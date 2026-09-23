@@ -47,6 +47,13 @@
 #' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
 #' @param show.grid.x Logical, whether to show gridlines on the x-axis. Default: TRUE.
 #' @param show.grid.y Logical, whether to show gridlines on the y-axis. Default: TRUE.
+#' @param grid.color Character, hex color for gridlines. Default: "#CCCCCC".
+#' @param axis.title.font.size Numeric, font size for the x/y axis titles. Default: 18.
+#' @param axis.title.font.color Character, hex color for the x/y axis titles. Default: "black".
+#' @param axis.title.font.family Character, font family for the x/y axis titles. Default: "Arial".
+#' @param facet.title.font.size Numeric, font size for the facet panel titles. Default: 18.
+#' @param facet.title.font.color Character, hex color for the facet panel titles. Default: "black".
+#' @param facet.title.font.family Character, font family for the facet panel titles. Default: "Arial".
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 14.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
@@ -101,15 +108,24 @@ linePlot <- function(data, x, y, palette.selection,
                      axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
                      axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
                      axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, show.grid.x = TRUE, show.grid.y = TRUE,
+                     grid.color = "#CCCCCC",
+                     axis.title.font.size = 18, axis.title.font.color = "black", axis.title.font.family = "Arial",
+                     facet.title.font.size = 18, facet.title.font.color = "black", facet.title.font.family = "Arial",
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
+    axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
+    facet_title_font <- list(
+        size = facet.title.font.size, color = facet.title.font.color, family = facet.title.font.family
+    )
+
     # Unique x axis styling for linePlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
-        title = x.title, autorange = TRUE, showgrid = show.grid.x
+        title = .axis_title_spec(x.title, axis_title_font), autorange = TRUE,
+        showgrid = show.grid.x, gridcolor = grid.color
     )
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
@@ -197,7 +213,7 @@ linePlot <- function(data, x, y, palette.selection,
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
     yaxis_style$tickangle <- axis.tickangle.y
-    yaxis_style$title <- y.title
+    yaxis_style$title <- .axis_title_spec(y.title, axis_title_font)
     yaxis_style$showgrid <- show.grid.y
 
     if (flip.x) {
@@ -283,7 +299,8 @@ linePlot <- function(data, x, y, palette.selection,
       
         annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
-            nrows = nrows, fig = fig
+            nrows = nrows, fig = fig, axis.title.font = axis_title_font,
+            facet.title.font = facet_title_font
         )
 
         borders <- build_facet_panel_borders(
@@ -337,7 +354,8 @@ linePlot <- function(data, x, y, palette.selection,
       
         annotations <- build_facet_annotations(
             facet_levels, x.title = x.title, y.title = y.title,
-            nrows = nrows, fig = fig
+            nrows = nrows, fig = fig, axis.title.font = axis_title_font,
+            facet.title.font = facet_title_font
         )
       
         borders <- build_facet_panel_borders(

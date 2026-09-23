@@ -266,9 +266,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
             )
-            update_viz_select(session, "split.by",
-                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
-            )
 
             # Aesthetics
             update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
@@ -339,11 +336,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
         observeEvent(input$facet.by, {
-            if (.nz_value(input$facet.by)) {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # The color-scale trimming controls only affect a continuous fill gradient,
@@ -366,10 +359,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 facet.by <- isolate_fn(input$facet.by)
             }
 
-            split.by <- NULL
-            if (.nz_value(isolate_fn(input$split.by))) {
-                split.by <- isolate_fn(input$split.by)
-            }
             fill.by <- NULL
             if (.nz_value(isolate_fn(input$fill.by))) {
                 fill.by <- isolate_fn(input$fill.by)
@@ -436,7 +425,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 alpha_by = alpha.by,
                 alpha_reverse = isolate_fn(input$alpha.reverse),
                 alpha_name = isolate_fn(input$alpha.name),
-                split_by = split.by,
                 bar_height = isolate_fn(input$bar.height),
                 lower_quantile = isolate_fn(input$lower.quantile),
                 upper_quantile = isolate_fn(input$upper.quantile),
@@ -542,7 +530,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
             fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
-            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Apply axis styling to all subplot axes (handles faceting)
             xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 

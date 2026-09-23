@@ -569,3 +569,121 @@ test_that("build_facet_panel_borders skips empty cells in a partial grid", {
     )
     expect_equal(length(borders), 5)
 })
+
+test_that("linePlot facet titles sit just above their own panel when axes are shared", {
+    # Fixed scales share axes, so plotly keeps one y axis per row and the second row
+    # has no yaxis3/yaxis4 to read a domain from. Titles used to fall back to an
+    # even grid that ignored the panel gaps, putting row 2's titles up against row 1.
+    set.seed(1)
+    d <- data.frame(x = rep(1:5, 3), y = rnorm(15), f = rep(c("A", "B", "C"), each = 5))
+    for (scales in c("fixed", "free")) {
+        built <- plotly::plotly_build(linePlot(
+            data = d, x = "x", y = "y", palette.selection = "red",
+            facet.by = "f", facet.nrow = 2, facet.scales = scales,
+            subplot.margin = c(0.08, 0.12)
+        ))
+        panels <- Filter(function(s) identical(s$type, "rect"), built$x$layout$shapes)
+        titles <- Filter(function(a) is.null(a$annotationType), built$x$layout$annotations)
+        expect_length(panels, 3)
+        expect_length(titles, 3)
+        for (i in seq_along(titles)) {
+            expect_equal(titles[[i]]$x, mean(c(panels[[i]]$x0, panels[[i]]$x1)))
+            expect_equal(titles[[i]]$y, panels[[i]]$y1 + 0.02)
+        }
+    }
+})
+
+# Axis-title annotations as left by axis_titles_as_annotations() / build_facet_annotations().
+.line_axis_title_anns <- function(fig) {
+    Filter(function(a) identical(a$annotationType, "axis"), fig$x$layout$annotations)
+}
+
+test_that("linePlot applies axis title font to single-panel titles (#326)", {
+    fig <- linePlot(
+        data = mtcars, x = "wt", y = "mpg",
+        palette.selection = "Set2", show.legend = FALSE,
+        x.title = "wt", y.title = "mpg",
+        axis.title.font.size = 36, axis.title.font.color = "#F51313",
+        axis.title.font.family = "Courier New"
+    )
+
+    built <- plotly::plotly_build(fig)
+    expect_equal(built$x$layout$xaxis$title$text, "wt")
+    expect_equal(built$x$layout$yaxis$title$text, "mpg")
+    expect_equal(built$x$layout$xaxis$title$font$size, 36)
+    expect_equal(built$x$layout$yaxis$title$font$family, "Courier New")
+
+    anns <- .line_axis_title_anns(axis_titles_as_annotations(fig))
+    expect_length(anns, 2)
+    for (a in anns) {
+        expect_equal(a$font$size, 36)
+        expect_equal(a$font$color, "#F51313")
+        expect_equal(a$font$family, "Courier New")
+    }
+})
+
+test_that("linePlot keeps the mean() y title relabel alongside the axis title font", {
+    d <- data.frame(grp = rep(c("a", "b"), each = 3), val = 1:6)
+    built <- plotly::plotly_build(linePlot(
+        data = d, x = "grp", y = "val", palette.selection = "Set2",
+        x.title = "grp", y.title = "val", axis.title.font.size = 25
+    ))
+    expect_equal(built$x$layout$yaxis$title$text, "mean(val)")
+    expect_equal(built$x$layout$yaxis$title$font$size, 25)
+})
+
+test_that("linePlot applies axis title font to faceted shared titles (#326)", {
+    d <- .line_facet_data()
+    single <- linePlot(
+        data = d, x = "x", y = "y", colour.group.by = "grp", facet.by = "fct",
+        palette.selection = c("red", "green", "blue"),
+        x.title = "x", y.title = "y",
+        axis.title.font.size = 30, axis.title.font.color = "#0000FF"
+    )
+    multi <- linePlot(
+        data = d, x = "x", y = c("y", "y2"), facet.by = "fct",
+        palette.selection = c("red", "green"),
+        x.title = "x", y.title = "Value",
+        axis.title.font.size = 30, axis.title.font.color = "#0000FF"
+    )
+
+    for (fig in list(single, multi)) {
+        anns <- .line_axis_title_anns(plotly::plotly_build(fig))
+        expect_length(anns, 2)
+        for (a in anns) {
+            expect_equal(a$font$size, 30)
+            expect_equal(a$font$color, "#0000FF")
+        }
+    }
+})
+
+test_that("linePlot honours gridline colour", {
+    built <- plotly::plotly_build(linePlot(
+        data = mtcars, x = "wt", y = "mpg", palette.selection = "Set2",
+        show.grid.x = FALSE, grid.color = "#FF0000"
+    ))
+    expect_false(built$x$layout$xaxis$showgrid)
+    expect_equal(built$x$layout$xaxis$gridcolor, "#FF0000")
+    expect_equal(built$x$layout$yaxis$gridcolor, "#FF0000")
+})
+
+test_that("linePlot styles facet panel titles with facet.title.font.*", {
+    d <- .line_facet_data()
+    single <- linePlot(
+        data = d, x = "x", y = "y", facet.by = "fct", palette.selection = "red",
+        facet.title.font.size = 40, facet.title.font.color = "#0000FF"
+    )
+    multi <- linePlot(
+        data = d, x = "x", y = c("y", "y2"), facet.by = "fct",
+        palette.selection = c("red", "green"),
+        facet.title.font.size = 40, facet.title.font.color = "#0000FF"
+    )
+    for (fig in list(single, multi)) {
+        titles <- Filter(function(a) is.null(a$annotationType), plotly::plotly_build(fig)$x$layout$annotations)
+        expect_length(titles, 2)
+        for (a in titles) {
+            expect_equal(a$font$size, 40)
+            expect_equal(a$font$color, "#0000FF")
+        }
+    }
+})

@@ -520,10 +520,22 @@ test_that("add_plot_config returns default config without facet", {
     expect_true(length(config$modeBarButtonsToAdd) > 0)
 })
 
-test_that("add_plot_config with facet.by disables axisTitleText editing", {
+test_that("add_plot_config with facet.by disables axis and plot title editing", {
     config <- VizModules::add_plot_config(facet.by = "group")
     expect_false(config$edits$axisTitleText)
-    expect_true(config$edits$titleText)
+    # The empty title's "Click to enter Plot title" placeholder overlaps the facet titles.
+    expect_false(config$edits$titleText)
+    expect_true(config$edits$annotationText)
+    expect_true(config$edits$annotationPosition)
+})
+
+test_that("add_plot_config only treats a real facet selection as faceted", {
+    for (facet in list(TRUE, "group", c("", "var.which"))) {
+        expect_false(VizModules::add_plot_config(facet.by = facet)$edits$titleText)
+    }
+    for (facet in list(NULL, FALSE, "", character(0))) {
+        expect_true(VizModules::add_plot_config(facet.by = facet)$edits$titleText)
+    }
 })
 
 test_that("add_plot_config respects download format and filename", {
@@ -1735,6 +1747,28 @@ test_that("build_facet_annotations keys shared axis titles by side, not text", {
     expect_true("axis:x#1" %in% keys)
     expect_true("axis:y#1" %in% keys)
     expect_false(any(c("text:grp#1", "text:units#1") %in% keys))
+})
+
+test_that("build_facet_annotations styles axis and facet titles independently", {
+    font <- list(size = 30, color = "#0000FF", family = "Courier New")
+    anns <- build_facet_annotations(
+        c("A", "B"), x.title = "grp", y.title = "units", axis.title.font = font
+    )
+    is_axis <- vapply(anns, function(a) identical(a$annotationType, "axis"), logical(1))
+    expect_equal(sum(is_axis), 2)
+    for (a in anns[is_axis]) expect_equal(a$font, font)
+    for (a in anns[!is_axis]) expect_equal(a$font, list(size = 14)) # facet titles untouched
+
+    facet_font <- list(size = 20, color = "red", family = "Arial")
+    anns_facet <- build_facet_annotations(c("A", "B"), x.title = "grp", facet.title.font = facet_font)
+    for (a in anns_facet) {
+        is_axis <- identical(a$annotationType, "axis")
+        expect_equal(a$font, if (is_axis) list(size = 14) else facet_font)
+    }
+
+    # Without either, everything falls back to title.font.size as before.
+    anns_default <- build_facet_annotations(c("A", "B"), x.title = "grp", title.font.size = 11)
+    for (a in anns_default) expect_equal(a$font, list(size = 11))
 })
 
 test_that("faceted shared-axis-title position survives a label text change", {

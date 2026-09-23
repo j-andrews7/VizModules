@@ -184,3 +184,54 @@ test_that("the Figure Builder scopes its layout styles", {
     # `.pb-app .well` rules are inert without this marker on the layout.
     expect_true(grepl("pb-app", html, fixed = TRUE))
 })
+
+
+# Records hide_input()/show_input() calls in place of the JavaScript they send.
+.record_toggles <- function(env = parent.frame()) {
+    calls <- new.env()
+    calls$shown <- character(0)
+    calls$hidden <- character(0)
+    local_mocked_bindings(
+        hide_input = function(session, ids) calls$hidden <- c(calls$hidden, ids),
+        show_input = function(session, ids) calls$shown <- c(calls$shown, ids),
+        .env = env
+    )
+    calls
+}
+
+test_that(".toggle_facet_title_inputs swaps the main title inputs for the facet ones", {
+    main <- c("title.font.family", "title.font.color", "title.font.size", "axis.title.horizontal.position")
+    facet <- c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family")
+
+    calls <- .record_toggles()
+    .toggle_facet_title_inputs(NULL, TRUE, extra = "facet.nrow")
+    expect_setequal(calls$shown, c(facet, "facet.nrow"))
+    expect_setequal(calls$hidden, main)
+
+    calls <- .record_toggles()
+    .toggle_facet_title_inputs(NULL, FALSE, extra = "facet.nrow")
+    expect_setequal(calls$shown, main)
+    expect_setequal(calls$hidden, c(facet, "facet.nrow"))
+})
+
+test_that(".toggle_facet_title_inputs never re-shows an input the app hid", {
+    calls <- .record_toggles()
+    .toggle_facet_title_inputs(NULL, FALSE, hidden = c("title.font.size", "legend.x"))
+    expect_false("title.font.size" %in% calls$shown)
+    expect_true("title.font.color" %in% calls$shown)
+
+    calls <- .record_toggles()
+    .toggle_facet_title_inputs(NULL, TRUE, hidden = "facet.title.font.color")
+    expect_false("facet.title.font.color" %in% calls$shown)
+    expect_true("facet.title.font.size" %in% calls$shown)
+})
+
+test_that("BarPlot and SplitBarPlot no longer offer a Split By input", {
+    # plotthis returns a patchwork for split_by, of which ggplotly only draws the last split.
+    bar <- as.character(plotthis_BarPlotInputsUI("bar", example_bar))
+    splitbar <- as.character(plotthis_SplitBarPlotInputsUI("sb", example_bar))
+    expect_false(grepl("bar-split.by", bar, fixed = TRUE))
+    expect_false(grepl("sb-split.by", splitbar, fixed = TRUE))
+    expect_true(grepl("bar-facet.by", bar, fixed = TRUE))
+    expect_true(grepl("sb-facet.by", splitbar, fixed = TRUE))
+})

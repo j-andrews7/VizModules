@@ -326,6 +326,12 @@ resolve_facet_layout <- function(n_facets, facet.nrow = NULL, facet.ncol = NULL)
 #'   panels filling the full paper area.
 #' @param title.offset Numeric fraction of the figure height to place each
 #'   subplot title above the top of its panel. Default: `0.02`.
+#' @param axis.title.font Optional named list of plotly font properties
+#'   (`size`, `color`, `family`) for the shared X/Y axis title annotations.
+#'   If `NULL` (the default), they use `title.font.size` like the facet titles.
+#' @param facet.title.font Optional named list of plotly font properties
+#'   (`size`, `color`, `family`) for the per-panel facet titles. If `NULL`
+#'   (the default), they use `title.font.size`.
 #'
 #' @return A list of annotation lists suitable for `plotly::layout(annotations = ...)`.
 #'
@@ -338,31 +344,26 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
                                      title.font.size = 14,
                                      nrows = 1,
                                      fig = NULL,
-                                     title.offset = 0.02) {
+                                     title.offset = 0.02,
+                                     axis.title.font = NULL,
+                                     facet.title.font = NULL) {
     n_facets <- length(facet_levels)
 
-    # Prefer actual axis domains on the figure (if supplied) so titles follow
+    if (is.null(axis.title.font)) {
+        axis.title.font <- list(size = title.font.size)
+    }
+    if (is.null(facet.title.font)) {
+        facet.title.font <- list(size = title.font.size)
+    }
+
+    # Prefer actual panel domains on the figure (if supplied) so titles follow
     # any domain rewriting performed by e.g. apply_facet_subplot_spacing().
     panel_coords <- NULL
-    if (!is.null(fig) && !is.null(fig$x) && !is.null(fig$x$layout)) {
-        axis_name <- function(prefix, i) if (i == 1L) prefix else paste0(prefix, i)
-        coords <- lapply(seq_len(n_facets), function(i) {
-            xa <- fig$x$layout[[axis_name("xaxis", i)]]
-            ya <- fig$x$layout[[axis_name("yaxis", i)]]
-            if (is.null(xa) || is.null(ya)) {
-                return(NULL)
-            }
-            xd <- xa$domain
-            yd <- ya$domain
-            if (!is.numeric(xd) || length(xd) != 2L ||
-                !is.numeric(yd) || length(yd) != 2L) {
-                return(NULL)
-            }
-            list(x_center = mean(xd), y_title = yd[2] + title.offset)
+    panels <- .facet_panel_domains(fig, n_facets)
+    if (length(panels) == n_facets && !any(vapply(panels, is.null, logical(1)))) {
+        panel_coords <- lapply(panels, function(p) {
+            list(x_center = mean(p$x), y_title = p$y[2] + title.offset)
         })
-        if (!any(vapply(coords, is.null, logical(1)))) {
-            panel_coords <- coords
-        }
     }
 
     # Fallback: compute from nrows/ncols assuming even, full-paper panels.
@@ -393,7 +394,7 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
             showarrow = FALSE,
             xanchor = "center",
             yanchor = "bottom",
-            font = list(size = title.font.size)
+            font = facet.title.font
         )
     })
 
@@ -411,7 +412,7 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
             xanchor = "center",
             yanchor = "top",
             annotationType = "axis",
-            font = list(size = title.font.size)
+            font = axis.title.font
         )))
     }
 
@@ -429,11 +430,79 @@ build_facet_annotations <- function(facet_levels, x.title = NULL,
             yanchor = "middle",
             textangle = -90,
             annotationType = "axis",
-            font = list(size = title.font.size)
+            font = axis.title.font
         )))
     }
 
     annotations
+}
+
+
+#' Resolve the paper-domain rectangle of each facet panel
+#'
+#' With shared axes plotly keeps only one axis per column (x) and one per row (y), so a
+#' per-facet `xaxis{i}`/`yaxis{i}` lookup comes up empty for every panel after the first
+#' row or column. Instead, the distinct x-axis domain starts define the columns (left to
+#' right) and the distinct y-axis domain starts define the rows (top to bottom), and panels
+#' fill that grid row-major, as `subplot()` lays them out. This holds for shared and free
+#' axes alike.
+#'
+#' @param fig A plotly figure object with per-panel `xaxis*`/`yaxis*` domains in `x$layout`.
+#' @param n_facets Integer, number of facet panels.
+#' @param ncol Optional integer overriding the detected number of columns. `NULL` or `NA`
+#'   means detect it from the domains. Rows always come from the domains.
+#'
+#' @return A list with one element per facet: `list(x = <domain>, y = <domain>)`, or `NULL`
+#'   for a panel outside the detected grid. `NULL` when the figure has no usable domains.
+#'
+#' @author Jacob Martin, Jared Andrews
+#' @rdname INTERNAL_facet_panel_domains
+#' @keywords internal
+.facet_panel_domains <- function(fig, n_facets, ncol = NULL) {
+    if (n_facets < 1L || is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
+        return(NULL)
+    }
+
+    layout_names <- names(fig$x$layout)
+    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
+    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
+
+    domain_of <- function(a) {
+        d <- fig$x$layout[[a]]$domain
+        if (is.numeric(d) && length(d) == 2L) d else NULL
+    }
+    x_domains <- Filter(Negate(is.null), lapply(x_axes, domain_of))
+    y_domains <- Filter(Negate(is.null), lapply(y_axes, domain_of))
+    if (length(x_domains) == 0L || length(y_domains) == 0L) {
+        return(NULL)
+    }
+
+    # One representative domain per distinct start, ordered into columns/rows.
+    dedupe_domains <- function(domains, decreasing = FALSE) {
+        starts <- vapply(domains, `[`, numeric(1), 1)
+        ord <- order(starts, decreasing = decreasing)
+        domains <- domains[ord]
+        starts <- starts[ord]
+        keep <- !duplicated(round(starts, 6))
+        domains[keep]
+    }
+    # Columns left to right (ascending x start); rows top to bottom (descending y start).
+    col_domains <- dedupe_domains(x_domains, decreasing = FALSE)
+    row_domains <- dedupe_domains(y_domains, decreasing = TRUE)
+
+    detected_ncol <- length(col_domains)
+    if (is.null(ncol) || is.na(ncol)) ncol <- detected_ncol
+    ncol <- as.integer(ncol)
+    if (!is.finite(ncol) || ncol < 1L) ncol <- detected_ncol
+
+    lapply(seq_len(n_facets), function(i) {
+        col <- ((i - 1L) %% ncol) + 1L
+        row <- ((i - 1L) %/% ncol) + 1L
+        if (col > length(col_domains) || row > length(row_domains)) {
+            return(NULL)
+        }
+        list(x = col_domains[[col]], y = row_domains[[row]])
+    })
 }
 
 
@@ -494,64 +563,16 @@ build_facet_panel_borders <- function(fig, n_facets, showline = TRUE, mirror = T
     if (!isTRUE(showline) || n_facets < 1L) {
         return(list())
     }
-    if (is.null(fig) || is.null(fig$x) || is.null(fig$x$layout)) {
-        return(list())
-    }
 
     line_style <- list(color = linecolor, width = linewidth)
 
-    # Collect the per-axis domains. Each distinct x-domain start is a column
-    # (ordered left to right) and each distinct y-domain start is a row (ordered
-    # top to bottom). This holds for both shared (shareX/shareY) and free axes,
-    # because subplot lays panels on a grid regardless of which axes are matched.
-    layout_names <- names(fig$x$layout)
-    x_axes <- layout_names[grepl("^xaxis[0-9]*$", layout_names)]
-    y_axes <- layout_names[grepl("^yaxis[0-9]*$", layout_names)]
-
-    domain_of <- function(a) {
-        d <- fig$x$layout[[a]]$domain
-        if (is.numeric(d) && length(d) == 2L) d else NULL
-    }
-    x_domains <- Filter(Negate(is.null), lapply(x_axes, domain_of))
-    y_domains <- Filter(Negate(is.null), lapply(y_axes, domain_of))
-    if (length(x_domains) == 0L || length(y_domains) == 0L) {
-        return(list())
-    }
-
-    # One representative domain per distinct start, ordered into columns/rows.
-    dedupe_domains <- function(domains, decreasing = FALSE) {
-        starts <- vapply(domains, `[`, numeric(1), 1)
-        ord <- order(starts, decreasing = decreasing)
-        domains <- domains[ord]
-        starts <- starts[ord]
-        keep <- !duplicated(round(starts, 6))
-        domains[keep]
-    }
-    # Columns left to right (ascending x start); rows top to bottom (descending y start).
-    col_domains <- dedupe_domains(x_domains, decreasing = FALSE)
-    row_domains <- dedupe_domains(y_domains, decreasing = TRUE)
-
-    detected_ncol <- length(col_domains)
-    detected_nrow <- length(row_domains)
-    if (is.null(ncol) || is.na(ncol)) ncol <- detected_ncol
-    if (is.null(nrow) || is.na(nrow)) nrow <- detected_nrow
-    ncol <- as.integer(ncol)
-    nrow <- as.integer(nrow)
-    if (!is.finite(ncol) || ncol < 1L) ncol <- detected_ncol
-
     shapes <- list()
-    for (i in seq_len(n_facets)) {
-        # Panels are filled row-major (left to right, top to bottom).
-        col <- ((i - 1L) %% ncol) + 1L
-        row <- ((i - 1L) %/% ncol) + 1L
-        if (col > length(col_domains) || row > length(row_domains)) {
+    for (panel in .facet_panel_domains(fig, n_facets, ncol = ncol)) {
+        if (is.null(panel)) {
             next
         }
-        xd <- col_domains[[col]]
-        yd <- row_domains[[row]]
-        if (!is.numeric(xd) || length(xd) != 2L || !is.numeric(yd) || length(yd) != 2L) {
-            next
-        }
+        xd <- panel$x
+        yd <- panel$y
 
         if (isTRUE(mirror)) {
             # Full rectangle border around the panel.

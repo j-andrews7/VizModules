@@ -27,6 +27,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 ## Deprecations and Removals
 
+* Removed the **Split By** input from the `BarPlot` and `SplitBarPlot` modules. plotthis returns a patchwork for `split_by`, of which `ggplotly()` only draws the last split, titled with that split's name. Use **Facet By** instead, as the other plotthis modules already do.
 * Removed the `plotthis_ViolinPlot` module - `plotthis_ViolinPlotApp()`, `plotthis_ViolinPlotInputsUI()`, `plotthis_ViolinPlotOutputUI()` and `plotthis_ViolinPlotServer()` (#358). `plotthis` rolled its own geom for this in v0.14.0, which broke the module since it didn't convert them via `ggplotly()`. More effort than it's worth to fix, since `yPlot` works well.
   * Use `dittoViz_yPlot` instead, with `defaults = list(plots = "vlnplot")` (add `"boxplot"` / `"jitter"` for the inner box and points). 
 
@@ -55,6 +56,12 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * Fixed default annotations in the `ComplexHeatmap` module failing to render their color pickers and annotation tracks on load. Initial rows in `multiDynamicInput()` are now reported to Shiny during initialization before deferred DOM binding, omitted fields backfill from `row_spec`, and the module server resolves palettes immediately and disables output suspension for annotation color controls.
 * Fixed every module-hosted `ComplexHeatmap` heatmap silently never drawing. `InteractiveComplexHeatmap` keys its registry by `validate_heatmap_id()`, which rewrites each non-word character to `_`, so the guard added alongside the annotation fix above looked up the raw namespaced id (`mymod-heatmap-Heatmap`) against a key stored as `mymod_heatmap_Heatmap`, found nothing, and returned before `makeInteractiveComplexHeatmap()` could run. Every `ComplexHeatmap_HeatmapServer()` instance was affected, since a module id always contains a `-`; the widget rendered its empty shell with no error or warning.
 * Fixed the `ComplexHeatmap` module's `compact = TRUE` widget (and any use of `output_ui_float = TRUE`) adding a ~10,000px horizontal scrollbar to the host app. 
+* The **Axis Title Size/Color/Font** inputs now actually do something in the `dumbbellPlot` and `linePlot` modules (#326), as do **Show X/Y Gridlines** and **Gridline Color** (dumbbell ignored all three, line ignored the colour). `dumbbellPlot()` and `linePlot()` gained the matching `axis.title.font.*`, `show.grid.*` and `grid.color` arguments, and `build_facet_annotations()` an `axis.title.font` argument for the shared axis titles.
+* Faceted plots in every module no longer offer an editable main title. Its empty "Click to enter Plot title" placeholder sat on top of the facet panel titles and caught the clicks meant for them. The **Title Font/Color/Size/Position** inputs are hidden while a plot is faceted, and the facet title inputs shown, in one place for every module. Neither is re-shown if the app hid it via `hide.inputs`.
+  * `yPlot` now counts several Y variables split into panels as faceted too, where it previously only looked at **Split By**.
+* The **Facet Title Size/Color/Font** inputs now actually do something in the `dumbbellPlot` and `linePlot` modules. `dumbbellPlot()` and `linePlot()` gained `facet.title.font.*` arguments, and `build_facet_annotations()` a `facet.title.font` argument.
+* A faceted `dumbbellPlot` now draws a border around every panel rather than only the first. With the y axis shared, only the first panel had one to draw its edges.
+  * Facet titles in `dumbbellPlot` and `linePlot` now sit directly above their own panel when axes are shared (the default fixed scales). `build_facet_annotations()` looked up a y axis per panel, found none past the first row, and fell back to an even grid that ignored the panel gaps, which put lower rows' titles up against the row above.
 
 ## Documentation
 

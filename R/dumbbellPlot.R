@@ -31,6 +31,15 @@
 #' @param axis.tickcolor Character, hex color for tick marks. Default: "black".
 #' @param axis.ticklen Numeric, length of tick marks in pixels. Default: 5.
 #' @param axis.tickwidth Numeric, width of tick marks in pixels. Default: 1.
+#' @param axis.title.font.size Numeric, font size for the x/y axis titles. Default: 18.
+#' @param axis.title.font.color Character, hex color for the x/y axis titles. Default: "black".
+#' @param axis.title.font.family Character, font family for the x/y axis titles. Default: "Arial".
+#' @param show.grid.x Logical, whether to show gridlines on the x-axis. Default: TRUE.
+#' @param show.grid.y Logical, whether to show gridlines on the y-axis. Default: TRUE.
+#' @param grid.color Character, hex color for gridlines. Default: "#CCCCCC".
+#' @param facet.title.font.size Numeric, font size for the facet panel titles. Default: 18.
+#' @param facet.title.font.color Character, hex color for the facet panel titles. Default: "black".
+#' @param facet.title.font.family Character, font family for the facet panel titles. Default: "Arial".
 #' @param title.text Character, main title text for the plot. Default: "".
 #' @param title.font.size Numeric, font size for plot title. Default: 26.
 #' @param title.font.family Character, font family for plot title. Default: "Arial".
@@ -85,7 +94,12 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
                         axis.tickfont.size = 12, axis.tickfont.color = "black", axis.tickfont.family = "Arial", 
                         axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
-                        axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, 
+                        axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1,
+                        axis.title.font.size = 18, axis.title.font.color = "black",
+                        axis.title.font.family = "Arial",
+                        show.grid.x = TRUE, show.grid.y = TRUE, grid.color = "#CCCCCC",
+                        facet.title.font.size = 18, facet.title.font.color = "black",
+                        facet.title.font.family = "Arial",
                         title.text = "", title.font.size = 26, title.font.family = "Arial",
                         title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, 
                         flip.x = FALSE, flip.y = FALSE,
@@ -105,19 +119,23 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         subplot.margin
     }
 
+    axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
+
     # Unique x axis styling for dumbbellPlot:
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen,
         tickwidth = axis.tickwidth,
-        title = x.title, autorange = TRUE
+        title = .axis_title_spec(x.title, axis_title_font), autorange = TRUE,
+        showgrid = show.grid.x, gridcolor = grid.color
     )
 
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
     yaxis_style$tickangle <- axis.tickangle.y
-    yaxis_style$title <- y.title
+    yaxis_style$title <- .axis_title_spec(y.title, axis_title_font)
+    yaxis_style$showgrid <- show.grid.y
 
     if (flip.x) {
         xaxis_style$autorange <- "reversed"
@@ -181,8 +199,27 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             titleX = FALSE, titleY = FALSE, margin = subplot_margin_sides
         )
 
-        annotations <- build_facet_annotations(facet_levels, x.title = x.title, y.title = y.title)
+        annotations <- build_facet_annotations(
+            facet_levels, x.title = x.title, y.title = y.title,
+            fig = fig, axis.title.font = axis_title_font,
+            facet.title.font = list(
+                size = facet.title.font.size, color = facet.title.font.color, family = facet.title.font.family
+            )
+        )
+
+        # Shared axes leave later panels without a y axis of their own, so the
+        # axis lines alone never frame them; draw each panel's border as a shape.
+        borders <- build_facet_panel_borders(
+            fig, length(facet_levels),
+            showline = axis.showline, mirror = axis.mirror,
+            linecolor = axis.linecolor, linewidth = axis.linewidth,
+            ncol = length(facet_levels), nrow = 1
+        )
+
         fig <- fig |> layout(annotations = annotations)
+        if (length(borders) > 0) {
+            fig$x$layout$shapes <- c(fig$x$layout$shapes, borders)
+        }
     } else {
         # WITHOUT FACETING
         fig <- .create_dumbbell_plot(plot_data, x, y, colour.by, palette.selection, line.colour, show.legend)

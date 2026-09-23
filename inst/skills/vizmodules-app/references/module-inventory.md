@@ -15,12 +15,12 @@ uniform across modules** — check the row before writing a key.
 | `dittoViz_scatterPlot` | `dittoViz::scatterPlot` | `x.by` `y.by` `color.by` `shape.by` `size.by` `split.by` | `color.panel` | — |
 | `dittoViz_yPlot` | `dittoViz::yPlot` | `var` `group.by` `color.by` `shape.by` `split.by` `plots` `y.min` `y.max` | `palette.colours` | **yes** |
 | `plotthis_AreaPlot` | `plotthis::AreaPlot` | `x.data` `y.data` `group.by` `facet.by` | `palette.colours` | — |
-| `plotthis_BarPlot` | `plotthis::BarPlot` | `x.data` `y.data` `group.by` `fill.by` `split.by` `facet.by` `y.min` `y.max` | `palette.colours` | — |
+| `plotthis_BarPlot` | `plotthis::BarPlot` | `x.data` `y.data` `group.by` `fill.by` `facet.by` `y.min` `y.max` | `palette.colours` | — |
 | `plotthis_BoxPlot` | `plotthis::BoxPlot` | `x.data` `y.data` `group.by` `facet.by` `y.min` `y.max` | `palette.colours` | **yes** |
 | `plotthis_DensityPlot` | `plotthis::DensityPlot` | `x.data` `group.by` `facet.by` | `palette.colours` | — |
 | `plotthis_DotPlot` | `plotthis::DotPlot` | `x.data` `y.data` `fill.by` `size.by` `facet.by` | `palette.name` (continuous) | — |
 | `plotthis_Histogram` | `plotthis::Histogram` | `x.data` `group.by` `facet.by` | `palette.colours` | — |
-| `plotthis_SplitBarPlot` | `plotthis::SplitBarPlot` | `x.data` `y.data` `fill.by` `split.by` `facet.by` `x.min` `x.max` | `palette.colours` | — |
+| `plotthis_SplitBarPlot` | `plotthis::SplitBarPlot` | `x.data` `y.data` `fill.by` `facet.by` `x.min` `x.max` | `palette.colours` | — |
 | `linePlot` | native (`linePlot()`) | `x.value` `y.value` `group.by` `facet.by` | `palette.colours` | — |
 | `dumbbellPlot` | native (`dumbbellPlot()`) | `x.value` `y.value` `colour.by` `facet.by` | `palette.colours` | — |
 | `piePlot` | native (`piePlot()`) | `labels` `values` | `slice.colors` | — |

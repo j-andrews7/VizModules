@@ -439,12 +439,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             }
         })
 
-        observeEvent(input$split.by, {
-            if (!is.null(input$split.by) && nzchar(input$split.by)) {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+        # Mirrors the facet.cols resolution in generate_yPlot(): several Y variables
+        # split into panels of their own even with no split.by set.
+        observeEvent(c(input$split.by, input$var, input$multivar.aes), {
+            split.set <- !is.null(input$split.by) && any(nzchar(input$split.by))
+            multivar.split <- length(input$var) > 1 &&
+                (!.nz_value(input$multivar.aes) || identical(input$multivar.aes, "split"))
+            .toggle_facet_title_inputs(session, split.set || multivar.split, hidden = hide.inputs)
         })
 
         # Generate yPlot reactive

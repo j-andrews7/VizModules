@@ -46,10 +46,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # "Per Facet Panel" is always hidden: this plot is always faceted on the
         # frequency variable, and the frequencies of two different levels are not
         # comparable quantities, so pooling across facets would compare nonsense.
-        # The tests are forced per-facet below.
+        # The tests are forced per-facet below. For the same reason there is never a
+        # main title (see add_plot_config()), so its styling inputs are hidden too.
         observeEvent(data(), {
             delay(100, {
-                hide_input(session, c(hide.inputs, "stat.per.facet"))
+                hide_input(session, c(hide.inputs, "stat.per.facet", .main_title_input_ids))
                 for (tab.name in hide.tabs) hideTab(inputId = "freqPlotTabsetPanel", target = tab.name)
             })
         })

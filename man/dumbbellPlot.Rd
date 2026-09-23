@@ -28,6 +28,15 @@ dumbbellPlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  axis.title.font.size = 18,
+  axis.title.font.color = "black",
+  axis.title.font.family = "Arial",
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
+  grid.color = "#CCCCCC",
+  facet.title.font.size = 18,
+  facet.title.font.color = "black",
+  facet.title.font.family = "Arial",
   title.text = "",
   title.font.size = 26,
   title.font.family = "Arial",
@@ -92,6 +101,24 @@ May be a single value (applied to both directions) or a length-2 vector
 \item{axis.ticklen}{Numeric, length of tick marks in pixels. Default: 5.}
 
 \item{axis.tickwidth}{Numeric, width of tick marks in pixels. Default: 1.}
+
+\item{axis.title.font.size}{Numeric, font size for the x/y axis titles. Default: 18.}
+
+\item{axis.title.font.color}{Character, hex color for the x/y axis titles. Default: "black".}
+
+\item{axis.title.font.family}{Character, font family for the x/y axis titles. Default: "Arial".}
+
+\item{show.grid.x}{Logical, whether to show gridlines on the x-axis. Default: TRUE.}
+
+\item{show.grid.y}{Logical, whether to show gridlines on the y-axis. Default: TRUE.}
+
+\item{grid.color}{Character, hex color for gridlines. Default: "#CCCCCC".}
+
+\item{facet.title.font.size}{Numeric, font size for the facet panel titles. Default: 18.}
+
+\item{facet.title.font.color}{Character, hex color for the facet panel titles. Default: "black".}
+
+\item{facet.title.font.family}{Character, font family for the facet panel titles. Default: "Arial".}
 
 \item{title.text}{Character, main title text for the plot. Default: "".}
 

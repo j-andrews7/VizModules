@@ -18,7 +18,8 @@ add_plot_config(
 
 \item{include.modebar.buttons}{Logical. Whether to include drawing tool buttons in the modebar (default: TRUE).}
 
-\item{facet.by}{Logical. Whether the figure is facetted to determine if axes labels for each plot should be editable or not.}
+\item{facet.by}{Whether the figure is faceted into panels carrying their own titles: the facet
+column name(s), or \code{TRUE}. \code{NULL}, \code{FALSE}, an empty vector, or empty strings mean not faceted.}
 }
 \value{
 A named list suitable for use as the \code{config} argument in Plotly
@@ -38,6 +39,10 @@ rectangles, and an eraser) to the modebar. Native cartesian axis-title
 text editing is disabled because axis titles are rendered as draggable,
 editable annotations (see \code{\link[=axis_titles_as_annotations]{axis_titles_as_annotations()}} and
 \code{build_facet_annotations()}).
+
+When the figure is faceted, plot title editing is disabled too. An empty editable title still
+draws plotly's "Click to enter Plot title" placeholder, which sits on top of the facet panel
+titles and swallows clicks meant for them.
 }
 \examples{
 add_plot_config()

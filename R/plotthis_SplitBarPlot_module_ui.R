@@ -23,7 +23,8 @@
 #' - `aspect.ratio` - Aspect ratio control (handled by plotly layout)
 #' - `legend.position` - Legend positioning (plotly allows interactive repositioning)
 #' - `y_sep` - Separator for y columns (not applicable in UI context)
-#' - `split_by_sep` - Separator for split columns (not applicable in UI context)
+#' - `split_by` - Split variable (returns a patchwork object, not supported in plotly), use `facet_by` instead
+#' - `split_by_sep` - Only applies if `split_by` is used
 #' - `order_y` - Y-axis ordering rules (handled by default logic)
 #' - `lineheight` - Text line height (not applicable in plotly)
 #' - `max_charwidth` - Maximum character width (not applicable in plotly)
@@ -64,7 +65,6 @@
 #' - `facet_ncol` - Number of facet columns (UI: "Facet number of columns", default: NULL)
 #' - `facet_nrow` - Number of facet rows (UI: "Facet number of rows", default: NULL)
 #' - `facet_byrow` - Facet ordering direction (UI: "Facet by row", default: TRUE)
-#' - `split_by` - Split variable (UI: "Split by", default: "")
 #' - `x_min` - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 #' - `x_max` - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 #' - `palcolor` - Custom color values (UI: palette picker, derived from palette)
@@ -163,7 +163,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     selected <- list(
         "x", "fill_by", "alpha_by", "alpha_reverse", "alpha_name",
         "bar_height", "facet_by", "facet_scales", "facet_ncol", "facet_nrow",
-        "facet_byrow", "split_by", "x_min", "x_max", "palreverse",
+        "facet_byrow", "x_min", "x_max", "palreverse",
         c("lower_quantile", "upper_quantile"), c("lower_cutoff", "upper_cutoff")
     )
 
@@ -225,10 +225,6 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(viz_select_input(ns("split.by"), "Split By",
-                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c(char.choices, "")
-            ), documentParameters$split_by, placement = "top", options = list(container = "body")),
             .uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(

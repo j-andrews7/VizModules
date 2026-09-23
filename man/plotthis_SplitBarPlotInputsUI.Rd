@@ -54,7 +54,8 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
 \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
 \item \code{y_sep} - Separator for y columns (not applicable in UI context)
-\item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
+\item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
+\item \code{split_by_sep} - Only applies if \code{split_by} is used
 \item \code{order_y} - Y-axis ordering rules (handled by default logic)
 \item \code{lineheight} - Text line height (not applicable in plotly)
 \item \code{max_charwidth} - Maximum character width (not applicable in plotly)
@@ -98,7 +99,6 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
 \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
-\item \code{split_by} - Split variable (UI: "Split by", default: "")
 \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
