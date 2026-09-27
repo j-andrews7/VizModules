@@ -326,3 +326,66 @@ test_that("dumbbellPlot styles facet panel titles with facet.title.font.*", {
         expect_equal(a$font, list(size = 40, color = "#0000FF", family = "Courier New"))
     }
 })
+
+# Colour by Y: every marker trace of a category, keyed by the category.
+.dumbbell_marker_colours <- function(fig) {
+    built <- plotly::plotly_build(fig)
+    markers <- Filter(function(t) identical(t$mode, "markers") && !is.null(t$name), built$x$data)
+    list(
+        colours = vapply(markers, function(t) t$marker$color, character(1)),
+        names = vapply(markers, function(t) t$name, character(1)),
+        legend = vapply(markers, function(t) isTRUE(t$showlegend), logical(1))
+    )
+}
+
+test_that("colouring by Y matches each category's own colour, not its sorted position", {
+    # Sorting by Women puts B first, then C, then A.
+    df <- data.frame(school = c("A", "B", "C"), women = c(30, 10, 20), men = c(40, 15, 25))
+    pal <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+
+    for (x in list(c("women", "men"), "women")) {
+        m <- .dumbbell_marker_colours(suppressWarnings(dumbbellPlot(
+            df, x = x, y = "school", colour.by = "Y variables", palette.selection = pal
+        )))
+        expect_equal(m$colours, unname(pal[m$names]), info = paste(x, collapse = "+"))
+        # One legend entry per category.
+        expect_setequal(m$names[m$legend], names(pal))
+        expect_equal(sum(m$legend), 3)
+    }
+})
+
+test_that("an unnamed Y palette follows the order categories appear in the data", {
+    df <- data.frame(school = c("A", "B", "C"), women = c(30, 10, 20), men = c(40, 15, 25))
+    m <- .dumbbell_marker_colours(suppressWarnings(dumbbellPlot(
+        df, x = c("women", "men"), y = "school", colour.by = "Y variables",
+        palette.selection = c("#FF0000", "#00FF00", "#0000FF")
+    )))
+    expect_equal(m$colours, unname(c(A = "#FF0000", B = "#00FF00", C = "#0000FF")[m$names]))
+})
+
+test_that("a Y category keeps its colour in every facet", {
+    df <- data.frame(
+        school = c("A", "B", "C", "A", "B", "C"),
+        women = c(30, 10, 20, 5, 50, 25),
+        men = c(40, 15, 25, 10, 60, 30),
+        grp = rep(c("g1", "g2"), each = 3)
+    )
+    pal <- c(A = "#FF0000", B = "#00FF00", C = "#0000FF")
+    m <- .dumbbell_marker_colours(suppressWarnings(dumbbellPlot(
+        df, x = c("women", "men"), y = "school", colour.by = "Y variables",
+        palette.selection = pal, facet.by = "grp"
+    )))
+    expect_equal(m$colours, unname(pal[m$names]))
+    # Legend entries come from the first facet only.
+    expect_equal(sum(m$legend), 3)
+})
+
+test_that("a named X palette is matched to the x variables by name", {
+    df <- data.frame(school = c("A", "B"), women = c(30, 10), men = c(40, 15))
+    m <- .dumbbell_marker_colours(dumbbellPlot(
+        df, x = c("women", "men"), y = "school", colour.by = "X variables",
+        palette.selection = c(men = "#0000FF", women = "#FF0000")
+    ))
+    expect_equal(m$colours[m$names == "women"], "#FF0000")
+    expect_equal(m$colours[m$names == "men"], "#0000FF")
+})

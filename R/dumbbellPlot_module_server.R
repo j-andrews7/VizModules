@@ -217,7 +217,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 .default_group_colors(defaults, "palette.colours")
             )
 
-            palette_selection <- unname(palette_values)
+            # Named, so dumbbellPlot() colours each group by name rather than by
+            # where it lands once the rows are sorted and faceted.
+            palette_selection <- palette_values
             if (is.null(palette_selection) || length(palette_selection) == 0) {
                 palette_selection <- default_palette_values
             }

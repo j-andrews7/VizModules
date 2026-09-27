@@ -9,7 +9,11 @@
 #' @param y Character, column name for the y-axis (categorical variable recommended).
 #' @param colour.by Character, how to color the markers. Options: "X variables" (different colors for each x variable)
 #'   or "Y variables" (different colors for each y category). Default: "X variables".
-#' @param palette.selection Character vector of hex colors for marker colors.
+#' @param palette.selection Character vector of hex colors for marker colors. A named vector
+#'   is matched by name to the x variables (`colour.by = "X variables"`) or the y categories
+#'   (`"Y variables"`); an unnamed one is assigned in order, to the x variables as given or to
+#'   the y categories in their order of appearance in `data`. Either way a category keeps its
+#'   colour in every facet.
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
 #' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
@@ -158,6 +162,22 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         x <- x.new
     }
 
+    # Colour each group by name rather than by position. The rows are reordered
+    # (and split into facets) below, so a positional palette would follow the
+    # order the groups happen to land in there -- which is neither the order the
+    # caller built the palette in nor the same from one facet to the next. The
+    # groups are taken in their order of appearance, matching the module's picker.
+    colour.groups <- if (identical(colour.by, "Y variables")) {
+        unique(stats::na.omit(as.character(data[[y]])))
+    } else {
+        x
+    }
+    if (length(palette.selection) > 0 && length(colour.groups) > 0) {
+        palette.selection <- resolve_palette(
+            colour.groups, palette.selection, unname(palette.selection)
+        )
+    }
+
     # Order data if needed
     order.cols <- order.by
     if (is.null(order.cols) && !is.null(x) && length(x) > 0) {
@@ -273,34 +293,60 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
     # Initialize empty plot
     fig <- plot_ly(data, type = "scatter")
 
-    if (length(x) == 1) {
-        # SINGLE DOT MODE
-        if (colour.by == "X variables") {
-            # Color by X variable (single color for all points)
-            fig <- fig |> add_markers(
-                x = data[[x[1]]],
-                y = data[[y]],
-                name = x[1],
-                marker = list(color = palette.selection[1]),
-                showlegend = show.legend
-            )
+    # A group's colour, looked up by name (dumbbellPlot() names the palette by
+    # group), falling back to position for a caller-supplied unnamed palette.
+    colour_of <- function(group, i) {
+        col <- if (!is.null(names(palette.selection))) {
+            unname(palette.selection[as.character(group)])
         } else {
-            # Color by Y variables (different color for each y value)
-            fig <- plot_ly(data,
-                x = reformulate(x[1]),
-                y = reformulate(y),
-                type = "scatter",
-                mode = "markers",
-                color = reformulate(y),
-                colors = palette.selection,
-                showlegend = show.legend
-            )
+            NA_character_
         }
-    } else if (length(x) == 2) {
-        # DUMBBELL MODE (2 X values)
-        if (colour.by == "X variables") {
-            # Color by X variables (different colors for each x variable)
-            # Add connecting segments
+        if (length(col) == 1L && !is.na(col)) {
+            return(col)
+        }
+        palette.selection[[(i - 1L) %% length(palette.selection) + 1L]]
+    }
+
+    if (colour.by == "Y variables") {
+        # One colour per y category, shared by its start and end markers. The
+        # categories are walked in palette order so the legend reads the way the
+        # colour picker does, and each is its own legend group so one click
+        # toggles it in every facet.
+        present <- unique(stats::na.omit(as.character(data[[y]])))
+        y_levels <- c(intersect(names(palette.selection), present), setdiff(present, names(palette.selection)))
+
+        for (i in seq_along(y_levels)) {
+            y_val <- y_levels[i]
+            y_data <- data[!is.na(data[[y]]) & as.character(data[[y]]) == y_val, , drop = FALSE]
+            col <- colour_of(y_val, i)
+
+            if (length(x) == 2) {
+                fig <- fig |> add_segments(
+                    x = y_data[[x[1]]],
+                    xend = y_data[[x[2]]],
+                    y = y_data[[y]],
+                    yend = y_data[[y]],
+                    line = list(color = col),
+                    showlegend = FALSE,
+                    hoverinfo = "skip",
+                    legendgroup = y_val
+                )
+            }
+            for (j in seq_along(x)) {
+                fig <- fig |> add_markers(
+                    x = y_data[[x[j]]],
+                    y = y_data[[y]],
+                    name = y_val,
+                    marker = list(color = col),
+                    # The first marker of each category carries its legend entry.
+                    showlegend = show.legend && j == 1L,
+                    legendgroup = y_val
+                )
+            }
+        }
+    } else if (length(x) <= 2) {
+        # One colour per x variable. With two, a neutral segment joins each pair.
+        if (length(x) == 2) {
             fig <- fig |> add_segments(
                 x = data[[x[1]]],
                 xend = data[[x[2]]],
@@ -310,62 +356,16 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                 showlegend = FALSE,
                 hoverinfo = "skip"
             )
-            # Add start markers
+        }
+        for (j in seq_along(x)) {
             fig <- fig |> add_markers(
-                x = data[[x[1]]],
+                x = data[[x[j]]],
                 y = data[[y]],
-                name = x[1],
-                marker = list(color = palette.selection[1]),
-                showlegend = show.legend
+                name = x[j],
+                marker = list(color = colour_of(x[j], j)),
+                showlegend = show.legend,
+                legendgroup = x[j]
             )
-            # Add end markers
-            fig <- fig |> add_markers(
-                x = data[[x[2]]],
-                y = data[[y]],
-                name = x[2],
-                marker = list(color = palette.selection[min(2, length(palette.selection))]),
-                showlegend = show.legend
-            )
-        } else {
-            # Color by Y variables (same color for start/end, different colors per y category)
-            # Get unique y values for coloring
-            y_unique <- unique(data[[y]])
-
-            # Add segments and markers for each y value
-            for (i in seq_along(y_unique)) {
-                y_val <- y_unique[i]
-                y_data <- data[data[[y]] == y_val, ]
-                color_idx <- (i - 1) %% length(palette.selection) + 1
-
-                # Add segment
-                fig <- fig |> add_segments(
-                    x = y_data[[x[1]]],
-                    xend = y_data[[x[2]]],
-                    y = y_data[[y]],
-                    yend = y_data[[y]],
-                    line = list(color = palette.selection[color_idx]),
-                    showlegend = FALSE,
-                    hoverinfo = "skip"
-                )
-                # Add start markers
-                fig <- fig |> add_markers(
-                    x = y_data[[x[1]]],
-                    y = y_data[[y]],
-                    name = as.character(y_val),
-                    marker = list(color = palette.selection[color_idx]),
-                    showlegend = (i == 1) && show.legend,
-                    legendgroup = as.character(y_val)
-                )
-                # Add end markers
-                fig <- fig |> add_markers(
-                    x = y_data[[x[2]]],
-                    y = y_data[[y]],
-                    name = as.character(y_val),
-                    marker = list(color = palette.selection[color_idx]),
-                    showlegend = FALSE,
-                    legendgroup = as.character(y_val)
-                )
-            }
         }
     }
 
