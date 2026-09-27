@@ -719,16 +719,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 fig <- fig |> toWebGL()
             }
 
-            # Add fit lines if requested
-            # Determine grouping
-            group_col <- if (!is.null(input$color.by) && input$color.by != "") {
-                input$color.by
-            } else {
-                NULL
-            }
+            # Add fit lines if requested. Every read goes through isolate_fn so a
+            # paused (Auto Update off) plot does not redraw for a fit-line tweak.
+            group_col <- null.na.inputs$color.by
 
             # Linear model fits
-            if (isTRUE(input$linear.model)) {
+            if (isTRUE(isolate_fn(input$linear.model))) {
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
                     df = data(),
@@ -737,11 +733,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     split.by = null.na.inputs$split.by,
                     group.col = group_col,
                     color_mapping = color_mapping,
-                    line_color = input$line.best.colour,
+                    line_color = isolate_fn(input$line.best.colour),
                     fit_type = "linear",
                     line_width = 3
                 )
-            } else if (isTRUE(input$best.fit)) {
+            } else if (isTRUE(isolate_fn(input$best.fit))) {
                 # LOESS smooth fit lines (only if linear model not selected)
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
@@ -751,9 +747,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     split.by = null.na.inputs$split.by,
                     group.col = group_col,
                     color_mapping = color_mapping,
-                    line_color = input$line.best.colour,
+                    line_color = isolate_fn(input$line.best.colour),
                     fit_type = "loess",
-                    span = input$line.best.smoothness,
+                    span = isolate_fn(input$line.best.smoothness),
                     line_width = 3
                 )
             }
@@ -763,7 +759,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # backend-specific extra fields. Formula text is validated by
             # .safe_build_model() (allow-listed fit function + AST whitelist),
             # so no arbitrary code is executed.
-            if (isTRUE(input$custom.model.enable)) {
+            if (isTRUE(isolate_fn(input$custom.model.enable))) {
                 model_rows <- isolate_fn(input$custom.models)
                 if (!is.null(model_rows) && length(model_rows) > 0) {
                     for (row_name in names(model_rows)) {

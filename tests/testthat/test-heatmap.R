@@ -676,7 +676,7 @@ test_that("the filter reactives narrow the matrix, and are debounced", {
 
     shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(df)), {
         session$setInputs(
-            matrix.cols = sample_cols, rowname.col = "gene",
+            auto.update = TRUE, matrix.cols = sample_cols, rowname.col = "gene",
             row_filter = "", column_filter = "", column_key = ""
         )
         expect_equal(nrow(filtered_matrix_data()), nrow(df))
@@ -701,6 +701,32 @@ test_that("the filter reactives narrow the matrix, and are debounced", {
     })
 })
 
+test_that("Auto Update off holds the matrix columns and filters until Update", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    df <- example_heatmap_matrix
+    sample_cols <- setdiff(names(df), c("gene", "pathway", "mean_expression"))
+
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(df)), {
+        session$setInputs(
+            auto.update = FALSE, update = 0, matrix.cols = sample_cols, rowname.col = "gene",
+            row_filter = "", column_filter = "", column_key = ""
+        )
+        expect_equal(ncol(heatmap_matrix()), length(sample_cols))
+
+        session$setInputs(matrix.cols = sample_cols[1:2], row_filter = 'pathway == "Immune"')
+        session$elapse(800)
+        expect_equal(ncol(heatmap_matrix()), length(sample_cols))
+        expect_equal(nrow(heatmap_matrix()), nrow(df))
+
+        session$setInputs(update = 1)
+        expect_equal(ncol(heatmap_matrix()), 2)
+        expect_equal(nrow(heatmap_matrix()), sum(df$pathway == "Immune"))
+    })
+})
+
 test_that("a column filter can reach the sample metadata", {
     skip_if_not_installed("ComplexHeatmap")
     skip_if_not_installed("InteractiveComplexHeatmap")
@@ -715,7 +741,7 @@ test_that("a column filter can reach the sample metadata", {
         ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(dat)),
         {
             session$setInputs(
-                matrix.cols = sample_cols, rowname.col = "gene",
+                auto.update = TRUE, matrix.cols = sample_cols, rowname.col = "gene",
                 row_filter = "", column_filter = "", column_key = "sample"
             )
             session$setInputs(column_filter = 'condition == "Disease"')
@@ -737,7 +763,7 @@ test_that("an invalid filter expression does not silently plot unfiltered data",
 
     shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = shiny::reactive(df)), {
         session$setInputs(
-            matrix.cols = sample_cols, rowname.col = "gene",
+            auto.update = TRUE, matrix.cols = sample_cols, rowname.col = "gene",
             row_filter = "", column_filter = "", column_key = ""
         )
         # A blocked call must raise rather than fall through to the whole matrix.

@@ -111,19 +111,26 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
         # The frame a Column Filter expression is evaluated against: one row per
         # selected matrix column, carrying the column name plus any per-sample
         # metadata. See .heatmap_column_meta().
+        #
+        # The inputs read by these reactives go through isolate_fn, as every
+        # build input does, so "Auto Update" off holds the heatmap until Update.
         column_meta <- reactive({
-            .heatmap_column_meta(column_data(), input$column_key, input$matrix.cols)
+            isolate_fn <- setup_auto_update_logic(input, params)
+            .heatmap_column_meta(
+                column_data(), isolate_fn(input$column_key), isolate_fn(input$matrix.cols)
+            )
         })
 
         # Matrix columns surviving the Column Filter, in matrix order.
         filtered_cols <- reactive({
-            cols <- input$matrix.cols
+            isolate_fn <- setup_auto_update_logic(input, params)
+            cols <- isolate_fn(input$matrix.cols)
             validate(need(
                 !is.null(cols) && length(cols) >= 1,
                 "Select at least one numeric column for the matrix."
             ))
 
-            res <- .heatmap_apply_filter(column_filter_text(), column_meta(), length(cols))
+            res <- .heatmap_apply_filter(isolate_fn(column_filter_text()), column_meta(), length(cols))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(
@@ -145,7 +152,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             df <- matrix_data()
             req(df)
 
-            res <- .heatmap_apply_filter(row_filter_text(), df, nrow(df))
+            isolate_fn <- setup_auto_update_logic(input, params)
+            res <- .heatmap_apply_filter(isolate_fn(row_filter_text()), df, nrow(df))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(
@@ -177,7 +185,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 "The selected matrix columns must all be numeric."
             ))
 
-            rn.col <- input$rowname.col
+            rn.col <- setup_auto_update_logic(input, params)(input$rowname.col)
             if (!is.null(rn.col) && nzchar(rn.col) && rn.col %in% names(df)) {
                 rownames(mat) <- make.unique(as.character(df[[rn.col]]))
             }
