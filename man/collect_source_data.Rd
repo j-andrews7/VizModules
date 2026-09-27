@@ -72,8 +72,9 @@ server <- function(input, output) {
 
     output$my_plot <- renderPlotly(plot_reactive())
     # collect_source_data() reads reactives, so it has to run inside one.
+    inputs_reactive <- reactive(reactiveValuesToList(input))
     output$download_data <- create_source_download_handler(
-        reactive(collect_source_data(plot_reactive, inputs_reactive = reactive(reactiveValuesToList(input))))
+        reactive(collect_source_data(plot_reactive, inputs_reactive = inputs_reactive))
     )
 }
 
