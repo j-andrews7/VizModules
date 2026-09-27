@@ -774,6 +774,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     y.min = if (adjustment.active) NULL else y.limits$min,
                     y.max = if (adjustment.active) NULL else y.limits$max
                 )
+            } else {
+                # Nothing was tested for this figure, so the source download must
+                # not ship the table from an earlier one.
+                last_stats_df(NULL)
             }
 
             # Highlight and label individual jitter points. Rasterized jitter is drawn

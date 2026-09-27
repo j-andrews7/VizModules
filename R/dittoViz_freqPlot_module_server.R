@@ -702,6 +702,10 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 fig <- apply_stat_annotations(fig, stat_result,
                     y.min = y.limits$min, y.max = y.limits$max
                 )
+            } else {
+                # Nothing was tested for this figure, so the source download must
+                # not ship the table from an earlier one.
+                last_stats_df(NULL)
             }
 
             # Highlight and label individual jitter points, which here are samples.

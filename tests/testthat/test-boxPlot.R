@@ -72,3 +72,23 @@ test_that("Sort X By never evaluates code", {
         }
     )
 })
+
+test_that("turning statistics off drops them from the source download", {
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics)),
+        {
+            do.call(session$setInputs, .box_inputs(stats.enabled = TRUE))
+            suppressWarnings(session$flushReact())
+            # The pair list refresh freezes stat.pairs; the mock session never
+            # echoes it back, so supply the echo by hand.
+            session$setInputs(stat.pairs = "")
+            suppressWarnings(session$flushReact())
+            expect_s3_class(suppressWarnings(session$returned())$stats, "data.frame")
+
+            session$setInputs(stats.enabled = FALSE)
+            suppressWarnings(session$flushReact())
+            expect_null(suppressWarnings(session$returned())$stats)
+        }
+    )
+})

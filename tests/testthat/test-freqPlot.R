@@ -590,6 +590,27 @@ test_that("enabled statistics add brackets drawn from the frequency table", {
     )
 })
 
+test_that("turning statistics off drops them from the source download", {
+    df <- .freq_fixture()
+
+    shiny::testServer(
+        dittoViz_freqPlotServer,
+        args = list(id = "freq", data = shiny::reactive(df)),
+        {
+            do.call(session$setInputs, .freq_inputs(stats.enabled = TRUE, stat.hide.ns = FALSE))
+            session$flushReact()
+            # The pair list refresh freezes stat.pairs; supply the echo by hand.
+            session$setInputs(stat.pairs = "")
+            session$flushReact()
+            expect_s3_class(session$returned()$stats, "data.frame")
+
+            session$setInputs(stats.enabled = FALSE)
+            session$flushReact()
+            expect_null(session$returned()$stats)
+        }
+    )
+})
+
 test_that("annotations label points by sample", {
     df <- .freq_fixture()
 
