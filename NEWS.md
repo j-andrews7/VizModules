@@ -24,8 +24,13 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * Alter `ComplexHeatmap_HeatmapApp()` default data so the column annotation, split, and filter features are usable out of the box.
 * The `linePlot` module's **Error Bars** tooltip now says what the bars actually represent (the plotted group mean plus or minus one standard deviation).
 * `safe_eval_filter()` and `validate_expression()` gained a wider shared vocabulary: `grepl`, `startsWith`, `endsWith`, `substr`, `nchar`, `toupper`, `tolower`, `trimws`, `abs`, `round`, and `xor`. All are pure, so the sandbox is unchanged. The two functions previously carried duplicate copies of the allowlist and AST walker and now share one.
+* `uniform_plotly_inputs_ui()` gained `include.shapes`. The pie/donut, radar and parallel coordinates modules turn it off, because plotly's drawing tools need cartesian axes; their shape controls did nothing, and the pie and radar modebars no longer offer the drawing buttons.
+* `collect_source_data()` now accepts `inputs_reactive` as a reactive, as documented, as well as the plain list the modules pass.
 
 ## Deprecations and Removals
+
+* Removed the built-in `nls` model backend from the scatter plot's custom model lines. An nls formula names its parameters, which the formula safety check rejects, so it could never fit.
+* The Figure Builder no longer accepts `.rds` uploads, which meant running `readRDS()` on whatever a user of a deployed app uploaded. CSV, TSV and tab-delimited TXT still work.
 
 * Removed the **Split By** input from the `BarPlot` and `SplitBarPlot` modules. plotthis returns a patchwork for `split_by`, of which `ggplotly()` only draws the last split, titled with that split's name. Use **Facet By** instead, as the other plotthis modules already do.
 * Removed the `plotthis_ViolinPlot` module - `plotthis_ViolinPlotApp()`, `plotthis_ViolinPlotInputsUI()`, `plotthis_ViolinPlotOutputUI()` and `plotthis_ViolinPlotServer()` (#358). `plotthis` rolled its own geom for this in v0.14.0, which broke the module since it didn't convert them via `ggplotly()`. More effort than it's worth to fix, since `yPlot` works well.
@@ -33,6 +38,17 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 ## Bug Fixes
 
+* **Security:** the `BoxPlot` module's **Sort X By** box was passed straight to `plotthis::BoxPlot()`, which evaluates it, so typing R code there ran it on the server. It now goes through the same expression check as every other user-typed expression, with summary functions (`mean`, `median`, `sd`, ...) allowed; anything else is ignored with a notification.
+* The source download no longer ships a stale statistics CSV after stats are turned off (`yPlot`, `freqPlot`, `BoxPlot`), and no longer writes the browser's captured plot images (up to tens of MB) into `*_ui_inputs.csv`.
+* The `dumbbellPlot` "Y variables" colouring now matches the colour picker, keeps each category's colour across facets, and gives every category a legend entry (previously only the first had one). `dumbbellPlot()` matches a named `palette.selection` by name.
+* **Reset** now:
+  * Restores the `BoxPlot` and `BarPlot` y limits for the column it resets `y.data` to. It used to measure the first numeric column, which clipped a plot whose default `y.data` was another one.
+  * Discards manually dragged legends, annotations, axis titles and colorbars, which it previously never managed to clear in any module.
+  * Returns every control to the value it started at. Several fallbacks disagreed with the UI (`stat.hide.ns`, the top and right margins, subplot spacing, and a few module-specific ones), and linePlot's tighter subplot spacing only ever reached the reset.
+* The `SplitBarPlot` axis no longer clips a long negative bar beside short positive ones, or inverts when every value is negative.
+* With **Auto Update** off, the scatter plot's fit-line controls and the heatmap's matrix columns, row names, filters and column key no longer redraw the plot before **Update**.
+* `dataFilterServer()` no longer applies the previous table's row indices to newly supplied data while DT redraws.
+* Smaller fixes: `multiColorPicker()` applies unnamed `colors` in order instead of ignoring them; `is_pure_type()` no longer errors on logical or Date columns (which broke `linePlot`); `apply_axis_title_to_annotations()` tolerates annotations without an `xanchor`; `safe_resolve_adj_fxn("neg_log10")` works from outside the package; the line-type tooltips list the names actually accepted; `parallelCoordinatesPlot()` tolerates a blank line width; the module gallery passes its `defaults` to the module servers so Reset matches the initial state.
 * A faceted `linePlot` no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel rather than just one (#357). 
   * Multi-axis `linePlot`s no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and `show.legend = FALSE` now actually hides the legend box instead of leaving an empty one.
 
