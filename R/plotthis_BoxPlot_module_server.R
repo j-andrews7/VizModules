@@ -135,19 +135,19 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
 
-            # Calculate y.max and y.min from the default selections
-            if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
-                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
-            } else {
-                max.y <- 1
-                min.y <- 0
-            }
-            # Reset numeric inputs to defaults derived from data
+            # Limits for the column y.data is being reset to. The y.data observer
+            # only recomputes them when the selection changes, which a reset to the
+            # current column does not.
+            y.range <- .calculate_range(
+                df = data(), data_col_y = default.y,
+                axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+            )
+            max.y <- if (!is.null(y.range)) y.range$max else 1
+            min.y <- if (!is.null(y.range)) y.range$min else 0
 
             # Data
             update_viz_select(session, "group.by",
@@ -156,9 +156,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            update_viz_select(session, "y.data",
-                selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
-            )
+            update_viz_select(session, "y.data", selected = default.y)
             updateMaterialSwitch(session, "show.outliers",
                 value = get_default(defaults, "show.outliers", TRUE, is.logical)
             )

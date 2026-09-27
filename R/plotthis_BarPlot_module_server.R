@@ -160,26 +160,24 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            default.x <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
+            default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
 
-            # Calculate y.max and y.min from the default selections
-            if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * y_axis_scale_factor
-            } else {
-                max.y <- 1
-            }
+            # Limits for the columns being reset to, summed per x like the y.data
+            # observer's. That observer only recomputes them when the selection
+            # changes, which a reset to the current columns does not.
+            y.range <- .calculate_range(
+                df = data(), data_col_x = default.x, data_col_y = default.y,
+                axis_scale_factor = y_axis_scale_factor, grouping = TRUE
+            )
+            max.y <- if (!is.null(y.range)) y.range$max else 1
             min.y <- 0
-            # Reset numeric inputs to defaults derived from data
 
             # Data
-            update_viz_select(session, "x.data",
-                selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
-            )
-            update_viz_select(session, "y.data",
-                selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
-            )
+            update_viz_select(session, "x.data", selected = default.x)
+            update_viz_select(session, "y.data", selected = default.y)
             update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices)
             )
@@ -267,7 +265,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 df                = data(),
                 data_col_x        = input$x.data,
                 data_col_y        = input$y.data,
-                axis_scale_factor = 1.18,
+                axis_scale_factor = y_axis_scale_factor,
                 grouping          = TRUE
             )
 
