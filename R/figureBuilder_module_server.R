@@ -251,7 +251,6 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                         txt = utils::read.delim(file$datapath,
                             stringsAsFactors = FALSE, check.names = FALSE
                         ),
-                        rds = readRDS(file$datapath),
                         stop("Unsupported file type '.", ext, "'.")
                     )
                 },
@@ -265,13 +264,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
                 return(invisible(NULL))
             }
 
-            if (!is.data.frame(df)) {
-                df <- tryCatch(as.data.frame(df, check.names = FALSE),
-                    error = function(e) NULL
-                )
-            }
-
-            if (!is.data.frame(df) || nrow(df) == 0L || ncol(df) == 0L) {
+            if (nrow(df) == 0L || ncol(df) == 0L) {
                 showNotification("File must contain a non-empty data frame.",
                     type = "error", duration = 8
                 )

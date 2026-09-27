@@ -56,7 +56,7 @@ SVG (or bundle every plot's source data, HTML plot, and statistics into one
 }
 \details{
 Datasets are supplied via \code{data_list} and seed the "Add Plot" dialog; users
-can also upload additional datasets (CSV, TSV, TXT, or RDS) at runtime. The
+can also upload additional datasets (CSV, TSV, or tab-delimited TXT) at runtime. The
 set of available plot modules is controlled by \code{module_registry}, so the app
 can be extended with custom wrapper modules without editing the package.
 

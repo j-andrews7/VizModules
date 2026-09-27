@@ -82,7 +82,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                     class = "pb-details",
                     tags$summary("Load Data"),
                     helpText(
-                        "Upload a CSV, TSV, TXT, or RDS file to make it available",
+                        "Upload a CSV, TSV, or tab-delimited TXT file to make it available",
                         "as a dataset when adding plots."
                     ),
                     splitLayout(
@@ -90,7 +90,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                             placeholder = "Defaults to the file name"
                         ),
                         fileInput(ns("pb_data_file"), "File:",
-                            accept = c(".csv", ".tsv", ".txt", ".rds", ".RDS")
+                            accept = c(".csv", ".tsv", ".txt")
                         )
                     ),
                     actionButton(ns("pb_data_add"), "Add dataset",

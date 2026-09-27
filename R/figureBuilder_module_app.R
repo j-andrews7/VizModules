@@ -8,7 +8,7 @@
 #' `.zip`).
 #'
 #' Datasets are supplied via `data_list` and seed the "Add Plot" dialog; users
-#' can also upload additional datasets (CSV, TSV, TXT, or RDS) at runtime. The
+#' can also upload additional datasets (CSV, TSV, or tab-delimited TXT) at runtime. The
 #' set of available plot modules is controlled by `module_registry`, so the app
 #' can be extended with custom wrapper modules without editing the package.
 #'
