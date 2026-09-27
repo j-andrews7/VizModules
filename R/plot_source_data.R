@@ -107,6 +107,37 @@
     intersect(unique(unlist(char_inputs, use.names = FALSE)), cols)
 }
 
+#' Drop the source download's own traffic from an input snapshot
+#'
+#' `sourceExport.js` hands the browser's photographs of a plot to the server as
+#' an input (`<output_id>_images`), so a module's `reactiveValuesToList(input)`
+#' carries every image of the last capture -- up to tens of megabytes of SVG and
+#' base64 PNG. That is transport, not a setting the plot was drawn with, and
+#' written into the archive's inputs table it would bury the table and bloat the
+#' download. Entries are recognised by the payload's shape (a `nonce` and an
+#' `images` list) rather than by name alone, so an app input that merely ends in
+#' `_images` is kept.
+#'
+#' @param inputs A named list of UI input values, or `NULL`.
+#'
+#' @return `inputs` without any image-capture payloads.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_source_input_snapshot
+#' @keywords internal
+.source_input_snapshot <- function(inputs) {
+    if (is.null(inputs) || length(inputs) == 0) {
+        return(inputs)
+    }
+    is_capture <- vapply(seq_along(inputs), function(i) {
+        x <- inputs[[i]]
+        grepl("_images$", names(inputs)[i]) && is.list(x) &&
+            all(c("nonce", "images") %in% names(x))
+    }, logical(1))
+    inputs[!is_capture]
+}
+
+
 #' Collect plot and source data for download
 #'
 #' Collects the plot object, its underlying data, statistical testing details (if applied),
@@ -191,6 +222,7 @@ collect_source_data <- function(plot_reactive,
         message("ERROR: ", e$message)
         NULL
     })
+    ui_inputs <- .source_input_snapshot(ui_inputs)
 
     plotted_vars <- intersect(
         names(full_data),

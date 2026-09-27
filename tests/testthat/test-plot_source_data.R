@@ -106,6 +106,33 @@ test_that("collect_source_data scopes parallelCoordinatesPlot data to the select
     expect_equal(nrow(result$plot_data), nrow(mtcars))
 })
 
+test_that("collect_source_data keeps the image capture out of the inputs table", {
+    fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+    capture <- list(
+        nonce = "123-abc",
+        images = list(list(key = "Data", svg = "<svg/>", png = strrep("A", 5000)))
+    )
+
+    result <- collect_source_data(
+        plot_reactive = function() fig,
+        inputs_reactive = list(
+            x.by = "wt", y.by = "mpg",
+            # What sourceExport.js leaves in a module's input after a click.
+            download.source_images = capture,
+            # An app input that only shares the suffix is a real setting.
+            reference_images = "on"
+        )
+    )
+
+    expect_setequal(result$inputs$names, c("x.by", "y.by", "reference_images"))
+    expect_false(any(grepl("AAAA", result$inputs$values, fixed = TRUE)))
+})
+
+test_that(".source_input_snapshot passes empty snapshots through", {
+    expect_null(.source_input_snapshot(NULL))
+    expect_equal(.source_input_snapshot(list()), list())
+})
+
 
 # --- Images captured in the browser -------------------------------------------
 

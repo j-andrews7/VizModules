@@ -658,7 +658,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
         # export the underlying matrix and the UI input values instead.
         plot_source_reactive <- reactive({
             mat <- heatmap_matrix()
-            inputs <- isolate(AllInputs())
+            inputs <- .source_input_snapshot(isolate(AllInputs()))
             input_df <- data.frame(
                 names = names(inputs),
                 values = vapply(inputs, function(v) {
