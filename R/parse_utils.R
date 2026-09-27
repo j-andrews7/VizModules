@@ -978,7 +978,10 @@ safe_resolve_adj_fxn <- function(fn_name) {
         return(NULL)
     }
 
-    match.fun(fn_name)
+    # Looked up from this package's namespace, not the caller's frame (which is
+    # what match.fun() searches): neg_log10 is not exported, so a caller outside
+    # the package could not otherwise resolve it.
+    get(fn_name, envir = asNamespace("VizModules"), mode = "function")
 }
 
 #' Validate a user-provided expression string for safety

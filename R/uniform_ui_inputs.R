@@ -103,7 +103,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "hline.linetypes", "dashed")
             ),
-            "Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(
@@ -140,7 +140,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "vline.linetypes", "dashed")
             ),
-            "Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(
@@ -183,7 +183,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "abline.linetypes", "dashed")
             ),
-            "Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(

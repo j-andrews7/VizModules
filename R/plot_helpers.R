@@ -867,13 +867,14 @@ empty_plot <- function(text = NULL, plotly = FALSE) {
 #'
 #' This function validates that a vector of column names from a data frame contains
 #' columns of only one data type category: either all numeric OR all categorical
-#' (factor/character). Returns `FALSE` for mixed numeric + categorical columns.
+#' (anything non-numeric: factor, character, logical, Date, ...). Returns `FALSE` for mixed
+#' numeric + categorical columns.
 #' Single columns always return `TRUE`. Used for Shiny plotting module input validation.
 #'
 #' @param inputs Character vector of column names to validate.
 #' @param d Data frame containing the columns specified in `inputs`.
 #'
-#' @return Logical scalar: `TRUE` if all numeric OR all categorical (factor/character);
+#' @return Logical scalar: `TRUE` if all numeric OR all categorical (non-numeric);
 #'   `FALSE` if mixed numeric + categorical/factor detected.
 #'
 #' @author Jacob Martin
@@ -886,7 +887,6 @@ empty_plot <- function(text = NULL, plotly = FALSE) {
 #' is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 #'
 #' @rdname is_pure_type
-#' @seealso [base::for()]
 #' @export
 is_pure_type <- function(inputs, d) {
     cols <- inputs[nzchar(inputs) & inputs %in% names(d)]
@@ -896,25 +896,11 @@ is_pure_type <- function(inputs, d) {
         return(TRUE)
     }
 
-    # Classify first column to establish reference type
-    first_col <- d[[cols[1]]]
-    ref_type <- if (is.numeric(first_col)) {
-        "numeric"
-    } else if (is.factor(first_col) || is.character(first_col)) "categorical"
-
-    # Check all remaining columns match reference
-    for (i in 2:length(cols)) {
-        col <- d[[cols[i]]]
-        col_type <- if (is.numeric(col)) {
-            "numeric"
-        } else if (is.factor(col) || is.character(col)) "categorical"
-
-        if (col_type != ref_type) {
-            return(FALSE)
-        }
-    }
-
-    TRUE
+    # Anything non-numeric (factor, character, logical, Date, ...) is plotted
+    # as a category, so that is how it is classified here. Leaving those types
+    # unclassified made the comparison below `logical(0)` and errored.
+    types <- vapply(cols, function(nm) is.numeric(d[[nm]]), logical(1))
+    all(types) || !any(types)
 }
 
 

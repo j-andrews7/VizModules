@@ -494,7 +494,9 @@ apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
         if (is_axis) {
             fig$x$layout$annotations[[i]]$font <- axis_font
         }
-        is_facet_title <- is.null(ann$annotationType) && ann$xanchor == "center"
+        # identical(): an annotation without an xanchor is not a facet title,
+        # and `NULL == "center"` would make this condition an error.
+        is_facet_title <- is.null(ann$annotationType) && identical(ann$xanchor, "center")
         if (is_facet_title){
             fig$x$layout$annotations[[i]]$font <- facet_font
         }

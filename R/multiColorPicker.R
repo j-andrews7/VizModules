@@ -498,7 +498,11 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
         return(character(0))
     }
 
-    vapply(
+    # USE.NAMES = FALSE: by default vapply() names an unnamed character input
+    # after its own values, which made every unnamed colour vector look named
+    # (so multiColorPicker() ignored positional `colors`). Keep the input's
+    # names, if any, and nothing else.
+    out <- vapply(
         x,
         function(val) {
             if (is.null(val) || is.na(val) || val == "") {
@@ -535,8 +539,11 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 
             toupper(val)
         },
-        character(1)
+        character(1),
+        USE.NAMES = FALSE
     )
+    names(out) <- names(x)
+    out
 }
 
 #' Null-or-empty coalescing operator

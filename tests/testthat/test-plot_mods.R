@@ -1861,3 +1861,32 @@ test_that(".split_bar_range clears the longest bar on either side", {
     expect_null(.split_bar_range(df, "term", "score"))
     expect_null(.split_bar_range(df, "", "term"))
 })
+
+test_that("is_pure_type treats every non-numeric column as categorical", {
+    df <- data.frame(
+        num = 1:3, lgl = c(TRUE, FALSE, TRUE), chr = c("a", "b", "c"),
+        date = as.Date("2024-01-01") + 0:2
+    )
+    expect_true(is_pure_type(c("lgl", "chr"), df))
+    expect_true(is_pure_type(c("date", "lgl"), df))
+    expect_false(is_pure_type(c("num", "lgl"), df))
+    expect_false(is_pure_type(c("date", "num"), df))
+})
+
+test_that("apply_axis_title_to_annotations tolerates an annotation with no xanchor", {
+    fig <- plotly::plotly_build(plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers"))
+    fig$x$layout$annotations <- list(list(x = 0.5, y = 1, xref = "paper", yref = "paper", text = "note"))
+    input <- list(
+        axis.title.font.size = 12, axis.title.font.family = "Arial", axis.title.font.color = "black",
+        facet.title.font.size = 14, facet.title.font.family = "Arial", facet.title.font.color = "black"
+    )
+    out <- apply_axis_title_to_annotations(fig, input, identity)
+    expect_null(out$x$layout$annotations[[1]]$font)
+})
+
+test_that("parallelCoordinatesPlot tolerates a blank line width", {
+    expect_s3_class(
+        parallelCoordinatesPlot(mtcars, dimensions = c("mpg", "hp"), color.by = "cyl", line.width = NA),
+        "plotly"
+    )
+})

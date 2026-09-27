@@ -128,6 +128,19 @@ test_that("safe_eval_filter: numeric literal comparison", {
 
 # ---- safe_resolve_adj_fxn ----
 
+test_that("safe_resolve_adj_fxn resolves the unexported neg_log10 for any caller", {
+    # A caller whose frame cannot see the package's internals, as user code
+    # calling the exported function cannot. The function object is inlined so
+    # the call does not depend on finding it by name from there.
+    caller <- eval(
+        bquote(function() .(safe_resolve_adj_fxn)("neg_log10")),
+        envir = new.env(parent = baseenv())
+    )
+    fn <- caller()
+    expect_true(is.function(fn))
+    expect_equal(fn(100), -2)
+})
+
 test_that("safe_resolve_adj_fxn: resolves log2", {
     fn <- safe_resolve_adj_fxn("log2")
     expect_identical(fn, log2)
