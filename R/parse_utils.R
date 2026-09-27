@@ -752,6 +752,28 @@ setup_auto_update_logic <- function(input, params = NULL) {
 }
 
 
+#' The call names a user-typed sort key is allowed to contain
+#'
+#' A sort key (the BoxPlot module's "Sort X By", handed to
+#' [plotthis::BoxPlot()]'s `sort_x`) is evaluated once per x group inside
+#' `dplyr::summarise()`, so it needs the summary functions that make it useful
+#' -- `mean(salary)`, `-median(salary)` -- on top of the ordinary expression
+#' vocabulary in [.expr_allowed_calls()]. Every addition is pure, which is the
+#' bar the shared list sets.
+#'
+#' @return A character vector of permitted call names.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_sort_allowed_calls
+#' @keywords internal
+.sort_allowed_calls <- function() {
+    c(
+        .expr_allowed_calls(),
+        "mean", "median", "min", "max", "sum", "sd", "var", "length"
+    )
+}
+
+
 #' Has a Shiny input reported an actual value?
 #'
 #' A Shiny input that has not reported yet is `NULL`, and every obvious test
@@ -985,7 +1007,29 @@ safe_resolve_adj_fxn <- function(fn_name) {
 #' validate_expression("system('echo pwned')", names(iris)) # NULL + warning
 #' validate_expression("", names(iris)) # NULL
 validate_expression <- function(expr_text, col_names) {
-    if (is.null(expr_text) || !nzchar(trimws(expr_text))) {
+    .validate_expression_with(expr_text, col_names, .expr_allowed_calls())
+}
+
+
+#' Validate an expression string against a given call vocabulary
+#'
+#' The body of [validate_expression()], parameterised on the allowlist so an
+#' expression with a different job (a sort key, say) can be checked by the same
+#' parser and walker rather than a second copy of them.
+#'
+#' @param expr_text Character string containing the expression to validate.
+#' @param col_names Character vector of allowed column/symbol names.
+#' @param allowed Character vector of permitted call names.
+#'
+#' @return The original `expr_text` string if safe, or `NULL` (with a warning
+#'   for anything that was not simply empty).
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_validate_expression_with
+#' @keywords internal
+.validate_expression_with <- function(expr_text, col_names, allowed) {
+    if (is.null(expr_text) || length(expr_text) != 1L || is.na(expr_text) ||
+        !nzchar(trimws(expr_text))) {
         return(NULL)
     }
 
@@ -1005,10 +1049,9 @@ validate_expression <- function(expr_text, col_names) {
         return(NULL)
     }
 
-    # Allowlist and walker shared with safe_eval_filter() -- see
-    # .expr_allowed_calls() / .expr_check_node().
+    # Walker shared with safe_eval_filter() -- see .expr_check_node().
     expr <- parsed[[1L]]
-    if (!.expr_check_node(expr, col_names)) {
+    if (!.expr_check_node(expr, col_names, allowed)) {
         warning(
             "Expression contains disallowed operations. ",
             "Only column references, comparisons, and logical operators are permitted."

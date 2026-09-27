@@ -164,7 +164,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             # Adjustments
-            update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            updateTextInput(session, "sort_x", value = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
             reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
@@ -279,6 +279,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         observeEvent(input$facet.by, {
             .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            # Sorting x is not applied to a faceted plot, so clear it rather than
+            # leave a key on screen that does nothing.
+            if (.nz_value(input$facet.by)) {
+                updateTextInput(session, "sort_x", value = "")
+            }
         })
 
         generate_BoxPlot <- reactive({
@@ -290,7 +295,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Facet By Null option Upstream:
             facet.by <- NULL
             if (.nz_value(isolate_fn(input$facet.by))) {
-                update_viz_select(session, "sort_x", selected = "") # Makes sure order x is not active when facet by is active
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -298,9 +302,26 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (.nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
+
+            # plotthis evaluates sort_x with rlang::parse_expr() inside summarise(),
+            # so the typed text is code, and it has to clear the same AST check as
+            # every other user expression before it gets anywhere near that. Sorting
+            # is not applied while faceted (see the facet.by observer above).
             sort.x <- NULL
-            if (.nz_value(isolate_fn(input$sort_x))) {
-                sort.x <- isolate_fn(input$sort_x)
+            sort.text <- isolate_fn(input$sort_x)
+            if (is.null(facet.by) && .nz_value(sort.text) && nzchar(trimws(sort.text))) {
+                sort.x <- suppressWarnings(
+                    .validate_expression_with(sort.text, names(data()), .sort_allowed_calls())
+                )
+                if (is.null(sort.x)) {
+                    showNotification(
+                        paste0(
+                            "'Sort X By' was ignored. Use data columns with basic math and ",
+                            "summary functions only (e.g. 'mean(", isolate_fn(input$y.data), ")')."
+                        ),
+                        type = "warning"
+                    )
+                }
             }
             highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 

@@ -308,6 +308,48 @@ test_that("validate_expression: does not evaluate the expression", {
 })
 
 
+# ---- Sort keys (.sort_allowed_calls, the BoxPlot module's "Sort X By") ----
+#
+# plotthis::BoxPlot() runs sort_x through rlang::parse_expr() inside
+# summarise(), so the text a user types there is code.
+
+test_that("sort keys: summary functions over data columns are accepted", {
+    cols <- names(test_df)
+    for (expr in c("mean(y)", "-median(y)", "max(y) - min(y)", "sum(x * y) / length(y)", "sd(y)")) {
+        expect_identical(.validate_expression_with(expr, cols, .sort_allowed_calls()), expr)
+    }
+})
+
+test_that("sort keys: code execution is rejected", {
+    cols <- names(test_df)
+    for (expr in c(
+        "system('echo pwned')",
+        "length(cat('pwned'))",
+        "mean(y); system('echo pwned')",
+        "base::mean(y)",
+        "mean(get('y'))",
+        "mean(unknown_col)"
+    )) {
+        expect_warning(
+            res <- .validate_expression_with(expr, cols, .sort_allowed_calls()),
+            info = expr
+        )
+        expect_null(res, info = expr)
+    }
+})
+
+test_that("sort keys: the summary vocabulary stays out of row filters", {
+    # mean() and friends are fine for a per-group sort key but meaningless in a
+    # row filter, so they are added for sort keys only.
+    expect_false("mean" %in% .expr_allowed_calls())
+    expect_warning(expect_null(validate_expression("y > mean(y)", names(test_df))))
+})
+
+test_that("sort keys: the vocabulary is a superset of the shared one", {
+    expect_true(all(.expr_allowed_calls() %in% .sort_allowed_calls()))
+})
+
+
 # ---- Shared allowlist / walker (.expr_allowed_calls, .expr_check_node) ----
 #
 # safe_eval_filter() and validate_expression() used to carry verbatim copies of
