@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `dittoViz_scatterPlot` module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, `loess`, and `nls`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
+The `dittoViz_scatterPlot` module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, and `loess`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
 
 ## How It Works
 
@@ -81,7 +81,7 @@ Unlike most `defaults` entries, `custom.models` cannot be supplied as a `reactiv
 
 ## Adding a Custom Model Backend
 
-The built-in types (`lm`, `glm`, `loess`, `nls`) are registered automatically. To add support for another modelling package, call `register_model_backend()` before the app runs.
+The built-in types (`lm`, `glm`, `loess`) are registered automatically. To add support for another modelling package, call `register_model_backend()` before the app runs.
 
 ### Backend Spec
 

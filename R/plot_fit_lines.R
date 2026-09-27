@@ -533,7 +533,7 @@
 #'   against which the model is fitted.
 #' @param fit_fn_name Character string naming the model backend. Must be a name
 #'   registered via [register_model_backend()] (e.g. `"lm"`, `"glm"`,
-#'   `"loess"`, `"nls"`, or any user-registered backend).
+#'   `"loess"`, or any user-registered backend).
 #' @param ... Extra arguments forwarded to the backend's `fit` function. These
 #'   typically come from additional fields in the [multiDynamicInput()] row
 #'   (e.g. `drc_fct = "LL.4"` for a drc backend).
@@ -610,8 +610,8 @@
 #' **backend** is a small named list that tells the pipeline how to fit a model
 #' and how to predict from it.
 #'
-#' Backends are stored in a package-level environment. The four built-in types
-#' (`lm`, `glm`, `loess`, `nls`) are registered automatically when the package
+#' Backends are stored in a package-level environment. The three built-in types
+#' (`lm`, `glm`, `loess`) are registered automatically when the package
 #' loads. Users add new ones with [register_model_backend()].
 #'
 #' @name model_backends
@@ -740,7 +740,7 @@ get_model_backend <- function(name) {
 #' List registered model backends
 #'
 #' Returns the names of all currently registered model backends. The built-in
-#' backends (`lm`, `glm`, `loess`, `nls`) are always present; any backends
+#' backends (`lm`, `glm`, `loess`) are always present; any backends
 #' added via [register_model_backend()] are included as well.
 #'
 #' @return A sorted character vector of backend names.
@@ -803,7 +803,7 @@ build_model_row_spec <- function() {
 
 
 #'
-#' Called from `.onLoad()` to seed the registry with the four standard backends.
+#' Called from `.onLoad()` to seed the registry with the three standard backends.
 #'
 #' @return Invisibly returns `NULL`.
 #'
@@ -829,11 +829,9 @@ build_model_row_spec <- function() {
         validate_classes = "loess"
     ))
 
-    register_model_backend("nls", list(
-        fit = function(formula, data, ...) stats::nls(formula, data = data),
-        predict = function(model, newdata) as.numeric(stats::predict(model, newdata = newdata)),
-        validate_classes = "nls"
-    ))
+    # No built-in nls backend: an nls formula names its parameters (`a`, `b` in
+    # `y ~ a * exp(b * x)`), which the formula check rejects as unknown symbols,
+    # and it needs start values the row has nowhere to supply.
 
     invisible(NULL)
 }

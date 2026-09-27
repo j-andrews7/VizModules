@@ -1,7 +1,7 @@
 # Custom model-line backends
 
 The `dittoViz_scatterPlot` module can overlay fitted model lines. The built-in types
-(`lm`, `glm`, `loess`, `nls`) are registered at load time; `register_model_backend()`
+(`lm`, `glm`, `loess`) are registered at load time; `register_model_backend()`
 adds more. Call it **before** the app runs.
 
 ## Backend spec
