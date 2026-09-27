@@ -347,7 +347,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.legend.x",
-                value = get_default(defaults, "size.legend.x", 1.04, is.numeric)
+                value = get_default(defaults, "size.legend.x", 1.03, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
                 value = get_default(defaults, "size.legend.y", 0.35, is.numeric)

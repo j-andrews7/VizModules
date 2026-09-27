@@ -734,11 +734,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
 #' @keywords internal
 .uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
+    spacing <- .subplot_spacing_defaults(defaults)
 
     tagList(
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = get_default(defaults, "subplot.margin.x", 0.03, is.numeric),
+                value = spacing$x,
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -749,7 +750,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
         ),
         tipify(
             numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
+                value = spacing$y,
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -758,6 +759,29 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             ),
             placement = "top", options = tip_opts
         )
+    )
+}
+
+
+#' Resolve the subplot spacing defaults
+#'
+#' Shared by [.uniform_subplot_spacing_inputs_ui()] and [reset_plotly_inputs()]
+#' so the controls start and reset to the same values. A `subplot.margin` entry
+#' sets both directions at once (linePlot uses it for its tighter default);
+#' `subplot.margin.x`/`subplot.margin.y` override it per direction.
+#'
+#' @param defaults A named list of default values, or `NULL`.
+#'
+#' @return A list with numeric `x` and `y`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_subplot_spacing_defaults
+#' @keywords internal
+.subplot_spacing_defaults <- function(defaults) {
+    both <- get_default(defaults, "subplot.margin", NULL, is.numeric)
+    list(
+        x = get_default(defaults, "subplot.margin.x", both %||% 0.03, is.numeric),
+        y = get_default(defaults, "subplot.margin.y", both %||% 0.1, is.numeric)
     )
 }
 

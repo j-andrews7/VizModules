@@ -235,3 +235,70 @@ test_that("BarPlot and SplitBarPlot no longer offer a Split By input", {
     expect_true(grepl("bar-facet.by", bar, fixed = TRUE))
     expect_true(grepl("sb-facet.by", splitbar, fixed = TRUE))
 })
+
+# ---- Reset returns controls to where they started ----------------------------
+
+# The value a rendered numeric/checkbox control starts at, keyed by input id.
+.ui_start_values <- function(ui, ids) {
+    html <- as.character(htmltools::renderTags(ui)$html)
+    stats::setNames(lapply(ids, function(id) {
+        tag <- regmatches(html, regexpr(sprintf('<input id="%s"[^>]*>', gsub(".", "\\.", id, fixed = TRUE)), html))
+        if (length(tag) == 0) {
+            return(NULL)
+        }
+        if (grepl('type="checkbox"', tag, fixed = TRUE)) {
+            return(grepl("checked", tag, fixed = TRUE))
+        }
+        as.numeric(sub('.*value="([^"]*)".*', "\\1", tag))
+    }), ids)
+}
+
+# What a reset helper sends to each control, keyed by input id.
+.reset_sent_values <- function(reset_fn, defaults = NULL) {
+    sent <- list()
+    # The update*Input() helpers insist on a session-classed object.
+    session <- new.env()
+    session$input <- list()
+    # updateNumericInput() sends numbers as formatted strings.
+    session$sendInputMessage <- function(inputId, message) {
+        v <- message$value
+        num <- suppressWarnings(as.numeric(v))
+        sent[[inputId]] <<- if (is.character(v) && length(v) == 1 && !is.na(num)) num else v
+    }
+    class(session) <- "ShinySession"
+    reset_fn(session, defaults)
+    sent
+}
+
+test_that("reset_plotly_inputs() restores the values uniform_plotly_inputs_ui() starts at", {
+    ids <- c("margin.t", "margin.b", "margin.l", "margin.r", "shape.line.width", "shape.opacity")
+    for (defaults in list(NULL, list(margin.t = 12, margin.r = 34))) {
+        start <- .ui_start_values(uniform_plotly_inputs_ui(identity, defaults), ids)
+        sent <- .reset_sent_values(reset_plotly_inputs, defaults)
+        for (id in ids) {
+            expect_equal(sent[[id]], start[[id]], info = id)
+        }
+    }
+})
+
+test_that("subplot spacing starts and resets to the same values, honouring subplot.margin", {
+    ids <- c("subplot.margin.x", "subplot.margin.y")
+    for (defaults in list(NULL, list(subplot.margin = 0.05), list(subplot.margin = 0.05, subplot.margin.y = 0.2))) {
+        start <- .ui_start_values(.uniform_subplot_spacing_inputs_ui(identity, defaults), ids)
+        sent <- .reset_sent_values(reset_plotly_inputs, defaults)
+        for (id in ids) {
+            expect_equal(sent[[id]], start[[id]], info = paste(id, format(defaults)))
+        }
+    }
+    expect_equal(.subplot_spacing_defaults(list(subplot.margin = 0.05)), list(x = 0.05, y = 0.05))
+})
+
+test_that(".reset_stats_inputs() restores the values the Stats tab starts at", {
+    ids <- c("stats.enabled", "stat.hide.ns", "stat.paired", "stat.per.facet", "stat.sig.threshold",
+        "stat.line.width", "stat.step.increase", "stat.text.bump", "stat.bracket.inset")
+    start <- .ui_start_values(.uniform_stats_inputs_ui(identity), ids)
+    sent <- .reset_sent_values(.reset_stats_inputs)
+    for (id in ids) {
+        expect_equal(sent[[id]], start[[id]], info = id)
+    }
+})

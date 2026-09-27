@@ -171,7 +171,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 selected = get_default(defaults, "tick.font.family", "Arial")
             )
             updateNumericInput(session, "title.font.size",
-                value = get_default(defaults, "title.font.size", 16, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
             update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial")

@@ -55,7 +55,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         edit_store <- setup_manual_edits(input, session, plot_source)
 
         if (is.null(defaults)) defaults <- list()
-        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 70
+        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
         # Reset functionality
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])

@@ -135,7 +135,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
     update_viz_select(session, "stat.p.adjust", selected = get_default(defaults, "stat.p.adjust", "holm"))
     update_viz_select(session, "stat.display", selected = get_default(defaults, "stat.display", "p.adj"))
     updateNumericInput(session, "stat.sig.threshold", value = get_default(defaults, "stat.sig.threshold", 0.05, is.numeric))
-    updateMaterialSwitch(session, "stat.hide.ns", value = get_default(defaults, "stat.hide.ns", FALSE, is.logical))
+    updateMaterialSwitch(session, "stat.hide.ns", value = get_default(defaults, "stat.hide.ns", TRUE, is.logical))
     updateMaterialSwitch(session, "stat.paired", value = get_default(defaults, "stat.paired", FALSE, is.logical))
     update_viz_select(session, "stat.pairs", selected = character(0))
     updateColourInput(session, "stat.line.color", value = get_default(defaults, "stat.line.color", "#000000"))
@@ -173,15 +173,15 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' }
 reset_plotly_inputs <- function(session, defaults = NULL) {
     update_viz_select(session, "download.format", selected = get_default(defaults, "download.format", "svg"))
-    updateNumericInput(session, "margin.t", value = get_default(defaults, "margin.t", 100, is.numeric))
+    # Fallbacks match uniform_plotly_inputs_ui(), so Reset returns to where the
+    # controls started.
+    updateNumericInput(session, "margin.t", value = get_default(defaults, "margin.t", 70, is.numeric))
     updateNumericInput(session, "margin.b", value = get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = get_default(defaults, "margin.l", 70, is.numeric))
-    updateNumericInput(session, "margin.r", value = get_default(defaults, "margin.r", 70, is.numeric))
-    subplot_margin_default <- get_default(defaults, "subplot.margin", 0.1, is.numeric)
-    updateNumericInput(session, "subplot.margin.x",
-        value = get_default(defaults, "subplot.margin.x", subplot_margin_default, is.numeric))
-    updateNumericInput(session, "subplot.margin.y",
-        value = get_default(defaults, "subplot.margin.y", subplot_margin_default, is.numeric))
+    updateNumericInput(session, "margin.r", value = get_default(defaults, "margin.r", 90, is.numeric))
+    spacing <- .subplot_spacing_defaults(defaults)
+    updateNumericInput(session, "subplot.margin.x", value = spacing$x)
+    updateNumericInput(session, "subplot.margin.y", value = spacing$y)
     updateColourInput(session, "shape.fill", value = get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))
     updateColourInput(session, "shape.line.color", value = get_default(defaults, "shape.line.color", "black"))
     updateNumericInput(session, "shape.line.width", value = get_default(defaults, "shape.line.width", 4, is.numeric))
