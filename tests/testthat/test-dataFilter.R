@@ -154,3 +154,27 @@ test_that("dataFilterServer leaves every column visible by default", {
         }
     )
 })
+
+test_that("dataFilterServer never applies a previous table's rows to new data", {
+    data_val <- shiny::reactiveVal(iris)
+
+    shiny::testServer(
+        dataFilterServer,
+        args = list(data = data_val),
+        {
+            session$setInputs(table_rows_all = seq_len(nrow(iris)))
+            expect_equal(nrow(session$returned()), nrow(iris))
+
+            # A smaller dataset arrives before DT has redrawn and reported its rows.
+            data_val(mtcars)
+            session$flushReact()
+            out <- session$returned()
+            expect_lte(nrow(out), nrow(mtcars))
+            expect_false(anyNA(out$mpg))
+
+            # Once DT reports the new table's rows, they apply as usual.
+            session$setInputs(table_rows_all = 1:4)
+            expect_equal(rownames(session$returned()), rownames(mtcars)[1:4])
+        }
+    )
+})
