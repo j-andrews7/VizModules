@@ -220,11 +220,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
 
-            # Calculate x.max and x.min from the default selections
-            default_y_col <- if (length(num.choices) >= 2) num.choices[2] else NULL
-            default_x_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
-            default_group_col <- if (length(char.choices) >= 2) char.choices[2] else NULL
-
+            # Limits for the current columns. If Reset changes them, the column
+            # observer below recomputes the limits once the new selection lands.
             x_range <- axis_range()
             if (!is.null(x_range)) {
                 min.x <- -x_range$max
@@ -262,7 +259,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             )
 
             # Aesthetics
-            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
             update_viz_select(session, "alpha.by",
                 selected = get_default(defaults, "alpha.by", "", function(x) x == "" || x %in% char.choices)
             )
@@ -272,7 +268,6 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             updateTextInput(session, "alpha.name", value = get_default(defaults, "alpha.name", ""))
             updateMaterialSwitch(session, "palreverse", value = get_default(defaults, "palreverse", FALSE, is.logical))
             updateNumericInput(session, "bar.height", value = get_default(defaults, "bar.height", 0.9, is.numeric))
-            updateNumericInput(session, "line.height", value = get_default(defaults, "line.height", 0.5, is.numeric))
             updateMaterialSwitch(session, "label.on.y.axis",
                 value = get_default(defaults, "label.on.y.axis", FALSE, is.logical)
             )

@@ -254,14 +254,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             req(input$y.data %in% names(data()))
             req(input$x.data %in% names(data()))
 
-            group_by_val <- if (.nz_value(input$group.by)) input$group.by else NULL
-            fill_by_val <- if (.nz_value(input$fill.by)) input$fill.by else NULL
-
-            # Determine if stacking is happening:
-            # Stacked when group.by is numeric OR fill.by is numeric
-            group_is_numeric <- !is.null(group_by_val) && group_by_val %in% names(data()) && is.numeric(data()[[group_by_val]])
-            fill_is_numeric <- !is.null(fill_by_val) && fill_by_val %in% names(data()) && is.numeric(data()[[fill_by_val]])
-
+            # Summed per x, since bars sharing an x stack.
             y_range <- .calculate_range(
                 df                = data(),
                 data_col_x        = input$x.data,

@@ -16,7 +16,6 @@
 #' @details Background traces (show.others) are identified by checking for:
 #'   - name field containing "show.others"
 #'   - legendgroup field containing "show.others"
-#'   - Single text element (this check is REMOVED as it's unreliable)
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_should_include_trace

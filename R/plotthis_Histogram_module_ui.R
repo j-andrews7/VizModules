@@ -147,9 +147,6 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
 
     selected <- list(
         "x", "group_by", "bins", "binwidth",

@@ -23,18 +23,14 @@
   const rowsContainer = (el) => el.querySelector(".mdi-rows");
   const templateEl = (el) => el.querySelector(".mdi-row-template");
 
-  // Read a single field's value by deferring to its registered Shiny binding,
-  // so any properly-registered input type reports correctly.
+  // Read a single field's value straight off its form control: a checkbox
+  // reports its checked state, everything else its string value (so numeric
+  // fields arrive as strings and the server converts them).
   const readField = (fieldEl) => {
     const bound = fieldEl.querySelector(".shiny-bound-input");
     const target = bound || fieldEl.querySelector("input, select, textarea");
     if (!target) return null;
 
-    if (target.shinyInputBinding && typeof target.shinyInputBinding.getValue === "function") {
-      try {
-        return target.shinyInputBinding.getValue(target);
-      } catch (e) { /* fall through */ }
-    }
     if (target.type === "checkbox") return target.checked;
     return target.value;
   };

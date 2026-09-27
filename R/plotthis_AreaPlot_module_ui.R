@@ -135,9 +135,6 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
 
     selected <- list(

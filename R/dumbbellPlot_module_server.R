@@ -21,7 +21,7 @@
 #' @import plotly
 #' @importFrom stats na.omit
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide click delay
+#' @importFrom shinyjs hide delay
 #'
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
@@ -173,9 +173,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             updateColourInput(session, "line.colour",
                 value = get_default(defaults, "line.colour", "gray30")
             )
-
-            click("reset_palette")
-
 
             # Axes
             reset_axes_inputs(session, defaults)

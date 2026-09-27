@@ -181,7 +181,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateColourInput(session, "pt.color",
                 value = get_default(defaults, "pt.color", "#000000")
             )
-            updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
 
             # Annotations
             updateTextInput(session, "highlight", value = get_default(defaults, "highlight", ""))
@@ -342,12 +341,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
-            # Fill By colour grading
-            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
-            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            fill.by <- NULL
-            if (!is.null(group.by) && group.by %in% num.choices) {
-                fill.by <- group.by
+            # A numeric group.by is not a nesting (the UI only offers categorical
+            # columns, but a default can name one); ignore it, as the stats do.
+            if (!is.null(group.by) && is.numeric(data()[[group.by]])) {
                 group.by <- NULL
             }
             p <- BoxPlot(
@@ -365,7 +361,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 pt_alpha = isolate_fn(input$pt.alpha),
                 jitter_width = isolate_fn(input$jitter.width),
                 pt_color = isolate_fn(input$pt.color),
-                alpha = isolate_fn(input$alpha),
                 palcolor = palcolor_arg,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),

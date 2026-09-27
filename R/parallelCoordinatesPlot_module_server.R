@@ -20,7 +20,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide show click delay
+#' @importFrom shinyjs hide show delay
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotApp()]
@@ -182,8 +182,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             updateColourInput(session, "bgcolor",
                 value = get_default(defaults, "bgcolor", "#FFFFFF")
             )
-
-            click("reset_palette")
 
             # Group colors
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)

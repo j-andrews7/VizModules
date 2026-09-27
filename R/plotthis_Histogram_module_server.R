@@ -176,7 +176,6 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
             updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
             updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 1, is.numeric))
-            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
             update_viz_select(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))

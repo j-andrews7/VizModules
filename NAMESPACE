@@ -263,7 +263,6 @@ importFrom(shinyWidgets,
 )
 importFrom(shinyjqui,jqui_resizable)
 importFrom(shinyjs,
-  click,
   delay,
   hide,
   runjs,
