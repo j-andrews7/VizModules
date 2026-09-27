@@ -61,7 +61,11 @@ If 1 value: creates single dot plot. If 2 values: creates dumbbell plot with con
 \item{colour.by}{Character, how to color the markers. Options: "X variables" (different colors for each x variable)
 or "Y variables" (different colors for each y category). Default: "X variables".}
 
-\item{palette.selection}{Character vector of hex colors for marker colors.}
+\item{palette.selection}{Character vector of hex colors for marker colors. A named vector
+is matched by name to the x variables (\code{colour.by = "X variables"}) or the y categories
+(\code{"Y variables"}); an unnamed one is assigned in order, to the x variables as given or to
+the y categories in their order of appearance in \code{data}. Either way a category keeps its
+colour in every facet.}
 
 \item{show.legend}{Logical, whether to display the legend. Default: TRUE.}
 
