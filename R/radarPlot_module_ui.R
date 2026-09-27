@@ -270,7 +270,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 value = get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults, include.shapes = FALSE)
     )
 
     organize_inputs(

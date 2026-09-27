@@ -189,7 +189,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 value = get_default(defaults, "title.font.color", "black")
             ), documentParameters$title.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults, include.shapes = FALSE)
     )
 
     organize_inputs(

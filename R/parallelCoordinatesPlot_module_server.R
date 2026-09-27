@@ -247,7 +247,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

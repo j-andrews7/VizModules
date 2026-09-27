@@ -302,3 +302,25 @@ test_that(".reset_stats_inputs() restores the values the Stats tab starts at", {
         expect_equal(sent[[id]], start[[id]], info = id)
     }
 })
+
+test_that("shape-drawing controls can be left out, and are for plots without cartesian axes", {
+    shape_ids <- c("shape.fill", "shape.line.color", "shape.line.width", "shape.linetype", "shape.opacity")
+    html_of <- function(ui) as.character(htmltools::renderTags(ui)$html)
+
+    with_shapes <- html_of(uniform_plotly_inputs_ui(identity))
+    without <- html_of(uniform_plotly_inputs_ui(identity, include.shapes = FALSE))
+    for (id in shape_ids) {
+        expect_true(grepl(sprintf('id="%s"', id), with_shapes, fixed = TRUE), info = id)
+        expect_false(grepl(sprintf('id="%s"', id), without, fixed = TRUE), info = id)
+    }
+    expect_true(grepl('id="margin.t"', without, fixed = TRUE))
+
+    uis <- list(
+        pie = piePlotInputsUI("p", example_skills),
+        radar = radarPlotInputsUI("r", example_skills),
+        parallel = parallelCoordinatesPlotInputsUI("c", example_sales)
+    )
+    for (nm in names(uis)) {
+        expect_false(grepl("shape.fill", html_of(uis[[nm]]), fixed = TRUE), info = nm)
+    }
+})

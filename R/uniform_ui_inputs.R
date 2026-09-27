@@ -611,6 +611,10 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
+#' @param include.shapes Logical; whether to include the controls styling shapes
+#'   drawn with plotly's drawing tools. Pass `FALSE` for plots without cartesian
+#'   axes (pie, radar, parallel coordinates), where those tools do not work.
+#'   Default is `TRUE`.
 #'
 #' @return A `tagList` containing the Plotly input UI elements.
 #'
@@ -623,9 +627,9 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' @examples
 #' ns <- shiny::NS("plot")
 #' uniform_plotly_inputs_ui(ns)
-uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
+uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE) {
     tip_opts <- list(container = "body")
-    tagList(
+    inputs <- list(
         viz_select_input(
             ns("download.format"),
             "Download Format",
@@ -667,7 +671,14 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             ),
             "Right margin of the plot in pixels",
             placement = "top", options = tip_opts
-        ),
+        )
+    )
+
+    if (!isTRUE(include.shapes)) {
+        return(do.call(tagList, inputs))
+    }
+
+    shapes <- list(
         tipify(
             colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
@@ -712,6 +723,8 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             placement = "top", options = tip_opts
         )
     )
+
+    do.call(tagList, c(inputs, shapes))
 }
 
 
