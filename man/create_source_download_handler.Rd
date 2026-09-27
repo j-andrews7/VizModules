@@ -90,9 +90,11 @@ server <- function(input, output) {
         plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
     })
 
-    data_list <- collect_source_data(plot_reactive)
     output$my_plot <- renderPlotly(plot_reactive())
-    output$download_data <- create_source_download_handler(reactive(data_list))
+    # collect_source_data() reads reactives, so it has to run inside one.
+    output$download_data <- create_source_download_handler(
+        reactive(collect_source_data(plot_reactive, inputs_reactive = reactive(reactiveValuesToList(input))))
+    )
 }
 
 shinyApp(ui, server)

@@ -149,9 +149,9 @@
 #'   [shiny::reactiveVal()]) returning a `data.frame` of statistical test results.
 #'   When `NULL` or when the reactive returns `NULL`, no statistics data is
 #'   included.
-#' @param inputs_reactive Optional. A reactive expression returning a named
-#'   list of UI input values. When `NULL` or when it returns `NULL`, no UI
-#'   input data is included.
+#' @param inputs_reactive Optional. A named list of UI input values (for
+#'   example `reactiveValuesToList(input)`), or a reactive expression returning
+#'   one. When `NULL` or when it returns `NULL`, no UI input data is included.
 #'
 #' @return A named list with elements:
 #' \describe{
@@ -196,9 +196,11 @@
 #'        plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
 #'     })
 #'
-#'     data_list <- collect_source_data(plot_reactive)
 #'     output$my_plot <- renderPlotly(plot_reactive())
-#'     output$download_data <- create_source_download_handler(reactive(data_list))
+#'     # collect_source_data() reads reactives, so it has to run inside one.
+#'     output$download_data <- create_source_download_handler(
+#'         reactive(collect_source_data(plot_reactive, inputs_reactive = reactive(reactiveValuesToList(input))))
+#'     )
 #' }
 #'
 #' shinyApp(ui, server)
@@ -218,10 +220,14 @@ collect_source_data <- function(plot_reactive,
         }
     }
 
-    ui_inputs <- tryCatch(isolate(inputs_reactive), error = function(e) {
-        message("ERROR: ", e$message)
-        NULL
-    })
+    # Accept the list itself (what the modules pass) or a reactive returning it.
+    ui_inputs <- tryCatch(
+        if (is.function(inputs_reactive)) inputs_reactive() else inputs_reactive,
+        error = function(e) {
+            message("ERROR: ", e$message)
+            NULL
+        }
+    )
     ui_inputs <- .source_input_snapshot(ui_inputs)
 
     plotted_vars <- intersect(
@@ -746,9 +752,11 @@ collect_source_data <- function(plot_reactive,
 #'         plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
 #'     })
 #'
-#'     data_list <- collect_source_data(plot_reactive)
 #'     output$my_plot <- renderPlotly(plot_reactive())
-#'     output$download_data <- create_source_download_handler(reactive(data_list))
+#'     # collect_source_data() reads reactives, so it has to run inside one.
+#'     output$download_data <- create_source_download_handler(
+#'         reactive(collect_source_data(plot_reactive, inputs_reactive = reactive(reactiveValuesToList(input))))
+#'     )
 #' }
 #'
 #' shinyApp(ui, server)

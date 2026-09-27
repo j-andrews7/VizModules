@@ -128,6 +128,16 @@ test_that("collect_source_data keeps the image capture out of the inputs table",
     expect_false(any(grepl("AAAA", result$inputs$values, fixed = TRUE)))
 })
 
+test_that("collect_source_data accepts inputs as a reactive, as documented", {
+    fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+    inputs <- shiny::reactive(list(x.by = "wt", y.by = "mpg"))
+
+    result <- shiny::isolate(collect_source_data(function() fig, inputs_reactive = inputs))
+
+    expect_setequal(result$inputs$names, c("x.by", "y.by"))
+    expect_setequal(names(result$plot_data), c("wt", "mpg"))
+})
+
 test_that(".source_input_snapshot passes empty snapshots through", {
     expect_null(.source_input_snapshot(NULL))
     expect_equal(.source_input_snapshot(list()), list())
