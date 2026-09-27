@@ -456,7 +456,8 @@ server <- function(input, output, session) {
             )
         })
 
-        m$server_fn(m$id, data = server_data)
+        # The same defaults the inputs were built with, so Reset returns to them.
+        m$server_fn(m$id, data = server_data, defaults = m$defaults)
     })
 
     # Figure Builder: uses its own bundled dataset catalogue and module
