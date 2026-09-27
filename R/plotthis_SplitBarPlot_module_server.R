@@ -44,15 +44,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         axis_scale <- reactive({
             axis_scale_factor <- input$axis.scale.factor
         })
-        # Initial call of .calculate_range() made into a reactive to be used later on in server
+        # Symmetric value-axis limits wide enough for the longest bar on either side.
         axis_range <- reactive({
-            return(.calculate_range(
-                df                = data(),
-                data_col_x        = input$y.data,
-                data_col_y        = input$x.data,
-                axis_scale_factor = axis_scale(),
-                grouping          = TRUE
-            ))
+            .split_bar_range(data(), input$x.data, input$y.data, axis_scale())
         })
 
 
@@ -216,7 +210,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             if (!is.null(x_range)) {
-                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
+                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
             }
         })
 
@@ -610,4 +604,49 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         return(plot_source_reactive)
     })
+}
+
+
+#' Value-axis limits for a split bar plot
+#'
+#' A split bar plot draws each category's bars outward from zero, positives on
+#' one side and negatives on the other, stacking a category's bars on each side.
+#' The axis is symmetric, so its half-width has to clear the longest stack on
+#' either side: the largest absolute per-category sum of that side's values.
+#' Summing signed values instead lets a long negative bar be cancelled by a short
+#' positive one, clipping it, and inverts the range when every value is negative.
+#'
+#' @param df Data frame.
+#' @param value_col Name of the numeric value column (the module's `x.data`).
+#' @param category_col Name of the category column (the module's `y.data`).
+#' @param scale_factor Multiplier applied to the half-width for headroom.
+#'
+#' @return `list(min = , max = )` with `min == -max`, or `NULL` when the columns
+#'   are missing or the value column is not numeric.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_split_bar_range
+#' @keywords internal
+.split_bar_range <- function(df, value_col, category_col, scale_factor = 1) {
+    if (is.null(df) || !.nz_value(value_col) || !.nz_value(category_col) ||
+        !all(c(value_col, category_col) %in% names(df)) || !is.numeric(df[[value_col]])) {
+        return(NULL)
+    }
+    if (!.has_value(scale_factor) || !is.numeric(scale_factor)) {
+        scale_factor <- 1
+    }
+
+    v <- df[[value_col]]
+    keep <- is.finite(v)
+    if (!any(keep)) {
+        return(NULL)
+    }
+    side <- ifelse(v[keep] >= 0, "positive", "negative")
+    sums <- tapply(v[keep], list(as.character(df[[category_col]][keep]), side), sum)
+    extent <- suppressWarnings(max(abs(sums), na.rm = TRUE))
+    if (!is.finite(extent) || extent == 0) {
+        extent <- 1
+    }
+
+    list(min = -extent * scale_factor, max = extent * scale_factor)
 }

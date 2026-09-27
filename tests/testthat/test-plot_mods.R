@@ -1843,3 +1843,21 @@ test_that(".reset_manual_edits clears the store a module reads, not a copy", {
         expect_null(edits$colorbar)
     })
 })
+
+test_that(".split_bar_range clears the longest bar on either side", {
+    df <- data.frame(term = c("a", "b", "c"), score = c(2, -30, 3))
+    r <- .split_bar_range(df, "score", "term", scale_factor = 1)
+    expect_equal(r, list(min = -30, max = 30))
+
+    # A category's bars stack on each side of zero rather than netting out.
+    stacked <- data.frame(term = c("a", "a", "a"), score = c(10, -8, -4))
+    expect_equal(.split_bar_range(stacked, "score", "term")$max, 12)
+
+    # All-negative data no longer inverts the range.
+    neg <- data.frame(term = c("a", "b"), score = c(-5, -2))
+    r <- .split_bar_range(neg, "score", "term", scale_factor = 1.2)
+    expect_equal(r, list(min = -6, max = 6))
+
+    expect_null(.split_bar_range(df, "term", "score"))
+    expect_null(.split_bar_range(df, "", "term"))
+})
