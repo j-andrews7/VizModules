@@ -146,7 +146,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         observeEvent(input$annotation.clear, {
             selected.data(NULL)
-            edit_store$annotations <- list()
         })
 
         # Selections are held as trace/point indices, which only describe the layout
@@ -360,6 +359,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Hover

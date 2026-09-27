@@ -514,6 +514,8 @@ setup_manual_edits <- function(input, session, plot_source) {
         new <- .capture_manual_edits(reactiveValuesToList(edits), rl, rendered_fig())
         edits$legend <- new$legend
         edits$annotations <- new$annotations
+        # A coloraxis colorbar drag arrives here rather than through the JS listener.
+        edits$colorbar <- new$colorbar
     })
 
     # Colorbars live on a trace marker, so their drag arrives via JS (see
@@ -585,6 +587,29 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
     fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)), regen_keys)
     store$rendered_fig(fig)
     .add_colorbar_listener(fig, session$ns("colorbar.move"))
+}
+
+
+#' Discard every captured manual layout edit
+#'
+#' Used by module Reset buttons, so a dragged legend, annotation, axis title or
+#' colorbar goes back to where the rebuilt figure puts it. The store's fields are
+#' reactive values, so they are cleared in place; reassigning the list returned
+#' by [setup_manual_edits()] would only change a local copy.
+#'
+#' @param store The list returned by [setup_manual_edits()].
+#'
+#' @return Invisibly `NULL`; called for its side effect.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reset_manual_edits
+#' @keywords internal
+.reset_manual_edits <- function(store) {
+    edits <- store$edits
+    edits$legend <- NULL
+    edits$annotations <- list()
+    edits$colorbar <- NULL
+    invisible(NULL)
 }
 
 

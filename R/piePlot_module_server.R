@@ -167,6 +167,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             .reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
         })
 
         build_textinfo <- function(selected) {

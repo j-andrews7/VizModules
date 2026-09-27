@@ -1826,3 +1826,20 @@ test_that(".add_colorbar_listener attaches a render hook to the figure", {
     expect_s3_class(out, "plotly")
     expect_false(is.null(out$jsHooks$render))
 })
+
+test_that(".reset_manual_edits clears the store a module reads, not a copy", {
+    shiny::testServer(function(input, output, session) {
+        store <- setup_manual_edits(input, session, "src")
+    }, {
+        store$edits$legend <- list(x = 0.2, y = 0.9)
+        store$edits$annotations <- list(`axis:x#1` = list(x = 0.4))
+        store$edits$colorbar <- list(x = 1.1)
+
+        .reset_manual_edits(store)
+
+        edits <- shiny::isolate(shiny::reactiveValuesToList(store$edits))
+        expect_null(edits$legend)
+        expect_equal(edits$annotations, list())
+        expect_null(edits$colorbar)
+    })
+})

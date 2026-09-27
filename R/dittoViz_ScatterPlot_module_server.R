@@ -344,6 +344,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.legend.x",
                 value = get_default(defaults, "size.legend.x", 1.04, is.numeric)
@@ -367,11 +368,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Lines & Axes
             reset_lines_inputs(session, include.fit.lines = TRUE, defaults = defaults)
             reset_axes_inputs(session, defaults)
-
-            # Discard captured manual layout edits so positions revert to defaults
-            edit_store$legend <- NULL
-            edit_store$annotations <- list()
-            edit_store$colorbar <- NULL
         })
 
         observeEvent(input$split.by, {

@@ -144,6 +144,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Plotly
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
 
             # Lines
             reset_lines_inputs(session, defaults = defaults)

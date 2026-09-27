@@ -244,7 +244,6 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         observeEvent(input$annotation.clear, {
             selected.data(NULL)
-            edit_store$annotations <- list()
         })
 
         # ---- Colour picker -------------------------------------------------------
@@ -477,6 +476,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Shared tabs
             reset_axes_inputs(session, defaults)
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
             reset_annotation_inputs(session, defaults, choices)
