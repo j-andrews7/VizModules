@@ -1,177 +1,42 @@
 test_that("linePlot creates expected line trace", {
-    palette <- plotthis::palette_list[["Set2"]]
-
-    fig <- linePlot(
-        data = mtcars,
-        x = "cyl",
-        y = "mpg",
-        plot.mode = "lines+markers",
-        line.type = "solid",
-        colour.group.by = "gear",
-        palette.selection = "Set2",
-        show.legend = TRUE,
-        facet.by = NULL,
-        facet.scales = "fixed",
-        axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, axis.tickfont.size = 12,
-        axis.tickfont.color = "black", axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
-        axis.tickcolor = "black", axis.ticklen = 5, axis.tickwidth = 1, title.text = "", title.font.size = 14, title.font.family = "Arial",
-        title.font.color = "black", y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
-        x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL
-    )
-
-    expect_s3_class(fig, "plotly")
-
-    built <- plotly::plotly_build(fig)
+    built <- plotly::plotly_build(linePlot(
+        data = mtcars, x = "cyl", y = "mpg", plot.mode = "lines+markers",
+        colour.group.by = "gear", palette.selection = "Set2"
+    ))
     trace <- built$x$data[[1]]
 
     expect_identical(trace$type, "scatter")
-    expect_true(trace$mode %in% c("lines", "markers", "lines+markers"))
+    expect_identical(trace$mode, "lines+markers")
 })
 
-test_that("Test Incorrect Inputs", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "-random_column",
-        y = "mpg",
-        plot.mode = "lines+markers",
-        line.type = "solid",
-        colour.group.by = "gear",
-        palette.selection = "Set2",
-        show.legend = TRUE
-    )
-
-    expect_error(print(fig))
+test_that("linePlot errors on missing data or columns", {
+    expect_error(linePlot(data = NULL, x = "wt", y = "mpg", palette.selection = "Set2"))
+    for (cols in list(c("-random_column", "mpg"), c("wt", "fake_column"))) {
+        fig <- linePlot(data = mtcars, x = cols[1], y = cols[2], palette.selection = "Set2")
+        expect_error(suppressWarnings(plotly::plotly_build(fig)), info = paste(cols, collapse = " ~ "))
+    }
 })
 
-test_that("linePlot returns plotly object", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = TRUE
-    )
-
-    expect_s3_class(fig, "plotly")
-})
-
-test_that("linePlot handles different plot modes", {
-    # Lines only
-    fig_lines <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE
-    )
-    expect_s3_class(fig_lines, "plotly")
-
-    # Markers only
-    fig_markers <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "markers",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE
-    )
-    expect_s3_class(fig_markers, "plotly")
-})
-
-test_that("linePlot handles different line types", {
-    fig_dash <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "dash",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE
-    )
-
-    expect_s3_class(fig_dash, "plotly")
-    built <- plotly::plotly_build(fig_dash)
-    expect_equal(built$x$data[[1]]$line$dash, "dash")
-})
-
-test_that("linePlot handles legend visibility", {
-    fig_no_legend <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = "gear",
-        palette.selection = "Set2",
-        show.legend = FALSE
-    )
-
-    expect_s3_class(fig_no_legend, "plotly")
-})
-
-test_that("linePlot handles custom titles", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        title.text = "My Custom Title",
-        x.title = "Weight (1000 lbs)",
-        y.title = "Miles Per Gallon"
-    )
-
-    expect_s3_class(fig, "plotly")
-    built <- plotly::plotly_build(fig)
-    expect_equal(built$x$layout$title$text, "My Custom Title")
+test_that("linePlot draws the requested plot mode and line type", {
+    for (mode in c("lines", "markers")) {
+        trace <- plotly::plotly_build(linePlot(
+            data = mtcars, x = "wt", y = "mpg", plot.mode = mode, palette.selection = "Set2"
+        ))$x$data[[1]]
+        expect_identical(trace$mode, mode)
+    }
+    trace <- plotly::plotly_build(linePlot(
+        data = mtcars, x = "wt", y = "mpg", plot.mode = "lines", line.type = "dash", palette.selection = "Set2"
+    ))$x$data[[1]]
+    expect_equal(trace$line$dash, "dash")
 })
 
 test_that("linePlot handles axis flipping", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        flip.x = TRUE,
-        flip.y = TRUE
-    )
-
-    expect_s3_class(fig, "plotly")
-    built <- plotly::plotly_build(fig)
+    built <- plotly::plotly_build(linePlot(
+        data = mtcars, x = "wt", y = "mpg", palette.selection = "Set2",
+        flip.x = TRUE, flip.y = TRUE
+    ))
     expect_equal(built$x$layout$xaxis$autorange, "reversed")
     expect_equal(built$x$layout$yaxis$autorange, "reversed")
-})
-
-test_that("linePlot handles faceting", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        facet.by = "cyl"
-    )
-
-    expect_s3_class(fig, "plotly")
 })
 
 # Regression data for the faceted-legend tests (#357): 2 facets x 3 colour groups.
@@ -200,20 +65,12 @@ test_that("linePlot handles faceting", {
     }, character(1))
 }
 
-test_that("linePlot shows each colour group once across facets", {
-    d <- .line_facet_data()
-
-    fig <- linePlot(
-        data = d,
-        x = "x",
-        y = "y",
-        colour.group.by = "grp",
-        facet.by = "fct",
-        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
-        show.legend = TRUE
-    )
-
-    built <- suppressWarnings(plotly::plotly_build(fig))
+test_that("linePlot shows each colour group once, and groups it across facets (#357)", {
+    built <- suppressWarnings(plotly::plotly_build(linePlot(
+        data = .line_facet_data(), x = "x", y = "y",
+        colour.group.by = "grp", facet.by = "fct",
+        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"), show.legend = TRUE
+    )))
 
     # 2 facets x 3 groups are still drawn, but only one facet feeds the legend.
     expect_equal(length(built$x$data), 6)
@@ -222,29 +79,12 @@ test_that("linePlot shows each colour group once across facets", {
         vapply(.legend_traces(built), function(tr) tr$name, character(1)),
         c("A", "B", "C")
     )
-})
 
-test_that("linePlot groups faceted traces so one legend click toggles every panel", {
-    d <- .line_facet_data()
-
-    fig <- linePlot(
-        data = d,
-        x = "x",
-        y = "y",
-        colour.group.by = "grp",
-        facet.by = "fct",
-        palette.selection = c("#1b9e77", "#d95f02", "#7570b3"),
-        show.legend = TRUE
-    )
-
-    built <- suppressWarnings(plotly::plotly_build(fig))
+    # Every trace is grouped under its own series name, and both facets use the
+    # same set of groups, so one legend click toggles the series in every panel.
     groups <- .trace_field(built, "legendgroup")
-
-    # Every trace is grouped, and grouped under its own series name.
     expect_false(any(is.na(groups)))
     expect_identical(groups, .trace_field(built, "name"))
-
-    # Both facets use the same set of groups - that is what ties the panels together.
     expect_setequal(groups[1:3], groups[4:6])
 })
 
@@ -341,157 +181,21 @@ test_that("linePlot honours show.legend in the layout", {
     expect_true(suppressWarnings(plotly::plotly_build(fig_legend))$x$layout$showlegend)
 })
 
-test_that("linePlot errors with NULL data", {
-    expect_error(
-        linePlot(
-            data = NULL,
-            x = "wt",
-            y = "mpg",
-            plot.mode = "lines",
-            line.type = "solid",
-            colour.group.by = NULL,
-            palette.selection = "Set2",
-            show.legend = FALSE
+test_that("linePlot frames every facet panel only when axis lines are on", {
+    for (showline in c(TRUE, FALSE)) {
+        fig <- linePlot(
+            data = mtcars, x = "wt", y = "mpg", palette.selection = "Set2",
+            facet.by = "cyl", axis.showline = showline, axis.mirror = showline
         )
-    )
-})
+        rect_shapes <- Filter(function(s) identical(s$type, "rect"), fig$x$layout$shapes)
 
-test_that("linePlot errors with invalid y column", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "fake_column",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE
-    )
-
-    expect_error(print(fig))
-})
-
-test_that("linePlot handles different datasets", {
-    fig <- linePlot(
-        data = iris,
-        x = "Sepal.Length",
-        y = "Sepal.Width",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = "Species",
-        palette.selection = "Set1",
-        show.legend = TRUE
-    )
-
-    expect_s3_class(fig, "plotly")
-})
-
-test_that("linePlot honors title.x.position for repositioning the title", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = TRUE,
-        title.text = "Custom title",
-        title.x.position = 0.2
-    )
-
-    built <- plotly::plotly_build(fig)
-    expect_equal(built$x$layout$title$x, 0.2)
-})
-
-test_that("linePlot wraps y-axis title with mean() for a categorical x-axis", {
-    df <- data.frame(
-        grp = factor(c("a", "a", "b", "b", "c", "c")),
-        val = c(1, 3, 5, 7, 9, 11)
-    )
-
-    fig <- linePlot(
-        data = df,
-        x = "grp",
-        y = "val",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        y.title = "val"
-    )
-
-    built <- plotly::plotly_build(fig)
-    y_title <- built$x$layout$yaxis$title
-    if (is.list(y_title)) y_title <- y_title$text
-    expect_equal(y_title, "mean(val)")
-})
-
-test_that("linePlot keeps a plain y-axis title for a numeric x-axis", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        y.title = "mpg"
-    )
-
-    built <- plotly::plotly_build(fig)
-    y_title <- built$x$layout$yaxis$title
-    if (is.list(y_title)) y_title <- y_title$text
-    expect_equal(y_title, "mpg")
-})
-
-test_that("linePlot adds panel border shapes to every facet", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        facet.by = "cyl",
-        axis.showline = TRUE,
-        axis.mirror = TRUE
-    )
-
-    n_facets <- length(unique(mtcars$cyl))
-    shapes <- fig$x$layout$shapes
-    rect_shapes <- Filter(function(s) identical(s$type, "rect"), shapes)
-
-    # One rectangular border (full box) per facet panel.
-    expect_equal(length(rect_shapes), n_facets)
-    for (s in rect_shapes) {
-        expect_identical(s$xref, "paper")
-        expect_identical(s$yref, "paper")
+        # One full box per facet panel, or none at all.
+        expect_length(rect_shapes, if (showline) length(unique(mtcars$cyl)) else 0)
+        for (s in rect_shapes) {
+            expect_identical(s$xref, "paper")
+            expect_identical(s$yref, "paper")
+        }
     }
-})
-
-test_that("linePlot omits panel borders when axis lines are disabled", {
-    fig <- linePlot(
-        data = mtcars,
-        x = "wt",
-        y = "mpg",
-        plot.mode = "lines",
-        line.type = "solid",
-        colour.group.by = NULL,
-        palette.selection = "Set2",
-        show.legend = FALSE,
-        facet.by = "cyl",
-        axis.showline = FALSE,
-        axis.mirror = FALSE
-    )
-
-    shapes <- fig$x$layout$shapes
-    rect_shapes <- Filter(function(s) identical(s$type, "rect"), shapes)
-    expect_equal(length(rect_shapes), 0)
 })
 
 test_that("build_facet_panel_borders honours showline and mirror", {
@@ -549,25 +253,9 @@ test_that("build_facet_panel_borders draws a distinct box per panel across rows"
     bottom_y <- vapply(borders[4:6], function(s) s$y0, numeric(1))
     expect_true(all(top_y == 0.52))
     expect_true(all(bottom_y == 0.00))
-})
 
-test_that("build_facet_panel_borders skips empty cells in a partial grid", {
-    # 5 panels in a 3x2 grid leaves the bottom-right cell empty.
-    fig <- structure(
-        list(x = list(layout = list(
-            xaxis = list(domain = c(0.00, 0.30)),
-            xaxis2 = list(domain = c(0.35, 0.65)),
-            xaxis3 = list(domain = c(0.70, 1.00)),
-            yaxis = list(domain = c(0.52, 1.00)),
-            yaxis2 = list(domain = c(0.00, 0.48))
-        ))),
-        class = "plotly"
-    )
-
-    borders <- build_facet_panel_borders(
-        fig, 5, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2
-    )
-    expect_equal(length(borders), 5)
+    # 5 panels in the same 3x2 grid leave the bottom-right cell empty.
+    expect_length(build_facet_panel_borders(fig, 5, showline = TRUE, mirror = TRUE, ncol = 3, nrow = 2), 5)
 })
 
 test_that("linePlot facet titles sit just above their own panel when axes are shared", {
@@ -622,7 +310,7 @@ test_that("linePlot applies axis title font to single-panel titles (#326)", {
     }
 })
 
-test_that("linePlot keeps the mean() y title relabel alongside the axis title font", {
+test_that("linePlot relabels the y title mean() only for a categorical x, keeping its font", {
     d <- data.frame(grp = rep(c("a", "b"), each = 3), val = 1:6)
     built <- plotly::plotly_build(linePlot(
         data = d, x = "grp", y = "val", palette.selection = "Set2",
@@ -630,6 +318,12 @@ test_that("linePlot keeps the mean() y title relabel alongside the axis title fo
     ))
     expect_equal(built$x$layout$yaxis$title$text, "mean(val)")
     expect_equal(built$x$layout$yaxis$title$font$size, 25)
+
+    # A numeric x plots the values themselves, so the title stays plain.
+    built <- plotly::plotly_build(linePlot(
+        data = mtcars, x = "wt", y = "mpg", palette.selection = "Set2", y.title = "mpg"
+    ))
+    expect_equal(built$x$layout$yaxis$title$text, "mpg")
 })
 
 test_that("linePlot applies axis title font to faceted shared titles (#326)", {

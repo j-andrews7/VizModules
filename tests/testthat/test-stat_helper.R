@@ -1,3 +1,5 @@
+set.seed(42)
+
 test_df <- data.frame(
     group = rep(c("A", "B", "C"), each = 20),
     value = c(rnorm(20, 5), rnorm(20, 8), rnorm(20, 5)),
@@ -6,49 +8,33 @@ test_df <- data.frame(
     stringsAsFactors = FALSE
 )
 
-set.seed(42)
+# One pre-computed comparison, for tests of how results are drawn.
+.one_pair <- function(p = 0.01, signif = "**") {
+    data.frame(
+        group1 = "A", group2 = "B", p.value = p, p.adj = p, p.signif = signif,
+        test = "wilcox.test", facet_level = NA_character_, x_level = NA_character_,
+        stringsAsFactors = FALSE
+    )
+}
 
 # ─── compute_pairwise_stats ─────────────────────────────────────────────────
 
-test_that("compute_pairwise_stats returns correct structure for wilcox.test", {
-    result <- compute_pairwise_stats(
-        df = test_df, x = "group", y = "value", test = "wilcox.test"
+test_that("compute_pairwise_stats runs pairwise and omnibus tests", {
+    cases <- list(
+        wilcox.test = list(rows = 3, omnibus = FALSE),
+        t.test = list(rows = 3, omnibus = FALSE),
+        kruskal.test = list(rows = 1, omnibus = TRUE),
+        anova = list(rows = 1, omnibus = TRUE)
     )
-    expect_s3_class(result, "data.frame")
-    expect_true(all(c("group1", "group2", "p.value", "p.adj", "p.signif",
-        "test", "facet_level", "x_level") %in% names(result)))
-    expect_equal(nrow(result), 3) # C(3,2) = 3 pairs
-    expect_true(all(result$test == "wilcox.test"))
-})
-
-test_that("compute_pairwise_stats works with t.test", {
-    result <- compute_pairwise_stats(
-        df = test_df, x = "group", y = "value", test = "t.test"
-    )
-    expect_s3_class(result, "data.frame")
-    expect_equal(nrow(result), 3)
-    expect_true(all(result$test == "t.test"))
-})
-
-test_that("compute_pairwise_stats works with kruskal.test (omnibus)", {
-    result <- compute_pairwise_stats(
-        df = test_df, x = "group", y = "value", test = "kruskal.test"
-    )
-    expect_s3_class(result, "data.frame")
-    expect_equal(nrow(result), 1)
-    expect_equal(result$group1, "all")
-    expect_equal(result$group2, "all")
-    expect_true(all(result$test == "kruskal.test"))
-})
-
-test_that("compute_pairwise_stats works with anova (omnibus)", {
-    result <- compute_pairwise_stats(
-        df = test_df, x = "group", y = "value", test = "anova"
-    )
-    expect_s3_class(result, "data.frame")
-    expect_equal(nrow(result), 1)
-    expect_equal(result$group1, "all")
-    expect_true(all(result$test == "anova"))
+    for (test in names(cases)) {
+        result <- compute_pairwise_stats(df = test_df, x = "group", y = "value", test = test)
+        expect_true(all(c("group1", "group2", "p.value", "p.adj", "p.signif",
+            "test", "facet_level", "x_level") %in% names(result)), info = test)
+        # C(3, 2) = 3 pairs, or one overall result.
+        expect_equal(nrow(result), cases[[test]]$rows, info = test)
+        expect_true(all(result$test == test), info = test)
+        if (cases[[test]]$omnibus) expect_equal(result$group1, "all", info = test)
+    }
 })
 
 test_that("compute_pairwise_stats applies p-value adjustment", {
@@ -71,23 +57,21 @@ test_that("compute_pairwise_stats respects specific pairs", {
     expect_equal(result$group2, "B")
 })
 
-test_that("compute_pairwise_stats handles per-facet testing", {
-    result <- compute_pairwise_stats(
+test_that("compute_pairwise_stats tests per facet, or across them", {
+    per <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", facet.by = "facet", per.facet = TRUE
     )
-    expect_true(all(c("F1", "F2") %in% result$facet_level))
     # 3 pairs * 2 facets = 6 rows
-    expect_equal(nrow(result), 6)
-})
+    expect_equal(nrow(per), 6)
+    expect_true(all(c("F1", "F2") %in% per$facet_level))
 
-test_that("compute_pairwise_stats with per.facet=FALSE returns NA facet_level", {
-    result <- compute_pairwise_stats(
+    across <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value",
         test = "wilcox.test", facet.by = "facet", per.facet = FALSE
     )
-    expect_equal(nrow(result), 3)
-    expect_true(all(is.na(result$facet_level)))
+    expect_equal(nrow(across), 3)
+    expect_true(all(is.na(across$facet_level)))
 })
 
 test_that("compute_pairwise_stats with group.by nests within x-levels", {
@@ -132,37 +116,21 @@ test_that("compute_pairwise_stats paired test works", {
     expect_false(is.na(result$p.value))
 })
 
-# ─── generate_pair_strings ──────────────────────────────────────────────────
+# ─── generate_pair_strings / parse_pair_strings ─────────────────────────────
 
-test_that("generate_pair_strings returns correct pairs", {
+test_that("generate_pair_strings offers x pairs, or group.by pairs, and none for one level", {
     result <- generate_pair_strings(test_df, "group")
     expect_equal(length(result), 3) # C(3,2) = 3
     expect_true(all(grepl(" vs ", result)))
+
+    # With group.by, the pairs are between its levels: red vs blue.
+    expect_equal(length(generate_pair_strings(test_df, "group", group.by = "color")), 1)
+
+    expect_equal(length(generate_pair_strings(test_df[test_df$group == "A", ], "group")), 0)
 })
 
-test_that("generate_pair_strings with group.by uses group levels", {
-    result <- generate_pair_strings(test_df, "group", group.by = "color")
-    expect_equal(length(result), 1) # C(2,2) = 1 pair: red vs blue
-    expect_true(grepl(" vs ", result))
-})
-
-test_that("generate_pair_strings returns empty for single level", {
-    single <- test_df[test_df$group == "A", ]
-    result <- generate_pair_strings(single, "group")
-    expect_equal(length(result), 0)
-})
-
-# ─── parse_pair_strings ─────────────────────────────────────────────────────
-
-test_that("parse_pair_strings parses valid strings", {
-    result <- parse_pair_strings(c("A vs B", "B vs C"))
-    expect_type(result, "list")
-    expect_equal(length(result), 2)
-    expect_equal(result[[1]], c("A", "B"))
-    expect_equal(result[[2]], c("B", "C"))
-})
-
-test_that("parse_pair_strings returns NULL for empty input", {
+test_that("parse_pair_strings splits 'A vs B' strings, and returns NULL for nothing", {
+    expect_equal(parse_pair_strings(c("A vs B", "B vs C")), list(c("A", "B"), c("B", "C")))
     expect_null(parse_pair_strings(NULL))
     expect_null(parse_pair_strings(character(0)))
     expect_null(parse_pair_strings(""))
@@ -170,7 +138,7 @@ test_that("parse_pair_strings returns NULL for empty input", {
 
 # ─── create_stat_annotations ────────────────────────────────────────────────
 
-test_that("create_stat_annotations returns correct structure", {
+test_that("create_stat_annotations builds brackets, or nothing for no results", {
     stats_df <- compute_pairwise_stats(
         df = test_df, x = "group", y = "value", test = "wilcox.test"
     )
@@ -178,82 +146,45 @@ test_that("create_stat_annotations returns correct structure", {
         stats_df = stats_df, fig = NULL, df = test_df,
         x = "group", y = "value"
     )
-    expect_type(result, "list")
     expect_true(all(c("annotations", "shapes", "y.max") %in% names(result)))
     expect_true(length(result$annotations) > 0)
     expect_true(length(result$shapes) > 0)
     expect_true(is.numeric(result$y.max))
-})
 
-test_that("create_stat_annotations returns empty for NULL stats_df", {
-    result <- create_stat_annotations(
+    empty <- create_stat_annotations(
         stats_df = NULL, fig = NULL, df = test_df,
         x = "group", y = "value"
     )
-    expect_equal(length(result$annotations), 0)
-    expect_equal(length(result$shapes), 0)
-    expect_null(result$y.max)
+    expect_equal(length(empty$annotations), 0)
+    expect_equal(length(empty$shapes), 0)
+    expect_null(empty$y.max)
 })
 
-test_that("create_stat_annotations hide.ns filters results", {
-    stats_df <- compute_pairwise_stats(
-        df = test_df, x = "group", y = "value",
-        test = "wilcox.test", sig.threshold = 0.05
-    )
-    # With very low threshold, everything should be hidden
-    result <- create_stat_annotations(
-        stats_df = stats_df, fig = NULL, df = test_df,
-        x = "group", y = "value",
-        hide.ns = TRUE, sig.threshold = 0.0001
-    )
-    # Brackets only shown for significant comparisons
-    # (may be 0 if none are significant at 0.0001)
-    expect_type(result, "list")
+test_that("create_stat_annotations draws capped or flat brackets, and hides non-significant ones", {
+    shapes <- function(stats_df, ...) {
+        length(create_stat_annotations(
+            stats_df = stats_df, fig = NULL, df = test_df, x = "group", y = "value", ...
+        )$shapes)
+    }
+    # Capped style: 3 shapes per bracket (left tick, horizontal, right tick); flat: 1.
+    expect_equal(shapes(.one_pair(), bracket.style = "capped"), 3)
+    expect_equal(shapes(.one_pair(), bracket.style = "flat"), 1)
+
+    # A comparison above the threshold is dropped under hide.ns, and kept without it.
+    expect_equal(shapes(.one_pair(p = 0.5, signif = "ns"), hide.ns = TRUE, sig.threshold = 0.05), 0)
+    expect_equal(shapes(.one_pair(p = 0.5, signif = "ns"), hide.ns = FALSE, sig.threshold = 0.05), 3)
 })
 
-test_that("create_stat_annotations generates capped bracket shapes", {
-    stats_df <- data.frame(
-        group1 = "A", group2 = "B",
-        p.value = 0.01, p.adj = 0.01, p.signif = "**",
-        test = "wilcox.test", facet_level = NA_character_,
-        x_level = NA_character_, stringsAsFactors = FALSE
-    )
-    result <- create_stat_annotations(
-        stats_df = stats_df, fig = NULL, df = test_df,
-        x = "group", y = "value", bracket.style = "capped"
-    )
-    # Capped style: 3 shapes per bracket (left tick, horizontal, right tick)
-    expect_equal(length(result$shapes), 3)
-})
-
-test_that("create_stat_annotations generates flat bracket shapes", {
-    stats_df <- data.frame(
-        group1 = "A", group2 = "B",
-        p.value = 0.01, p.adj = 0.01, p.signif = "**",
-        test = "wilcox.test", facet_level = NA_character_,
-        x_level = NA_character_, stringsAsFactors = FALSE
-    )
-    result <- create_stat_annotations(
-        stats_df = stats_df, fig = NULL, df = test_df,
-        x = "group", y = "value", bracket.style = "flat"
-    )
-    # Flat style: 1 shape per bracket
-    expect_equal(length(result$shapes), 1)
-})
-
-test_that("create_stat_annotations displays symbols", {
-    stats_df <- data.frame(
-        group1 = "A", group2 = "B",
-        p.value = 0.001, p.adj = 0.001, p.signif = "***",
-        test = "wilcox.test", facet_level = NA_character_,
-        x_level = NA_character_, stringsAsFactors = FALSE
-    )
-    result <- create_stat_annotations(
-        stats_df = stats_df, fig = NULL, df = test_df,
-        x = "group", y = "value", display = "symbol"
-    )
-    # Should display the significance symbol
-    expect_equal(result$annotations[[1]]$text, "***")
+test_that("create_stat_annotations labels brackets with symbols or p-values", {
+    label <- function(stats_df, display) {
+        create_stat_annotations(
+            stats_df = stats_df, fig = NULL, df = test_df, x = "group", y = "value", display = display
+        )$annotations[[1]]$text
+    }
+    expect_equal(label(.one_pair(0.001, "***"), "symbol"), "***")
+    expect_equal(label(.one_pair(0.0123, "*"), "p.adj"), "0.0123")
+    # A p-value that would round to zero reads as a bound, not as "0".
+    expect_equal(label(.one_pair(1e-6, "****"), "p.value"), "< 0.0001")
 })
 
 test_that("create_stat_annotations includes omnibus annotation", {
@@ -275,8 +206,12 @@ test_that("create_stat_annotations includes omnibus annotation", {
 
 # ─── apply_stat_annotations ─────────────────────────────────────────────────
 
-test_that("apply_stat_annotations adds shapes and annotations to figure", {
-    fig <- list(x = list(layout = list(yaxis = list(range = c(0, 10)))))
+test_that("apply_stat_annotations appends to existing shapes and annotations and raises the axis", {
+    fig <- list(x = list(layout = list(
+        yaxis = list(range = c(0, 10)),
+        shapes = list(list(type = "rect")),
+        annotations = list(list(text = "existing"))
+    )))
     class(fig) <- "plotly"
 
     stat_result <- list(
@@ -286,30 +221,11 @@ test_that("apply_stat_annotations adds shapes and annotations to figure", {
     )
 
     result <- apply_stat_annotations(fig, stat_result)
-    expect_equal(length(result$x$layout$shapes), 1)
-    expect_equal(length(result$x$layout$annotations), 1)
+    expect_equal(length(result$x$layout$shapes), 2)
+    expect_equal(length(result$x$layout$annotations), 2)
     expect_equal(result$x$layout$yaxis$range[2], 13)
     # y-min should have a small buffer below the original value
     expect_true(result$x$layout$yaxis$range[1] < 0)
-})
-
-test_that("apply_stat_annotations preserves existing shapes", {
-    fig <- list(x = list(layout = list(
-        yaxis = list(range = c(0, 10)),
-        shapes = list(list(type = "rect")),
-        annotations = list(list(text = "existing"))
-    )))
-    class(fig) <- "plotly"
-
-    stat_result <- list(
-        annotations = list(list(text = "new")),
-        shapes = list(list(type = "line")),
-        y.max = 13
-    )
-
-    result <- apply_stat_annotations(fig, stat_result)
-    expect_equal(length(result$x$layout$shapes), 2)
-    expect_equal(length(result$x$layout$annotations), 2)
 })
 
 test_that("apply_stat_annotations updates all y-axes for faceted plots", {

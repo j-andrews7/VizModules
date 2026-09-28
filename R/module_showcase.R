@@ -95,10 +95,10 @@
             output_ui = plotthis_AreaPlotOutputUI,
             server_fn = plotthis_AreaPlotServer,
             # Each age group's share of the total, so the ageing population
-            # reads straight off the plot.
+            # reads straight off the plot. Fifty year labels only fit upright.
             defaults = list(
                 "x.data" = "year", "y.data" = "count", "group.by" = "age_group",
-                "scale.y" = TRUE
+                "scale.y" = TRUE, "axis.tickfont.size" = 9, "axis.tickangle.x" = -90
             )
         ),
         bar = list(
@@ -284,6 +284,8 @@
                 "matrix.cols" = setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression")),
                 "column_key" = "sample",
                 "scale" = "Rows",
+                # 30 gene names have to fit the widget's default height.
+                "row_names_fontsize" = 7,
                 "row_split_by" = "Annotation", "row_split_cols" = "pathway",
                 "column_split_by" = "Annotation", "column_split_cols" = "condition",
                 "row_annotations" = list(r1 = list(column = "pathway", side = "Left")),

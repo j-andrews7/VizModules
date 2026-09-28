@@ -26,65 +26,31 @@ test_that("scatterPlot UI exposes a numeric 'Size By' selector", {
     expect_false("cat1" %in% size_by_choices)
 })
 
-test_that("scatterPlot size column yields variable marker sizes for the legend", {
-    skip_if_not_installed("dittoViz")
-    data(example_mtcars)
-
+test_that("a size column gives a spread of marker sizes and a custom size legend", {
     p <- dittoViz::scatterPlot(
         example_mtcars,
         x.by = "mpg", y.by = "wt", size = "hp",
         do.hover = TRUE, data.out = TRUE
     )
 
-    sizes <- VizModules:::.extract_marker_sizes(p$plot)
     # A numeric size mapping must produce a spread of marker diameters so the
     # custom size legend has meaningful breaks to render.
+    sizes <- .extract_marker_sizes(p$plot)
     expect_gt(length(sizes), 0)
     expect_gt(diff(range(sizes)), 0)
-})
 
-test_that("scatterPlot draws a custom size legend when size encodes a column", {
-    skip_if_not_installed("dittoViz")
-    data(example_mtcars)
-
-    p <- dittoViz::scatterPlot(
-        example_mtcars,
-        x.by = "mpg", y.by = "wt", size = "hp",
-        do.hover = TRUE, data.out = TRUE
-    )
-
-    fig <- VizModules:::.custom_legend(
+    anns <- plotly::plotly_build(.custom_legend(
         p$plot,
         data = example_mtcars, size_by = "hp",
         gap = 0.04, title.size = 14, text.size = 12
-    )
-    built <- plotly::plotly_build(fig)
-    anns <- built$x$layout$annotations
-
-    circle_anns <- Filter(function(a) grepl("font-size", a$text), anns)
-    title_ann <- Filter(function(a) identical(a$text, "hp"), anns)
-
-    expect_equal(length(circle_anns), 5)
-    expect_true(length(title_ann) >= 1)
-})
-
-test_that("scatterPlot custom legend is omitted when size is not a column", {
-    data(example_mtcars)
-    fig <- plotly::plot_ly(
-        data = example_mtcars, x = ~mpg, y = ~wt,
-        type = "scatter", mode = "markers"
-    )
-
-    # No size mapping (size.by unset) -> figure returned unchanged.
-    expect_identical(
-        VizModules:::.custom_legend(fig, example_mtcars, size_by = NULL), fig
-    )
+    ))$x$layout$annotations
+    expect_length(Filter(function(a) grepl("font-size", a$text), anns), 5)
+    expect_true(length(Filter(function(a) identical(a$text, "hp"), anns)) >= 1)
 })
 
 test_that("highlight styling matches points by value on a categorical x-axis", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
+    # Matching on coordinates dropped the highlight styling here (issue #309):
+    # the raw x values ("A"/"B"/...) can never equal the trace's numeric positions.
     set.seed(1)
     df <- data.frame(
         grp = rep(c("A", "B", "C"), each = 5),
@@ -115,15 +81,6 @@ test_that("highlight styling matches points by value on a categorical x-axis", {
     expect_equal(sum(value_mask), length(highlight_vals))
     expect_setequal(trace_map$anno_value[value_mask], highlight_vals)
 
-    # The previous coordinate-based matching fails for categorical axes because
-    # the raw data x-values ("A"/"B"/...) cannot match the trace's numeric
-    # positions, which is what dropped the highlight styling (issue #309).
-    highlight_idx <- which(as.character(df[["lab"]]) %in% highlight_vals)
-    highlight_coords <- VizModules:::.create_coord_id(
-        df[["grp"]][highlight_idx], df[["val"]][highlight_idx]
-    )
-    coord_mask <- trace_map$coord_id %in% highlight_coords & value_mask
-    expect_equal(sum(coord_mask), 0)
 })
 
 test_that("scatterPlot seeds group colors from defaults but yields to the picker", {

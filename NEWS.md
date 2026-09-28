@@ -36,7 +36,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 * Removed the built-in `nls` model backend from the scatter plot's custom model lines. An nls formula names its parameters, which the formula safety check rejects, so it could never fit.
 * The Figure Builder no longer accepts `.rds` uploads.
-* Removed the bundled `inst/apps/figure-builder` deployment app. Launch the Figure Builder with `figureBuilderApp()`, or use the **Figure Builder** tab of `moduleGalleryApp()`.
+* Removed the bundled `inst/apps/figure-builder` deployment app, as it's now included in the gallery app.
 * Removed the `plotthis_ViolinPlot` module - `plotthis_ViolinPlotApp()`, `plotthis_ViolinPlotInputsUI()`, `plotthis_ViolinPlotOutputUI()` and `plotthis_ViolinPlotServer()` (#358). `plotthis` rolled its own geom for this in v0.14.0, which broke the module since it didn't convert them via `ggplotly()`. More effort than it's worth to fix, since `yPlot` works well.
   * Use `dittoViz_yPlot` instead, with `defaults = list(plots = "vlnplot")` (add `"boxplot"` / `"jitter"` for the inner box and points). 
 
@@ -56,7 +56,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * Fixed vignette examples that could not have worked: `x.by`/`y.by` passed to the `BoxPlot` (whose keys are `x.data`/`y.data`), a hidden `rows.use` input that does not exist, columns missing from the example data, `input` read outside a `moduleServer()`, a model formula at odds with its plot's axes, and a `linked-filter` example app that never shipped.
 * With **Auto Update** off, the scatter plot's fit-line controls and the heatmap's matrix columns, row names, filters and column key no longer redraw the plot before **Update**.
 * `dataFilterServer()` no longer applies the previous table's row indices to newly supplied data while DT redraws.
-* Smaller fixes: `multiColorPicker()` applies unnamed `colors` in order instead of ignoring them; `is_pure_type()` no longer errors on logical or Date columns (which broke `linePlot`); `apply_axis_title_to_annotations()` tolerates annotations without an `xanchor`; `safe_resolve_adj_fxn("neg_log10")` works from outside the package; the line-type tooltips list the names actually accepted; `parallelCoordinatesPlot()` tolerates a blank line width; the module gallery passes its `defaults` to the module servers so Reset matches the initial state.
+* Smaller fixes: `multiColorPicker()` applies unnamed `colors` in order instead of ignoring them; `is_pure_type()` no longer errors on logical or Date columns (which broke `linePlot`); `apply_axis_title_to_annotations()` tolerates annotations without an `xanchor`; `safe_resolve_adj_fxn("neg_log10")` works from outside the package; the line-type tooltips list the names actually accepted; `parallelCoordinatesPlot()` tolerates a blank line width; the module gallery passes its `defaults` to the module servers so Reset matches the initial state; significance labels showing a p-value below 0.0001 read "< 0.0001" rather than rounding to "0".
 * A faceted `linePlot` no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel rather than just one (#357). 
   * Multi-axis `linePlot`s no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and `show.legend = FALSE` now actually hides the legend box instead of leaving an empty one.
 

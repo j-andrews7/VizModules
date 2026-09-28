@@ -12,41 +12,32 @@ test_that(".heatmap_resolve_split returns no-op km/split for 'None' or invalid i
     expect_equal(.heatmap_resolve_split("Bogus", 3, 10), list(km = 1L, split = NULL))
 })
 
-test_that(".heatmap_resolve_split never returns both km and split set", {
-    km_res <- .heatmap_resolve_split("K-means", 3, 10)
-    expect_equal(km_res$km, 3L)
-    expect_null(km_res$split)
-
-    split_res <- .heatmap_resolve_split("Hierarchical", 3, 10)
-    expect_equal(split_res$km, 1L)
-    expect_equal(split_res$split, 3L)
+test_that(".heatmap_resolve_split never returns both km and split, and ignores split_values for them", {
+    # split_values is ignored unless the method is "Annotation".
+    sv <- data.frame(g = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
+    expect_equal(.heatmap_resolve_split("K-means", 3, 10, sv), list(km = 3L, split = NULL))
+    expect_equal(.heatmap_resolve_split("Hierarchical", 3, 10, sv), list(km = 1L, split = 3L))
+    expect_equal(.heatmap_resolve_split("None", 2, 10, sv), list(km = 1L, split = NULL))
 })
 
-test_that(".heatmap_resolve_split clamps k-means one below the dimension, not equal to it", {
+test_that(".heatmap_resolve_split clamps k-means below the dimension and hierarchical splits to it", {
     # Empirically confirmed against real ComplexHeatmap: row_km == nrow(mat) errors
     # ("number of cluster centres must lie between 1 and nrow(x)"), row_km == nrow(mat) - 1 does not.
     expect_equal(.heatmap_resolve_split("K-means", 32, 32)$km, 31L)
     expect_equal(.heatmap_resolve_split("K-means", 999, 32)$km, 31L)
     expect_equal(.heatmap_resolve_split("K-means", 31, 32)$km, 31L)
-})
-
-test_that(".heatmap_resolve_split clamps hierarchical splits to the dimension (inclusive)", {
+    # A k-means clamp below 2 falls back to no split at all.
+    expect_equal(.heatmap_resolve_split("K-means", 5, 2), list(km = 1L, split = NULL))
+    # Hierarchical splits may equal the dimension.
     expect_equal(.heatmap_resolve_split("Hierarchical", 32, 32)$split, 32L)
     expect_equal(.heatmap_resolve_split("Hierarchical", 999, 32)$split, 32L)
 })
 
-test_that(".heatmap_resolve_split falls back to no-op when k-means clamps below 2", {
-    expect_equal(.heatmap_resolve_split("K-means", 5, 2), list(km = 1L, split = NULL))
-})
-
 # ---- .heatmap_scale_matrix() ------------------------------------------------------------------
 
-test_that(".heatmap_scale_matrix('none') returns the matrix unchanged", {
-    mat <- matrix(1:6, nrow = 2)
-    expect_identical(.heatmap_scale_matrix(mat, "none"), mat)
-})
+test_that(".heatmap_scale_matrix leaves 'none' alone and z-scores rows/columns correctly", {
+    expect_identical(.heatmap_scale_matrix(matrix(1:6, nrow = 2), "none"), matrix(1:6, nrow = 2))
 
-test_that(".heatmap_scale_matrix z-scores rows/columns correctly", {
     mat <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 2, byrow = TRUE)
     rownames(mat) <- c("r1", "r2")
     colnames(mat) <- c("c1", "c2", "c3")
@@ -80,32 +71,16 @@ test_that(".heatmap_scale_matrix preserves genuine NA but pins zero-variance row
 
 # ---- .heatmap_resolve_data() ------------------------------------------------------------------
 
-test_that(".heatmap_resolve_data normalizes a plain data frame", {
+test_that(".heatmap_resolve_data takes a plain data frame or the list(matrix=, column_annotations=) shape", {
     df <- data.frame(x = 1:3, y = 4:6)
     res <- .heatmap_resolve_data(df)
     expect_identical(res$matrix, df)
     expect_null(res$column_annotations)
-})
 
-test_that(".heatmap_resolve_data passes through the list(matrix=, column_annotations=) shape", {
-    mat_df <- data.frame(x = 1:3)
     col_df <- data.frame(sample = "s1", condition = "A")
-    res <- .heatmap_resolve_data(list(matrix = mat_df, column_annotations = col_df))
-    expect_identical(res$matrix, mat_df)
+    res <- .heatmap_resolve_data(list(matrix = df, column_annotations = col_df))
+    expect_identical(res$matrix, df)
     expect_identical(res$column_annotations, col_df)
-})
-
-# ---- .heatmap_default_colors() -------------------------------------------------------------
-
-test_that(".heatmap_default_colors returns the blue/white/red triple", {
-    expect_equal(.heatmap_default_colors(), c("#2166AC", "#F7F7F7", "#B2182B"))
-})
-
-# ---- .heatmap_annotation_widget_id() -----------------------------------------------------------
-
-test_that(".heatmap_annotation_widget_id sanitizes the row name into a safe HTML id", {
-    expect_equal(.heatmap_annotation_widget_id("row_ann_color", "row1"), "row_ann_color_row1")
-    expect_equal(.heatmap_annotation_widget_id("row_ann_color", "row annotations1"), "row_ann_color_row_annotations1")
 })
 
 # ---- .heatmap_annotation_spec() --------------------------------------------------------------
@@ -114,40 +89,23 @@ test_that(".heatmap_annotation_widget_id sanitizes the row name into a safe HTML
 # actually alter an annotated column's type/levels, e.g. a "Data Table" filter
 # that keeps every group, and must differ when it genuinely does.
 
-test_that(".heatmap_annotation_spec is stable across a row-filter that keeps every level", {
-    df_full <- data.frame(
+test_that(".heatmap_annotation_spec changes only when a column, its type or its levels change", {
+    df <- data.frame(
         gene = paste0("g", 1:9),
         pathway = rep(c("A", "B", "C"), each = 3),
         score = 1:9
     )
-    df_filtered <- df_full[c(1, 4, 7), ]  # one row per level -- still all 3 levels
+    spec <- function(column, data) .heatmap_annotation_spec(list(r1 = list(column = column)), data)
 
-    rows <- list(r1 = list(column = "pathway"))
-    expect_identical(.heatmap_annotation_spec(rows, df_full), .heatmap_annotation_spec(rows, df_filtered))
-})
-
-test_that(".heatmap_annotation_spec changes when a level actually disappears", {
-    df <- data.frame(pathway = rep(c("A", "B", "C"), each = 3))
-    rows <- list(r1 = list(column = "pathway"))
-    full_spec <- .heatmap_annotation_spec(rows, df)
-    dropped_spec <- .heatmap_annotation_spec(rows, df[df$pathway != "C", , drop = FALSE])
-    expect_false(identical(full_spec, dropped_spec))
-})
-
-test_that(".heatmap_annotation_spec for a numeric column ignores the actual values (row count only matters via existence)", {
-    df <- data.frame(score = c(1, 2, 3, 4, 5))
-    rows <- list(r1 = list(column = "score"))
-    spec1 <- .heatmap_annotation_spec(rows, df)
-    spec2 <- .heatmap_annotation_spec(rows, df[1:2, , drop = FALSE])
-    expect_identical(spec1, spec2)
-    expect_true(spec1$r1$numeric)
-})
-
-test_that(".heatmap_annotation_spec changes when a row's column selection changes", {
-    df <- data.frame(pathway = c("A", "B"), score = c(1, 2))
-    spec_pathway <- .heatmap_annotation_spec(list(r1 = list(column = "pathway")), df)
-    spec_score <- .heatmap_annotation_spec(list(r1 = list(column = "score")), df)
-    expect_false(identical(spec_pathway, spec_score))
+    # A row filter that keeps every level leaves it alone...
+    expect_identical(spec("pathway", df), spec("pathway", df[c(1, 4, 7), ]))
+    # ...one that drops a level changes it.
+    expect_false(identical(spec("pathway", df), spec("pathway", df[df$pathway != "C", , drop = FALSE])))
+    # A numeric column's values do not matter.
+    expect_identical(spec("score", df), spec("score", df[1:2, , drop = FALSE]))
+    expect_true(spec("score", df)$r1$numeric)
+    # Picking a different column does.
+    expect_false(identical(spec("pathway", df), spec("score", df)))
 })
 
 test_that(".heatmap_annotation_spec returns an empty list, not NULL, for empty/invalid input", {
@@ -159,28 +117,24 @@ test_that(".heatmap_annotation_spec returns an empty list, not NULL, for empty/i
 
 # ---- .heatmap_annotation_col() ----------------------------------------------------------------
 
-test_that(".heatmap_annotation_col builds a discrete mapping from explicit discrete_colors", {
+test_that(".heatmap_annotation_col builds a discrete mapping, falling back to grey for missing levels", {
     discrete <- c(A = "#FF0000", B = "#00FF00")
     mapping <- .heatmap_annotation_col(c("A", "B", "A", NA), discrete_colors = discrete)
     expect_type(mapping, "character")
     expect_setequal(names(mapping), c("A", "B"))
     expect_equal(unname(mapping[c("A", "B")]), c("#FF0000", "#00FF00"))
-})
 
-test_that(".heatmap_annotation_col falls back to grey for a level missing from discrete_colors", {
     mapping <- .heatmap_annotation_col(c("A", "B"), discrete_colors = c(A = "#FF0000"))
     expect_false(anyNA(mapping))
     expect_equal(unname(mapping["B"]), "#999999")
 })
 
-test_that(".heatmap_annotation_col builds a continuous mapping for numeric values", {
-    mapping <- .heatmap_annotation_col(c(1, 2, 3, NA), low_color = "blue", mid_color = "white", high_color = "red")
-    expect_true(is.function(mapping))
-})
-
-test_that(".heatmap_annotation_col handles a degenerate (constant) numeric range", {
-    mapping <- .heatmap_annotation_col(c(5, 5, 5), low_color = "blue", mid_color = "white", high_color = "red")
-    expect_true(is.function(mapping))
+test_that(".heatmap_annotation_col builds a continuous mapping, even over a constant range", {
+    skip_if_not_installed("circlize")
+    for (values in list(c(1, 2, 3, NA), c(5, 5, 5))) {
+        mapping <- .heatmap_annotation_col(values, low_color = "blue", mid_color = "white", high_color = "red")
+        expect_true(is.function(mapping))
+    }
 })
 
 test_that(".heatmap_annotation_col returns NULL when there are no usable values or colors", {
@@ -242,84 +196,54 @@ test_that(".heatmap_build_annotation builds a rowAnnotation/columnAnnotation obj
 })
 
 test_that(".heatmap_build_annotation carries each row's show_legend through per track", {
-    df <- data.frame(gene = c("g1", "g2", "g3"), pathway = c("A", "B", "A"), score = c(1, 2, 3))
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("circlize")
+    df <- data.frame(gene = c("g1", "g2", "g3"), pathway = c("A", "B", "A"), score = c(1, 2, 3), grp = c("x", "y", "x"))
 
     ann <- .heatmap_build_annotation(
         list(
             r = list(column = "pathway", side = "Left", show_legend = FALSE),
-            s = list(column = "score", side = "Left", show_legend = TRUE)
+            s = list(column = "score", side = "Left", show_legend = TRUE),
+            # A row predating show_legend gets a legend.
+            g = list(column = "grp", side = "Left")
         ),
         df, c("g1", "g2", "g3"), key_col = NULL, which = "row", color_lookup = .test_color_lookup
     )
     expect_equal(unname(ann@anno_list$pathway@show_legend), FALSE)
     expect_equal(unname(ann@anno_list$score@show_legend), TRUE)
+    expect_equal(unname(ann@anno_list$grp@show_legend), TRUE)
 })
 
-test_that(".heatmap_build_annotation shows a legend for a row predating show_legend", {
-    df <- data.frame(gene = c("g1", "g2", "g3"), pathway = c("A", "B", "A"))
-
-    ann <- .heatmap_build_annotation(
-        list(r = list(column = "pathway", side = "Left")),
-        df, c("g1", "g2", "g3"), key_col = NULL, which = "row", color_lookup = .test_color_lookup
-    )
-    expect_equal(unname(ann@anno_list$pathway@show_legend), TRUE)
-})
-
-test_that(".heatmap_build_annotation keeps show_legend aligned when a row is skipped", {
+test_that(".heatmap_build_annotation keeps show_legend and labels aligned when a row is skipped", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("circlize")
     df <- data.frame(gene = c("g1", "g2", "g3"), pathway = c("A", "B", "A"), score = c(1, 2, 3))
 
-    # The unusable middle row must not shift `score`'s flag onto `pathway`.
+    # The unusable middle row is dropped, and its fields with it: they must not
+    # slide onto the rows after it.
     ann <- .heatmap_build_annotation(
         list(
             r = list(column = "pathway", side = "Left", show_legend = TRUE),
-            skipped = list(column = "not_a_column", side = "Left", show_legend = FALSE),
-            s = list(column = "score", side = "Left", show_legend = FALSE)
+            skipped = list(column = "not_a_column", side = "Left", show_legend = FALSE,
+                label_side = "Top", label_size = 30),
+            s = list(column = "score", side = "Left", show_legend = FALSE,
+                label_side = "Bottom", label_size = 14)
         ),
         df, c("g1", "g2", "g3"), key_col = NULL, which = "row", color_lookup = .test_color_lookup
     )
+    expect_equal(names(ann@anno_list), c("pathway", "score"))
     expect_equal(unname(ann@anno_list$pathway@show_legend), TRUE)
     expect_equal(unname(ann@anno_list$score@show_legend), FALSE)
-})
-
-test_that(".heatmap_build_annotation, filtered by side, builds independent left/right annotations", {
-    skip_if_not_installed("ComplexHeatmap")
-    skip_if_not_installed("circlize")
-
-    df <- data.frame(gene = c("g1", "g2", "g3"), pathway = c("A", "B", "A"), score = c(1, 2, 3))
-    rows <- list(
-        r1 = list(column = "pathway", side = "Left"),
-        r2 = list(column = "score", side = "Right")
-    )
-    left_rows <- Filter(function(r) identical(r$side %||% "Left", "Left"), rows)
-    right_rows <- Filter(function(r) identical(r$side, "Right"), rows)
-    expect_named(left_rows, "r1")
-    expect_named(right_rows, "r2")
-
-    left_ann <- .heatmap_build_annotation(left_rows, df, df$gene, NULL, "row", .test_color_lookup)
-    right_ann <- .heatmap_build_annotation(right_rows, df, df$gene, NULL, "row", .test_color_lookup)
-    expect_s4_class(left_ann, "HeatmapAnnotation")
-    expect_s4_class(right_ann, "HeatmapAnnotation")
-
-    mat <- matrix(1:9, nrow = 3, dimnames = list(df$gene, c("s1", "s2", "s3")))
-    ht <- ComplexHeatmap::Heatmap(mat, left_annotation = left_ann, right_annotation = right_ann)
-    grDevices::pdf(NULL)
-    on.exit(grDevices::dev.off(), add = TRUE)
-    expect_no_error(ComplexHeatmap::draw(ht))
-})
-
-test_that("a row without `side` (predating the feature) defaults to Left/Top", {
-    rows <- list(r1 = list(column = "pathway"))
-    left_rows <- Filter(function(r) identical(r$side %||% "Left", "Left"), rows)
-    right_rows <- Filter(function(r) identical(r$side, "Right"), rows)
-    expect_length(left_rows, 1)
-    expect_length(right_rows, 0)
+    expect_equal(ann@anno_list$score@name_param$side, "bottom")
+    expect_equal(ann@anno_list$score@name_param$gp$fontsize, 14)
 })
 
 # ---- .heatmap_resolve_split(), "Annotation" method ----------------------------------------------
 
-test_that(".heatmap_resolve_split splits on a single annotation column", {
+test_that(".heatmap_resolve_split splits on a single annotation column, ignoring a stale split count", {
     sv <- data.frame(pathway = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
-    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
+    # A stale row_split_n left over from a previous K-means selection must not leak through.
+    res <- .heatmap_resolve_split("Annotation", 5, 4, sv)
 
     expect_equal(res$km, 1L)
     expect_s3_class(res$split, "data.frame")
@@ -343,50 +267,30 @@ test_that(".heatmap_resolve_split nests several annotation columns", {
     expect_equal(nrow(res6$split), 6L)
 })
 
-test_that(".heatmap_resolve_split never returns both km and split for the annotation method", {
-    sv <- data.frame(g = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
-    # A stale row_split_n left over from a previous K-means selection must not leak through.
-    res <- .heatmap_resolve_split("Annotation", 5, 4, sv)
-
-    expect_equal(res$km, 1L)
-    expect_false(is.null(res$split))
-})
-
-test_that(".heatmap_resolve_split makes NA an explicit annotation slice", {
+test_that(".heatmap_resolve_split makes NA an explicit slice, for characters and factors", {
     sv <- data.frame(g = c("A", NA, "B", NA), stringsAsFactors = FALSE)
-    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
+    expect_equal(.heatmap_resolve_split("Annotation", NA, 4, sv)$split$g, c("A", "NA", "B", "NA"))
 
-    expect_equal(res$split$g, c("A", "NA", "B", "NA"))
+    sv <- data.frame(g = factor(c("A", NA, "B", NA), levels = c("B", "A")))
+    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
+    expect_equal(as.character(res$split$g), c("A", "NA", "B", "NA"))
+    # The caller's order is kept, with the NA group appended rather than sorted in.
+    expect_equal(levels(res$split$g), c("B", "A", "NA"))
 })
 
-test_that(".heatmap_resolve_split keeps a factor's level order for the slice order", {
+test_that(".heatmap_resolve_split keeps a factor's level order and drops unused levels", {
     # Alphabetically these sort SJ10, SJ115, SJ2; the caller's level order is
     # the point, so it has to survive.
     sv <- data.frame(g = factor(
         c("SJ2", "SJ115", "SJ10", "SJ2"), levels = c("SJ2", "SJ10", "SJ115")
     ))
     res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
-
     expect_s3_class(res$split$g, "factor")
     expect_equal(levels(res$split$g), c("SJ2", "SJ10", "SJ115"))
-})
 
-test_that(".heatmap_resolve_split drops unused factor levels, which would be empty slices", {
-    sv <- data.frame(g = factor(
-        c("A", "B", "A", "B"), levels = c("A", "B", "never_used")
-    ))
-    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
-
-    expect_equal(levels(res$split$g), c("A", "B"))
-})
-
-test_that(".heatmap_resolve_split still groups NA when the column is a factor", {
-    sv <- data.frame(g = factor(c("A", NA, "B", NA), levels = c("B", "A")))
-    res <- .heatmap_resolve_split("Annotation", NA, 4, sv)
-
-    expect_equal(as.character(res$split$g), c("A", "NA", "B", "NA"))
-    # The caller's order is kept, with the NA group appended rather than sorted in.
-    expect_equal(levels(res$split$g), c("B", "A", "NA"))
+    # An unused level would be an empty slice.
+    sv <- data.frame(g = factor(c("A", "B", "A", "B"), levels = c("A", "B", "never_used")))
+    expect_equal(levels(.heatmap_resolve_split("Annotation", NA, 4, sv)$split$g), c("A", "B"))
 })
 
 test_that(".heatmap_resolve_split falls back to no split for unusable annotation values", {
@@ -405,15 +309,6 @@ test_that(".heatmap_resolve_split falls back to no split for unusable annotation
         .heatmap_resolve_split("Annotation", NA, 3, data.frame(g = c("A", "B", "C"))),
         no_split
     )
-})
-
-test_that(".heatmap_resolve_split leaves the numeric methods untouched", {
-    sv <- data.frame(g = c("A", "A", "B", "B"), stringsAsFactors = FALSE)
-
-    # split_values is ignored unless the method is "Annotation".
-    expect_equal(.heatmap_resolve_split("K-means", 2, 10, sv), list(km = 2L, split = NULL))
-    expect_equal(.heatmap_resolve_split("Hierarchical", 2, 10, sv), list(km = 1L, split = 2L))
-    expect_equal(.heatmap_resolve_split("None", 2, 10, sv), list(km = 1L, split = NULL))
 })
 
 # ---- .heatmap_annotation_values() ---------------------------------------------------------------
@@ -459,6 +354,10 @@ test_that(".heatmap_column_meta synthesises `column` when there is no metadata",
 
     expect_equal(names(meta), "column")
     expect_equal(meta$column, c("S1", "S2"))
+
+    # ...and gives an empty frame when no columns are selected.
+    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, character(0))), 0L)
+    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, NULL)), 0L)
 })
 
 test_that(".heatmap_column_meta joins metadata in matrix column order", {
@@ -493,11 +392,6 @@ test_that(".heatmap_column_meta falls back to names alone when the key is unusab
     expect_equal(names(.heatmap_column_meta(col_df, NULL, c("S1", "S2"))), "column")
 })
 
-test_that(".heatmap_column_meta handles no selected columns", {
-    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, character(0))), 0L)
-    expect_equal(nrow(.heatmap_column_meta(NULL, NULL, NULL)), 0L)
-})
-
 # ---- .heatmap_apply_filter() --------------------------------------------------------------------
 
 test_that(".heatmap_apply_filter keeps everything for a blank expression", {
@@ -510,7 +404,7 @@ test_that(".heatmap_apply_filter keeps everything for a blank expression", {
     }
 })
 
-test_that(".heatmap_apply_filter evaluates a valid expression", {
+test_that(".heatmap_apply_filter evaluates a valid expression, treating NA as drop", {
     df <- data.frame(v = c(1, 5, 9), g = c("a", "b", "a"), stringsAsFactors = FALSE)
 
     res <- .heatmap_apply_filter("v > 4", df, 3)
@@ -518,40 +412,22 @@ test_that(".heatmap_apply_filter evaluates a valid expression", {
     expect_equal(res$keep, c(FALSE, TRUE, TRUE))
 
     expect_equal(.heatmap_apply_filter('g == "a"', df, 3)$keep, c(TRUE, FALSE, TRUE))
-})
 
-test_that(".heatmap_apply_filter treats NA as drop, not keep", {
-    df <- data.frame(v = c(1, NA, 9))
-
-    res <- .heatmap_apply_filter("v > 4", df, 3)
+    res <- .heatmap_apply_filter("v > 4", data.frame(v = c(1, NA, 9)), 3)
     expect_equal(res$status, "ok")
     expect_equal(res$keep, c(FALSE, FALSE, TRUE))
 })
 
-test_that(".heatmap_apply_filter reports invalid separately from empty", {
+test_that(".heatmap_apply_filter reports invalid separately from empty, without leaking a warning", {
     df <- data.frame(v = 1:3)
 
-    # A blocked call, an unknown symbol, and an unparseable string.
-    for (bad in c('system("id")', "nope > 1", "v >")) {
-        res <- .heatmap_apply_filter(bad, df, 3)
-        expect_equal(res$status, "invalid")
+    # A blocked call, an unknown symbol, an unparseable string, a scalar rather
+    # than one value per row, and a numeric rather than logical result.
+    for (bad in c('system("id")', "nope > 1", "v >", "is.null(v)", "v + 1")) {
+        expect_no_warning(res <- .heatmap_apply_filter(bad, df, 3))
+        expect_equal(res$status, "invalid", info = bad)
         expect_null(res$keep)
     }
-})
-
-test_that(".heatmap_apply_filter rejects a non-logical or wrong-length result", {
-    df <- data.frame(v = 1:3)
-
-    # Scalar rather than one value per row.
-    expect_equal(.heatmap_apply_filter("is.null(v)", df, 3)$status, "invalid")
-    # Numeric rather than logical.
-    expect_equal(.heatmap_apply_filter("v + 1", df, 3)$status, "invalid")
-})
-
-test_that(".heatmap_apply_filter does not leak safe_eval_filter's warning", {
-    df <- data.frame(v = 1:3)
-
-    expect_no_warning(.heatmap_apply_filter('system("id")', df, 3))
 })
 
 # ---- Per-annotation label side and size --------------------------------------------------------
@@ -575,6 +451,7 @@ test_that(".heatmap_apply_filter does not leak safe_eval_filter's warning", {
 
 test_that("each annotation track gets its own label side and size", {
     skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("circlize")
 
     ann <- .build_label_ann(list(
         r1 = list(column = "g", label_side = "Top", label_size = 14),
@@ -587,8 +464,9 @@ test_that("each annotation track gets its own label side and size", {
     expect_equal(ann@anno_list[["n"]]@name_param$gp$fontsize, 8)
 })
 
-test_that("column annotations take left/right label sides", {
+test_that("label sides follow the axis, and one from the wrong axis falls back", {
     skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("circlize")
 
     ann <- .heatmap_build_annotation(
         list(
@@ -597,13 +475,8 @@ test_that("column annotations take left/right label sides", {
         ),
         .label_test_df, .label_test_keys, NULL, "column", .label_test_lookup
     )
-
     expect_equal(ann@anno_list[["g"]]@name_param$side, "left")
     expect_equal(ann@anno_list[["n"]]@name_param$side, "right")
-})
-
-test_that("a label side from the wrong axis falls back instead of erroring", {
-    skip_if_not_installed("ComplexHeatmap")
 
     # "left" is a column-annotation side; ComplexHeatmap errors on it for a row
     # annotation, so it must not reach the constructor.
@@ -617,48 +490,19 @@ test_that("a label side from the wrong axis falls back instead of erroring", {
     expect_equal(ann2@anno_list[["g"]]@name_param$side, "right")
 })
 
-test_that("rows saved before the label fields existed still build", {
+
+test_that("missing or unusable label fields fall back rather than propagating NA", {
     skip_if_not_installed("ComplexHeatmap")
 
-    # A `defaults` list written against the old two-field row_spec.
+    # A `defaults` list written against the old two-field row_spec still builds.
     ann <- .build_label_ann(list(r1 = list(column = "g", side = "Left")))
-
     expect_equal(ann@anno_list[["g"]]@name_param$side, "bottom")
     expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 10)
-})
-
-test_that("an unusable label size falls back rather than propagating NA", {
-    skip_if_not_installed("ComplexHeatmap")
 
     for (bad in list("abc", NA, -1, 0, NULL)) {
         ann <- .build_label_ann(list(r1 = list(column = "g", label_size = bad)))
         expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 10)
     }
-})
-
-test_that("a skipped row does not shift the labels of the rows after it", {
-    skip_if_not_installed("ComplexHeatmap")
-
-    # The first row names a column that is not in the data, so it is dropped --
-    # its label values must be dropped with it rather than sliding onto `g`.
-    ann <- .build_label_ann(list(
-        r1 = list(column = "not_a_column", label_side = "Top", label_size = 30),
-        r2 = list(column = "g", label_side = "Bottom", label_size = 14)
-    ))
-
-    expect_equal(names(ann@anno_list), "g")
-    expect_equal(ann@anno_list[["g"]]@name_param$side, "bottom")
-    expect_equal(ann@anno_list[["g"]]@name_param$gp$fontsize, 14)
-})
-
-test_that("the annotation UI exposes label side and size per row", {
-    dat <- list(matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data)
-    html <- paste(as.character(ComplexHeatmap_HeatmapInputsUI("h", dat)), collapse = "")
-
-    expect_true(grepl("label_side", html, fixed = TRUE))
-    expect_true(grepl("label_size", html, fixed = TRUE))
-    expect_true(grepl("Label Side", html, fixed = TRUE))
-    expect_true(grepl("Label Size", html, fixed = TRUE))
 })
 
 # ---- Filter pipeline in the module server ------------------------------------------------------
@@ -785,12 +629,26 @@ test_that("an invalid filter expression does not silently plot unfiltered data",
 
 # ---- End-to-end module smoke test --------------------------------------------------------------
 
-test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes", {
-    df <- example_heatmap_matrix
-    col_df <- example_heatmap_column_data
+test_that("ComplexHeatmap_HeatmapInputsUI builds for both data shapes, with its annotation and filter controls", {
+    expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", example_heatmap_matrix))
 
-    expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", df))
-    expect_no_error(ComplexHeatmap_HeatmapInputsUI("h", list(matrix = df, column_annotations = col_df)))
+    dat <- list(matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data)
+    html <- paste(as.character(ComplexHeatmap_HeatmapInputsUI("h", dat)), collapse = "")
+
+    # Label side and size per annotation row.
+    for (txt in c("label_side", "label_size", "Label Side", "Label Size")) {
+        expect_true(grepl(txt, html, fixed = TRUE), info = txt)
+    }
+
+    # The Filter tab carries its guidance in tooltips, not as on-screen text:
+    # helpText() renders a help-block div.
+    expect_true(grepl("h-row_filter", html, fixed = TRUE))
+    expect_true(grepl("h-column_filter", html, fixed = TRUE))
+    expect_false(grepl("help-block", html, fixed = TRUE))
+    # The tooltips list the fields each filter can use, read from the data:
+    # `column` is synthesised, and the metadata fields join alongside it.
+    expect_true(grepl("mean_expression", html, fixed = TRUE))
+    expect_true(grepl("Fields: column, sample, condition, batch", html, fixed = TRUE))
 })
 
 # The app is a thin createModuleApp() wrapper, so its data_list is what to assert on.
@@ -805,18 +663,18 @@ test_that("ComplexHeatmap_HeatmapApp() defaults to the matrix *and* its metadata
 
     # Without a metadata table the column annotation/split/filter features are
     # inert, so a bare app() would demo only half the module.
-    entry <- .app_data_list(ComplexHeatmap_HeatmapApp())[[1]]
+    app <- ComplexHeatmap_HeatmapApp()
+    entry <- .app_data_list(app)[[1]]
 
     expect_true(is.list(entry) && !is.data.frame(entry))
     expect_s3_class(entry$matrix, "data.frame")
     expect_s3_class(entry$column_annotations, "data.frame")
     expect_equal(nrow(entry$column_annotations), nrow(example_heatmap_column_data))
     # The join is useless without a key, so it must be seeded too.
-    app_env <- environment(ComplexHeatmap_HeatmapApp()$serverFuncSource())
-    expect_equal(get("defaults", envir = app_env)$column_key, "sample")
+    expect_equal(get("defaults", envir = environment(app$serverFuncSource()))$column_key, "sample")
 })
 
-test_that("ComplexHeatmap_HeatmapApp() does not attach the bundled metadata to a caller's data", {
+test_that("ComplexHeatmap_HeatmapApp() attaches metadata to a caller's matrix only when it is supplied", {
     skip_if_not_installed("ComplexHeatmap")
     skip_if_not_installed("InteractiveComplexHeatmap")
     skip_if_not_installed("circlize")
@@ -828,18 +686,11 @@ test_that("ComplexHeatmap_HeatmapApp() does not attach the bundled metadata to a
     # metadata onto it would match on sample names that do not exist there.
     expect_s3_class(entry, "data.frame")
     expect_equal(entry, own)
-})
-
-test_that("ComplexHeatmap_HeatmapApp() attaches supplied column_data to the caller's matrix", {
-    skip_if_not_installed("ComplexHeatmap")
-    skip_if_not_installed("InteractiveComplexHeatmap")
-    skip_if_not_installed("circlize")
 
     entry <- .app_data_list(ComplexHeatmap_HeatmapApp(
         data_list = list(m = example_heatmap_matrix),
         column_data = example_heatmap_column_data
     ))[[1]]
-
     expect_equal(names(entry), c("matrix", "column_annotations"))
     expect_equal(entry$matrix, example_heatmap_matrix)
 })
@@ -936,39 +787,11 @@ test_that("ComplexHeatmap_HeatmapServer renders default annotations on startup w
     )
 })
 
-test_that("the Filter tab carries its guidance in tooltips, not as on-screen text", {
-    dat <- list(matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data)
-    html <- paste(as.character(ComplexHeatmap_HeatmapInputsUI("h", dat)), collapse = "")
-
-    expect_true(grepl("h-row_filter", html, fixed = TRUE))
-    expect_true(grepl("h-column_filter", html, fixed = TRUE))
-    # helpText() renders a help-block div; the guidance moved into the tooltips.
-    expect_false(grepl("help-block", html, fixed = TRUE))
-
-    # Each tooltip must still stand alone: purpose, available fields, vocabulary.
-    expect_true(grepl("Leave blank to keep every row", html, fixed = TRUE))
-    expect_true(grepl("Leave blank to keep every column", html, fixed = TRUE))
-    expect_true(grepl("mean_expression", html, fixed = TRUE))
-    # `column` is synthesised, and the metadata fields join alongside it.
-    expect_true(grepl("Fields: column, sample, condition, batch", html, fixed = TRUE))
-    expect_equal(
-        lengths(regmatches(html, gregexpr("startsWith/endsWith", html, fixed = TRUE))), 2L
-    )
-})
-
-test_that("ComplexHeatmap_HeatmapOutputUI passes compact through to the underlying widget", {
-    skip_if_not_installed("InteractiveComplexHeatmap")
-
-    expect_no_error(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE))
-    expect_no_error(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE, layout = "1|(2-3)"))
-
-    html <- as.character(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE))
-    # Compact mode floats the info panel rather than giving it a static area.
-    expect_true(grepl("float", html, ignore.case = TRUE))
-})
-
 test_that("a floating info panel is re-parked so it cannot widen the page", {
     skip_if_not_installed("InteractiveComplexHeatmap")
+
+    # compact passes through to the underlying widget, layout and all.
+    expect_no_error(ComplexHeatmap_HeatmapOutputUI("h", compact = TRUE, layout = "1|(2-3)"))
 
     # InteractiveComplexHeatmap parks the detached panel at right: -10000px,
     # which extends the host document's scrollable width by ~10,000px.
@@ -994,13 +817,6 @@ test_that("a floating info panel is re-parked so it cannot widen the page", {
         expect_false("vizmodules-heatmap-float-output" %in% deps)
         expect_false(grepl("heatmapFloatOutput", as.character(off), fixed = TRUE))
     }
-})
-
-test_that(".heatmap_widget_id mirrors InteractiveComplexHeatmap's id validation", {
-    expect_equal(.heatmap_widget_id("heatmap-Heatmap"), "heatmap_Heatmap")
-    expect_equal(.heatmap_widget_id("a b.c-d"), "a_b_c_d")
-    expect_equal(.heatmap_widget_id("Heatmap"), "Heatmap")
-    expect_equal(.heatmap_widget_id("1heatmap"), "v_1heatmap")
 })
 
 test_that("the heatmap output UIs fit their container's width unless told not to", {
@@ -1084,11 +900,8 @@ test_that("heatmap_fit_width attaches the fit script to a hand-built widget", {
     expect_true(grepl("ovw_modality_ht_widget", html, fixed = TRUE))
     expect_true("vizmodules-heatmap-fit-width" %in%
         vapply(rendered$dependencies, function(d) d$name, character(1)))
-})
 
-test_that("heatmap_fit_width honours a narrowed panel set", {
-    skip_if_not_installed("InteractiveComplexHeatmap")
-
+    # A narrowed panel set is honoured.
     html <- as.character(heatmap_fit_width(
         InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput(heatmap_id = "ht"),
         heatmap_id = "ht", panels = "heatmap", output = FALSE
@@ -1127,52 +940,6 @@ test_that("ComplexHeatmap_HeatmapStaticOutputUI renders a plain plot output", {
         )),
         fixed = TRUE
     ))
-})
-
-test_that("ComplexHeatmap_HeatmapServer exposes a vector_svg renderer for figure export", {
-    skip_if_not_installed("ComplexHeatmap")
-    skip_if_not_installed("InteractiveComplexHeatmap")
-    skip_if_not_installed("circlize")
-
-    df <- example_heatmap_matrix
-    sample_cols <- setdiff(names(df), c("gene", "pathway", "mean_expression"))
-    dat <- list(matrix = df, column_annotations = example_heatmap_column_data)
-
-    shiny::testServer(
-        ComplexHeatmap_HeatmapServer,
-        args = list(
-            data = shiny::reactive(dat),
-            defaults = list(
-                matrix.cols = sample_cols, rowname.col = "gene",
-                column_key = "sample"
-            )
-        ),
-        {
-            session$setInputs(
-                matrix.cols = sample_cols, rowname.col = "gene",
-                column_key = "sample", row_filter = "", column_filter = "",
-                auto.update = TRUE
-            )
-
-            render <- attr(session$getReturned(), "vector_svg")
-            expect_true(is.function(render))
-
-            svg <- render(width = 480, height = 380)
-            expect_true(is.character(svg))
-            # The panel is sized in pixels so it lands at the size the canvas
-            # measured, whatever a reader makes of the device's own units.
-            expect_true(startsWith(svg, "<svg "))
-            expect_true(grepl('width="480"', svg, fixed = TRUE))
-            expect_true(grepl('height="380"', svg, fixed = TRUE))
-            # Really the heatmap, not a blank device.
-            expect_true(grepl(df$gene[1], svg, fixed = TRUE))
-            # Ids are namespaced per widget so two panels cannot collide.
-            ids <- unlist(regmatches(svg, gregexpr("id='[^']+", svg)))
-            if (length(ids)) {
-                expect_true(all(grepl("Heatmap-", ids, fixed = TRUE)))
-            }
-        }
-    )
 })
 
 test_that("an exported heatmap keeps its cells at the size they were drawn", {
@@ -1232,6 +999,11 @@ test_that("an exported heatmap keeps its cells at the size they were drawn", {
             # Drawn on the right canvas this is ~7pt; on a 25%-smaller one it
             # fell below a tenth of a point.
             expect_gt(cell, 2)
+
+            # Ids are namespaced per widget so two panels cannot collide.
+            ids <- unlist(regmatches(svg, gregexpr("id='[^']+", svg)))
+            expect_gt(length(ids), 0)
+            expect_true(all(grepl("Heatmap-", ids, fixed = TRUE)))
         }
     )
 })

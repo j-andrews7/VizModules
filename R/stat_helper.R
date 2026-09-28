@@ -123,6 +123,21 @@ compute_pairwise_stats <- function(df, x, y,
     )
 }
 
+#' Format a p-value for a bracket or omnibus label
+#'
+#' Four decimal places, but a value that would round to zero reads "< 0.0001"
+#' rather than a misleading "0".
+#' @noRd
+.format_p <- function(p) {
+    if (is.na(p)) {
+        return("NA")
+    }
+    if (p < 1e-4) {
+        return("< 0.0001")
+    }
+    format(round(p, 4), scientific = FALSE)
+}
+
 #' Convert p-values to significance symbols
 #' @noRd
 .p_to_signif <- function(p, sig.threshold, sig.levels) {
@@ -547,8 +562,8 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
         row <- omnibus_df[i, ]
         p_text <- switch(display,
             "symbol" = row$p.signif,
-            "p.value" = if (is.na(row$p.value)) "NA" else format(round(row$p.value, 4), scientific = FALSE),
-            "p.adj" = if (is.na(row$p.adj)) "NA" else format(round(row$p.adj, 4), scientific = FALSE)
+            "p.value" = .format_p(row$p.value),
+            "p.adj" = .format_p(row$p.adj)
         )
         facet_prefix <- if (!is.na(row$facet_level)) paste0(row$facet_level, ": ") else ""
         x_prefix <- if (!is.na(row$x_level)) paste0(row$x_level, ": ") else ""
@@ -746,8 +761,8 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 
         label <- switch(display,
             "symbol" = row$p.signif,
-            "p.value" = if (is.na(row$p.value)) "NA" else format(round(row$p.value, 4), scientific = FALSE),
-            "p.adj" = if (is.na(row$p.adj)) "NA" else format(round(row$p.adj, 4), scientific = FALSE)
+            "p.value" = .format_p(row$p.value),
+            "p.adj" = .format_p(row$p.adj)
         )
 
         if (bracket.style == "capped") {

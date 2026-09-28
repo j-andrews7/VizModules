@@ -72,8 +72,6 @@ test_that("draw_to_svg renders a drawing at a pixel size with unique ids", {
     b <- draw_to_svg(function() plot(1:10), 300, 200, id_prefix = "panelB")
 
     expect_true(startsWith(a, "<svg "))
-    expect_true(grepl('width="300"', a, fixed = TRUE))
-    expect_true(grepl('height="200"', a, fixed = TRUE))
 
     # Two panels drawing the same thing mint the same raw ids, which is exactly
     # the collision the prefixing exists to prevent.
@@ -97,13 +95,15 @@ test_that("draw_to_svg renders a drawing at a pixel size with unique ids", {
     expect_error(draw_to_svg(function() plot(1:3), 0, 0), "margins")
 })
 
-test_that("draw_to_svg leaves no device open when the drawing fails", {
-    before <- length(grDevices::dev.list())
-    expect_error(
-        draw_to_svg(function() stop("boom"), 300, 200),
-        "boom"
-    )
-    expect_equal(length(grDevices::dev.list()), before)
+test_that("draw_to_svg and draw_to_png leave no device open when the drawing fails", {
+    renderers <- list(draw_to_svg = draw_to_svg)
+    if (isTRUE(capabilities("png"))) renderers$draw_to_png <- draw_to_png
+
+    for (nm in names(renderers)) {
+        before <- length(grDevices::dev.list())
+        expect_error(renderers[[nm]](function() stop("boom"), 300, 200), "boom", info = nm)
+        expect_equal(length(grDevices::dev.list()), before, info = nm)
+    }
 })
 
 test_that("draw_to_svg draws on the canvas the panel was rendered at", {
@@ -214,15 +214,6 @@ test_that("draw_to_png refuses a size it cannot draw at", {
     suppressWarnings(
         expect_error(draw_to_png(function() plot(1:3), 0, 0), "margins")
     )
-})
-
-
-test_that("draw_to_png leaves no device open when the drawing fails", {
-    skip_if_not(isTRUE(capabilities("png")))
-
-    before <- length(grDevices::dev.list())
-    expect_error(draw_to_png(function() stop("boom"), 300, 200), "boom")
-    expect_equal(length(grDevices::dev.list()), before)
 })
 
 

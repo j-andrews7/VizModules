@@ -24,14 +24,6 @@ test_that(".safe_build_model builds a model from an allowed formula", {
 })
 
 
-test_that(".safe_build_model rejects a formula naming unknown columns", {
-    expect_warning(
-        expect_null(.safe_build_model("Sepal.Length ~ nope", iris, "lm")),
-        "disallowed terms"
-    )
-})
-
-
 test_that(".safe_build_model rejects input that is not a single formula", {
     expect_warning(
         expect_null(.safe_build_model("Sepal.Length ~ Sepal.Width; 1", iris, "lm")),
@@ -69,8 +61,9 @@ test_that(".safe_build_model rejects a call in function position", {
 })
 
 
-test_that(".safe_build_model rejects impure calls", {
+test_that(".safe_build_model rejects impure calls and unknown columns", {
     for (f in c(
+        "Sepal.Length ~ nope",
         "Sepal.Length ~ system('id')",
         "Sepal.Length ~ eval(parse(text = 'Sepal.Width'))",
         "Sepal.Length ~ get('Sepal.Width')",

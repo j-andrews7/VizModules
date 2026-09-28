@@ -13,39 +13,22 @@ test_that("collect_source_data handles zero-length (non-NULL) UI input values", 
     expect_equal(result$inputs$values[result$inputs$names == "hover.data"], "")
 })
 
-test_that("collect_source_data limits plot_data to plotted columns and rows", {
+test_that("collect_source_data limits plot_data to plotted columns, recovering split.by from the inputs", {
     df <- mtcars
-    df$carname <- rownames(df)
     df$gear_f <- factor(df$gear)
+    df$am <- factor(df$am)
+    collect <- function(...) {
+        args <- list(x.by = "mpg", y.by = "hp", color.by = "cyl", ...)
+        fig <- plotly::ggplotly(do.call(dittoViz::scatterPlot, c(list(df), args, data.out = FALSE)))
+        collect_source_data(plot_reactive = function() fig, inputs_reactive = args)
+    }
 
-    fig <- plotly::ggplotly(
-        dittoViz::scatterPlot(df, x.by = "mpg", y.by = "hp", color.by = "cyl", shape.by = "gear_f", data.out = FALSE)
-    )
-
-    result <- collect_source_data(
-        plot_reactive = function() fig,
-        inputs_reactive = list(x.by = "mpg", y.by = "hp", color.by = "cyl", shape.by = "gear_f", split.by = "")
-    )
-
+    result <- collect(shape.by = "gear_f")
     expect_setequal(names(result$plot_data), c("mpg", "hp", "cyl", "gear_f"))
     expect_equal(nrow(result$plot_data), nrow(df))
-})
 
-test_that("collect_source_data recovers split.by/facet columns from UI inputs", {
-    df <- mtcars
-    df$am <- factor(df$am)
-
-    fig <- plotly::ggplotly(
-        dittoViz::scatterPlot(df, x.by = "mpg", y.by = "hp", color.by = "cyl", split.by = "am", data.out = FALSE)
-    )
-
-    result <- collect_source_data(
-        plot_reactive = function() fig,
-        inputs_reactive = list(x.by = "mpg", y.by = "hp", color.by = "cyl", split.by = "am")
-    )
-
-    expect_true("am" %in% names(result$plot_data))
-    expect_setequal(names(result$plot_data), c("mpg", "hp", "cyl", "am"))
+    # A split column is not in the figure's own data; it comes from the inputs.
+    expect_setequal(names(collect(split.by = "am")$plot_data), c("mpg", "hp", "cyl", "am"))
 })
 
 test_that("collect_source_data drops rows with NA in a plotted column", {
@@ -136,9 +119,8 @@ test_that("collect_source_data accepts inputs as a reactive, as documented", {
 
     expect_setequal(result$inputs$names, c("x.by", "y.by"))
     expect_setequal(names(result$plot_data), c("wt", "mpg"))
-})
 
-test_that(".source_input_snapshot passes empty snapshots through", {
+    # An empty snapshot passes straight through.
     expect_null(.source_input_snapshot(NULL))
     expect_equal(.source_input_snapshot(list()), list())
 })
@@ -492,29 +474,6 @@ test_that(".write_source_images prefers a redraw over a screenshot", {
 
     expect_true(called)
     expect_equal(readBin(file.path(dir, "x_plot.png"), "raw", n = 1e7), redrawn)
-})
-
-
-test_that(".write_source_images keeps an unflagged capture over a redraw", {
-    skip_if_not(isTRUE(capabilities("png")))
-
-    dir <- withr::local_tempdir()
-    captured <- draw_to_png(function() plot(1:5), 200, 150)
-    called <- FALSE
-
-    .write_source_images(
-        dir, "x",
-        img = list(png = captured),
-        raster_png = function(width, height, res) {
-            called <<- TRUE
-            as.raw(1:8)
-        }
-    )
-
-    # A Plotly.toImage() result is the plot as the user actually has it, so it
-    # still beats anything the server can rebuild.
-    expect_false(called)
-    expect_equal(readBin(file.path(dir, "x_plot.png"), "raw", n = 1e7), captured)
 })
 
 

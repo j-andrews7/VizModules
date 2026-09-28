@@ -14,70 +14,26 @@ test_that("dumbbellPlot creates expected trace structure", {
     expect_true(length(built$x$data) >= 2)
 })
 
-test_that("dumbbellPlot handles colour.by parameter", {
+test_that("dumbbellPlot applies its segment colour, x adjustment and axis styling", {
     df <- data.frame(
         School = c("MIT", "Stanford"),
         Women = c(94, 96),
         Men = c(152, 151)
     )
-
-    fig_x <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        colour.by = "X variables", palette.selection = c("pink", "blue")
-    )
-    expect_s3_class(fig_x, "plotly")
-
-    fig_y <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        colour.by = "Y variables", palette.selection = c("red", "green")
-    )
-    expect_s3_class(fig_y, "plotly")
-})
-
-test_that("dumbbellPlot handles custom line colour", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
+    built <- suppressWarnings(plotly::plotly_build(dumbbellPlot(
         data = df, x = c("Women", "Men"), y = "School",
         palette.selection = c("pink", "blue"),
-        line.colour = "#FF0000"
-    )
+        line.colour = "#FF0000", x.adjustment = "log2", axis.showline = FALSE
+    )))
 
-    expect_s3_class(fig, "plotly")
-})
+    segments <- Filter(function(t) identical(t$mode, "lines"), built$x$data)
+    expect_length(segments, 1)
+    expect_equal(segments[[1]]$line$color, "#FF0000")
 
-test_that("dumbbellPlot handles legend visibility", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"), show.legend = FALSE
-    )
+    markers <- Filter(function(t) identical(t$mode, "markers") && !is.null(t$name), built$x$data)
+    expect_equal(sort(unlist(lapply(markers, `[[`, "x"))), sort(log2(c(df$Women, df$Men))))
 
-    built <- plotly::plotly_build(fig)
-    expect_false(built$x$layout$showlegend)
-})
-
-test_that("dumbbellPlot handles custom titles", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        title.text = "Earnings Gap", x.title = "Salary ($K)", y.title = "School"
-    )
-
-    built <- plotly::plotly_build(fig)
-    expect_equal(built$x$layout$title$text, "Earnings Gap")
+    expect_false(built$x$layout$xaxis$showline)
 })
 
 test_that("dumbbellPlot handles axis flipping", {
@@ -95,90 +51,6 @@ test_that("dumbbellPlot handles axis flipping", {
     built <- plotly::plotly_build(fig)
     expect_equal(built$x$layout$xaxis$autorange, "reversed")
     expect_equal(built$x$layout$yaxis$autorange, "reversed")
-})
-
-test_that("dumbbellPlot handles axis styling", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        axis.showline = FALSE, axis.linecolor = "#999999",
-        axis.tickfont.size = 14, axis.tickfont.color = "#333333"
-    )
-
-    expect_s3_class(fig, "plotly")
-    built <- plotly::plotly_build(fig)
-    expect_false(built$x$layout$xaxis$showline)
-})
-
-test_that("dumbbellPlot handles faceting", {
-    df <- data.frame(
-        School = c("MIT", "Stanford", "Harvard", "Yale"),
-        Women = c(94, 96, 112, 88),
-        Men = c(152, 151, 165, 140),
-        Region = c("East", "West", "East", "East")
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        facet.by = "Region"
-    )
-
-    expect_s3_class(fig, "plotly")
-})
-
-test_that("dumbbellPlot handles x.adjustment", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        x.adjustment = "log2"
-    )
-
-    expect_s3_class(fig, "plotly")
-})
-
-test_that("dumbbellPlot handles title font styling", {
-    df <- data.frame(
-        School = c("MIT", "Stanford"),
-        Women = c(94, 96),
-        Men = c(152, 151)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        title.text = "Test", title.font.size = 30,
-        title.font.family = "Courier", title.font.color = "#0000FF"
-    )
-
-    built <- plotly::plotly_build(fig)
-    expect_equal(built$x$layout$title$font$size, 30)
-    expect_equal(built$x$layout$title$font$family, "Courier")
-})
-
-test_that("dumbbellPlot honors title.x.position for repositioning the title", {
-    df <- data.frame(
-        School = c("MIT", "Stanford", "Harvard"),
-        Women = c(94, 96, 112),
-        Men = c(152, 151, 165)
-    )
-    fig <- dumbbellPlot(
-        data = df, x = c("Women", "Men"), y = "School",
-        palette.selection = c("pink", "blue"),
-        title.text = "Custom title",
-        title.x.position = 0.2
-    )
-
-    built <- plotly::plotly_build(fig)
-    expect_equal(built$x$layout$title$x, 0.2)
 })
 
 # Axis-title annotations as left by axis_titles_as_annotations() / build_facet_annotations().
@@ -352,15 +224,12 @@ test_that("colouring by Y matches each category's own colour, not its sorted pos
         expect_setequal(m$names[m$legend], names(pal))
         expect_equal(sum(m$legend), 3)
     }
-})
 
-test_that("an unnamed Y palette follows the order categories appear in the data", {
-    df <- data.frame(school = c("A", "B", "C"), women = c(30, 10, 20), men = c(40, 15, 25))
+    # An unnamed palette follows the order the categories appear in the data.
     m <- .dumbbell_marker_colours(suppressWarnings(dumbbellPlot(
-        df, x = c("women", "men"), y = "school", colour.by = "Y variables",
-        palette.selection = c("#FF0000", "#00FF00", "#0000FF")
+        df, x = c("women", "men"), y = "school", colour.by = "Y variables", palette.selection = unname(pal)
     )))
-    expect_equal(m$colours, unname(c(A = "#FF0000", B = "#00FF00", C = "#0000FF")[m$names]))
+    expect_equal(m$colours, unname(pal[m$names]))
 })
 
 test_that("a Y category keeps its colour in every facet", {

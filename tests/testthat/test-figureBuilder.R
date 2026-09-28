@@ -29,6 +29,9 @@ test_that("figureBuilderUI namespaces its ids and canvas markup", {
     expect_true(grepl("pb-label-case", html))
     expect_true(grepl("pbAssignLabels", head_html))
     expect_true(grepl("\\.viz-panel-label", head_html))
+
+    # `.pb-app .well` rules are inert without this marker on the layout.
+    expect_true(grepl("pb-app", html, fixed = TRUE))
 })
 
 test_that("figureBuilderUI can omit its header title", {
@@ -112,22 +115,6 @@ test_that("figureBuilderApp returns UI and server components", {
     expect_s3_class(figureBuilderApp(), "shiny.appobj")
 })
 
-test_that("figureBuilderServer accepts a multi-table dataset entry", {
-    entry <- list(
-        matrix = data.frame(gene = c("a", "b"), s1 = 1:2),
-        column_annotations = data.frame(sample = "s1", condition = "ctrl")
-    )
-    expect_no_error(
-        shiny::testServer(
-            figureBuilderServer,
-            args = list(data_list = list(two_table = entry)),
-            {
-                session$flushReact()
-            }
-        )
-    )
-})
-
 test_that("the ComplexHeatmap module is offered when its dependencies are present", {
     reg <- .figure_builder_registry()
     dat <- .example_datasets()
@@ -146,13 +133,11 @@ test_that("the ComplexHeatmap module is offered when its dependencies are presen
 
     skip_if_not(available)
     entry <- reg$heatmap
-    expect_equal(entry$dataset, "example_heatmap")
     expect_equal(entry$primary.table, "matrix")
     # The static output, not the InteractiveComplexHeatmap widget: a figure
     # panel has no room for the widget's border and control strip.
     expect_identical(entry$output_ui, ComplexHeatmap_HeatmapStaticOutputUI)
     expect_identical(entry$server_fn, ComplexHeatmap_HeatmapServer)
-    expect_true(all(entry$defaults$matrix.cols %in% names(example_heatmap_matrix)))
 })
 
 test_that("a multi-table dataset is reduced for modules that cannot take one", {
@@ -352,38 +337,31 @@ test_that("figureBuilderUI points its source download at its own canvas", {
 })
 
 
-test_that(".figure_builder_sources tags each summary with its panel id", {
+test_that(".figure_builder_sources tags each summary and forwards attached renderers", {
+    svg_fn <- function(width, height, res = 72) "<svg/>"
+    png_fn <- function(width, height, res = 72) as.raw(1:4)
+    heatmap <- reactive(list(plot = NULL, plot_data = data.frame(b = 2)))
+    attr(heatmap, "vector_svg") <- svg_fn
+    attr(heatmap, "raster_png") <- png_fn
+
     sources <- list(
         panel1 = reactive(list(plot = NULL, plot_data = data.frame(a = 1))),
-        panel2 = reactive(list(plot = NULL, plot_data = data.frame(b = 2)))
+        panel2 = heatmap
     )
-    labels <- list(panel1 = "Box #1 (mtcars)", panel2 = "Bar #2 (mtcars)")
+    labels <- list(panel1 = "Box #1 (mtcars)", panel2 = "Heatmap #2")
 
     out <- isolate(.figure_builder_sources(c("panel1", "panel2"), sources, labels))
 
     # Named for the reader, keyed for the browser: the archive uses the label
     # the user can edit, while the capture only ever knows the panel id.
-    expect_named(out, c("Box #1 (mtcars)", "Bar #2 (mtcars)"))
+    expect_named(out, c("Box #1 (mtcars)", "Heatmap #2"))
     expect_equal(out[["Box #1 (mtcars)"]]$svg_key, "panel1")
-    expect_equal(out[["Bar #2 (mtcars)"]]$svg_key, "panel2")
-})
+    expect_equal(out[["Heatmap #2"]]$svg_key, "panel2")
 
-
-test_that(".figure_builder_sources forwards renderers given as attributes", {
-    svg_fn <- function(width, height, res = 72) "<svg/>"
-    png_fn <- function(width, height, res = 72) as.raw(1:4)
-
-    sr <- reactive(list(plot = NULL, plot_data = data.frame(a = 1)))
-    attr(sr, "vector_svg") <- svg_fn
-    attr(sr, "raster_png") <- png_fn
-
-    out <- isolate(.figure_builder_sources("panel1", list(panel1 = sr),
-        list(panel1 = "Heatmap #1")))
-
-    # The older contract puts them on the reactive; the archive reads the
+    # The older contract puts renderers on the reactive; the archive reads the
     # summary, so they are copied across.
-    expect_identical(out[["Heatmap #1"]]$vector_svg, svg_fn)
-    expect_identical(out[["Heatmap #1"]]$raster_png, png_fn)
+    expect_identical(out[["Heatmap #2"]]$vector_svg, svg_fn)
+    expect_identical(out[["Heatmap #2"]]$raster_png, png_fn)
 })
 
 

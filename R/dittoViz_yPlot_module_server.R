@@ -584,23 +584,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 strip.background = element_blank()
             )
 
-            # Collect hover data. When the user makes no explicit selection,
-            # reconstruct dittoViz::yPlot()'s internal default set so hover
-            # content is unchanged from the package default. Columns that do not
-            # exist in the plotted data are ignored downstream by dittoViz.
+            # Collect hover data, falling back to dittoViz's own default set
+            # when the user makes no explicit selection.
             annotate.by <- .na_to_null(isolate_fn(input$annotate.by))
             hover.data <- .na_to_null(isolate_fn(input$hover.data))
             if (is.null(hover.data)) {
-                var.name <- y.vars
-                hover.data <- unique(c(
-                    var.name,
-                    paste0(var.name, ".adj"),
-                    "var.multi", "var.which",
-                    isolate_fn(input$group.by),
-                    color.by,
-                    shape.by,
-                    split.by
-                ))
+                hover.data <- .yplot_default_hover(y.vars, isolate_fn(input$group.by), color.by, shape.by, split.by)
             }
             # Point annotations are parsed back out of the hover text, so the
             # annotation column has to be carried in it.
@@ -914,4 +903,24 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         return(plot_source_reactive)
     })
+}
+
+
+#' dittoViz::yPlot()'s default hover columns
+#'
+#' The module always passes `hover.data`, so when the user has made no Hover Data
+#' selection it passes the set dittoViz would have used, keeping the hover content
+#' unchanged from the package default. Columns that are not in the plotted data
+#' are ignored downstream by dittoViz.
+#'
+#' @param var Character vector of the plotted Y columns.
+#' @param group.by,color.by,shape.by,split.by The grouping columns, or `NULL`.
+#'
+#' @return A character vector of column names.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_yplot_default_hover
+#' @keywords internal
+.yplot_default_hover <- function(var, group.by, color.by = NULL, shape.by = NULL, split.by = NULL) {
+    unique(c(var, paste0(var, ".adj"), "var.multi", "var.which", group.by, color.by, shape.by, split.by))
 }

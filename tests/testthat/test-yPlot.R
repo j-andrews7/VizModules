@@ -5,32 +5,31 @@
     txt[!is.na(txt) & nzchar(txt)]
 }
 
-test_that("yPlot UI exposes the Hover Data and Hover Round Digits inputs", {
+test_that("yPlot UI exposes the hover and point annotation inputs", {
     df <- data.frame(
         num1 = c(1, 2, 3),
         num2 = c(4.5, 5.5, 6.5),
         cat1 = c("a", "b", "c"),
         stringsAsFactors = FALSE
     )
-    ui <- dittoViz_yPlotInputsUI("yplot", df)
-    html <- as.character(ui)
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df))
 
-    # Both hover controls are namespaced and present in the rendered UI.
-    expect_true(grepl("yplot-hover.data", html, fixed = TRUE))
+    for (id in c("hover.data", "hover.round.digits", "annotate.by", "highlight.points",
+                 "highlight.auto.annotate", "annotation.clear")) {
+        expect_true(grepl(paste0("yplot-", id), html, fixed = TRUE), info = id)
+    }
     expect_true(grepl("Hover Data", html, fixed = TRUE))
-    expect_true(grepl("yplot-hover.round.digits", html, fixed = TRUE))
     expect_true(grepl("Hover Round Digits", html, fixed = TRUE))
 })
 
-test_that("yPlot UI takes several Y variables and exposes the multivar controls", {
+test_that("yPlot UI takes several Y variables, with limits spanning all of them", {
     df <- data.frame(
         num1 = c(1, 2, 3),
         num2 = c(4.5, 5.5, 6.5),
         cat1 = c("a", "b", "c"),
         stringsAsFactors = FALSE
     )
-    ui <- dittoViz_yPlotInputsUI("yplot", df, defaults = list(var = c("num1", "num2")))
-    html <- as.character(ui)
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df, defaults = list(var = c("num1", "num2"))))
 
     # The Y Data select is a multi-select and honours a multi-column default.
     expect_true(grepl('"multiple":true', html, fixed = TRUE))
@@ -40,17 +39,6 @@ test_that("yPlot UI takes several Y variables and exposes the multivar controls"
     expect_true(grepl("yplot-multivar.aes", html, fixed = TRUE))
     expect_true(grepl("Multivar Aesthetic", html, fixed = TRUE))
     expect_true(grepl("yplot-multivar.split.dir", html, fixed = TRUE))
-})
-
-test_that("the seeded Y axis limits span every default Y variable", {
-    df <- data.frame(
-        num1 = c(1, 2, 3),
-        num2 = c(4.5, 5.5, 6.5),
-        cat1 = c("a", "b", "c"),
-        stringsAsFactors = FALSE
-    )
-    ui <- dittoViz_yPlotInputsUI("yplot", df, defaults = list(var = c("num1", "num2")))
-    html <- as.character(ui)
 
     # Both variables share one axis, so its limits must fit the pair, not just
     # the first column.
@@ -58,42 +46,7 @@ test_that("the seeded Y axis limits span every default Y variable", {
     expect_match(html, 'id="yplot-y\\.min"[^>]*value="1"')
 })
 
-test_that("dittoViz facets by variable when the module passes several vars", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
-    set.seed(1)
-    df <- data.frame(
-        grp = rep(c("A", "B"), each = 10),
-        val1 = round(rnorm(20), 4),
-        val2 = round(rnorm(20) + 5, 4),
-        stringsAsFactors = FALSE
-    )
-
-    # The arguments the module now builds for a two-variable selection.
-    fig <- dittoViz::yPlot(
-        df,
-        var = c("val1", "val2"), group.by = "grp", plots = "jitter",
-        multivar.aes = "split", multivar.split.dir = "col",
-        do.hover = TRUE,
-        hover.data = unique(c(
-            c("val1", "val2"), paste0(c("val1", "val2"), ".adj"),
-            "var.multi", "var.which", "grp"
-        ))
-    )
-
-    # One panel per variable, each labelled by its column name.
-    axes <- grep("^xaxis", names(fig$x$layout), value = TRUE)
-    expect_gt(length(axes), 1)
-    strips <- vapply(fig$x$layout$annotations, function(a) {
-        if (is.null(a$text)) "" else as.character(a$text)
-    }, character(1))
-    expect_true(all(c("val1", "val2") %in% strips))
-})
-
 test_that("the palette follows the Y variables when they drive the fill", {
-    skip_if_not_installed("dittoViz")
-
     set.seed(1)
     df <- data.frame(
         grp = rep(c("A", "B"), each = 10),
@@ -129,8 +82,6 @@ test_that("the palette follows the Y variables when they drive the fill", {
 })
 
 test_that("a rebuilt colour picker reporting the same palette does not rebuild the plot", {
-    skip_if_not_installed("dittoViz")
-
     set.seed(1)
     df <- data.frame(
         grp = rep(c("A", "B"), each = 8),
@@ -176,8 +127,6 @@ test_that("a rebuilt colour picker reporting the same palette does not rebuild t
 })
 
 test_that("stats for several Y variables are computed within each variable's facet", {
-    skip_if_not_installed("dittoViz")
-
     set.seed(2)
     df <- data.frame(
         grp = rep(c("A", "B"), each = 12),
@@ -213,6 +162,11 @@ test_that("stats for several Y variables are computed within each variable's fac
         var = c("val1", "val2"), group.by = "grp", plots = "boxplot",
         multivar.aes = "split", do.hover = TRUE
     )
+    # One panel per variable, each labelled by its column name.
+    strips <- vapply(fig$x$layout$annotations, function(a) {
+        if (is.null(a$text)) "" else as.character(a$text)
+    }, character(1))
+    expect_true(all(c("val1", "val2") %in% strips))
     stat_result <- create_stat_annotations(
         stats_df = stats_df, fig = fig, df = long,
         x = "grp", y = "var.multi", facet.by = "var.which", display = "symbol"
@@ -224,10 +178,7 @@ test_that("stats for several Y variables are computed within each variable's fac
     expect_equal(length(unique(xrefs)), 2)
 })
 
-test_that("module default hover.data reconstructs dittoViz's internal default", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
+test_that("the module's default hover set reproduces dittoViz's own, and a selection controls it", {
     set.seed(1)
     df <- data.frame(
         grp = rep(c("A", "B"), each = 10),
@@ -235,83 +186,28 @@ test_that("module default hover.data reconstructs dittoViz's internal default", 
         lab = paste0("cell", seq_len(20)),
         stringsAsFactors = FALSE
     )
+    hover_of <- function(...) {
+        .yplot_hover_text(dittoViz::yPlot(df, var = "val", group.by = "grp", plots = "jitter", do.hover = TRUE, ...))
+    }
 
-    # The module reconstructs this set (see dittoViz_yPlotServer's generate_yPlot)
-    # when the user makes no explicit Hover Data selection.
-    var.name <- "val"
-    group.by <- "grp"
-    color.by <- "grp"
-    reconstructed <- unique(c(
-        var.name, paste0(var.name, ".adj"),
-        "var.multi", "var.which",
-        group.by, color.by, NULL, NULL
-    ))
+    # Passing the module's reconstructed default must reproduce the package's
+    # default hover content exactly, so users who never touch Hover Data see no
+    # change.
+    expect_identical(hover_of(hover.data = .yplot_default_hover("val", "grp", "grp")), hover_of())
 
-    default_fig <- dittoViz::yPlot(
-        df, var = "val", group.by = "grp", plots = "jitter", do.hover = TRUE
-    )
-    reconstructed_fig <- dittoViz::yPlot(
-        df, var = "val", group.by = "grp", plots = "jitter",
-        do.hover = TRUE, hover.data = reconstructed
-    )
-
-    # Passing the reconstructed default must reproduce the package default hover
-    # content exactly, so users who never touch Hover Data see no change.
-    expect_identical(
-        .yplot_hover_text(reconstructed_fig),
-        .yplot_hover_text(default_fig)
-    )
-})
-
-test_that("a custom hover.data selection controls which columns appear on hover", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
-    set.seed(1)
-    df <- data.frame(
-        grp = rep(c("A", "B"), each = 10),
-        val = round(c(rnorm(10), rnorm(10) + 2), 4),
-        lab = paste0("cell", seq_len(20)),
-        stringsAsFactors = FALSE
-    )
-
-    fig <- dittoViz::yPlot(
-        df, var = "val", group.by = "grp", plots = "jitter",
-        do.hover = TRUE, hover.data = c("lab", "grp")
-    )
-    txt <- .yplot_hover_text(fig)
-
+    # A selection controls which columns appear, and nothing else leaks in.
+    txt <- hover_of(hover.data = c("lab", "grp"))
     expect_true(all(grepl("lab:", txt, fixed = TRUE)))
     expect_true(all(grepl("grp:", txt, fixed = TRUE)))
-    # A column that was not selected must not leak into the hover text.
     expect_false(any(grepl("val:", txt, fixed = TRUE)))
-})
 
-test_that("hover.round.digits controls rounding of numeric hover values", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
-    df <- data.frame(
-        grp = rep(c("A", "B"), each = 3),
-        val = c(1.234567, 2.345678, 3.456789, 4.567891, 5.678912, 6.789123),
-        stringsAsFactors = FALSE
-    )
-
-    fig <- dittoViz::yPlot(
-        df, var = "val", group.by = "grp", plots = "jitter",
-        do.hover = TRUE, hover.data = "val", hover.round.digits = 2
-    )
-    txt <- .yplot_hover_text(fig)
-
-    # Every value is rounded to two decimals (e.g. "val: 1.23"), never more.
-    vals <- sub(".*val: ", "", txt)
-    decimals <- ifelse(grepl("\\.", vals), nchar(sub(".*\\.", "", vals)), 0L)
+    # hover.round.digits rounds numeric values (e.g. "val: 1.23"), never more.
+    vals <- sub(".*val: ", "", hover_of(hover.data = "val", hover.round.digits = 2))
+    decimals <- ifelse(grepl(".", vals, fixed = TRUE), nchar(sub(".*[.]", "", vals)), 0L)
     expect_true(all(decimals <= 2))
 })
 
 test_that("yPlot seeds its palette from defaults", {
-    skip_if_not_installed("dittoViz")
-
     df <- data.frame(
         grp = rep(c("A", "B"), each = 4),
         val = as.numeric(1:8),
@@ -350,24 +246,7 @@ test_that("yPlot seeds its palette from defaults", {
     )
 }
 
-test_that("yPlot UI exposes the point annotation inputs", {
-    df <- data.frame(
-        val = c(1, 2, 3),
-        grp = c("a", "b", "c"),
-        stringsAsFactors = FALSE
-    )
-    html <- as.character(dittoViz_yPlotInputsUI("yplot", df))
-
-    expect_true(grepl("yplot-annotate.by", html, fixed = TRUE))
-    expect_true(grepl("yplot-highlight.points", html, fixed = TRUE))
-    expect_true(grepl("yplot-highlight.auto.annotate", html, fixed = TRUE))
-    expect_true(grepl("yplot-annotation.clear", html, fixed = TRUE))
-})
-
 test_that("highlighting restyles only the jitter points that match", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
     fixture <- .yplot_jitter_fixture()
     fig <- fixture$fig
     before <- fig$x$data
@@ -401,9 +280,6 @@ test_that("highlighting restyles only the jitter points that match", {
 })
 
 test_that("auto-annotations label each highlighted jitter point where it is drawn", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
     fixture <- .yplot_jitter_fixture()
 
     annos <- .create_highlight_annotations(
@@ -429,9 +305,6 @@ test_that("auto-annotations label each highlighted jitter point where it is draw
 })
 
 test_that("only jitter marker traces are matched when violins are drawn", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
     fig <- .yplot_jitter_fixture(plots = c("vlnplot", "jitter"))$fig
 
     included <- vapply(
@@ -458,9 +331,6 @@ test_that("hand-selected and highlighted labels for the same point merge into on
 })
 
 test_that("selected points are labelled even after the jitter has been re-drawn", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
     fig <- .yplot_jitter_fixture()$fig
     marker_idx <- which(vapply(
         fig$x$data, function(tr) .should_include_trace(tr, require.markers = TRUE), logical(1)
@@ -502,9 +372,6 @@ test_that("selected points are labelled even after the jitter has been re-drawn"
 })
 
 test_that("a fixed seed keeps jitter positions stable across rebuilds", {
-    skip_if_not_installed("dittoViz")
-    skip_if_not_installed("plotly")
-
     build <- function() {
         .with_stable_seed(dittoViz::yPlot(
             data.frame(

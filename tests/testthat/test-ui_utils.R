@@ -1,28 +1,17 @@
 # Tests for organize_inputs() grid-flow behavior.
 
-test_that("organize_inputs drops NULL inputs so they do not create empty cells", {
-    ui <- organize_inputs(tagList(div("a"), NULL, div("b")), columns = 2)
-    n_cells <- length(gregexpr("vizmodules-input-cell", as.character(ui))[[1]])
-    expect_equal(n_cells, 2)
-})
+test_that("organize_inputs gives each visible input exactly one grid cell", {
+    n_cells <- function(ui) length(gregexpr("vizmodules-input-cell", as.character(ui))[[1]])
 
-test_that("organize_inputs flows a uniform input block into one cell per visible input", {
-    ns <- NS("x")
-    block <- uniform_axes_inputs_ui(ns)
-    expected <- sum(!vapply(block, is.null, logical(1)))
+    # NULL inputs create no empty cell.
+    expect_equal(n_cells(organize_inputs(tagList(div("a"), NULL, div("b")), columns = 2)), 2)
 
-    ui <- organize_inputs(block, columns = 2)
-    n_cells <- length(gregexpr("vizmodules-input-cell", as.character(ui))[[1]])
-    expect_equal(n_cells, expected)
-})
+    # A uniform input block flows into one cell per visible input.
+    block <- uniform_axes_inputs_ui(NS("x"))
+    expect_equal(n_cells(organize_inputs(block, columns = 2)), sum(!vapply(block, is.null, logical(1))))
 
-test_that("organize_inputs keeps a tooltip-wrapped input as a single cell", {
-    ui <- organize_inputs(
-        tagList(shinyBS::tipify(numericInput("a", "A", 1), "tip")),
-        columns = 2
-    )
-    n_cells <- length(gregexpr("vizmodules-input-cell", as.character(ui))[[1]])
-    expect_equal(n_cells, 1)
+    # A tooltip-wrapped input stays a single cell.
+    expect_equal(n_cells(organize_inputs(tagList(shinyBS::tipify(numericInput("a", "A", 1), "tip")), columns = 2)), 1)
 })
 
 
@@ -38,10 +27,7 @@ test_that("module_tack_ui marks the download button for the image capture", {
 
     deps <- vapply(htmltools::findDependencies(ui), function(d) d$name, character(1))
     expect_true("viz-source-export" %in% deps)
-})
 
-
-test_that("module_tack_ui carries a nested module's full namespace", {
     # A module inside the Figure Builder is namespaced twice over, and the
     # script matches on the whole prefix.
     html <- as.character(module_tack_ui(NS(NS("fb")("panel1"))))
@@ -164,25 +150,13 @@ test_that("organize_inputs keeps its layout out of inline styles", {
 
     deps <- vapply(htmltools::findDependencies(ui), function(d) d$name, character(1))
     expect_true("viz-modules" %in% deps)
-})
 
-
-test_that("organize_inputs marks its tabset so the tab strip can wrap", {
-    ui <- organize_inputs(
-        list(
-            Data = tagList(numericInput("a", "A", 1)),
-            Axes = tagList(numericInput("b", "B", 2))
-        ),
+    # A tabbed set is marked so the tab strip can wrap.
+    tabbed <- organize_inputs(
+        list(Data = tagList(numericInput("a", "A", 1)), Axes = tagList(numericInput("b", "B", 2))),
         columns = 1
     )
-    expect_true(grepl("vizmodules-input-tabs", as.character(ui), fixed = TRUE))
-})
-
-
-test_that("the Figure Builder scopes its layout styles", {
-    html <- as.character(figureBuilderUI("fb"))
-    # `.pb-app .well` rules are inert without this marker on the layout.
-    expect_true(grepl("pb-app", html, fixed = TRUE))
+    expect_true(grepl("vizmodules-input-tabs", as.character(tabbed), fixed = TRUE))
 })
 
 
@@ -224,16 +198,6 @@ test_that(".toggle_facet_title_inputs never re-shows an input the app hid", {
     .toggle_facet_title_inputs(NULL, TRUE, hidden = "facet.title.font.color")
     expect_false("facet.title.font.color" %in% calls$shown)
     expect_true("facet.title.font.size" %in% calls$shown)
-})
-
-test_that("BarPlot and SplitBarPlot no longer offer a Split By input", {
-    # plotthis returns a patchwork for split_by, of which ggplotly only draws the last split.
-    bar <- as.character(plotthis_BarPlotInputsUI("bar", example_bar))
-    splitbar <- as.character(plotthis_SplitBarPlotInputsUI("sb", example_bar))
-    expect_false(grepl("bar-split.by", bar, fixed = TRUE))
-    expect_false(grepl("sb-split.by", splitbar, fixed = TRUE))
-    expect_true(grepl("bar-facet.by", bar, fixed = TRUE))
-    expect_true(grepl("sb-facet.by", splitbar, fixed = TRUE))
 })
 
 # ---- Reset returns controls to where they started ----------------------------
@@ -323,4 +287,82 @@ test_that("shape-drawing controls can be left out, and are for plots without car
     for (nm in names(uis)) {
         expect_false(grepl("shape.fill", html_of(uis[[nm]]), fixed = TRUE), info = nm)
     }
+})
+
+
+# ---- Reading module inputs that have not reported yet ----------------------
+
+test_that(".nz_value answers FALSE where nzchar() would error", {
+    # Every one of these is logical(0) under nzchar()/== "", which makes
+    # `if (...)` an "argument is of length zero" error rather than a FALSE.
+    expect_false(.nz_value(NULL))
+    expect_false(.nz_value(character(0)))
+
+    expect_false(.nz_value(""))
+    expect_false(.nz_value(NA_character_))
+    expect_false(.nz_value(c("a", "b")))
+
+    expect_true(.nz_value("x"))
+    expect_true(.nz_value("some.column"))
+})
+
+
+test_that("no module server tests a bare input with nzchar/is.na/== ''", {
+    # viz_select_input() is a custom binding that reports late, and the plot
+    # reactives only req() the x/y columns -- so group.by, fill.by, facet.by and
+    # friends are readably NULL while the plot is first built. Each of the forms
+    # below is logical(0) on a NULL, which makes `if (...)` an error rather than
+    # a FALSE; they crashed the render across a dozen modules. Use .nz_value()
+    # (for a column name) or .has_value() (for a number) instead.
+    #
+    # Checked against the deparsed bodies rather than the source files so this
+    # holds for an installed package too.
+    # covr's instrumentation splits `!is.null(x) && nzchar(x)` across lines, which
+    # would flag every properly guarded read.
+    skip_if(identical(Sys.getenv("R_COVR"), "true"), "function bodies are instrumented under covr")
+    unsafe <- c(
+        "nzchar(input$",
+        "nzchar(isolate_fn(input$",
+        "is.na(input$",
+        "is.na(isolate_fn(input$"
+    )
+    # `!x == ""` parses as `!(x == "")`, so it deparses with the ! outermost.
+    unsafe_rx <- "!\\s*\\(?\\s*(isolate_fn\\()?input\\$[A-Za-z._0-9]+\\)?\\s*==\\s*\"\""
+
+    # Line by line, because `!is.null(x) && nzchar(x)` is a perfectly good
+    # guard and must not be flagged -- it is only a bare test that is a bug.
+    flag_lines <- function(src) {
+        lines <- strsplit(src, "\n", fixed = TRUE)[[1]]
+        lines <- lines[!grepl("is.null", lines, fixed = TRUE)]
+        bad <- vapply(lines, function(ln) {
+            any(vapply(unsafe, function(p) grepl(p, ln, fixed = TRUE), logical(1))) ||
+                grepl(unsafe_rx, ln)
+        }, logical(1))
+        unname(trimws(lines[bad]))
+    }
+
+    ns <- asNamespace("VizModules")
+    offenders <- character()
+
+    for (nm in ls(ns, all.names = TRUE)) {
+        obj <- get(nm, envir = ns)
+        if (!is.function(obj)) {
+            next
+        }
+        hits <- flag_lines(paste(deparse(body(obj)), collapse = "\n"))
+        if (length(hits)) {
+            offenders <- c(offenders, paste0(nm, ": ", hits))
+        }
+    }
+
+    expect_equal(offenders, character())
+
+    # The tripwire has to be able to fire, or it is pinning nothing.
+    demo <- function(input) if (nzchar(input$group.by)) 1 else 2
+    expect_length(flag_lines(paste(deparse(body(demo)), collapse = "\n")), 1)
+    demo2 <- function(input) if (!input$facet.by == "") 1 else 2
+    expect_length(flag_lines(paste(deparse(body(demo2)), collapse = "\n")), 1)
+    # ...and has to leave a properly guarded read alone.
+    ok <- function(input) if (!is.null(input$x) && nzchar(input$x)) 1 else 2
+    expect_length(flag_lines(paste(deparse(body(ok)), collapse = "\n")), 0)
 })

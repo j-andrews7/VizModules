@@ -5,105 +5,111 @@ test_df <- data.frame(
     stringsAsFactors = FALSE
 )
 
-# ---- safe_eval_filter ----
+str_df <- data.frame(
+    gene = c("RPL3", "TP53", "RPS6", "MYC"),
+    val = c(1, 9, 3, 7),
+    stringsAsFactors = FALSE
+)
 
-test_that("safe_eval_filter: simple comparison returns correct logical vector", {
-    result <- safe_eval_filter("x > 3", test_df)
-    expect_equal(result, c(FALSE, FALSE, FALSE, TRUE, TRUE))
-})
+# ---- What the two public expression functions accept ----
 
-test_that("safe_eval_filter: compound expression works", {
-    result <- safe_eval_filter("x > 1 & group == 'B'", test_df)
-    expect_equal(result, c(FALSE, FALSE, TRUE, TRUE, FALSE))
-})
-
-test_that("safe_eval_filter: %in% operator works", {
-    result <- safe_eval_filter("group %in% c('A', 'C')", test_df)
-    expect_equal(result, c(TRUE, TRUE, FALSE, FALSE, TRUE))
-})
-
-test_that("safe_eval_filter: arithmetic in expression works", {
-    result <- safe_eval_filter("x + y > 30", test_df)
-    expect_equal(result, c(FALSE, FALSE, TRUE, TRUE, TRUE))
-})
-
-test_that("safe_eval_filter: negation operator works", {
-    result <- safe_eval_filter("!group == 'A'", test_df)
-    expect_equal(result, c(FALSE, FALSE, TRUE, TRUE, TRUE))
-})
-
-test_that("safe_eval_filter: is.na works", {
-    df_na <- data.frame(x = c(1, NA, 3))
-    result <- safe_eval_filter("is.na(x)", df_na)
-    expect_equal(result, c(FALSE, TRUE, FALSE))
-})
-
-test_that("safe_eval_filter: NULL input returns NULL", {
-    expect_null(safe_eval_filter(NULL, test_df))
-})
-
-test_that("safe_eval_filter: empty string returns NULL", {
-    expect_null(safe_eval_filter("", test_df))
-})
-
-test_that("safe_eval_filter: whitespace-only returns NULL", {
-    expect_null(safe_eval_filter("   ", test_df))
-})
-
-test_that("safe_eval_filter: unparseable expression returns NULL with warning", {
-    expect_warning(
-        result <- safe_eval_filter("x >>>> 3", test_df),
-        "Could not parse"
+test_that("safe_eval_filter evaluates allowed expressions to the right mask", {
+    cases <- list(
+        "x > 3" = c(FALSE, FALSE, FALSE, TRUE, TRUE),
+        "x > 1 & group == 'B'" = c(FALSE, FALSE, TRUE, TRUE, FALSE),
+        "group %in% c('A', 'C')" = c(TRUE, TRUE, FALSE, FALSE, TRUE),
+        "x + y > 30" = c(FALSE, FALSE, TRUE, TRUE, TRUE),
+        "!group == 'A'" = c(FALSE, FALSE, TRUE, TRUE, TRUE),
+        "x == 3" = c(FALSE, FALSE, TRUE, FALSE, FALSE),
+        "TRUE" = TRUE
     )
-    expect_null(result)
+    for (expr in names(cases)) {
+        expect_equal(safe_eval_filter(expr, test_df), cases[[expr]], info = expr)
+    }
+    expect_equal(safe_eval_filter("is.na(x)", data.frame(x = c(1, NA, 3))), c(FALSE, TRUE, FALSE))
 })
 
-test_that("safe_eval_filter: system() call is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("system('echo pwned')", test_df),
-        "disallowed"
+test_that("the widened string, numeric and logical vocabulary evaluates", {
+    cases <- list(
+        'grepl("^RP", gene)' = c(TRUE, FALSE, TRUE, FALSE),
+        'startsWith(gene, "RP")' = c(TRUE, FALSE, TRUE, FALSE),
+        'endsWith(gene, "3")' = c(TRUE, TRUE, FALSE, FALSE),
+        'substr(gene, 1, 2) == "RP"' = c(TRUE, FALSE, TRUE, FALSE),
+        "nchar(gene) > 3" = c(TRUE, TRUE, TRUE, FALSE),
+        'toupper(gene) == "MYC"' = c(FALSE, FALSE, FALSE, TRUE),
+        'tolower(gene) == "myc"' = c(FALSE, FALSE, FALSE, TRUE),
+        'trimws(gene) == "MYC"' = c(FALSE, FALSE, FALSE, TRUE),
+        "abs(val - 5) > 3" = c(TRUE, TRUE, FALSE, FALSE),
+        "round(val) == 9" = c(FALSE, TRUE, FALSE, FALSE),
+        'xor(val > 5, gene == "RPL3")' = c(TRUE, TRUE, FALSE, TRUE)
     )
-    expect_null(result)
+    for (expr in names(cases)) {
+        expect_equal(safe_eval_filter(expr, str_df), cases[[expr]], info = expr)
+    }
 })
 
-test_that("safe_eval_filter: file.remove() call is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("file.remove('important.txt')", test_df),
-        "disallowed"
-    )
-    expect_null(result)
+test_that("validate_expression returns allowed expressions unchanged", {
+    cols <- c("x", "y", "group", "gene")
+    for (expr in c(
+        "x > 5", "x > 1 & group == 'B'", "group %in% c('A', 'C')", "x + y > 30",
+        "is.na(x)", "x == TRUE", 'grepl("^RP", gene)', 'startsWith(gene, "RP")'
+    )) {
+        expect_identical(validate_expression(expr, cols), expr, info = expr)
+    }
 })
 
-test_that("safe_eval_filter: library() call is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("library(malicious)", test_df),
-        "disallowed"
-    )
-    expect_null(result)
+test_that("validate_expression: does not evaluate the expression", {
+    # If this were evaluated, it would error; validate_expression should just return it
+    result <- validate_expression("x / 0 > 1", c("x"))
+    expect_identical(result, "x / 0 > 1")
 })
 
-test_that("safe_eval_filter: eval/parse nested attack is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("eval(parse(text = 'system(\"whoami\")'))", test_df),
-        "disallowed"
-    )
-    expect_null(result)
+test_that("blank input is NULL for every expression function", {
+    for (blank in list(NULL, "", "   ")) {
+        expect_null(safe_eval_filter(blank, test_df))
+        expect_null(validate_expression(blank, c("x")))
+        expect_null(safe_resolve_adj_fxn(blank))
+    }
 })
 
-test_that("safe_eval_filter: assignment is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("x <- 999", test_df),
-        "disallowed"
-    )
-    expect_null(result)
+test_that("an unparseable expression returns NULL with a warning", {
+    expect_warning(expect_null(safe_eval_filter("x >>>> 3", test_df)), "Could not parse")
+    expect_warning(expect_null(validate_expression("x >>>> 3", c("x"))), "Could not parse")
 })
 
-test_that("safe_eval_filter: unknown symbol is blocked", {
-    expect_warning(
-        result <- safe_eval_filter("nonexistent_col > 3", test_df),
-        "disallowed"
+# ---- What they refuse ----
+
+test_that("both public functions block code execution and unknown names", {
+    # These are the cases the allowlist exists for. Adding pure string helpers
+    # must not have opened a route to any of them.
+    hostile_df <- data.frame(x = 1:4, y = 4:1, group = c("A", "A", "B", "C"), gene = str_df$gene)
+    hostile <- c(
+        "system('echo pwned')",
+        'system("id")',
+        "file.remove('important.txt')",
+        'file.remove("a")',
+        "library(malicious)",
+        "eval(parse(text = 'rm()'))",
+        'eval(parse(text = "1"))',
+        "x <- 999",
+        "nonexistent_col > 3",
+        'base::system("id")',
+        "utils::head(gene)",
+        'get("system")("id")',
+        'assign("x", 1)',
+        'Sys.getenv("PATH")',
+        "lapply(gene, print)",
+        'do.call("system", list("id"))',
+        "(function() 1)()",
+        'quote(system("id"))'
     )
-    expect_null(result)
+
+    for (expr in hostile) {
+        expect_warning(res <- safe_eval_filter(expr, hostile_df), regexp = "disallowed|parse", info = expr)
+        expect_null(res, info = expr)
+        expect_warning(res <- validate_expression(expr, names(hostile_df)), regexp = "disallowed|parse", info = expr)
+        expect_null(res, info = expr)
+    }
 })
 
 test_that("safe_eval_filter: runtime error returns NULL with warning", {
@@ -114,16 +120,6 @@ test_that("safe_eval_filter: runtime error returns NULL with warning", {
         "Filter expression error"
     )
     expect_null(result)
-})
-
-test_that("safe_eval_filter: TRUE/FALSE literals allowed", {
-    result <- safe_eval_filter("TRUE", test_df)
-    expect_true(result)
-})
-
-test_that("safe_eval_filter: numeric literal comparison", {
-    result <- safe_eval_filter("x == 3", test_df)
-    expect_equal(result, c(FALSE, FALSE, TRUE, FALSE, FALSE))
 })
 
 # ---- safe_resolve_adj_fxn ----
@@ -141,183 +137,14 @@ test_that("safe_resolve_adj_fxn resolves the unexported neg_log10 for any caller
     expect_equal(fn(100), -2)
 })
 
-test_that("safe_resolve_adj_fxn: resolves log2", {
-    fn <- safe_resolve_adj_fxn("log2")
-    expect_identical(fn, log2)
-})
-
-test_that("safe_resolve_adj_fxn: resolves log", {
-    fn <- safe_resolve_adj_fxn("log")
-    expect_identical(fn, log)
-})
-
-test_that("safe_resolve_adj_fxn: resolves log10", {
-    fn <- safe_resolve_adj_fxn("log10")
-    expect_identical(fn, log10)
-})
-
-test_that("safe_resolve_adj_fxn: resolves abs", {
-    fn <- safe_resolve_adj_fxn("abs")
-    expect_identical(fn, abs)
-})
-
-test_that("safe_resolve_adj_fxn: resolves sqrt", {
-    fn <- safe_resolve_adj_fxn("sqrt")
-    expect_identical(fn, sqrt)
-})
-
-test_that("safe_resolve_adj_fxn: resolves log1p", {
-    fn <- safe_resolve_adj_fxn("log1p")
-    expect_identical(fn, log1p)
-})
-
-test_that("safe_resolve_adj_fxn: resolves as.factor", {
-    fn <- safe_resolve_adj_fxn("as.factor")
-    expect_identical(fn, as.factor)
-})
-
-test_that("safe_resolve_adj_fxn: resolves neg_log10", {
-    fn <- safe_resolve_adj_fxn("neg_log10")
-    expect_equal(fn(100), -2)
-})
-
-test_that("safe_resolve_adj_fxn: NULL input returns NULL", {
-    expect_null(safe_resolve_adj_fxn(NULL))
-})
-
-test_that("safe_resolve_adj_fxn: empty string returns NULL", {
-    expect_null(safe_resolve_adj_fxn(""))
-})
-
-test_that("safe_resolve_adj_fxn: whitespace-only returns NULL", {
-    expect_null(safe_resolve_adj_fxn("   "))
-})
-
-test_that("safe_resolve_adj_fxn: system is blocked", {
-    expect_warning(
-        result <- safe_resolve_adj_fxn("system"),
-        "Unrecognized"
-    )
-    expect_null(result)
-})
-
-test_that("safe_resolve_adj_fxn: eval is blocked", {
-    expect_warning(
-        result <- safe_resolve_adj_fxn("eval"),
-        "Unrecognized"
-    )
-    expect_null(result)
-})
-
-test_that("safe_resolve_adj_fxn: arbitrary string is blocked", {
-    expect_warning(
-        result <- safe_resolve_adj_fxn("readLines"),
-        "Unrecognized"
-    )
-    expect_null(result)
-})
-
-# ---- validate_expression ----
-
-test_that("validate_expression: valid comparison returns original string", {
-    expr <- "x > 5"
-    result <- validate_expression(expr, c("x", "y"))
-    expect_identical(result, expr)
-})
-
-test_that("validate_expression: compound expression returns original string", {
-    expr <- "x > 1 & group == 'B'"
-    result <- validate_expression(expr, c("x", "group"))
-    expect_identical(result, expr)
-})
-
-test_that("validate_expression: %in% expression returns original string", {
-    expr <- "group %in% c('A', 'C')"
-    result <- validate_expression(expr, c("group"))
-    expect_identical(result, expr)
-})
-
-test_that("validate_expression: arithmetic expression returns original string", {
-    expr <- "x + y > 30"
-    result <- validate_expression(expr, c("x", "y"))
-    expect_identical(result, expr)
-})
-
-test_that("validate_expression: is.na allowed", {
-    expr <- "is.na(x)"
-    result <- validate_expression(expr, c("x"))
-    expect_identical(result, expr)
-})
-
-test_that("validate_expression: NULL input returns NULL", {
-    expect_null(validate_expression(NULL, c("x")))
-})
-
-test_that("validate_expression: empty string returns NULL", {
-    expect_null(validate_expression("", c("x")))
-})
-
-test_that("validate_expression: whitespace-only returns NULL", {
-    expect_null(validate_expression("   ", c("x")))
-})
-
-test_that("validate_expression: unparseable expression returns NULL with warning", {
-    expect_warning(
-        result <- validate_expression("x >>>> 3", c("x")),
-        "Could not parse"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: system() call is blocked", {
-    expect_warning(
-        result <- validate_expression("system('echo pwned')", c("x")),
-        "disallowed"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: file.remove() call is blocked", {
-    expect_warning(
-        result <- validate_expression("file.remove('foo')", c("x")),
-        "disallowed"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: eval/parse attack is blocked", {
-    expect_warning(
-        result <- validate_expression("eval(parse(text='rm()'))", c("x")),
-        "disallowed"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: assignment is blocked", {
-    expect_warning(
-        result <- validate_expression("x <- 999", c("x")),
-        "disallowed"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: unknown symbol is blocked", {
-    expect_warning(
-        result <- validate_expression("mystery_var > 3", c("x", "y")),
-        "disallowed"
-    )
-    expect_null(result)
-})
-
-test_that("validate_expression: TRUE/FALSE literals allowed", {
-    result <- validate_expression("x == TRUE", c("x"))
-    expect_identical(result, "x == TRUE")
-})
-
-test_that("validate_expression: does not evaluate the expression", {
-    # If this were evaluated, it would error; validate_expression should just return it
-    result <- validate_expression("x / 0 > 1", c("x"))
-    expect_identical(result, "x / 0 > 1")
+test_that("safe_resolve_adj_fxn resolves only its adjustment functions", {
+    for (nm in c("log2", "log", "log10", "abs", "sqrt", "log1p", "as.factor")) {
+        expect_identical(safe_resolve_adj_fxn(nm), match.fun(nm), info = nm)
+    }
+    for (nm in c("system", "eval", "readLines")) {
+        expect_warning(res <- safe_resolve_adj_fxn(nm), "Unrecognized", info = nm)
+        expect_null(res, info = nm)
+    }
 })
 
 
@@ -368,67 +195,6 @@ test_that("sort keys: the vocabulary is a superset of the shared one", {
 # safe_eval_filter() and validate_expression() used to carry verbatim copies of
 # both; they now share one. These cover the shared piece directly, and the
 # widened string/pattern vocabulary that made sharing worth doing.
-
-str_df <- data.frame(
-    gene = c("RPL3", "TP53", "RPS6", "MYC"),
-    val = c(1, 9, 3, 7),
-    stringsAsFactors = FALSE
-)
-
-test_that("the string and pattern helpers evaluate", {
-    expect_equal(safe_eval_filter('grepl("^RP", gene)', str_df), c(TRUE, FALSE, TRUE, FALSE))
-    expect_equal(safe_eval_filter('startsWith(gene, "RP")', str_df), c(TRUE, FALSE, TRUE, FALSE))
-    expect_equal(safe_eval_filter('endsWith(gene, "3")', str_df), c(TRUE, TRUE, FALSE, FALSE))
-    expect_equal(safe_eval_filter('substr(gene, 1, 2) == "RP"', str_df), c(TRUE, FALSE, TRUE, FALSE))
-    expect_equal(safe_eval_filter("nchar(gene) > 3", str_df), c(TRUE, TRUE, TRUE, FALSE))
-    expect_equal(safe_eval_filter('toupper(gene) == "MYC"', str_df), c(FALSE, FALSE, FALSE, TRUE))
-    expect_equal(safe_eval_filter('tolower(gene) == "myc"', str_df), c(FALSE, FALSE, FALSE, TRUE))
-    expect_equal(safe_eval_filter('trimws(gene) == "MYC"', str_df), c(FALSE, FALSE, FALSE, TRUE))
-})
-
-test_that("the numeric and logical additions evaluate", {
-    expect_equal(safe_eval_filter("abs(val - 5) > 3", str_df), c(TRUE, TRUE, FALSE, FALSE))
-    expect_equal(safe_eval_filter("round(val) == 9", str_df), c(FALSE, TRUE, FALSE, FALSE))
-    expect_equal(
-        safe_eval_filter('xor(val > 5, gene == "RPL3")', str_df),
-        c(TRUE, TRUE, FALSE, TRUE)
-    )
-})
-
-test_that("validate_expression accepts the same widened vocabulary", {
-    expect_identical(
-        validate_expression('grepl("^RP", gene)', names(str_df)),
-        'grepl("^RP", gene)'
-    )
-    expect_identical(
-        validate_expression('startsWith(gene, "RP")', names(str_df)),
-        'startsWith(gene, "RP")'
-    )
-})
-
-test_that("the widened allowlist still blocks code execution", {
-    # These are the cases the allowlist exists for. Adding pure string helpers
-    # must not have opened a route to any of them.
-    hostile <- c(
-        'system("id")',
-        'eval(parse(text = "1"))',
-        'base::system("id")',
-        "utils::head(gene)",
-        'get("system")("id")',
-        'assign("x", 1)',
-        'Sys.getenv("PATH")',
-        'file.remove("a")',
-        "lapply(gene, print)",
-        'do.call("system", list("id"))',
-        "(function() 1)()",
-        'quote(system("id"))'
-    )
-
-    for (expr in hostile) {
-        expect_warning(res <- safe_eval_filter(expr, str_df), regexp = "disallowed|parse")
-        expect_null(res, info = expr)
-    }
-})
 
 test_that("a namespaced or extracted call cannot smuggle in an allowed name", {
     # `node[[1]]` is a call rather than a name for these, so the walker must
@@ -559,77 +325,4 @@ test_that(".formula_allowed_calls is a pure, formula-shaped vocabulary", {
         "function", "<-", "source", "library", "do.call"
     )
     expect_length(intersect(allowed, forbidden), 0)
-})
-
-
-test_that(".nz_value answers FALSE where nzchar() would error", {
-    # Every one of these is logical(0) under nzchar()/== "", which makes
-    # `if (...)` an "argument is of length zero" error rather than a FALSE.
-    expect_false(.nz_value(NULL))
-    expect_false(.nz_value(character(0)))
-
-    expect_false(.nz_value(""))
-    expect_false(.nz_value(NA_character_))
-    expect_false(.nz_value(c("a", "b")))
-
-    expect_true(.nz_value("x"))
-    expect_true(.nz_value("some.column"))
-})
-
-
-test_that("no module server tests a bare input with nzchar/is.na/== ''", {
-    # viz_select_input() is a custom binding that reports late, and the plot
-    # reactives only req() the x/y columns -- so group.by, fill.by, facet.by and
-    # friends are readably NULL while the plot is first built. Each of the forms
-    # below is logical(0) on a NULL, which makes `if (...)` an error rather than
-    # a FALSE; they crashed the render across a dozen modules. Use .nz_value()
-    # (for a column name) or .has_value() (for a number) instead.
-    #
-    # Checked against the deparsed bodies rather than the source files so this
-    # holds for an installed package too.
-    unsafe <- c(
-        "nzchar(input$",
-        "nzchar(isolate_fn(input$",
-        "is.na(input$",
-        "is.na(isolate_fn(input$"
-    )
-    # `!x == ""` parses as `!(x == "")`, so it deparses with the ! outermost.
-    unsafe_rx <- "!\\s*\\(?\\s*(isolate_fn\\()?input\\$[A-Za-z._0-9]+\\)?\\s*==\\s*\"\""
-
-    # Line by line, because `!is.null(x) && nzchar(x)` is a perfectly good
-    # guard and must not be flagged -- it is only a bare test that is a bug.
-    flag_lines <- function(src) {
-        lines <- strsplit(src, "\n", fixed = TRUE)[[1]]
-        lines <- lines[!grepl("is.null", lines, fixed = TRUE)]
-        bad <- vapply(lines, function(ln) {
-            any(vapply(unsafe, function(p) grepl(p, ln, fixed = TRUE), logical(1))) ||
-                grepl(unsafe_rx, ln)
-        }, logical(1))
-        unname(trimws(lines[bad]))
-    }
-
-    ns <- asNamespace("VizModules")
-    offenders <- character()
-
-    for (nm in ls(ns, all.names = TRUE)) {
-        obj <- get(nm, envir = ns)
-        if (!is.function(obj)) {
-            next
-        }
-        hits <- flag_lines(paste(deparse(body(obj)), collapse = "\n"))
-        if (length(hits)) {
-            offenders <- c(offenders, paste0(nm, ": ", hits))
-        }
-    }
-
-    expect_equal(offenders, character())
-
-    # The tripwire has to be able to fire, or it is pinning nothing.
-    demo <- function(input) if (nzchar(input$group.by)) 1 else 2
-    expect_length(flag_lines(paste(deparse(body(demo)), collapse = "\n")), 1)
-    demo2 <- function(input) if (!input$facet.by == "") 1 else 2
-    expect_length(flag_lines(paste(deparse(body(demo2)), collapse = "\n")), 1)
-    # ...and has to leave a properly guarded read alone.
-    ok <- function(input) if (!is.null(input$x) && nzchar(input$x)) 1 else 2
-    expect_length(flag_lines(paste(deparse(body(ok)), collapse = "\n")), 0)
 })

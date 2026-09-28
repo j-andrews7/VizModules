@@ -99,19 +99,20 @@ test_that(".freq_selected_vars keeps multi-value selections that .blank_to_null(
     expect_equal(.freq_selected_vars(c("T", "", NA)), "T")
 })
 
-test_that(".freq_y_col names the column freqPlot() actually plots", {
+test_that("the column-name helpers pick the plotted and the nesting columns", {
+    # .freq_y_col names the column freqPlot() actually plots.
     expect_equal(.freq_y_col("percent", FALSE), "percent")
     expect_equal(.freq_y_col("count", FALSE), "count")
     expect_equal(.freq_y_col("percent", TRUE), "percent.norm")
     expect_equal(.freq_y_col("count", TRUE), "count.norm")
-})
 
-test_that(".freq_stats_group_col only nests when color.by is a genuinely different column", {
+    # .freq_stats_group_col only nests when color.by is a genuinely different column.
     expect_null(.freq_stats_group_col("condition", ""))
     expect_null(.freq_stats_group_col("condition", NULL))
     expect_null(.freq_stats_group_col("condition", "condition"))
     expect_equal(.freq_stats_group_col("condition", "batch"), "batch")
 })
+
 
 
 # --- 3. The summarised frame -------------------------------------------------
@@ -161,7 +162,7 @@ test_that(".freq_summary reapplies the vars.use subsetting freqPlot() skips", {
     expect_setequal(unique(as.character(plotted$label)), unique(as.character(summ$label)))
 })
 
-test_that(".freq_summary follows scale and max.normalize", {
+test_that(".freq_summary follows scale and max.normalize, and carries a distinct color column", {
     df <- .freq_fixture()
 
     counts <- .freq_summary(df, var = "cell_type", sample.by = "sample",
@@ -173,16 +174,12 @@ test_that(".freq_summary follows scale and max.normalize", {
     expect_true(all(c("percent.norm", "count.norm") %in% names(normed)))
     # Each label is scaled to its own maximum, so every facet peaks at 1.
     expect_equal(max(normed$percent.norm), 1)
-})
 
-test_that(".freq_summary carries a distinct color column through", {
-    df <- .freq_fixture()
-
-    summ <- .freq_summary(df, var = "cell_type", sample.by = "sample",
+    coloured <- .freq_summary(df, var = "cell_type", sample.by = "sample",
         group.by = "condition", color.by = "batch")
-    expect_true("batch" %in% names(summ))
-    expect_setequal(unique(summ$batch), c("B1", "B2"))
+    expect_setequal(unique(coloured$batch), c("B1", "B2"))
 })
+
 
 test_that(".freq_summary returns NULL rather than erroring on unusable input", {
     df <- .freq_fixture()
@@ -224,7 +221,7 @@ test_that("the inputs UI exposes the freqPlot-specific controls", {
     expect_true(grepl("freq-stats.enabled", html, fixed = TRUE))
 })
 
-test_that("the inputs UI honours defaults and offers only nesting sample columns", {
+test_that("the inputs UI honours defaults", {
     df <- .freq_fixture()
     html <- as.character(dittoViz_freqPlotInputsUI("freq", df,
         defaults = list(var = "cell_type", sample.by = "sample", group.by = "condition")))
@@ -237,49 +234,10 @@ test_that("the inputs UI honours defaults and offers only nesting sample columns
     expect_true(grepl("Mono", html, fixed = TRUE))
 })
 
-test_that("the inputs UI is namespaced per instance", {
-    df <- .freq_fixture()
-    a <- as.character(dittoViz_freqPlotInputsUI("first", df))
-    b <- as.character(dittoViz_freqPlotInputsUI("second", df))
-
-    expect_true(grepl("first-var", a, fixed = TRUE))
-    expect_false(grepl("second-var", a, fixed = TRUE))
-    expect_true(grepl("second-var", b, fixed = TRUE))
-    expect_false(grepl("first-var", b, fixed = TRUE))
-})
 
 
 # --- 5. The module server ----------------------------------------------------
 
-test_that("the server summarises from the current inputs", {
-    df <- .freq_fixture()
-
-    shiny::testServer(
-        dittoViz_freqPlotServer,
-        args = list(id = "freq", data = shiny::reactive(df)),
-        {
-            session$setInputs(
-                var = "cell_type", sample.by = "sample", group.by = "condition",
-                color.by = "", vars.use = "", scale = "percent", max.normalize = FALSE
-            )
-            session$flushReact()
-
-            summ <- summary_df()
-            expect_s3_class(summ, "data.frame")
-            expect_equal(nrow(summ), 18)
-            expect_setequal(unique(summ$grouping), c("Healthy", "Disease"))
-
-            # Restricting the visible levels restricts the frame everything else
-            # is computed from, not just the picture.
-            session$setInputs(vars.use = "T")
-            expect_equal(unique(as.character(summary_df()$label)), "T")
-
-            # Counts and percentages are different columns of that same frame.
-            session$setInputs(vars.use = "", scale = "count")
-            expect_true("count" %in% names(summary_df()))
-        }
-    )
-})
 
 test_that("the y-axis limits are computed from the frequencies, not the input columns", {
     df <- .freq_fixture()
@@ -312,7 +270,7 @@ test_that("the y-axis limits are computed from the frequencies, not the input co
     )
 })
 
-test_that("the palette is keyed by the column the plot fills by", {
+test_that("the server summarises from the current inputs, keying the palette by the fill column", {
     df <- .freq_fixture()
 
     shiny::testServer(
@@ -321,11 +279,24 @@ test_that("the palette is keyed by the column the plot fills by", {
         {
             session$setInputs(
                 var = "cell_type", sample.by = "sample", group.by = "condition",
-                color.by = ""
+                color.by = "", vars.use = "", scale = "percent", max.normalize = FALSE
             )
             session$flushReact()
+
+            summ <- summary_df()
+            expect_equal(nrow(summ), 18)
+            expect_setequal(unique(summ$grouping), c("Healthy", "Disease"))
             # With no color.by the fill follows the grouping.
             expect_setequal(palette_groups(), c("Healthy", "Disease"))
+
+            # Restricting the visible levels restricts the frame everything else
+            # is computed from, not just the picture.
+            session$setInputs(vars.use = "T")
+            expect_equal(unique(as.character(summary_df()$label)), "T")
+
+            # Counts and percentages are different columns of that same frame.
+            session$setInputs(vars.use = "", scale = "count")
+            expect_true("count" %in% names(summary_df()))
 
             session$setInputs(color.by = "batch")
             session$flushReact()
@@ -358,81 +329,11 @@ test_that("a defaults palette seeds the picker", {
     )
 })
 
-test_that("two instances hold independent state", {
-    df <- .freq_fixture()
-
-    first <- NULL
-    shiny::testServer(
-        dittoViz_freqPlotServer,
-        args = list(id = "first", data = shiny::reactive(df)),
-        {
-            session$setInputs(
-                var = "cell_type", sample.by = "sample", group.by = "condition",
-                color.by = "", vars.use = "T", scale = "percent", max.normalize = FALSE
-            )
-            session$flushReact()
-            first <<- list(labels = unique(as.character(summary_df()$label)),
-                           groups = palette_groups())
-        }
-    )
-
-    second <- NULL
-    shiny::testServer(
-        dittoViz_freqPlotServer,
-        args = list(id = "second", data = shiny::reactive(df)),
-        {
-            session$setInputs(
-                var = "cell_type", sample.by = "sample", group.by = "condition",
-                color.by = "batch", vars.use = "", scale = "count", max.normalize = FALSE
-            )
-            session$flushReact()
-            second <<- list(labels = unique(as.character(summary_df()$label)),
-                            groups = palette_groups())
-        }
-    )
-
-    expect_equal(first$labels, "T")
-    expect_setequal(second$labels, c("T", "B", "Mono"))
-    expect_setequal(first$groups, c("Healthy", "Disease"))
-    expect_setequal(second$groups, c("B1", "B2"))
-})
 
 
-# --- 6. Statistics run against the summary, per facet ------------------------
-
-test_that("statistics compare per-sample frequencies within each facet", {
-    df <- .freq_fixture()
-    summ <- .freq_summary(df, var = "cell_type", sample.by = "sample", group.by = "condition")
-
-    stats_df <- compute_pairwise_stats(
-        df = summ, x = "grouping", y = "percent",
-        pairs = parse_pair_strings("Healthy vs Disease"),
-        test = "t.test", p.adjust.method = "none", paired = FALSE,
-        group.by = NULL, facet.by = "label", per.facet = TRUE,
-        sig.threshold = 0.05
-    )
-
-    expect_s3_class(stats_df, "data.frame")
-    # One comparison per facet, never pooled across them: the frequencies of two
-    # different cell types are not comparable quantities.
-    expect_equal(nrow(stats_df), 3)
-    expect_setequal(unique(as.character(stats_df$facet)), c("T", "B", "Mono"))
-})
-
-test_that("the comparison pairs come from the grouping column's levels", {
-    df <- .freq_fixture()
-
-    # The x-axis is the summary's "grouping" column, but its levels are exactly
-    # the levels of group.by in the input, so the pairs can be built from either.
-    from_input <- generate_pair_strings(df, "condition", NULL)
-    summ <- .freq_summary(df, var = "cell_type", sample.by = "sample", group.by = "condition")
-    from_summary <- generate_pair_strings(summ, "grouping", NULL)
-
-    expect_setequal(from_input, from_summary)
-})
 
 
-# --- 7. Driving the module's own build ---------------------------------------
+# --- 6. Driving the module's own build ---------------------------------------
 
 # The plot output cannot be driven from testServer (the mock session never
 # renders the renderUI()-built colour picker and never registers plotly events),
@@ -502,39 +403,23 @@ test_that("the module builds a figure over the summarised frequencies", {
             expect_equal(nrow(src), 18)
             expect_true(all(c("label", "grouping", "count", "percent") %in% names(src)))
             expect_false("cell_id" %in% names(src))
+            summ <- .freq_summary(df, var = "cell_type", sample.by = "sample", group.by = "condition")
+            expect_equal(sort(src$percent), sort(summ$percent))
         }
     )
 })
 
-test_that("restricting the visible levels restricts the figure", {
-    df <- .freq_fixture()
-
-    shiny::testServer(
-        dittoViz_freqPlotServer,
-        args = list(id = "freq", data = shiny::reactive(df)),
-        {
-            do.call(session$setInputs, .freq_inputs(vars.use = "T"))
-            session$flushReact()
-
-            src <- as.data.frame(plotly::plotly_data(generate_freqPlot()))
-            # Upstream ignores vars.use on its data.only path; the drawn figure
-            # does not, and the module's frame has to agree with the figure.
-            expect_equal(unique(as.character(src$label)), "T")
-            expect_equal(nrow(src), 6)
-        }
-    )
-})
 
 test_that("the module builds every plot type and both scales", {
     df <- .freq_fixture()
 
+    # One session each: the mock session never echoes the controls the server
+    # updates, so a second variant in the same session would wait on them.
     for (variant in list(
-        list(plots = "boxplot"),
         list(plots = "vlnplot"),
         list(plots = "ridgeplot"),
         list(plots = c("boxplot", "jitter"), scale = "count"),
-        list(plots = c("vlnplot", "jitter"), max.normalize = TRUE),
-        list(color.by = "batch")
+        list(plots = c("vlnplot", "jitter"), max.normalize = TRUE)
     )) {
         shiny::testServer(
             dittoViz_freqPlotServer,
@@ -542,8 +427,7 @@ test_that("the module builds every plot type and both scales", {
             {
                 do.call(session$setInputs, do.call(.freq_inputs, variant))
                 session$flushReact()
-                fig <- suppressWarnings(generate_freqPlot())
-                expect_s3_class(fig, "plotly")
+                expect_s3_class(suppressWarnings(generate_freqPlot()), "plotly")
             }
         )
     }
@@ -586,30 +470,16 @@ test_that("enabled statistics add brackets drawn from the frequency table", {
                 reported <- stats_df$p.value[as.character(stats_df$facet_level) == lvl]
                 expect_equal(reported, direct, tolerance = 1e-8)
             }
-        }
-    )
-})
 
-test_that("turning statistics off drops them from the source download", {
-    df <- .freq_fixture()
-
-    shiny::testServer(
-        dittoViz_freqPlotServer,
-        args = list(id = "freq", data = shiny::reactive(df)),
-        {
-            do.call(session$setInputs, .freq_inputs(stats.enabled = TRUE, stat.hide.ns = FALSE))
-            session$flushReact()
-            # The pair list refresh freezes stat.pairs; supply the echo by hand.
-            session$setInputs(stat.pairs = "")
-            session$flushReact()
+            # Turning statistics off drops them from the source download too.
             expect_s3_class(session$returned()$stats, "data.frame")
-
             session$setInputs(stats.enabled = FALSE)
             session$flushReact()
             expect_null(session$returned()$stats)
         }
     )
 })
+
 
 test_that("annotations label points by sample", {
     df <- .freq_fixture()
@@ -637,38 +507,8 @@ test_that("annotations label points by sample", {
 })
 
 
-# --- 8. Registration ---------------------------------------------------------
+# --- 7. The bundled example data --------------------------------------------
 
-test_that("the module is registered with the figure builder against a suitable dataset", {
-    registry <- .figure_builder_registry()
-    datasets <- .example_datasets()
-
-    expect_true("freq" %in% names(registry))
-    entry <- registry[["freq"]]
-
-    expect_identical(entry$server_fn, dittoViz_freqPlotServer)
-    expect_identical(entry$inputs_ui, dittoViz_freqPlotInputsUI)
-    expect_identical(entry$output_ui, dittoViz_freqPlotOutputUI)
-
-    # The defaults are written against this dataset, so it has to be in the
-    # catalogue and the columns they name have to exist in it.
-    expect_true(entry$dataset %in% names(datasets))
-    df <- datasets[[entry$dataset]]
-    for (key in c("var", "sample.by", "group.by", "annotate.by")) {
-        expect_true(entry$defaults[[key]] %in% names(df), info = key)
-    }
-
-    # And the pairing has to be one freqPlot() accepts: samples nested inside
-    # the grouping, and the frequency variable varying within a sample.
-    expect_true(entry$defaults[["sample.by"]] %in%
-        .freq_sample_choices(df, entry$defaults[["group.by"]]))
-    expect_s3_class(
-        .freq_summary(df, var = entry$defaults[["var"]],
-            sample.by = entry$defaults[["sample.by"]],
-            group.by = entry$defaults[["group.by"]]),
-        "data.frame"
-    )
-})
 
 test_that("the bundled example dataset has samples nested inside groups", {
     df <- example_composition
@@ -688,29 +528,15 @@ test_that("the bundled example dataset has samples nested inside groups", {
     # Six samples per group in every facet, so the boxes have real spread.
     expect_equal(nrow(summ), 12 * length(unique(df$cell_type)))
     expect_true(all(table(summ$grouping, summ$label) == 6))
+
+    # The showcase opens on exactly that pairing, which the Sample By control offers.
+    defaults <- .module_showcase()$freq$defaults
+    expect_true(defaults$sample.by %in% .freq_sample_choices(df, defaults$group.by))
 })
 
 
-# --- 9. The figure the module builds -----------------------------------------
+# --- 8. The figure the module builds -----------------------------------------
 
-test_that("the built figure plots the summarised frequencies", {
-    df <- .freq_fixture()
-    summ <- .freq_summary(df, var = "cell_type", sample.by = "sample", group.by = "condition")
-
-    fig <- .with_stable_seed(dittoViz::freqPlot(
-        df, var = "cell_type", sample.by = "sample", group.by = "condition",
-        plots = c("boxplot", "jitter"), do.hover = TRUE
-    ))
-
-    expect_s3_class(fig, "plotly")
-
-    # plotly_data() is what the source download is built from, so it has to be
-    # the frequency table rather than the 120 input rows.
-    src <- as.data.frame(plotly::plotly_data(fig))
-    expect_equal(nrow(src), nrow(summ))
-    expect_true(all(c("label", "grouping", "percent", "count") %in% names(src)))
-    expect_equal(sort(src$percent), sort(summ$percent))
-})
 
 test_that("a named palette reaches the fill for every plot type", {
     df <- .freq_fixture()

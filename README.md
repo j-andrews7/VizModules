@@ -273,7 +273,7 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 [dumbbellPlot:][5]
 
-![](man/figures/DumbellPlot.png)
+![](man/figures/DumbbellPlot.png)
 
 [plotthis_Histogram:][6]
 
@@ -298,6 +298,12 @@ To contribute a new module to the package, see the vignette for clear guidelines
 [(Source Plotting Function)][22]
 
 ![](man/figures/ScatterPlot.png)
+
+[plotthis_BarPlot:][15]
+
+[(Source Plotting Function)][23]
+
+![](man/figures/BarPlot.png)
 
 [plotthis_SplitBarPlot:][11]
 
