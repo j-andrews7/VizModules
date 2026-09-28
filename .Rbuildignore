@@ -12,7 +12,6 @@
 ^paper\.bib$
 ^paper.*\.md$
 ^inst/apps/module-gallery/manifest\.json
-^inst/apps/figure-builder/manifest\.json
 ^.*\.Rproj$
 ^cran-comments\.md$
 ^SKILL\.md$
