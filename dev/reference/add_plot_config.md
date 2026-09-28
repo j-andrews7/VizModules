@@ -102,7 +102,7 @@ add_plot_config()
 #> [1] "png"
 #> 
 #> $toImageButtonOptions$filename
-#> [1] "2026-09-11"
+#> [1] "2026-09-28"
 #> 
 #> 
 #> $displaylogo
@@ -169,7 +169,7 @@ add_plot_config(download.format = "svg", include.modebar.buttons = FALSE)
 #> [1] "svg"
 #> 
 #> $toImageButtonOptions$filename
-#> [1] "2026-09-11"
+#> [1] "2026-09-28"
 #> 
 #> 
 #> $displaylogo
