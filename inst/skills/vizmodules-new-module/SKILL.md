@@ -82,7 +82,7 @@ unverified rather than chasing it.
 
 ## Finishing
 
-- Register the module in `inst/apps/module-gallery/app.R` (its own tab, small sample dataset) **and** in `.figure_builder_registry()` (`R/figureBuilder_module_app.R`) — two registries, different shapes.
+- Register the module in `.module_showcase()` (`R/module_showcase.R`): one entry gives it a gallery tab (`moduleGalleryApp()`), a Figure Builder entry, and the example its `*App()` opens on. Its `defaults` should switch on the module's distinctive features, not just map columns; `tests/testthat/test-showcase.R` checks them.
 - Add `tests/testthat/test-<plot>.R`; cover a new plotting function directly, and the module with `testServer` where feasible.
 - Add the exports to `_pkgdown.yml` and an entry to `NEWS.md`.
 - Run `devtools::document()`, then `devtools::test()` and `devtools::check()`.

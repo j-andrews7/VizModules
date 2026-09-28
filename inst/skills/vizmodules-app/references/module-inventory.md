@@ -122,15 +122,20 @@ frequency variable), `n_genes`, `percent_mito`. The nesting of samples inside gr
 what `freqPlot()` needs — on a table without it every group collapses to a single point
 and the underlying function warns.
 
-Each `*App()` opens on a dataset chosen to suit it: scatter/line/area/pie/parallel →
-`example_sales`; yPlot/box/density/histogram → `example_demographics`; bar and
-split bar → `example_bar`; dot → `example_markers`; radar → `example_skills`; dumbbell →
-`example_school_earnings`; heatmap → `example_heatmap_matrix`; freqPlot →
-`example_composition`.
+`example_demographics` (500 x 11) is built for grouped comparisons: salary rises
+steeply with `job_level` (factor: Entry, Mid, Senior, Lead) and varies by `department`;
+`work_mode` (factor: Office, Remote) shifts `satisfaction` in every department;
+`employee_id` (`E001`-`E500`) is a unique key for highlighting. `example_sales` (720 x 8)
+has `revenue` proportional to `units` with one slope per `product_line`, per-product
+trends over `year`, a `profit` column, and a unique `sale_id`.
 
-`dittoViz_freqPlotApp()` additionally seeds `defaults = list(var = "cell_type",
-sample.by = "sample", group.by = "condition")`, but **only** when it falls back to the
-bundled dataset — pass your own `data_list` and it opens on columns chosen from that.
+Each `*App()` opens, when given no `data_list`, on the same showcase example as its tab
+in `moduleGalleryApp()`: a bundled dataset plus `defaults` that switch on the module's
+main features (e.g. the box plot opens on salary by job level with significance brackets
+and highlighted points). Any `defaults` passed alongside are layered over those; pass
+your own `data_list` and it opens on columns chosen from that, with no showcase
+defaults. The showcase entries live in `.module_showcase()` (`R/module_showcase.R`) and
+are a good source of working `defaults` lists for each module.
 
 ## Not yet wrapped
 

@@ -67,9 +67,8 @@ else — `system()`, `file.remove()`, `library()` — is rejected with a warning
 ## App, gallery and figure builder
 
 - [ ] `<module>App()` is a thin `createModuleApp()` wrapper — no duplicated import, filtering, or dataset-switching logic.
-- [ ] A sensible bundled example dataset as the default `data_list`.
-- [ ] The module added to `inst/apps/module-gallery/app.R` in its own tab with a small sample dataset.
-- [ ] The module added to `.figure_builder_registry()` in `R/figureBuilder_module_app.R` — a *second* registry, easily missed, with its own shape (`label`, `dataset`, the trio, `defaults`).
+- [ ] With no `data_list`, it opens on its showcase example: `example <- .module_example("<id>")`, then `example$data_list`, with the caller's `defaults` layered over `example$defaults`.
+- [ ] The module registered in `.module_showcase()` (`R/module_showcase.R`) — the one registry behind the gallery (`moduleGalleryApp()`), the Figure Builder, and the `*App()` examples — with `defaults` that switch on its distinctive features (stats, highlights, fit lines, annotations) on an `.example_datasets()` entry that gives them something to show.
 - [ ] A module whose output is not plotly supplies `vector_svg` and `raster_png` functions of `(width, height, res)` -- on the summary list for the source download's images, and `vector_svg` also as an attribute on the reactive for the Figure Builder's canvas export -- or its panels export as a bare label and its archive carries no picture (see `ComplexHeatmap_HeatmapServer()`, `draw_to_svg()` and `draw_to_png()`).
 - [ ] An example that uses the module **twice** to prove multi-instance behaviour; each instance holds independent state.
 

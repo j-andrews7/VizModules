@@ -14,7 +14,7 @@ File counts below are deliberately approximate — check the directory rather th
 - **man/** - Auto-generated roxygen2 docs (~275 .Rd files). `INTERNAL_*.Rd` are gitignored by design
 - **data/** - 13 example datasets (`example_bar`, `example_composition`, `example_demographics`, `example_heatmap_column_data`, `example_heatmap_matrix`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`, `example_skills`)
 - **data-raw/** - `generate_example_data.R` script that builds the example datasets
-- **inst/apps/** - Standalone Shiny apps (`figure-builder`, `module-gallery`); **inst/src/** - bundled JS/CSS assets; **inst/skills/** - agent skills shipped with the package and installed by `use_vizmodules_skills()`
+- **inst/apps/** - `module-gallery`, a thin deploy wrapper around `moduleGalleryApp()`; **inst/src/** - bundled JS/CSS assets; **inst/skills/** - agent skills shipped with the package and installed by `use_vizmodules_skills()`
 - **vignettes/** - adding-a-new-module, custom-model-lines, custom-modules, custom-shiny-inputs, data-filtering, defaults-and-hiding, quick-start, statistical-testing (all `eval = FALSE`, so `R CMD check` never runs their code)
 - **tests/testthat/** - ~22 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
 - **paper.md / paper.bib** - JOSS manuscript sources
@@ -66,6 +66,8 @@ R CMD check --no-build-vignettes VizModules_*.tar.gz     # Quick check
 
 ### Module Structure Pattern
 Each module has 3 files: `*_module_ui.R` (InputsUI/OutputUI functions), `*_module_server.R` (Server function), `*_module_app.R` (create*App example).
+
+Each module also has one entry in `.module_showcase()` (`R/module_showcase.R`), the single registry behind the gallery (`moduleGalleryApp()`), the Figure Builder, and the example every `*App()` opens on. Its `defaults` switch on the module's main features, and the bundled data (`data-raw/generate_example_data.R`) is built so they have something to show; `tests/testthat/test-showcase.R` checks both.
 
 ### Critical Namespace Pattern for Wrapper Modules
 ```r

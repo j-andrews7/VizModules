@@ -46,7 +46,7 @@ register_model_backend("gam", list(
 ```
 
 Formula terms are whitelisted for safety, so a GAM using `s()` or `te()` also needs
-those added to the whitelist in `.safe_build_model()`.
+those added to the whitelist, `.formula_allowed_calls()` in `R/parse_utils.R`.
 
 ## How extra fields flow through
 
