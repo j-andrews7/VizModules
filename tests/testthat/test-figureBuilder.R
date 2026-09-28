@@ -101,16 +101,6 @@ test_that("figureBuilderServer validates its inputs", {
     )
 })
 
-test_that("figureBuilderServer accepts a multi-table dataset entry", {
-    entry <- list(
-        matrix = data.frame(gene = c("a", "b"), s1 = 1:2),
-        column_annotations = data.frame(sample = "s1", condition = "ctrl")
-    )
-    expect_silent(
-        figureBuilderApp(data_list = list(two_table = entry), return_components = TRUE)
-    )
-})
-
 test_that("figureBuilderApp returns UI and server components", {
     parts <- figureBuilderApp(
         data_list = list(d1 = data.frame(a = 1:3)),
@@ -119,11 +109,28 @@ test_that("figureBuilderApp returns UI and server components", {
     expect_named(parts, c("ui", "server"))
     expect_true(is.function(parts$server))
     expect_true(grepl("figure_builder-pb_canvas", as.character(parts$ui)))
+    expect_s3_class(figureBuilderApp(), "shiny.appobj")
+})
+
+test_that("figureBuilderServer accepts a multi-table dataset entry", {
+    entry <- list(
+        matrix = data.frame(gene = c("a", "b"), s1 = 1:2),
+        column_annotations = data.frame(sample = "s1", condition = "ctrl")
+    )
+    expect_no_error(
+        shiny::testServer(
+            figureBuilderServer,
+            args = list(data_list = list(two_table = entry)),
+            {
+                session$flushReact()
+            }
+        )
+    )
 })
 
 test_that("the ComplexHeatmap module is offered when its dependencies are present", {
     reg <- .figure_builder_registry()
-    dat <- .figure_builder_data()
+    dat <- .example_datasets()
 
     # The two-table dataset ships regardless, so any module can still be paired
     # with it (reduced to its matrix).

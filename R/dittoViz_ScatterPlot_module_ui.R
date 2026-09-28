@@ -92,7 +92,9 @@
 #' - `multivar.split.dir` - Multivar split direction (UI: "Multivar Split Dir", default: "col")
 #' - `split.adjust.scales` - Facet scales (UI: "Facet Scales", default: "fixed")
 #' - `annotate.by` - Annotate by column (UI: "Annotate By", default: "")
-#' - `highlight.points` - Points to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight",
+#'   default: ""). Values containing spaces
+#'   (e.g. "CD4 T") must be separated by commas or new lines
 #' - `highlight.color` - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
 #' - `highlight.size` - Highlight size (UI: "Highlight Size", default: 7)
 #' - `highlight.border.color` - Highlight border color (UI: "Highlight Border Color", default: "#000000")

@@ -248,7 +248,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # than the raw inputs means the echo of a limit just set costs no rebuild.
         y_range_store <- setup_axis_range(input, session, params = params)
 
-        # Update y-axis range when y data column is changed (when auto-update is off) df, y_data_col, y_axis_scale_factor
+        # Update y-axis range when y data column is changed (when auto-update is off).
+        # Limits given as y.min/y.max defaults stand until x.data or y.data first
+        # changes, since those are all the range depends on.
+        seeded_limits <- .seed_axis_limits(defaults, "y.min", "y.max")
         observeEvent(list(input$y.data, input$group.by, input$fill.by), {
             req(input$y.data, input$x.data)
             req(input$y.data %in% names(data()))
@@ -262,6 +265,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 axis_scale_factor = y_axis_scale_factor,
                 grouping          = TRUE
             )
+            y_range <- seeded_limits(y_range, list(input$x.data, input$y.data))
 
             if (!is.null(y_range)) {
                 y_range_store(list(min = y_range$min, max = y_range$max))

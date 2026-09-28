@@ -340,7 +340,8 @@
 #'   default: ""). Restricted to the columns carried in the plot's hover text, which for this
 #'   plot are the sample and color columns
 #' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to
-#'   Highlight", default: "")
+#'   Highlight", default: ""). Values containing spaces
+#'   (e.g. "CD4 T") must be separated by commas or new lines
 #' - `highlight.color` - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 #' - `highlight.size` - Size of highlighted points (UI: "Highlight Size", default: 7)
 #' - `highlight.border.color` - Border color for highlighted points (UI: "Highlight Border Color",
@@ -360,7 +361,9 @@
 #' - `stats.enabled` and the other `stat.*` parameters - Pairwise testing of the per-sample
 #'   frequencies between x-axis groups. Tests always run within each facet, since frequencies
 #'   of different levels are not comparable quantities; the "Per Facet Panel" control is
-#'   therefore hidden and forced on
+#'   therefore hidden and forced on. `stat.pairs` takes a character vector of `"A vs B"` strings
+#'   naming levels of `group.by` (or of `color.by`, when it differs), e.g. `"Healthy vs Disease"`;
+#'   left unset, every pair is tested
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

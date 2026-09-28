@@ -8,7 +8,8 @@
 #' Unlike [figureBuilderApp()] (which returns a complete, standalone app), this
 #' function returns a `tagList` you can drop into any page, so the builder can be
 #' embedded alongside other content and instantiated more than once (each
-#' instance keeps its own namespace, canvas, and downloads).
+#' instance keeps its own namespace, canvas, and downloads). The module gallery,
+#' [moduleGalleryApp()], embeds it this way as its **Figure Builder** tab.
 #'
 #' The returned UI bundles the JavaScript and CSS the canvas needs, and calls
 #' [shinyjs::useShinyjs()], so no extra setup is required in the host app.
@@ -26,7 +27,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [figureBuilderServer()], [figureBuilderApp()]
+#' @seealso [figureBuilderServer()], [figureBuilderApp()], [moduleGalleryApp()]
 #' @examples
 #' library(VizModules)
 #' figureBuilderUI("figure_builder")

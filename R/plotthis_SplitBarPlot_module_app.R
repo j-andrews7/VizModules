@@ -5,16 +5,17 @@
 #' a **Data Table** for filtering the active dataset, and a **Plot** area
 #' for configuring and displaying an interactive split bar plot.
 #'
-#' When `data_list` is not provided (or `NULL`), the app launches with
-#' `example_bar` as an example dataset. Uploaded data files are added
-#' to the available datasets and can be selected for plotting. If an uploaded
-#' file shares a name with an existing dataset, the existing one is overwritten
-#' with a warning.
+#' When `data_list` is not provided (or `NULL`), the app launches on `example_bar`
+#' with the settings the module gallery ([moduleGalleryApp()]) opens this module on,
+#' so its main features are on show from the start; any `defaults` you pass are
+#' applied over those. Uploaded data files are added to the available datasets and
+#' can be selected for plotting. If an uploaded file shares a name with an existing
+#' dataset, the existing one is overwritten with a warning.
 #'
 #' This is a convenience wrapper around [createModuleApp()].
 #'
 #' @param data_list An optional named list of data frames. If `NULL` (the default),
-#'   `list("Bar" = example_bar)` is used as example data.
+#'   the module's example dataset is used, along with its showcase defaults.
 #' @param defaults A named list of input IDs and their default values to apply on startup.
 #'   An entry may also be a [shiny::reactive()] or [shiny::reactiveVal()] to have the input
 #'   follow the parent app's state; see [setup_reactive_defaults()].
@@ -37,7 +38,9 @@
 #' if (interactive()) runApp(app2)
 plotthis_SplitBarPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
     if (is.null(data_list)) {
-        data_list <- list("Bar" = example_bar)
+        example <- .module_example("splitbar")
+        data_list <- example$data_list
+        defaults <- utils::modifyList(example$defaults, defaults %||% list())
     }
     createModuleApp(
         inputs_ui_fn = plotthis_SplitBarPlotInputsUI,

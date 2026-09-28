@@ -1226,3 +1226,38 @@ parse_pair_strings <- function(pair_strings) {
     pair_strings <- pair_strings[nzchar(pair_strings)]
     lapply(strsplit(pair_strings, " vs "), trimws)
 }
+
+
+#' Pick the comparisons a `defaults` list asks for from those on offer
+#'
+#' The Comparisons selector is repopulated from the data whenever its grouping
+#' columns change, so a `stat.pairs` default cannot simply be written into the
+#' UI. The modules instead select, from each fresh set of choices, the ones
+#' `defaults$stat.pairs` names. A pair matches in either orientation, so
+#' `"Mid vs Entry"` selects the `"Entry vs Mid"` choice.
+#'
+#' @param defaults A named list of module defaults, or `NULL`.
+#' @param pair_strings Character vector of `"A vs B"` choices on offer, as from
+#'   [generate_pair_strings()].
+#'
+#' @return The elements of `pair_strings` that `defaults$stat.pairs` names.
+#'   When it names none, `""`, which is what the selector needs to show an
+#'   empty selection (and means every pair is tested).
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_default_stat_pairs
+#' @keywords internal
+.default_stat_pairs <- function(defaults, pair_strings) {
+    wanted <- get_default(defaults, "stat.pairs", character(0), is.character)
+    wanted <- wanted[!is.na(wanted) & nzchar(wanted)]
+    pair_strings <- pair_strings[!is.na(pair_strings) & nzchar(pair_strings)]
+    if (length(wanted) == 0 || length(pair_strings) == 0) {
+        return("")
+    }
+
+    unordered <- function(x) {
+        vapply(parse_pair_strings(x), function(p) paste(sort(p), collapse = "\r"), character(1))
+    }
+    seeded <- pair_strings[unordered(pair_strings) %in% unordered(wanted)]
+    if (length(seeded) == 0) "" else seeded
+}

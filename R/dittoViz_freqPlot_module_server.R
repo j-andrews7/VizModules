@@ -203,15 +203,26 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # `grouping` column, but its levels are exactly the levels of `group.by` in
         # the input, so reading them from there keeps this off the summary and the
         # user's chosen comparisons survive a change of scale or of visible facets.
+        pair_choices <- function() {
+            df <- data()
+            if (is.null(df) || !isTRUE(input$group.by %in% names(df))) {
+                return(character(0))
+            }
+            generate_pair_strings(df, input$group.by, .freq_stats_group_col(input$group.by, input$color.by))
+        }
+
         observeEvent(c(input$group.by, input$color.by), {
             df <- data()
             req(df, input$group.by, input$group.by %in% names(df))
-            color.col <- .freq_stats_group_col(input$group.by, input$color.by)
-            pair_strings <- generate_pair_strings(df, input$group.by, color.col)
-            # Pause readers until the client echoes the cleared selection, otherwise
-            # the plot renders once now and again when that echo lands.
+            pair_strings <- pair_choices()
+            # Pause readers until the client echoes the new selection, otherwise
+            # the plot renders once now and again when that echo lands. Any pairs
+            # defaults$stat.pairs names are selected; none means all are tested.
             freezeReactiveValue(input, "stat.pairs")
-            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs",
+                choices = c("", pair_strings),
+                selected = .default_stat_pairs(defaults, pair_strings)
+            )
         })
 
         # Selections are held as trace/point indices, which only describe the layout
@@ -481,7 +492,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             reset_lines_inputs(session, defaults = defaults)
             reset_annotation_inputs(session, defaults, choices)
             selected.data(NULL)
-            .reset_stats_inputs(session, defaults)
+            .reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # ---- Build the figure ----------------------------------------------------
@@ -720,8 +731,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 highlight_points_raw <- isolate_fn(input$highlight.points)
                 highlight_vals <- character(0)
                 if (!is.null(highlight_points_raw) && highlight_points_raw != "") {
-                    highlight_vals <- .string_to_vector(highlight_points_raw)
-                    highlight_vals <- highlight_vals[highlight_vals != ""]
+                    highlight_vals <- .parse_highlight_values(highlight_points_raw, data()[[annotate.by]])
                 }
 
                 if (length(highlight_vals) > 0) {

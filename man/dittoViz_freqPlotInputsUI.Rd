@@ -185,7 +185,8 @@ back to the default palette and user edits take precedence.
 default: ""). Restricted to the columns carried in the plot's hover text, which for this
 plot are the sample and color columns
 \item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to
-Highlight", default: "")
+Highlight", default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color",
@@ -205,7 +206,9 @@ Highlights", default: TRUE)
 \item \code{stats.enabled} and the other \verb{stat.*} parameters - Pairwise testing of the per-sample
 frequencies between x-axis groups. Tests always run within each facet, since frequencies
 of different levels are not comparable quantities; the "Per Facet Panel" control is
-therefore hidden and forced on
+therefore hidden and forced on. \code{stat.pairs} takes a character vector of \code{"A vs B"} strings
+naming levels of \code{group.by} (or of \code{color.by}, when it differs), e.g. \code{"Healthy vs Disease"};
+left unset, every pair is tested
 }
 }
 

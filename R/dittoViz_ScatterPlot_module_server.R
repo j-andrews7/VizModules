@@ -617,9 +617,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             if (!is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
-                highlight_vals <- .string_to_vector(highlight_points_raw)
-                # Remove empty strings that may result from parsing
-                highlight_vals <- highlight_vals[highlight_vals != ""]
+                highlight_vals <- .parse_highlight_values(
+                    highlight_points_raw, data()[[null.na.inputs$annotate.by]]
+                )
 
                 if (length(highlight_vals) > 0) {
                     fig <- .apply_highlight_styling(
@@ -668,8 +668,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 !is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
-                highlight_vals <- .string_to_vector(highlight_points_raw)
-                highlight_vals <- highlight_vals[highlight_vals != ""]
+                highlight_vals <- .parse_highlight_values(
+                    highlight_points_raw, data()[[null.na.inputs$annotate.by]]
+                )
 
                 if (length(highlight_vals) > 0) {
                     # Create annotations for highlighted points

@@ -12,9 +12,10 @@ piePlotApp(
 )
 }
 \arguments{
-\item{data_list}{An optional named list of summary data frames (one row per slice).
-If \code{NULL} (the default), aggregated example data is used. Each data frame should already
-contain a label column and an aggregated numeric value column.}
+\item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
+the module's example dataset is used, along with its showcase defaults.
+Each data frame should already contain a label column and an aggregated numeric
+value column, one row per slice.}
 
 \item{defaults}{A named list of input IDs and their default values to apply on startup.
 An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to have the input
@@ -36,11 +37,13 @@ a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive pie plot.
 }
 \details{
-When \code{data_list} is not provided (or \code{NULL}), the app launches with
-an aggregated \code{example_sales} dataset (revenue by product line). Uploaded data files are added
-to the available datasets and can be selected for plotting. If an uploaded
-file shares a name with an existing dataset, the existing one is overwritten
-with a warning.
+When \code{data_list} is not provided (or \code{NULL}), the app launches on
+\code{sales_by_region} (\code{example_sales} revenue summed by region) with the
+settings the module gallery (\code{\link[=moduleGalleryApp]{moduleGalleryApp()}}) opens this module on,
+so its main features are on show from the start; any \code{defaults} you pass are
+applied over those. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an existing
+dataset, the existing one is overwritten with a warning.
 
 This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }

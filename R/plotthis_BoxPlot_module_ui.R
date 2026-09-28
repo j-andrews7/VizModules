@@ -124,9 +124,11 @@
 #' - `stat.p.adjust` - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
 #' - `stat.display` - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
 #' - `stat.sig.threshold` - Significance threshold for symbols/hiding (UI: "Significance Threshold")
-#' - `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
+#' - `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide Non-Significant", default: TRUE)
 #' - `stat.paired` - Use a paired test (UI: "Paired Test", default: FALSE)
-#' - `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple selection)
+#' - `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple selection, default: all
+#'   pairs). As a default, a character vector of `"A vs B"` strings naming levels of `x.data` (or of
+#'   `group.by`, when set), e.g. `c("Entry vs Mid", "Mid vs Senior")`; either order matches
 #' - `stat.line.color` - Bracket line color (UI: "Line Color", default: "#000000")
 #' - `stat.line.width` - Bracket line width (UI: "Line Width")
 #' - `stat.bracket.style` - Bracket style, capped or flat (UI: "Bracket Style")

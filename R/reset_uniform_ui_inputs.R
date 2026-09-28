@@ -119,6 +119,9 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' @param session The Shiny session object (from `moduleServer`).
 #' @param defaults A named list of default values to reset to, or NULL to use
 #'   hardcoded fallbacks. Typically the same list passed to the UI function.
+#' @param pair_strings Character vector of the comparisons currently on offer
+#'   in the Comparisons selector. Those named by `defaults$stat.pairs` are
+#'   reselected (see [.default_stat_pairs()]); `NULL` clears the selection.
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
@@ -129,7 +132,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' @author Jared Andrews
 #' @rdname INTERNAL_reset_stats_inputs
 #' @keywords internal
-.reset_stats_inputs <- function(session, defaults = NULL) {
+.reset_stats_inputs <- function(session, defaults = NULL, pair_strings = NULL) {
     updateMaterialSwitch(session, "stats.enabled", value = get_default(defaults, "stats.enabled", FALSE, is.logical))
     update_viz_select(session, "stat.test", selected = get_default(defaults, "stat.test", "wilcox.test"))
     update_viz_select(session, "stat.p.adjust", selected = get_default(defaults, "stat.p.adjust", "holm"))
@@ -137,7 +140,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
     updateNumericInput(session, "stat.sig.threshold", value = get_default(defaults, "stat.sig.threshold", 0.05, is.numeric))
     updateMaterialSwitch(session, "stat.hide.ns", value = get_default(defaults, "stat.hide.ns", TRUE, is.logical))
     updateMaterialSwitch(session, "stat.paired", value = get_default(defaults, "stat.paired", FALSE, is.logical))
-    update_viz_select(session, "stat.pairs", selected = character(0))
+    update_viz_select(session, "stat.pairs", selected = .default_stat_pairs(defaults, pair_strings))
     updateColourInput(session, "stat.line.color", value = get_default(defaults, "stat.line.color", "#000000"))
     updateNumericInput(session, "stat.line.width", value = get_default(defaults, "stat.line.width", 1, is.numeric))
     update_viz_select(session, "stat.bracket.style", selected = get_default(defaults, "stat.bracket.style", "capped"))

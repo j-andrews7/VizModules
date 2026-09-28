@@ -138,3 +138,121 @@ test_that("BarPlot Reset restores per-x summed limits for its default y.data", {
         }
     )
 })
+
+test_that("the comparisons named in defaults are selected on load and again on Reset", {
+    calls <- new.env()
+    calls$pairs <- list()
+    local_mocked_bindings(update_viz_select = function(session, inputId, choices = NULL, selected = NULL, ...) {
+        if (identical(inputId, "stat.pairs")) {
+            calls$pairs[[length(calls$pairs) + 1]] <- selected
+        }
+        invisible(NULL)
+    })
+
+    defaults <- list(
+        x.data = "job_level", y.data = "salary",
+        stat.pairs = c("Mid vs Entry", "Senior vs Lead")
+    )
+
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics), defaults = defaults),
+        {
+            suppressWarnings(do.call(session$setInputs, .box_inputs(x.data = "job_level", stats.enabled = TRUE)))
+            suppressWarnings(session$flushReact())
+            expect_equal(calls$pairs[[length(calls$pairs)]], c("Entry vs Mid", "Senior vs Lead"))
+
+            n <- length(calls$pairs)
+            suppressWarnings(session$setInputs(reset = 1))
+            expect_gt(length(calls$pairs), n)
+            expect_equal(calls$pairs[[length(calls$pairs)]], c("Entry vs Mid", "Senior vs Lead"))
+        }
+    )
+})
+
+test_that(".seed_axis_limits keeps seeded limits for the starting columns only", {
+    seed <- .seed_axis_limits(list(y.max = 50), "y.min", "y.max")
+    data_range <- list(min = 1, max = 10)
+
+    # Only the limit given is seeded; the other comes from the data.
+    expect_equal(seed(data_range, "a"), list(min = 1, max = 50))
+    # Recomputed for the same columns (a second observer, an unrelated input).
+    expect_equal(seed(data_range, "a"), list(min = 1, max = 50))
+    # New columns: the data's range, and for good, even back on the old ones.
+    expect_equal(seed(data_range, "b"), data_range)
+    expect_equal(seed(data_range, "a"), data_range)
+    expect_null(seed(NULL, "a"))
+
+    # Nothing seeded: always the data's range.
+    expect_equal(.seed_axis_limits(NULL, "y.min", "y.max")(data_range, "a"), data_range)
+})
+
+test_that("BoxPlot y.min/y.max defaults survive startup until y.data changes", {
+    defaults <- list(x.data = "department", y.data = "salary", y.min = 0, y.max = 3e5)
+
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics), defaults = defaults),
+        {
+            suppressWarnings(do.call(session$setInputs, .box_inputs(y.min = 0, y.max = 3e5)))
+            suppressWarnings(session$flushReact())
+            expect_equal(y_range_store()$max, 3e5)
+            expect_equal(y_range_store()$min, 0)
+
+            suppressWarnings(session$setInputs(y.data = "age"))
+            expect_equal(y_range_store()$max, max(example_demographics$age) * .y_axis_scale_factor)
+        }
+    )
+})
+
+test_that("BarPlot y.min/y.max defaults survive startup until y.data changes", {
+    defaults <- list(x.data = "Group", y.data = "Values", y.min = -10, y.max = 500)
+
+    shiny::testServer(
+        plotthis_BarPlotServer,
+        args = list(id = "bar", data = shiny::reactive(example_bar), defaults = defaults),
+        {
+            suppressWarnings(session$setInputs(
+                auto.update = TRUE, x.data = "Group", y.data = "Values",
+                group.by = "", fill.by = "", facet.by = "", y.min = -10, y.max = 500
+            ))
+            suppressWarnings(session$flushReact())
+            expect_equal(y_range_store()$max, 500)
+            expect_equal(y_range_store()$min, -10)
+
+            suppressWarnings(session$setInputs(y.data = "Score"))
+            sums <- tapply(example_bar$Score, example_bar$Group, sum)
+            expect_equal(y_range_store()$max, max(sums) * 1.18)
+        }
+    )
+})
+
+test_that("SplitBarPlot x.min/x.max defaults survive startup until the columns change", {
+    sent <- new.env()
+    local_mocked_bindings(updateNumericInput = function(session, inputId, label = NULL, value = NULL, ...) {
+        if (inputId %in% c("x.min", "x.max")) {
+            sent[[inputId]] <- value
+        }
+        invisible(NULL)
+    })
+    defaults <- list(x.data = "Score", y.data = "Group", x.min = -40, x.max = 40)
+
+    shiny::testServer(
+        plotthis_SplitBarPlotServer,
+        args = list(id = "sb", data = shiny::reactive(example_bar), defaults = defaults),
+        {
+            suppressWarnings(session$setInputs(
+                auto.update = TRUE, x.data = "Score", y.data = "Group", fill.by = "Group",
+                axis.scale.factor = 1.2, x.min = -40, x.max = 40
+            ))
+            suppressWarnings(session$flushReact())
+            expect_equal(sent[["x.max"]], 40)
+            expect_equal(sent[["x.min"]], -40)
+
+            # A new value column gets limits from its own data.
+            suppressWarnings(session$setInputs(x.data = "Numbers"))
+            expect_equal(sent[["x.max"]], axis_range()$max)
+            expect_equal(sent[["x.min"]], -axis_range()$max)
+        }
+    )
+})

@@ -1890,3 +1890,27 @@ test_that("parallelCoordinatesPlot tolerates a blank line width", {
         "plotly"
     )
 })
+
+test_that("AreaPlot offers every categorical column except X for Group By", {
+    seen <- new.env()
+    real_select <- viz_select_input
+    local_mocked_bindings(viz_select_input = function(inputId, label, choices, selected = NULL, ...) {
+        seen[[inputId]] <- list(choices = choices, selected = selected)
+        real_select(inputId, label, choices, selected = selected, ...)
+    })
+
+    # region is the first categorical column; it used to be left out of Group By
+    # whatever X was, so this default was silently dropped.
+    df <- data.frame(
+        region = c("N", "S"), year = factor(c("2020", "2021")), product = c("x", "y"),
+        value = 1:2, stringsAsFactors = FALSE
+    )
+    plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "year", group.by = "region"))
+    expect_equal(seen[["area-group.by"]]$selected, "region")
+    expect_setequal(setdiff(seen[["area-group.by"]]$choices, ""), c("region", "product"))
+
+    # Without a default, Group By falls back to a column other than X.
+    plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "product"))
+    expect_equal(seen[["area-group.by"]]$selected, "region")
+    expect_false("product" %in% seen[["area-group.by"]]$choices)
+})

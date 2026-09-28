@@ -76,7 +76,8 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters c
 \itemize{
 \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
-\item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: 3rd categorical variable or "")
+\item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: first categorical variable
+other than \code{x.data}, or "")
 \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)

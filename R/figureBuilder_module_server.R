@@ -124,13 +124,14 @@
 #'   [figureBuilderUI()].
 #' @param data_list An optional named list of data frames that seed the dataset
 #'   registry. If `NULL` (the default), the bundled example datasets (plus a
-#'   `sales_by_product` summary suited to the pie plot) are used. At least one
+#'   `sales_by_region` summary suited to the pie plot) are used. At least one
 #'   element is required. An element is either a data frame, or a named list of
 #'   data frames for a module that needs companion tables (the `ComplexHeatmap`
 #'   module's `list(matrix = , column_annotations = )`); in the latter case only
 #'   the primary table is filtered and shown in the panel's table pane.
 #' @param module_registry An optional named list describing the plot modules to
-#'   offer. If `NULL` (the default), all bundled VizModules modules are offered.
+#'   offer. If `NULL` (the default), all bundled VizModules modules are offered,
+#'   each opening on the same example figure as in [moduleGalleryApp()].
 #'   Each entry is itself a list with components: `label` (character, shown in the
 #'   picker), `dataset` (character, the dataset name its `defaults` were written
 #'   for), `inputs_ui`, `output_ui`, and `server_fn` (the module's three
@@ -166,7 +167,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [figureBuilderUI()], [figureBuilderApp()]
+#' @seealso [figureBuilderUI()], [figureBuilderApp()], [moduleGalleryApp()]
 #' @examples
 #' library(VizModules)
 #' if (interactive()) {
@@ -179,7 +180,7 @@
 figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
     # --- Validate / resolve inputs
     if (is.null(data_list)) {
-        data_list <- .figure_builder_data()
+        data_list <- .example_datasets()
     }
     stopifnot(is.list(data_list), length(data_list) >= 1)
     # An entry may be a plain data frame or a named list of them, for modules

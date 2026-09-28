@@ -27,7 +27,8 @@ passed to \code{\link[=figureBuilderServer]{figureBuilderServer()}}.
 Unlike \code{\link[=figureBuilderApp]{figureBuilderApp()}} (which returns a complete, standalone app), this
 function returns a \code{tagList} you can drop into any page, so the builder can be
 embedded alongside other content and instantiated more than once (each
-instance keeps its own namespace, canvas, and downloads).
+instance keeps its own namespace, canvas, and downloads). The module gallery,
+\code{\link[=moduleGalleryApp]{moduleGalleryApp()}}, embeds it this way as its \strong{Figure Builder} tab.
 
 The returned UI bundles the JavaScript and CSS the canvas needs, and calls
 \code{\link[shinyjs:useShinyjs]{shinyjs::useShinyjs()}}, so no extra setup is required in the host app.
@@ -37,7 +38,7 @@ library(VizModules)
 figureBuilderUI("figure_builder")
 }
 \seealso{
-\code{\link[=figureBuilderServer]{figureBuilderServer()}}, \code{\link[=figureBuilderApp]{figureBuilderApp()}}
+\code{\link[=figureBuilderServer]{figureBuilderServer()}}, \code{\link[=figureBuilderApp]{figureBuilderApp()}}, \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}
 }
 \author{
 Jared Andrews

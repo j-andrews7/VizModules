@@ -641,7 +641,7 @@ test_that("annotations label points by sample", {
 
 test_that("the module is registered with the figure builder against a suitable dataset", {
     registry <- .figure_builder_registry()
-    datasets <- .figure_builder_data()
+    datasets <- .example_datasets()
 
     expect_true("freq" %in% names(registry))
     entry <- registry[["freq"]]
@@ -654,8 +654,8 @@ test_that("the module is registered with the figure builder against a suitable d
     # catalogue and the columns they name have to exist in it.
     expect_true(entry$dataset %in% names(datasets))
     df <- datasets[[entry$dataset]]
-    for (col in unlist(entry$defaults)) {
-        expect_true(col %in% names(df), info = col)
+    for (key in c("var", "sample.by", "group.by", "annotate.by")) {
+        expect_true(entry$defaults[[key]] %in% names(df), info = key)
     }
 
     # And the pairing has to be one freqPlot() accepts: samples nested inside

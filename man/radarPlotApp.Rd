@@ -13,7 +13,7 @@ radarPlotApp(
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("skills" = example_skills)} is used. Each data frame should
+the module's example dataset is used, along with its showcase defaults. Each data frame should
 contain columns for categories (theta) and values (r). For multiple traces, include a
 grouping column.}
 
@@ -37,11 +37,12 @@ a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive radar plot.
 }
 \details{
-When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_skills} as an example dataset. Uploaded data files are added
-to the available datasets and can be selected for plotting. If an uploaded
-file shares a name with an existing dataset, the existing one is overwritten
-with a warning.
+When \code{data_list} is not provided (or \code{NULL}), the app launches on \code{example_skills}
+with the settings the module gallery (\code{\link[=moduleGalleryApp]{moduleGalleryApp()}}) opens this module on,
+so its main features are on show from the start; any \code{defaults} you pass are
+applied over those. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an existing
+dataset, the existing one is overwritten with a warning.
 
 This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }

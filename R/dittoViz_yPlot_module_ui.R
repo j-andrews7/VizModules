@@ -66,8 +66,8 @@
 #' - `split.by` - Faceting variable (UI: "Split by (facet)", default: "")
 #' - `plots` - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 #' - `color.panel` - Custom color values (UI: palette picker, derived from palette)
-#' - `min` - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
-#' - `max` - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+#' - `min` - Y-axis minimum; set with the `y.min` key (UI: "Y Axis Min", auto-calculated)
+#' - `max` - Y-axis maximum; set with the `y.max` key (UI: "Y Axis Max", auto-calculated)
 #' - `var.adjustment` - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 #' - `var.adj.fxn` - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 #' - `split.nrow` - Number of facet rows (UI: "Rows", default: 4)
@@ -98,6 +98,10 @@
 #'   empty uses a sensible default set of columns)
 #' - `hover.round.digits` - Hover value rounding (UI: "Hover Round Digits", default: 5)
 #' - `legend.show` - Show legend (always `TRUE`; not directly settable)
+#' - `stats.enabled` and the other `stat.*` parameters - Pairwise testing between the `group.by`
+#'   groups, or between the `color.by` levels within each group when `color.by` is set (Stats tab).
+#'   `stat.pairs` takes a character vector of `"A vs B"` strings naming those levels, e.g.
+#'   `"Office vs Remote"`; left unset, every pair is tested
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
@@ -147,7 +151,9 @@
 #'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 #'   back to the default palette and user edits take precedence.
 #' - `annotate.by` - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
-#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight",
+#'   default: ""). Values containing spaces
+#'   (e.g. "CD4 T") must be separated by commas or new lines
 #' - `highlight.color` - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 #' - `highlight.size` - Size of highlighted points (UI: "Highlight Size", default: 7)
 #' - `highlight.border.color` - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
@@ -311,7 +317,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.max"), "Y Axis Max",
-                    value = get_default(defaults, "max", max.y, is.numeric),
+                    value = get_default(defaults, "y.max", max.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$max,
@@ -319,7 +325,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.min"), "Y Axis Min",
-                    value = get_default(defaults, "min", min.y, is.numeric),
+                    value = get_default(defaults, "y.min", min.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$min,

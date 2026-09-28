@@ -126,7 +126,9 @@ groups fall back to the default palette and user edits take precedence.
 \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")
 \item \code{split.adjust.scales} - Facet scales (UI: "Facet Scales", default: "fixed")
 \item \code{annotate.by} - Annotate by column (UI: "Annotate By", default: "")
-\item \code{highlight.points} - Points to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight",
+default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Highlight size (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Highlight border color (UI: "Highlight Border Color", default: "#000000")

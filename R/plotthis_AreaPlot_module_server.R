@@ -130,13 +130,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
+            group_fallback <- c(group_facet_choices[nzchar(group_facet_choices)], "")[1]
 
             # Data
             update_viz_select(session, "x.data", selected = x_default)
             update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
+                selected = get_default(
+                    defaults, "group.by", group_fallback, function(x) x %in% c("", group_facet_choices)
+                ))
 
             # Facet
             update_viz_select(session, "facet.by",

@@ -15,19 +15,19 @@
 #' This is the recommended way to launch a standalone Figure Builder. Internally
 #' it is a thin wrapper around the [figureBuilderUI()] / [figureBuilderServer()]
 #' Shiny module, so the same builder can be embedded inside a larger app (and
-#' instantiated more than once) by calling those two functions directly. The
-#' bundled app at `system.file("apps/figure-builder", package = "VizModules")` is
-#' itself a thin wrapper around this function.
+#' instantiated more than once) by calling those two functions directly. It is
+#' also the **Figure Builder** tab of [moduleGalleryApp()].
 #'
 #' @param data_list An optional named list of data frames that seed the dataset
 #'   registry. If `NULL` (the default), the bundled example datasets (plus a
-#'   `sales_by_product` summary suited to the pie plot) are used. At least one
+#'   `sales_by_region` summary suited to the pie plot) are used. At least one
 #'   element is required. An element is either a data frame, or a named list of
 #'   data frames for a module that needs companion tables (the `ComplexHeatmap`
 #'   module's `list(matrix = , column_annotations = )`); in the latter case only
 #'   the primary table is filtered and shown in the panel's table pane.
 #' @param module_registry An optional named list describing the plot modules to
-#'   offer. If `NULL` (the default), all bundled VizModules modules are offered.
+#'   offer. If `NULL` (the default), all bundled VizModules modules are offered,
+#'   each opening on the same example figure as in [moduleGalleryApp()].
 #'   Each entry is itself a list with components: `label` (character, shown in the
 #'   picker), `dataset` (character, the dataset name its `defaults` were written
 #'   for), `inputs_ui`, `output_ui`, and `server_fn` (the module's three
@@ -52,7 +52,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [figureBuilderUI()], [figureBuilderServer()]
+#' @seealso [figureBuilderUI()], [figureBuilderServer()], [moduleGalleryApp()]
 #' @examples
 #' library(VizModules)
 #'
@@ -94,192 +94,21 @@ figureBuilderApp <- function(data_list = NULL,
 }
 
 
-# Build the default dataset catalogue: the bundled example datasets plus a
-# derived `sales_by_product` summary that suits the pie plot.
-.figure_builder_data <- function() {
-    sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
-    list(
-        "example_sales"           = example_sales,
-        "example_bar"             = example_bar,
-        "example_demographics"    = example_demographics,
-        "example_markers"         = example_markers,
-        "example_school_earnings" = example_school_earnings,
-        "example_skills"          = example_skills,
-        "example_rnaseq"          = example_rnaseq,
-        "example_iris"            = example_iris,
-        "example_mtcars"          = example_mtcars,
-        "example_population"      = example_population,
-        "example_composition"     = example_composition,
-        "sales_by_product"        = sales_by_product,
-        # A two-table entry: the ComplexHeatmap module needs per-sample metadata
-        # alongside the matrix for its column annotations, splits and filters.
-        # Only the matrix is filtered and shown in a panel's table pane.
-        "example_heatmap"         = list(
-            matrix = example_heatmap_matrix,
-            column_annotations = example_heatmap_column_data
-        )
-    )
-}
-
-# Build the default module registry. Each entry wires up one VizModules module.
-# `dataset` is the dataset that the supplied `defaults` were written for; it is
-# used as the initial selection and the defaults are only applied when that
-# dataset is chosen.
+# The Figure Builder's default module registry: the showcase registry (see
+# R/module_showcase.R) in the shape figureBuilderServer() takes. `dataset` is the
+# dataset each entry's `defaults` were written for; it is the initial selection
+# when the module is picked, and the defaults apply only when that dataset is the
+# one chosen. The heatmap swaps in its static output, since a figure panel has
+# no room for the interactive widget's chrome.
 .figure_builder_registry <- function() {
-    registry <- list(
-        area = list(
-            label = "Area Plot", dataset = "example_sales",
-            inputs_ui = plotthis_AreaPlotInputsUI,
-            output_ui = plotthis_AreaPlotOutputUI,
-            server_fn = plotthis_AreaPlotServer,
-            defaults = list(
-                "x.data" = "year", "y.data" = "revenue",
-                "group.by" = "product_line"
-            )
-        ),
-        bar = list(
-            label = "Bar Plot", dataset = "example_bar",
-            inputs_ui = plotthis_BarPlotInputsUI,
-            output_ui = plotthis_BarPlotOutputUI,
-            server_fn = plotthis_BarPlotServer,
-            defaults = list(
-                "x.data" = "Group", "y.data" = "Values",
-                "group.by" = "Type"
-            )
-        ),
-        box = list(
-            label = "Box Plot", dataset = "example_demographics",
-            inputs_ui = plotthis_BoxPlotInputsUI,
-            output_ui = plotthis_BoxPlotOutputUI,
-            server_fn = plotthis_BoxPlotServer,
-            defaults = list("x.data" = "department", "y.data" = "salary")
-        ),
-        density = list(
-            label = "Density Plot", dataset = "example_demographics",
-            inputs_ui = plotthis_DensityPlotInputsUI,
-            output_ui = plotthis_DensityPlotOutputUI,
-            server_fn = plotthis_DensityPlotServer,
-            defaults = list("x.data" = "salary", "group.by" = "department")
-        ),
-        dotplot = list(
-            label = "Dot Plot", dataset = "example_markers",
-            inputs_ui = plotthis_DotPlotInputsUI,
-            output_ui = plotthis_DotPlotOutputUI,
-            server_fn = plotthis_DotPlotServer,
-            defaults = list(
-                "x.data" = "gene", "y.data" = "cell_type",
-                "size.by" = "pct_expressed", "fill.by" = "avg_expression"
-            )
-        ),
-        dumbbell = list(
-            label = "Dumbbell Plot", dataset = "example_school_earnings",
-            inputs_ui = dumbbellPlotInputsUI,
-            output_ui = dumbbellPlotOutputUI,
-            server_fn = dumbbellPlotServer,
-            defaults = list()
-        ),
-        freq = list(
-            label = "Frequency Plot", dataset = "example_composition",
-            inputs_ui = dittoViz_freqPlotInputsUI,
-            output_ui = dittoViz_freqPlotOutputUI,
-            server_fn = dittoViz_freqPlotServer,
-            defaults = list(
-                "var" = "cell_type", "sample.by" = "sample",
-                "group.by" = "condition"
-            )
-        ),
-        histogram = list(
-            label = "Histogram", dataset = "example_demographics",
-            inputs_ui = plotthis_HistogramInputsUI,
-            output_ui = plotthis_HistogramOutputUI,
-            server_fn = plotthis_HistogramServer,
-            defaults = list("x.data" = "salary")
-        ),
-        line = list(
-            label = "Line Plot", dataset = "example_sales",
-            inputs_ui = linePlotInputsUI,
-            output_ui = linePlotOutputUI,
-            server_fn = linePlotServer,
-            defaults = list("x.value" = "product_line", "y.value" = "units")
-        ),
-        parallel = list(
-            label = "Parallel Coordinates", dataset = "example_sales",
-            inputs_ui = parallelCoordinatesPlotInputsUI,
-            output_ui = parallelCoordinatesPlotOutputUI,
-            server_fn = parallelCoordinatesPlotServer,
-            defaults = list("color.by" = "product_line")
-        ),
-        pie = list(
-            label = "Pie Plot", dataset = "sales_by_product",
-            inputs_ui = piePlotInputsUI,
-            output_ui = piePlotOutputUI,
-            server_fn = piePlotServer,
-            defaults = list("labels" = "product_line", "values" = "revenue")
-        ),
-        radar = list(
-            label = "Radar Plot", dataset = "example_skills",
-            inputs_ui = radarPlotInputsUI,
-            output_ui = radarPlotOutputUI,
-            server_fn = radarPlotServer,
-            defaults = list("theta" = "category", "r" = "value", "group" = "player")
-        ),
-        scatter = list(
-            label = "Scatter Plot", dataset = "example_sales",
-            inputs_ui = dittoViz_scatterPlotInputsUI,
-            output_ui = dittoViz_scatterPlotOutputUI,
-            server_fn = dittoViz_scatterPlotServer,
-            defaults = list(
-                "x.by" = "revenue", "y.by" = "units",
-                "color.by" = "product_line"
-            )
-        ),
-        splitbar = list(
-            label = "Split Bar Plot", dataset = "example_bar",
-            inputs_ui = plotthis_SplitBarPlotInputsUI,
-            output_ui = plotthis_SplitBarPlotOutputUI,
-            server_fn = plotthis_SplitBarPlotServer,
-            defaults = list("x.data" = "Score", "y.data" = "Group")
-        ),
-        yplot = list(
-            label = "yPlot", dataset = "example_demographics",
-            inputs_ui = dittoViz_yPlotInputsUI,
-            output_ui = dittoViz_yPlotOutputUI,
-            server_fn = dittoViz_yPlotServer,
-            defaults = list("var" = "salary", "group.by" = "department")
-        )
-    )
-
-    # The ComplexHeatmap module depends on Bioconductor packages that may not be
-    # installed, and its server stops outright without them. Offer it only when
-    # they are available, so the builder still runs without them -- the same
-    # guard the module gallery applies to its Heatmap tab.
-    heatmap_available <- all(vapply(
-        c("ComplexHeatmap", "InteractiveComplexHeatmap", "circlize"),
-        requireNamespace, logical(1),
-        quietly = TRUE
-    ))
-    if (heatmap_available) {
-        # Deliberately the *static* output: the InteractiveComplexHeatmap widget
-        # carries a grey panel border, a control tab strip and a fixed pixel
-        # width that no argument turns off, none of which belong on a figure
-        # panel. See ComplexHeatmap_HeatmapStaticOutputUI().
-        registry$heatmap <- list(
-            label = "Heatmap", dataset = "example_heatmap",
-            primary.table = "matrix",
-            inputs_ui = ComplexHeatmap_HeatmapInputsUI,
-            output_ui = ComplexHeatmap_HeatmapStaticOutputUI,
-            server_fn = ComplexHeatmap_HeatmapServer,
-            defaults = list(
-                "rowname.col" = "gene",
-                "matrix.cols" = setdiff(
-                    names(example_heatmap_matrix),
-                    c("gene", "pathway", "mean_expression")
-                )
-            )
-        )
-    }
-
-    registry
+    lapply(.module_showcase(), function(entry) {
+        if (!is.null(entry$static_output_ui)) {
+            entry$output_ui <- entry$static_output_ui
+        }
+        entry$static_output_ui <- NULL
+        entry$tab_label <- NULL
+        entry
+    })
 }
 
 .figure_builder_css <- function() {

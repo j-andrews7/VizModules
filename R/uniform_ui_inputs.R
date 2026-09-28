@@ -889,7 +889,10 @@ uniform_annotation_inputs_ui <- function(ns, defaults = NULL, choices = "", anno
                 placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
                 value = get_default(defaults, "highlight.points", ""),
                 rows = 3
-            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+            ), paste(
+                "Enter specific values from the 'Annotate By' column to highlight those points on the plot.",
+                "Separate values that contain spaces with commas or new lines."
+            ),
             placement = "top", options = tip_opts
         ),
         tipify(

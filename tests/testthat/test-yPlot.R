@@ -523,3 +523,32 @@ test_that("a fixed seed keeps jitter positions stable across rebuilds", {
 
     expect_equal(jitter_x(build()), jitter_x(build()))
 })
+
+test_that("the y.min and y.max defaults seed the Y axis limits and survive startup", {
+    df <- data.frame(
+        num1 = c(1, 2, 3),
+        num2 = c(4.5, 5.5, 6.5),
+        cat1 = c("a", "b", "c"),
+        stringsAsFactors = FALSE
+    )
+    defaults <- list(var = "num1", group.by = "cat1", y.min = -5, y.max = 50)
+
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df, defaults = defaults))
+    expect_match(html, 'id="yplot-y\\.max"[^>]*value="50"')
+    expect_match(html, 'id="yplot-y\\.min"[^>]*value="-5"')
+
+    shiny::testServer(
+        dittoViz_yPlotServer,
+        args = list(id = "yplot", data = shiny::reactive(df), defaults = defaults),
+        {
+            # The first var is the one the limits were given for, so they stand...
+            suppressWarnings(session$setInputs(var = "num1"))
+            expect_equal(y_range_store()$max, 50)
+            expect_equal(y_range_store()$min, -5)
+
+            # ...and a new var gets limits from its own data.
+            suppressWarnings(session$setInputs(var = "num2"))
+            expect_equal(y_range_store()$max, 6.5 * .y_axis_scale_factor)
+        }
+    )
+})

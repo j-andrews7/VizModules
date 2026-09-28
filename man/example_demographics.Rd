@@ -5,17 +5,19 @@
 \alias{example_demographics}
 \title{Example demographics dataset}
 \format{
-A data frame with 500 rows and 9 columns:
+A data frame with 500 rows and 11 columns:
 \describe{
-\item{department}{Employee department (factor: Engineering, Marketing, Sales, HR, Finance, Operations)}
-\item{job_level}{Job seniority level (factor: Junior, Mid, Senior, Lead)}
-\item{gender}{Employee gender (factor: Male, Female)}
-\item{age}{Employee age in years}
+\item{department}{Employee department (factor: Engineering, Finance, Sales, Marketing, Operations, HR)}
+\item{job_level}{Job seniority level (factor: Entry, Mid, Senior, Lead)}
+\item{gender}{Employee gender (factor: Female, Male)}
+\item{age}{Employee age in years (21-67)}
 \item{salary}{Annual salary in USD}
-\item{satisfaction}{Job satisfaction score (1–10)}
-\item{performance}{Performance rating (1–10)}
+\item{satisfaction}{Job satisfaction score (1-10)}
+\item{performance}{Performance rating (1-10)}
 \item{tenure_years}{Years with the company}
-\item{weekly_hours}{Average weekly hours worked (35–65)}
+\item{weekly_hours}{Average weekly hours worked}
+\item{work_mode}{Where the employee works (factor: Office, Remote)}
+\item{employee_id}{Unique employee identifier (\code{E001}-\code{E500})}
 }
 }
 \source{
@@ -26,8 +28,13 @@ example_demographics
 }
 \description{
 A simulated employee survey dataset with 500 rows spanning six departments
-and four job levels. Designed to showcase box, yPlot, density, and
-histogram plot modules with realistic numeric distributions.
+and four job levels. Salary rises steeply with job level and varies by
+department; age and tenure rise with level; remote workers report higher
+satisfaction than office workers in every department, and long hours lower
+it. Gender has no effect on anything. Two employees are planted against the
+trend for highlighting: \code{E042}, a very unhappy remote engineer, and \code{E137},
+a very happy office-based salesperson. Designed to showcase the box, yPlot,
+density, and histogram plot modules, including their statistical comparisons.
 }
 \author{
 Jared Andrews

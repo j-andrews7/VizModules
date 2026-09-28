@@ -123,14 +123,21 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
         })
 
-        # Update stat comparison pairs when x or group.by changes
+        # The comparisons on offer for the current x and group.by.
+        pair_choices <- function() generate_pair_strings(data(), input$x.data, input$group.by)
+
+        # Update stat comparison pairs when x or group.by changes, selecting any
+        # that defaults$stat.pairs names (all pairs are tested when none are).
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
-            pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
-            # Pause readers until the client echoes the cleared selection, otherwise
+            pair_strings <- pair_choices()
+            # Pause readers until the client echoes the new selection, otherwise
             # the plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "stat.pairs")
-            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs",
+                choices = c("", pair_strings),
+                selected = .default_stat_pairs(defaults, pair_strings)
+            )
         })
 
         # Reset functionality
@@ -222,7 +229,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             reset_axes_inputs(session, defaults)
 
             # Stats
-            .reset_stats_inputs(session, defaults)
+            .reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # How high the significance brackets will reach, so the y-axis can reserve
@@ -252,9 +259,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             headroom = stat_headroom, params = params
         )
 
-        # Update y-axis range when y data column is changed
+        # Update y-axis range when y data column is changed. Limits given as
+        # y.min/y.max defaults stand until y.data first changes.
+        seeded_limits <- .seed_axis_limits(defaults, "y.min", "y.max")
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
+            y_range <- seeded_limits(y_range, input$y.data)
             if (!is.null(y_range)) {
                 y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)

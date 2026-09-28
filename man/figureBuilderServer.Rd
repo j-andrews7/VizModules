@@ -12,14 +12,15 @@ figureBuilderServer(id, data_list = NULL, module_registry = NULL)
 
 \item{data_list}{An optional named list of data frames that seed the dataset
 registry. If \code{NULL} (the default), the bundled example datasets (plus a
-\code{sales_by_product} summary suited to the pie plot) are used. At least one
+\code{sales_by_region} summary suited to the pie plot) are used. At least one
 element is required. An element is either a data frame, or a named list of
 data frames for a module that needs companion tables (the \code{ComplexHeatmap}
 module's \code{list(matrix = , column_annotations = )}); in the latter case only
 the primary table is filtered and shown in the panel's table pane.}
 
 \item{module_registry}{An optional named list describing the plot modules to
-offer. If \code{NULL} (the default), all bundled VizModules modules are offered.
+offer. If \code{NULL} (the default), all bundled VizModules modules are offered,
+each opening on the same example figure as in \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}.
 Each entry is itself a list with components: \code{label} (character, shown in the
 picker), \code{dataset} (character, the dataset name its \code{defaults} were written
 for), \code{inputs_ui}, \code{output_ui}, and \code{server_fn} (the module's three
@@ -75,7 +76,7 @@ if (interactive()) {
 }
 }
 \seealso{
-\code{\link[=figureBuilderUI]{figureBuilderUI()}}, \code{\link[=figureBuilderApp]{figureBuilderApp()}}
+\code{\link[=figureBuilderUI]{figureBuilderUI()}}, \code{\link[=figureBuilderApp]{figureBuilderApp()}}, \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}
 }
 \author{
 Jared Andrews

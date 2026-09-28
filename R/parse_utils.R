@@ -59,6 +59,38 @@
     x
 }
 
+#' Parse a highlight string into the values it names
+#'
+#' Highlight values are typed as a comma- or newline-separated list, but they
+#' have also always been splittable on spaces, which left a value containing a
+#' space (`"CD4 T"`, `"Player A"`) impossible to name. Each comma- or
+#' newline-delimited entry is therefore kept whole when it is one of
+#' `available`, and split on whitespace as before otherwise.
+#'
+#' @param x A single string, e.g. `"CD4 T, B"` or `"P01 P07"`, or `NULL`.
+#' @param available Character vector of the values the entries name (the
+#'   `annotate.by` column), or `NULL` to split every entry on whitespace.
+#'
+#' @return A character vector of unique, non-blank values, possibly empty.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_parse_highlight_values
+#' @keywords internal
+.parse_highlight_values <- function(x, available = NULL) {
+    if (is.null(x) || length(x) == 0 || is.na(x[1]) || !nzchar(trimws(x[1]))) {
+        return(character(0))
+    }
+
+    entries <- trimws(strsplit(x[1], "[,\r\n]")[[1]])
+    entries <- entries[nzchar(entries)]
+    available <- unique(as.character(available))
+
+    values <- unlist(lapply(entries, function(entry) {
+        if (entry %in% available) entry else strsplit(entry, "\\s+")[[1]]
+    }), use.names = FALSE)
+    unique(values[nzchar(values)])
+}
+
 #' Parse and validate linetype string to a vector
 #'
 #' Parses a comma-separated string of linetypes and validates each element.
@@ -525,6 +557,49 @@ setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max
     })
 
     store
+}
+
+#' Let axis limits given in `defaults` survive a module's startup
+#'
+#' Modules recompute an axis's limits from the data whenever the columns it
+#' shows change, and those observers also run as the controls first report in,
+#' which used to replace any limits given in `defaults` before the plot was
+#' ever drawn. Pass each recomputed range through the function this returns:
+#' while the columns are still the ones the module started on, the `defaults`
+#' limits win (either may be given alone); once they change, the data's range
+#' is used from then on, since the seeded limits described other columns.
+#'
+#' @param defaults A named list of module defaults, or `NULL`.
+#' @param min_key,max_key Character strings — the limit controls' input ids,
+#'   which are also their `defaults` keys.
+#'
+#' @return A function of `(range, key)`, where `range` is a `list(min = , max = )`
+#'   computed from the data (or `NULL`) and `key` identifies the columns it was
+#'   computed for (e.g. `list(input$x.data, input$y.data)`). It returns the range
+#'   to use.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_seed_axis_limits
+#' @keywords internal
+.seed_axis_limits <- function(defaults, min_key, max_key) {
+    start_key <- NULL
+    seeding <- TRUE
+
+    function(range, key) {
+        if (is.null(range) || !seeding) {
+            return(range)
+        }
+        if (is.null(start_key)) {
+            start_key <<- key
+        }
+        if (!identical(key, start_key)) {
+            seeding <<- FALSE
+            return(range)
+        }
+        range$min <- get_default(defaults, min_key, range$min, is.numeric)
+        range$max <- get_default(defaults, max_key, range$max, is.numeric)
+        range
+    }
 }
 
 #' Normalize a module's "no selection" column input to `NULL`

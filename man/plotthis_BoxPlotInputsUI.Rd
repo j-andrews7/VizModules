@@ -155,9 +155,11 @@ the plotthis significance-testing features). The following inputs are available:
 \item \code{stat.p.adjust} - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
 \item \code{stat.display} - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
 \item \code{stat.sig.threshold} - Significance threshold for symbols/hiding (UI: "Significance Threshold")
-\item \code{stat.hide.ns} - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
+\item \code{stat.hide.ns} - Hide non-significant comparisons (UI: "Hide Non-Significant", default: TRUE)
 \item \code{stat.paired} - Use a paired test (UI: "Paired Test", default: FALSE)
-\item \code{stat.pairs} - Group comparisons to test (UI: "Comparisons", multiple selection)
+\item \code{stat.pairs} - Group comparisons to test (UI: "Comparisons", multiple selection, default: all
+pairs). As a default, a character vector of \code{"A vs B"} strings naming levels of \code{x.data} (or of
+\code{group.by}, when set), e.g. \code{c("Entry vs Mid", "Mid vs Senior")}; either order matches
 \item \code{stat.line.color} - Bracket line color (UI: "Line Color", default: "#000000")
 \item \code{stat.line.width} - Bracket line width (UI: "Line Width")
 \item \code{stat.bracket.style} - Bracket style, capped or flat (UI: "Bracket Style")

@@ -48,7 +48,8 @@
 #'
 #' - `x` - X-axis variable (UI: "X values", default: 2nd categorical variable)
 #' - `y` - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
-#' - `group_by` - Grouping variable for area fill (UI: "Group by", default: 3rd categorical variable or "")
+#' - `group_by` - Grouping variable for area fill (UI: "Group by", default: first categorical variable
+#'   other than `x.data`, or "")
 #' - `facet_by` - Faceting variable (UI: "Facet by", default: "")
 #' - `facet_scales` - Facet scale behavior (UI: "Facet scale", default: "fixed")
 #' - `facet_ncol` - Number of facet columns (UI: "Columns", default: NULL)
@@ -135,7 +136,11 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     # Get numeric variables of data.
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    group_facet_choices <- setdiff(cat.choices, cat.choices[2])
+    # Group By and Facet By offer every categorical column but the X column,
+    # matching what the server offers once X changes and on Reset.
+    x.default <- get_default(defaults, "x.data", cat.choices[2], function(x) x %in% cat.choices)
+    group_facet_choices <- setdiff(cat.choices, x.default)
+    group.fallback <- c(group_facet_choices[nzchar(group_facet_choices)], "")[1]
 
     selected <- list(
         "x", "y", "group_by", "scale_y",
@@ -150,10 +155,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     inputs <- list(
         "Data" = tagList(
             tipify(viz_select_input(ns("x.data"), "X Values",
-                selected = get_default(
-                    defaults, "x.data", cat.choices[2],
-                    function(x) x %in% cat.choices
-                ),
+                selected = x.default,
                 choices = cat.choices[nzchar(cat.choices)]
             ), documentParameters$x, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.data"), "Y Values",
@@ -165,7 +167,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group.by"), "Group By",
                 selected = get_default(
-                    defaults, "group.by", cat.choices[3],
+                    defaults, "group.by", group.fallback,
                     function(x) x %in% c("", group_facet_choices)
                 ),
                 choices = c("", group_facet_choices)

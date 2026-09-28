@@ -49,6 +49,20 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             .split_bar_range(data(), input$x.data, input$y.data, axis_scale())
         })
 
+        # The limits the x.min/x.max controls are set to: axis_range(), unless
+        # x.min/x.max defaults were given, which stand until the columns (or the
+        # scale factor) the range depends on first change.
+        seeded_limits <- .seed_axis_limits(defaults, "x.min", "x.max")
+        x_limits <- function(x_range) {
+            if (is.null(x_range)) {
+                return(NULL)
+            }
+            seeded_limits(
+                list(min = -x_range$max, max = x_range$max),
+                list(input$x.data, input$y.data, input$axis.scale.factor)
+            )
+        }
+
 
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
         # parent app via renderUI (and re-injected when the dataset changes), so the
@@ -180,10 +194,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
                 # Wait a moment for other inputs to be available
                 if (!is.null(input$x.data) && input$x.data != "") {
-                    x_range <- axis_range()
-                    if (!is.null(x_range)) {
-                        updateNumericInput(session, "x.max", value = x_range$max)
-                        updateNumericInput(session, "x.min", value = -x_range$max)
+                    limits <- x_limits(axis_range())
+                    if (!is.null(limits)) {
+                        updateNumericInput(session, "x.max", value = limits$max)
+                        updateNumericInput(session, "x.min", value = limits$min)
                         initialized(TRUE)
                     }
                 }
@@ -204,9 +218,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             x_range <- axis_range()
             # Only auto-update if auto.update is enabled
             if (!is.null(input$auto.update) && input$auto.update) {
-                if (!is.null(x_range)) {
-                    updateNumericInput(session, "x.max", value = x_range$max)
-                    updateNumericInput(session, "x.min", value = -x_range$max)
+                limits <- x_limits(x_range)
+                if (!is.null(limits)) {
+                    updateNumericInput(session, "x.max", value = limits$max)
+                    updateNumericInput(session, "x.min", value = limits$min)
                 }
             }
             if (!is.null(x_range)) {
@@ -317,9 +332,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             req(input$y.data %in% names(data()))
 
             x_range <- axis_range()
-            if (!is.null(x_range)) {
-                updateNumericInput(session, "x.max", value = x_range$max)
-                updateNumericInput(session, "x.min", value = -x_range$max)
+            limits <- x_limits(x_range)
+            if (!is.null(limits)) {
+                updateNumericInput(session, "x.max", value = limits$max)
+                updateNumericInput(session, "x.min", value = limits$min)
                 updateSliderInput(session, "text.position", min = 0, max = x_range$max)
             }
         })

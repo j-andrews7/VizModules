@@ -94,8 +94,8 @@ default: "split")
 \item \code{split.by} - Faceting variable (UI: "Split by (facet)", default: "")
 \item \code{plots} - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
-\item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
-\item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+\item \code{min} - Y-axis minimum; set with the \code{y.min} key (UI: "Y Axis Min", auto-calculated)
+\item \code{max} - Y-axis maximum; set with the \code{y.max} key (UI: "Y Axis Max", auto-calculated)
 \item \code{var.adjustment} - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 \item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
@@ -126,6 +126,10 @@ default: "split")
 empty uses a sensible default set of columns)
 \item \code{hover.round.digits} - Hover value rounding (UI: "Hover Round Digits", default: 5)
 \item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
+\item \code{stats.enabled} and the other \verb{stat.*} parameters - Pairwise testing between the \code{group.by}
+groups, or between the \code{color.by} levels within each group when \code{color.by} is set (Stats tab).
+\code{stat.pairs} takes a character vector of \code{"A vs B"} strings naming those levels, e.g.
+\code{"Office vs Remote"}; left unset, every pair is tested
 }
 }
 
@@ -178,7 +182,9 @@ ggplot's dodge, so plotly.js is not asked to dodge them
 \code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 back to the default palette and user edits take precedence.
 \item \code{annotate.by} - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
-\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight",
+default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
