@@ -150,9 +150,10 @@ reference:
       - dataFilterUI
       - resolve_column_targets
 
-  - title: "Figure Builder Module"
-    desc: "Multi-panel figure builder module."
+  - title: "Module Gallery & Figure Builder"
+    desc: "The gallery of every module on its example data, and the multi-panel figure builder module."
     contents:
+      - moduleGalleryApp
       - figureBuilderApp
       - figureBuilderServer
       - figureBuilderUI
