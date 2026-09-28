@@ -24,10 +24,9 @@ remotes::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted [example gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/).
-- Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Check out the hosted [Figure Builder app](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/) for a demo of how the modules can be used together to build a free-form, multi-pane figure.
-- Run the Figure Builder app locally: `VizModules::figureBuilderApp()`
+- Explore the hosted [example gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/). Each module opens on an example with its main features switched on (statistical comparisons, highlighted points, fit lines, annotations, and so on), and the **Figure Builder** tab shows how the modules combine into a free-form, multi-panel figure.
+- Run the same gallery locally after installation: `VizModules::moduleGalleryApp()`
+- Run the Figure Builder on its own: `VizModules::figureBuilderApp()`
 - See the vignette for a full walkthrough of using the modules in your own apps: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -108,9 +107,9 @@ runApp(app)
 ```
 
 
-## Figure Builder App
+## Figure Builder
 
-The **Figure Builder** is now a fully reusable, namespaced Shiny module (`figureBuilderUI()` / `figureBuilderServer()`) that turns the plot modules into a free-form figure builder. It can be launched as a standalone app, embedded inside a larger app, or even instantiated more than once on a single page. Launch the standalone app with `figureBuilderApp()`:
+The **Figure Builder** is a fully reusable, namespaced Shiny module (`figureBuilderUI()` / `figureBuilderServer()`) that turns the plot modules into a free-form figure builder. It can be launched as a standalone app, embedded inside a larger app, or even instantiated more than once on a single page. It is also the **Figure Builder** tab of the gallery (`moduleGalleryApp()`, or the [hosted gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/)). Launch the standalone app with `figureBuilderApp()`:
 
 ```r
 library(VizModules)
@@ -123,8 +122,6 @@ figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 ```
 
 `figureBuilderApp()` accepts `data_list` to seed datasets, `module_registry` to add custom modules, and `return_components = TRUE` to get separate `ui`/`server` objects instead of a `shinyApp()`. See `?figureBuilderApp` for details.
-
-Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
 
 The Figure Builder is also a self-contained Shiny module, so you can embed it in a larger app (and even use more than one instance on a page) with `figureBuilderUI()` / `figureBuilderServer()`, just like the plot modules:
 
