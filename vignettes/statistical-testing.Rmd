@@ -19,11 +19,26 @@ The **BoxPlot**, **yPlot**, and **freqPlot** modules include a **Stats** tab tha
 
 ## Using the Stats tab
 
-Enable testing from the Stats tab in any supported module app:
+Enable testing from the Stats tab in any supported module app. The bundled example apps open with it already on; the box plot compares salaries between neighbouring job levels:
 
 ```{r stats-app}
 library(VizModules)
 plotthis_BoxPlotApp()
+```
+
+Every Stats control can also be set from `defaults`, including which comparisons to draw, as `"A vs B"` strings (either order matches):
+
+```{r stats-defaults}
+plotthis_BoxPlotApp(
+    data_list = list("iris" = example_iris),
+    defaults = list(
+        x.data        = "Species",
+        y.data        = "Sepal.Length",
+        stats.enabled = TRUE,
+        stat.display  = "symbol",
+        stat.pairs    = c("setosa vs versicolor", "versicolor vs virginica")
+    )
+)
 ```
 
 The Stats tab exposes these controls:
@@ -35,9 +50,9 @@ The Stats tab exposes these controls:
 | P-value Adjustment | holm | Any `p.adjust` method |
 | Display | Adjusted P-value | `p.adj`, `p.value`, or `symbol` (`*`/`**`/`***`/`****`) |
 | Significance Threshold | 0.05 | Boundary for `*` vs `ns` |
-| Hide Non-Significant | OFF | Suppress `ns` brackets |
+| Hide Non-Significant | ON | Suppress `ns` brackets |
 | Paired Test | OFF | Paired Wilcoxon or paired t-test |
-| Comparisons | (all pairs) | Restrict to specific pairs |
+| Comparisons | (all pairs) | Restrict to specific pairs (`stat.pairs` in `defaults`) |
 | Bracket Style | Capped | `capped` (ticked) or `flat` |
 | Bracket Spacing / Text Offset / Bracket Inset | — | Fine layout control (fractions of y-range) |
 | Per Facet Panel | ON | Test independently per facet, or across the full dataset |
@@ -128,7 +143,7 @@ Pass `facet.by` with `per.facet = TRUE` to test independently within each panel,
 compute_pairwise_stats(
     df        = example_rnaseq,
     x         = "condition",
-    y         = "expression",
+    y         = "log2_cpm",
     test      = "wilcox.test",
     facet.by  = "gene",
     per.facet = TRUE

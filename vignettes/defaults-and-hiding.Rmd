@@ -19,31 +19,30 @@ Two closely related arguments — `defaults` and `hide.inputs`/`hide.tabs` — l
 
 ## `defaults`: pre-filling inputs
 
-Pass a named list to the `defaults` argument of any `*InputsUI()` call. Each name is an input ID (matching the underlying plot function argument), and its value is what the control initialises to.
+Pass a named list to the `defaults` argument of any `*InputsUI()` call. Each name is an input ID (matching the underlying plot function argument), and its value is what the control initialises to. Pass the same list to the module's `*Server()` too, so its **Reset** button returns the controls to these values rather than to the built-in ones.
 
 ```{r defaults-basic}
 library(VizModules)
 
+scatter_defaults <- list(
+    x.by        = "wt",
+    y.by        = "mpg",
+    color.by    = "cyl",
+    size        = 3,
+    best.fit    = TRUE
+)
+
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_scatterPlotInputsUI(
-                "p", mtcars,
-                defaults = list(
-                    x.by        = "wt",
-                    y.by        = "mpg",
-                    color.by    = "cyl",
-                    size        = 3,
-                    best.fit    = TRUE
-                )
-            )
+            dittoViz_scatterPlotInputsUI("p", mtcars, defaults = scatter_defaults)
         ),
         mainPanel(dittoViz_scatterPlotOutputUI("p"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_scatterPlotServer("p", data = reactive(mtcars))
+    dittoViz_scatterPlotServer("p", data = reactive(mtcars), defaults = scatter_defaults)
 }
 
 shinyApp(ui, server)
@@ -116,13 +115,17 @@ The obvious alternative is an `observeEvent()` in the parent calling `updateText
 
 ```{r defaults-app}
 plotthis_BoxPlotApp(
+    data_list = list("iris" = example_iris),
     defaults = list(
-        x.by     = "Species",
-        y.by     = "Sepal.Length",
-        pt.size  = 0
+        x.data     = "Species",
+        y.data     = "Sepal.Length",
+        add.points = TRUE,
+        pt.size    = 2
     )
 )
 ```
+
+Run on its bundled example data instead (no `data_list`), a `*App()` opens with the settings the module gallery (`moduleGalleryApp()`) shows it with, and any `defaults` you pass are layered over those: `plotthis_BoxPlotApp(defaults = list(stats.enabled = FALSE))` is the gallery's box plot without its significance brackets.
 
 The same `defaults` list is accepted by `createModuleApp()` directly:
 
@@ -132,7 +135,7 @@ app <- createModuleApp(
     output_ui_fn = plotthis_BoxPlotOutputUI,
     server_fn    = plotthis_BoxPlotServer,
     data_list    = list("iris" = iris),
-    defaults     = list(x.by = "Species", y.by = "Sepal.Length")
+    defaults     = list(x.data = "Species", y.data = "Sepal.Length")
 )
 if (interactive()) runApp(app)
 ```
@@ -218,7 +221,7 @@ ui <- fluidPage(
             plotthis_BoxPlotInputsUI(
                 "b", example_rnaseq,
                 defaults = list(
-                    x.data   = "condition",
+                    x.data   = "cell_type",
                     y.data   = "log2_cpm",
                     group.by = "condition"
                 )
@@ -240,7 +243,7 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-Here `group.by` is fixed to `"condition"` and hidden. The entire `"Plotly"` and `"Lines"` tabs are removed because they aren't relevant to this app.
+Here each cell type's boxes are always split by `"condition"`: `group.by` is set and then hidden, so users can change what is plotted but not the comparison. The entire `"Plotly"` and `"Lines"` tabs are removed because they aren't relevant to this app.
 
 ---
 
@@ -250,6 +253,7 @@ Both accept `hide.inputs` and `hide.tabs`, forwarding them to the server if it s
 
 ```{r hide-in-app}
 plotthis_BoxPlotApp(
+    data_list   = list("iris" = example_iris),
     defaults    = list(x.data = "Species", y.data = "Sepal.Length"),
     hide.inputs = "group.by",
     hide.tabs   = "Plotly"
@@ -267,9 +271,10 @@ library(shinyjs)
 
 myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
-        # Hide the 'size' input whenever a size.by column is chosen
+        # Hide the 'size' input whenever a size.by column is chosen. isTRUE()
+        # because input$size.by is NULL until the control first reports in.
         observe({
-            if (nzchar(input$size.by)) {
+            if (isTRUE(nzchar(input$size.by))) {
                 shinyjs::hide(id = "size")
             } else {
                 shinyjs::show(id = "size")
@@ -287,7 +292,7 @@ Note that `shinyjs::hide()` / `shinyjs::show()` act on the input element itself.
 myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
         observe({
-            if (nzchar(input$size.by)) {
+            if (isTRUE(nzchar(input$size.by))) {
                 VizModules::hide_input(session, "size")
             } else {
                 VizModules::show_input(session, "size")
