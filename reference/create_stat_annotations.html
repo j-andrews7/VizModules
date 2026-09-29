@@ -11,7 +11,7 @@ small-gap brackets are closest to the data and large-gap brackets are higher."><
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ small-gap brackets are closest to the data and large-gap brackets are higher."><
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create plotly shapes and annotations for statistical test results</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/stat_helper.R" class="external-link"><code>R/stat_helper.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/stat_helper.R" class="external-link"><code>R/stat_helper.R</code></a></small>
       <div class="d-none name"><code>create_stat_annotations.Rd</code></div>
     </div>
 
@@ -80,7 +80,9 @@ small-gap brackets are closest to the data and large-gap brackets are higher.</p
 <span>  font.size <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  step.increase <span class="op">=</span> <span class="fl">0.06</span>,</span>
 <span>  text.bump <span class="op">=</span> <span class="fl">0.04</span>,</span>
-<span>  bracket.inset <span class="op">=</span> <span class="fl">0.025</span></span>
+<span>  bracket.inset <span class="op">=</span> <span class="fl">0.025</span>,</span>
+<span>  dodge.width <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  free.y <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -98,7 +100,11 @@ faceted plots.</p></dd>
 
 
 <dt id="arg-df">df<a class="anchor" aria-label="anchor" href="#arg-df"></a></dt>
-<dd><p>The original data frame.</p></dd>
+<dd><p>The data frame the plot was drawn from, holding the values as they
+are plotted: if the plot transformed a column (e.g. dittoViz's
+<code>var.adjustment</code>/<code>var.adj.fxn</code>), pass the transformed values (see
+<code><a href="adjust_column_values.html">adjust_column_values()</a></code>), or the brackets are placed in a different
+coordinate space from the data. Non-finite values are ignored.</p></dd>
 
 
 <dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
@@ -168,6 +174,21 @@ text above the bracket line. Default 0.04.</p></dd>
 from the group center position. Creates visual separation between
 adjacent brackets at the same y-level. Default 0.025.</p></dd>
 
+
+<dt id="arg-dodge-width">dodge.width<a class="anchor" aria-label="anchor" href="#arg-dodge-width"></a></dt>
+<dd><p>Numeric; width the <code>group.by</code> levels at one x category are
+dodged across, matching the dodge the plot was built with. Brackets between
+two <code>group.by</code> levels are placed on the same slot centres the boxes sit on,
+so this has to be the plot's dodge or they will not line up. Default 1.</p></dd>
+
+
+<dt id="arg-free-y">free.y<a class="anchor" aria-label="anchor" href="#arg-free-y"></a></dt>
+<dd><p>Logical; whether each facet panel has its own y scale (e.g.
+<code>scales = "free_y"</code>). Each panel's brackets are then stacked above that
+panel's own data rather than above the tallest panel's, and comparisons
+pooled across facets are drawn on every panel at that panel's height.
+Ignored when the figure has no facet panels. Default <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -180,8 +201,23 @@ adjacent brackets at the same y-level. Default 0.025.</p></dd>
 <dt>y.max</dt>
 <dd><p>Numeric; maximum y value needed to accommodate all annotations.</p></dd>
 
+<dt>y.min</dt>
+<dd><p>Numeric; the smallest finite value of <code>y</code>.</p></dd>
+
+<dt>y.range.by.axis</dt>
+<dd><p>Under <code>free.y</code>, a named list of <code>c(min, max)</code> ranges
+keyed by y-axis reference (<code>"y"</code>, <code>"y2"</code>, ...): the panel's data minimum
+and the top its brackets need. <code>NULL</code> otherwise.</p></dd>
+
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The values in <code>y</code> are expected to be the values drawn on the y-axis, so the
+plot must show them running up the y-axis. A plot whose values run along the
+x-axis (a rotated box plot or a ridge plot, say) has no room for vertical
+brackets; test it with <code><a href="compute_pairwise_stats.html">compute_pairwise_stats()</a></code> but do not draw brackets.</p>
+    </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
     <p>Jared Andrews, Jacob Martin</p>
@@ -210,7 +246,8 @@ adjacent brackets at the same y-level. Default 0.025.</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">stat_result</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "annotations" "shapes"      "y.max"      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "annotations"     "shapes"          "y.max"           "y.min"          </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [5] "y.range.by.axis"</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

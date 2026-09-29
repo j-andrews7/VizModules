@@ -6,8 +6,8 @@ Data visualization is central to modern data analysis, enabling
 exploration of complex datasets, hypothesis generation, and
 communication of results. `VizModules` is an R package that provides a
 curated library of interactivity-first `shiny` \[@shiny\] modules for
-common plot types, including scatter, bar, line, box, violin, density,
-area, dot, histogram, pie, radar, and more. Every module renders
+common plot types, including scatter, bar, line, box, density, area,
+dot, histogram, pie, radar, heatmap, and more. Most modules render
 interactive `plotly` \[@plotly\] graphics with input tooltips, hover
 highlighting, draggable text and shape annotations, and one-click export
 in multiple formats, while exposing the full aesthetic controls of the
@@ -16,12 +16,13 @@ generation of true publication-quality figures without writing code.
 Each module has a consistent three-function interface, allowing
 developers to embed it in any `shiny` application in \<10 lines of code.
 Built on `dittoViz` \[@dittoViz\], `plotthis` \[@plotthis\], `ggplot2`
-\[@ggplot2\], and `plotly` \[@plotly\], `VizModules` decouples plotting
-logic from data, accepts inputs ranging from in-memory data frames to
-uploaded CSV, TSV, and Excel files, and contains a multi-pane [“Figure
-Builder”
-application](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
-for free-form composition and vector (SVG) export of complete figures.
+\[@ggplot2\], `plotly` \[@plotly\], and `ComplexHeatmap`
+\[@ComplexHeatmap\], `VizModules` decouples plotting logic from data,
+accepts inputs ranging from in-memory data frames to uploaded CSV, TSV,
+and Excel files, and contains a multi-pane [“Figure
+Builder”](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
+for free-form composition and vector (SVG) export of complete figures,
+itself a module that can be embedded in any application.
 
 ## Statement of need
 
@@ -100,7 +101,11 @@ decoupled from the plot.
 To serve both app users and developers, the input functions accept
 `defaults`, `hide.inputs`, and `hide.tabs` arguments that pre-fill or
 hide controls without altering server logic, letting developers enforce
-application-level defaults while reusing the same tested module. A
+application-level defaults while reusing the same tested module.
+Individual `defaults` entries may themselves be reactive, so a parent
+application can drive a module parameter, including an explicit
+group-to-color mapping, from its own state while the control remains
+editable by the user. A
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
 factory turns any module trio into a complete application for simple
 testing, and the same pattern provides a template for composing
@@ -114,21 +119,34 @@ natively. In many cases where `ggplot2` conversion is imperfect,
 functionality. This enables the usage of existing plotting functions
 that return `ggplot2` objects, and several modules are built on top of
 `plotthis` \[@plotthis\] and `dittoViz` \[@dittoViz\] plot functions.
+The module contract is not tied to one rendering backend, however: the
+`ComplexHeatmap` module instead delivers sub-heatmap zoom and cell
+hover, click, and selection through `InteractiveComplexHeatmap`
+\[@InteractiveComplexHeatmap\] while exposing the same controls,
+defaults, and download behaviour as the rest of the library. Manual
+refinements such as dragged annotations and edited axis titles persist
+when a plot is redrawn, so iterative work is not lost with each change.
 
 `VizModules` is implemented primarily in R, with select JavaScript
 components such as a custom `multiColorPicker` input for individually
-mapping colors to discrete variable levels. Documentation tooltips for
-plotting functions are automatically extracted with `roclang` to attach
-detailed descriptions to each control on hover. The `BoxPlot`,
-`ViolinPlot`, and `yPlot` modules add an integrated statistics tab
-supporting pairwise tests (Wilcoxon rank-sum and paired or unpaired
-t-tests) and omnibus tests (Kruskal–Wallis and ANOVA), with bracket
-annotations placed by an interval-packing algorithm, configurable
-p-value adjustment, and per-facet or nested-group comparisons. Finally,
-helper functions collect each plot together with its underlying data,
-the inputs used to generate it, and any statistical results into a
-single downloadable archive at the click of a button, supporting
-reproducibility and downstream editing.
+mapping colors to discrete variable levels and a `multiDynamicInput` for
+adding and removing rows of heterogeneous controls. Select inputs are
+virtualized and searchable, so columns with tens of thousands of
+distinct values remain usable. Documentation tooltips for plotting
+functions are automatically extracted with `roclang` to attach detailed
+descriptions to each control on hover. The `BoxPlot`, `yPlot`, and
+`freqPlot` modules add an integrated statistics tab supporting pairwise
+tests (Wilcoxon rank-sum and paired or unpaired t-tests) and omnibus
+tests (Kruskal–Wallis and ANOVA), with bracket annotations placed by an
+interval-packing algorithm, configurable p-value adjustment, and
+per-facet or nested-group comparisons. The scatter module fits any
+number of user-specified trend lines through an extensible backend
+registry, with `lm`, `glm`, `loess`, and `nls` supplied and additional
+backends registrable from user code. Finally, helper functions collect
+each plot together with its underlying data (limited to the rows
+actually drawn), the inputs used to generate it, and any statistical
+results into a single downloadable archive at the click of a button,
+supporting reproducibility and downstream editing.
 
 ## Research impact statement
 
@@ -137,9 +155,18 @@ reproducibility and downstream editing.
 actively maintained, well-documented with a `pkgdown`
 [website](https://j-andrews7.github.io/VizModules/) and vignettes
 (including clear guides to using modules in your own app, authoring new
-modules, and extending existing modules), and covered by a `testthat`
-suite spanning its plotting functions and internal helpers. A hosted
-[module
+modules, extending existing modules, statistical testing, data
+filtering, and custom inputs), and covered by a `testthat` suite
+spanning its plotting functions and internal helpers. The package also
+ships three [Agent Skills](https://agentskills.io), installable into a
+project with
+[`use_vizmodules_skills()`](https://j-andrews7.github.io/VizModules/reference/use_vizmodules_skills.md),
+that give coding agents the package’s conventions and a generated
+inventory of every module’s input keys, covering app construction,
+wrapper modules, and authoring new modules within the package. In paired
+benchmarking, the app-building skill halved both token usage and wall
+time relative to pointing an agent at the documentation, with no loss of
+correctness. A hosted [module
 gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/) and
 [Figure Builder
 application](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
@@ -159,8 +186,10 @@ visualizations.
 ## AI usage disclosure
 
 `VizModules` was developed with assistance from generative AI tools,
-including GitHub Copilot and Claude Code (Sonnet 4.6, Opus 4.6-4.8), for
-code optimization, debugging, and documentation formatting. The core
-architecture, module logic, and testing strategy were designed and
+including GitHub Copilot and Claude Code (Sonnet 4.6, Opus 4.6-4.8, Opus
+5), for code optimization, debugging, and documentation formatting. The
+core architecture, module logic, and testing strategy were designed and
 authored by the developers, and all AI-assisted contributions were
-manually reviewed and tested.
+manually reviewed and tested. The Agent Skills bundled with the package
+are maintained alongside the code they describe and are intended to make
+such assisted use of `VizModules` accurate and efficient for others.

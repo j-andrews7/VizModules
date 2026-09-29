@@ -10,6 +10,16 @@ full functionality of the base modules.
 This vignette demonstrates how to create a custom module by building on
 top of the `scatterPlot` module.
 
+If you are working with an AI coding agent, the package ships an [Agent
+Skill](https://agentskills.io) covering exactly this material -
+**`vizmodules-custom-module`** - along with the namespace contract,
+reactive `defaults`, avoiding double renders, manual-edit persistence,
+and model-line backends. Install it (and its two siblings) into your
+project with `VizModules::use_vizmodules_skills(".")`, or pass
+`client = "copilot"` / `client = "claude"` to write to `.github/skills/`
+or `.claude/skills/` instead of the default `.agents/skills/`. See the
+README for details.
+
 ## The Pattern
 
 When building a custom module, you need to handle Shiny’s namespacing
@@ -224,6 +234,36 @@ See the “Adding a New Module” vignette for the full description of these
 helpers, but this is pretty much all you need to do.
 
 ## Best Practices
+
+When you add a free-text control of your own, debounce it.
+[`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html) reports on
+every keystroke, so a base module reading it directly is rebuilt once
+per character — and if the text is an expression, most of those
+characters describe something that cannot parse yet:
+
+``` r
+
+myModuleServer <- function(id, data) {
+    filtered <- moduleServer(id, function(input, output, session) {
+        # Once, in the moduleServer body (where the wrapper's own input lives),
+        # not inside the reactive below. 500-800ms is a good range.
+        query <- debounce(reactive(input$query), 700)
+
+        reactive({
+            keep <- safe_eval_filter(query(), data())
+            if (is.null(keep)) data() else data()[keep, , drop = FALSE]
+        })
+    })
+
+    dittoViz_scatterPlotServer(id, filtered)
+}
+```
+
+Select, numeric, and checkbox inputs need no such treatment — they
+report discrete choices, not keystrokes. See the “Debouncing Free-Text
+Inputs” section of
+[`vignette("adding-a-new-module", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.md)
+for the full rationale.
 
 1.  **Keep wrapper logic focused**: Each wrapper should add a cohesive
     set of related functionality.

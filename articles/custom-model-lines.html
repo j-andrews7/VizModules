@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
       <h1>Custom Model Lines in Scatter Plots</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/vignettes/custom-model-lines.Rmd" class="external-link"><code>vignettes/custom-model-lines.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/vignettes/custom-model-lines.Rmd" class="external-link"><code>vignettes/custom-model-lines.Rmd</code></a></small>
       <div class="d-none name"><code>custom-model-lines.Rmd</code></div>
     </div>
 
@@ -82,10 +82,10 @@
     
 <p>The <code>dittoViz_scatterPlot</code> module lets users overlay
 fitted model lines on their data. Out of the box it supports
-<code>lm</code>, <code>glm</code>, <code>loess</code>, and
-<code>nls</code>. This vignette explains how the system works, how to
-set defaults, and how to add support for any modelling package
-(e.g. <code>drc</code>, <code>mgcv</code>, <code>brms</code>).</p>
+<code>lm</code>, <code>glm</code>, and <code>loess</code>. This vignette
+explains how the system works, how to set defaults, and how to add
+support for any modelling package (e.g. <code>drc</code>,
+<code>mgcv</code>, <code>brms</code>).</p>
 <div class="section level2">
 <h2 id="how-it-works">How It Works<a class="anchor" aria-label="anchor" href="#how-it-works"></a>
 </h2>
@@ -124,9 +124,22 @@ Lines</strong> on.</li>
 <li>Click <strong>+ Add</strong> to create a model row.</li>
 <li>Select a model type, enter a formula using your data’s column names
 (e.g. <code>revenue ~ poly(units, 2)</code>), pick line colour and
-width.</li>
+width. Write it as <code>&lt;y column&gt; ~ &lt;x column&gt;</code>: the
+line is the formula’s prediction across the X axis’s range, drawn
+against the Y axis, and any other column in the formula is held at its
+median (or first level).</li>
 <li>The fitted line appears on the plot.</li>
 </ol>
+<p>The model is fit to the values as plotted. With an X or Y adjustment
+on the <strong>Adjustments</strong> tab (a z-score, <code>log10</code>,
+…), <code>revenue ~ units</code> models the adjusted revenue against the
+adjusted units, so the line runs through the points you see. Don’t
+repeat the adjustment inside the formula:
+<code>log10(revenue) ~ units</code> on a <code>log10</code> Y axis would
+take the log twice. No model lines are drawn while
+<code>as.factor</code> makes an axis categorical. The same goes for the
+<strong>Linear model line</strong> and <strong>Line of best fit</strong>
+toggles.</p>
 <p>You can add multiple rows — each draws its own line with independent
 settings.</p>
 </div>
@@ -141,8 +154,8 @@ settings.</p>
 <span><span class="fu"><a href="../reference/dittoViz_scatterPlotApp.html">dittoViz_scatterPlotApp</a></span><span class="op">(</span></span>
 <span>    data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"sales"</span> <span class="op">=</span> <span class="va">example_sales</span><span class="op">)</span>,</span>
 <span>    defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        x.by <span class="op">=</span> <span class="st">"revenue"</span>,</span>
-<span>        y.by <span class="op">=</span> <span class="st">"units"</span>,</span>
+<span>        x.by <span class="op">=</span> <span class="st">"units"</span>,</span>
+<span>        y.by <span class="op">=</span> <span class="st">"revenue"</span>,</span>
 <span>        custom.model.enable <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>        custom.models <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>            models1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
@@ -171,9 +184,9 @@ list.</p>
 <h2 id="adding-a-custom-model-backend">Adding a Custom Model Backend<a class="anchor" aria-label="anchor" href="#adding-a-custom-model-backend"></a>
 </h2>
 <p>The built-in types (<code>lm</code>, <code>glm</code>,
-<code>loess</code>, <code>nls</code>) are registered automatically. To
-add support for another modelling package, call
-<code><a href="../reference/register_model_backend.html">register_model_backend()</a></code> before the app runs.</p>
+<code>loess</code>) are registered automatically. To add support for
+another modelling package, call <code><a href="../reference/register_model_backend.html">register_model_backend()</a></code>
+before the app runs.</p>
 <div class="section level3">
 <h3 id="backend-spec">Backend Spec<a class="anchor" aria-label="anchor" href="#backend-spec"></a>
 </h3>
@@ -273,8 +286,8 @@ function as the <code>drc_fct</code> argument.</p>
 <p>No <code>fields</code> needed here because GAM complexity is
 expressed in the formula itself (<code>s()</code>, <code>te()</code>,
 etc.). Note: you’d need to add <code>"s"</code>, <code>"te"</code>, etc.
-to the formula whitelist in <code>.safe_build_model()</code> for this to
-work.</p>
+to the formula whitelist, <code>.formula_allowed_calls()</code> in
+<code>R/parse_utils.R</code>, for this to work.</p>
 </div>
 </div>
 <div class="section level2">
@@ -294,7 +307,7 @@ work.</p>
 <tr class="odd">
 <td>Built into VizModules</td>
 <td>Add to <code>.register_builtin_backends()</code> in
-<code>R/model_backends.R</code>
+<code>R/plot_fit_lines.R</code>
 </td>
 </tr>
 <tr class="even">

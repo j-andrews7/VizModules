@@ -9,7 +9,7 @@ that matches the id used in the plotthis_BarPlotServer() and plotthis_BarPlotOut
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ that matches the id used in the plotthis_BarPlotServer() and plotthis_BarPlotOut
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Input UI components for the BarPlot module</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/plotthis_BarPlot_module_ui.R" class="external-link"><code>R/plotthis_BarPlot_module_ui.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plotthis_BarPlot_module_ui.R" class="external-link"><code>R/plotthis_BarPlot_module_ui.R</code></a></small>
       <div class="d-none name"><code>plotthis_BarPlotInputsUI.Rd</code></div>
     </div>
 
@@ -116,7 +116,8 @@ for that function for an exhaustive list.</p>
 <li><p><code>position_dodge_preserve</code> - Preserve bar width when dodging (not yet implemented)</p></li>
 <li><p><code>x_sep</code> - Separator for multiple x columns (not yet implemented)</p></li>
 <li><p><code>group_by_sep</code> - Separator for multiple group_by columns (not yet implemented)</p></li>
-<li><p><code>split_by_sep</code> - Separator for multiple split_by columns (not yet implemented)</p></li>
+<li><p><code>split_by</code> - Split variable (returns a patchwork object, not supported in plotly), use <code>facet_by</code> instead</p></li>
+<li><p><code>split_by_sep</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>fill_name</code> - Name of the fill legend (not yet implemented)</p></li>
 <li><p><code>line_name</code> - Name of line (not yet implemented)</p></li>
 <li><p><code>label</code> - Bar labels on top (not yet implemented)</p></li>
@@ -146,15 +147,15 @@ for that function for an exhaustive list.</p>
 <li><p><code>legend.direction</code> - Legend orientation (plotly allows interactive adjustment)</p></li>
 <li><p><code>keep_empty</code> - Keep empty factor levels (not yet implemented)</p></li>
 <li><p><code>keep_na</code> - Keep NA values (not yet implemented)</p></li>
-<li><p><code>combine</code> - Combine multiple plots (not applicable for plotly)</p></li>
-<li><p><code>nrow</code> - Only applies if <code>split_by</code> is used with combine</p></li>
-<li><p><code>ncol</code> - Only applies if <code>split_by</code> is used with combine</p></li>
-<li><p><code>byrow</code> - Only applies if <code>split_by</code> is used with combine</p></li>
+<li><p><code>combine</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>nrow</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>ncol</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>byrow</code> - Only applies if <code>split_by</code> is used</p></li>
 <li><p><code>seed</code> - Random seed (not applicable)</p></li>
-<li><p><code>axes</code> - Only applies if <code>split_by</code> is used with combine</p></li>
-<li><p><code>axis_titles</code> - Only applies if <code>split_by</code> is used with combine</p></li>
-<li><p><code>guides</code> - Only applies if <code>split_by</code> is used with combine</p></li>
-<li><p><code>design</code> - Only applies if <code>split_by</code> is used with combine</p></li>
+<li><p><code>axes</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>axis_titles</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>guides</code> - Only applies if <code>split_by</code> is used</p></li>
+<li><p><code>design</code> - Only applies if <code>split_by</code> is used</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="plot-parameters-and-defaults">Plot parameters and defaults<a class="anchor" aria-label="anchor" href="#plot-parameters-and-defaults"></a></h2>
@@ -165,7 +166,6 @@ for that function for an exhaustive list.</p>
 <li><p><code>group_by</code> - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)</p></li>
 <li><p><code>fill_by</code> - Variable used to fill the bars (UI: "Fill by", default: "")</p></li>
 <li><p><code>flip</code> - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)</p></li>
-<li><p><code>split_by</code> - Split variable for separate plots (UI: "Split by", default: "")</p></li>
 <li><p><code>facet_by</code> - Faceting variable (UI: "Facet by", default: "")</p></li>
 <li><p><code>facet_scales</code> - Facet scale behavior (UI: "Facet scale", default: "fixed")</p></li>
 <li><p><code>facet_ncol</code> - Number of facet columns (UI: "Facet number of columns", default: NULL)</p></li>
@@ -212,6 +212,11 @@ for that function for an exhaustive list.</p>
 <li><p><code>axis.tickcolor</code> - Color of tick marks (UI: "Tick mark color", default: "black")</p></li>
 <li><p><code>axis.ticklen</code> - Length of tick marks (UI: "Tick mark length", default: 5)</p></li>
 <li><p><code>axis.tickwidth</code> - Width of tick marks (UI: "Tick mark width", default: 1)</p></li>
+<li><p><code>legend.show</code> - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)</p></li>
+<li><p><code>legend.font.family</code> - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")</p></li>
+<li><p><code>legend.font.color</code> - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")</p></li>
+<li><p><code>legend.title.size</code> - Legend title font size (UI: "Legend Title Size", default: 14)</p></li>
+<li><p><code>legend.text.size</code> - Legend entry label font size (UI: "Legend Text Size", default: 12)</p></li>
 <li><p><code>hline.intercepts</code> - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")</p></li>
 <li><p><code>hline.colors</code> - Colors for horizontal lines (UI: "Colors", default: "#000000")</p></li>
 <li><p><code>hline.widths</code> - Widths for horizontal lines (UI: "Widths", default: "1")</p></li>
@@ -248,248 +253,265 @@ back to the default palette and user edits take precedence.</p></li>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotthis_BarPlotInputsUI</span><span class="op">(</span><span class="st">"BarPlot"</span>, <span class="va">mtcars</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="4838"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="tabbable vizmodules-input-tabs"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="4951"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data"&gt;Data&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet"&gt;Facet&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics"&gt;Aesthetics&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments"&gt;Adjustments&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend"&gt;Legend&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly"&gt;Plotly&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes"&gt;Axes&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4838-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;a href="#tab-4951-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines"&gt;Lines&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="4838"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-4838-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify9708450"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="tab-content" data-tabsetid="4951"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane active" data-value="Data" id="tab-4951-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify9272817"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-x.data-label" for="BarPlot-x.data"&gt;X Values&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-x.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-x.data"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"selectedValue":null,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9272817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify5352176"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify8941226"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-y.data-label" for="BarPlot-y.data"&gt;Y Values&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-y.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-y.data"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"mpg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8941226', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify1664908"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify2036644"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-group.by-label" for="BarPlot-group.by"&gt;Group By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-group.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-group.by"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":null,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2036644', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify581757"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify2569829"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-fill.by-label" for="BarPlot-fill.by"&gt;Fill By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-fill.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-fill.by"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars.  Both categorical and numeric columns are accepted: itemize{ item `TRUE` (default) — fill by the x-axis values. item `FALSE` — solid fill (first palette colour). item A column name (character/factor) — discrete colour scale. item A column name (numeric) — continuous gradient with quantile / cutoff controls. } Ignored when `group_by` is provided (fill is determined by `group_by`).'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2569829', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars.  Both categorical and numeric columns are accepted: itemize{ item `TRUE` (default) — fill by the x-axis values. item `FALSE` — solid fill (first palette colour). item A column name (character/factor) — discrete colour scale. item A column name (numeric) — continuous gradient with quantile / cutoff controls. } Ignored when `group_by` is provided (fill is determined by `group_by`).'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-4838-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify4591390"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Facet" id="tab-4951-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify6140056"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.by-label" for="BarPlot-facet.by"&gt;Facet By&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-facet.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-facet.by"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4591390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6140056', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify6227988"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify4414992"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.scale-label" for="BarPlot-facet.scale"&gt;Facet Scale&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-facet.scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-facet.scale"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["fixed","free","free_x","free_y"],"value":["fixed","free","free_x","free_y"]}},"config":{"multiple":false,"search":false,"selectedValue":"fixed","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6227988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4414992', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5948192"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3155947"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.ncol-label" for="BarPlot-facet.ncol"&gt;Columns&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5948192', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3155947', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7430182"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1013138"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.nrow-label" for="BarPlot-facet.nrow"&gt;Rows&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7430182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1013138', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5242801"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2726462"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-facet.by.row" style="padding-right: 10px;"&gt;Facet by Row&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BarPlot-facet.by.row" type="checkbox" checked="checked"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BarPlot-facet.by.row"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5242801', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2726462', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify4968253"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-split.by-label" for="BarPlot-split.by"&gt;Split By&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-split.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-split.by"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4968253', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The column(s) to split the data by for separate sub-plots.'})}, 500)});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify147189"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6536994"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-subplot.margin.x-label" for="BarPlot-subplot.margin.x"&gt;Subplot Spacing (Horizontal)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6536994', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9579191"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9278701"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-subplot.margin.y-label" for="BarPlot-subplot.margin.y"&gt;Subplot Spacing (Vertical)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9278701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-4838-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Aesthetics" id="tab-4951-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div id="BarPlot-palette.selection" class="shiny-html-output"&gt;&lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4530892"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify266247"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-alpha-label" for="BarPlot-alpha"&gt;Alpha&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify266247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9815318"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5594912"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-palreverse" style="padding-right: 10px;"&gt;Reverse Palette&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BarPlot-palreverse" type="checkbox"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BarPlot-palreverse"&gt;&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5594912', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5447052"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8541736"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-width-label" for="BarPlot-width"&gt;Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-width" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the bar width (0–1).'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8541736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the bar width (0–1).'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3600424"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify758831"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-expand-label" for="BarPlot-expand"&gt;Expand&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-expand" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 1,2,3,4" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The values to expand the x and y axes. It is like CSS padding. When a single value is provided, it is used for both axes on both sides. When two values are provided, the first value is used for the top/bottom side and the second value is used for the left/right side. When three values are provided, the first value is used for the top side, the second value is used for the left/right side, and the third value is used for the bottom side. When four values are provided, the values are used for the top, right, bottom, and left sides, respectively. You can also use a named vector to specify the values for each side. When the axis is discrete, the values will be applied as &amp;#39;add&amp;#39; to the &amp;#39;expansion&amp;#39; function. When the axis is continuous, the values will be applied as &amp;#39;mult&amp;#39; to the &amp;#39;expansion&amp;#39; function. See also url{https://ggplot2.tidyverse.org/reference/expansion.html}'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify758831', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The values to expand the x and y axes. It is like CSS padding. When a single value is provided, it is used for both axes on both sides. When two values are provided, the first value is used for the top/bottom side and the second value is used for the left/right side. When three values are provided, the first value is used for the top side, the second value is used for the left/right side, and the third value is used for the bottom side. When four values are provided, the values are used for the top, right, bottom, and left sides, respectively. You can also use a named vector to specify the values for each side. When the axis is discrete, the values will be applied as &amp;#39;add&amp;#39; to the &amp;#39;expansion&amp;#39; function. When the axis is continuous, the values will be applied as &amp;#39;mult&amp;#39; to the &amp;#39;expansion&amp;#39; function. See also url{https://ggplot2.tidyverse.org/reference/expansion.html}'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5031461"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2058289"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-lower.quantile-label" for="BarPlot-lower.quantile"&gt;Lower Quantile&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-lower.quantile" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5031461', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2058289', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify746337"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4958896"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-upper.quantile-label" for="BarPlot-upper.quantile"&gt;Upper Quantile&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-upper.quantile" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify746337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4958896', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9697918"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2618570"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-lower.cutoff-label" for="BarPlot-lower.cutoff"&gt;Lower Cutoff&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-lower.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9697918', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2618570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6485013"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4159615"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-upper.cutoff-label" for="BarPlot-upper.cutoff"&gt;Upper Cutoff&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-upper.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6485013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4159615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-4838-4"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9845654"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Adjustments" id="tab-4951-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4391500"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-y.min-label" for="BarPlot-y.min"&gt;Y-axis Min&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-y.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9845654', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4391500', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5361333"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1823780"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-y.max-label" for="BarPlot-y.max"&gt;Y-axis Max&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-y.max" type="number" class="shiny-input-number form-control" value="33.9" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5361333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1823780', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-4838-5"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7610594"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Legend" id="tab-4951-5"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify783283"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-legend.show" style="padding-right: 10px;"&gt;Show Legend&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;input id="BarPlot-legend.show" type="checkbox" checked="checked"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label class="switch label-success bg-success" for="BarPlot-legend.show"&gt;&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify783283', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify177700"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-legend.font.family-label" for="BarPlot-legend.font.family"&gt;Legend Font&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-legend.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-legend.font.family"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify177700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7281800"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-legend.font.color"&gt;Legend Font Color&lt;/label&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7281800', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9708450"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-legend.title.size-label" for="BarPlot-legend.title.size"&gt;Legend Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7610594', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9708450', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5643857"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5352176"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-legend.text.size-label" for="BarPlot-legend.text.size"&gt;Legend Text Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5643857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5352176', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-4838-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Plotly" id="tab-4951-6"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-download.format-label" for="BarPlot-download.format"&gt;Download Format&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-download.format" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -497,76 +519,76 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7784543"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1664908"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-margin.t-label" for="BarPlot-margin.t"&gt;Margin Top&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1664908', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6390610"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify581757"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-margin.b-label" for="BarPlot-margin.b"&gt;Margin Bottom&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify581757', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3789607"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4591390"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-margin.l-label" for="BarPlot-margin.l"&gt;Margin Left&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4591390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3595307"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6227988"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-margin.r-label" for="BarPlot-margin.r"&gt;Margin Right&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6227988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8442314"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5948192"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-shape.fill"&gt;Shape Fill&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8442314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5948192', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4567492"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7430182"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-shape.line.color"&gt;Shape Line Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4567492', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7430182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1790343"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5242801"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-shape.line.width-label" for="BarPlot-shape.line.width"&gt;Shape Line Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1790343', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5242801', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify9662091"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;" id="tipify4968253"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-shape.linetype-label" for="BarPlot-shape.linetype"&gt;Shape Linetype&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-shape.linetype" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;script type="application/json" data-for="BarPlot-shape.linetype"&gt;{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["solid","dot","dash","longdash","dashdot","longdashdot"],"value":["solid","dot","dash","longdash","dashdot","longdashdot"]}},"config":{"multiple":false,"search":false,"selectedValue":"solid","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9662091', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4968253', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&amp;#39;s drawing tools'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7134119"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify147189"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-shape.opacity-label" for="BarPlot-shape.opacity"&gt;Shape Opacity&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7134119', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify147189', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-4838-7"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Axes" id="tab-4951-7"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="material-switch"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label for="BarPlot-rotate" style="padding-right: 10px;"&gt;Rotate (swap X/Y)&lt;/label&gt;</span>
@@ -575,7 +597,7 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-title.font.family-label" for="BarPlot-title.font.family"&gt;Title Font&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -583,37 +605,37 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-title.font.color"&gt;Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-title.font.size-label" for="BarPlot-title.font.size"&gt;Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-title.font.size" type="number" class="shiny-input-number form-control" value="26" data-update-on="change" min="1" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.title.horizontal.position-label" for="BarPlot-axis.title.horizontal.position"&gt;Title position&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.title.horizontal.position" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1" step="0.1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.title.font.size-label" for="BarPlot-axis.title.font.size"&gt;Axis Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-axis.title.font.color"&gt;Axis Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.title.font.family-label" for="BarPlot-axis.title.font.family"&gt;Axis Title Font&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-axis.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -621,7 +643,7 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
@@ -631,7 +653,7 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
@@ -641,7 +663,7 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
@@ -651,7 +673,7 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div class="checkbox"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;label&gt;</span>
@@ -661,37 +683,37 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-grid.color"&gt;Gridline Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-grid.color" type="text" class="form-control shiny-colour-input" data-init-value="#CCCCCC" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-axis.linecolor"&gt;Axis Line Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.linecolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.linewidth-label" for="BarPlot-axis.linewidth"&gt;Axis Line Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.linewidth" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" step="0.1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.tickfont.size-label" for="BarPlot-axis.tickfont.size"&gt;Tick Label Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickfont.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-axis.tickfont.color"&gt;Tick Label Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickfont.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.tickfont.family-label" for="BarPlot-axis.tickfont.family"&gt;Tick Label Font&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-axis.tickfont.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -699,19 +721,19 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.tickangle.x-label" for="BarPlot-axis.tickangle.x"&gt;X Tick Label Angle&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickangle.x" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.tickangle.y-label" for="BarPlot-axis.tickangle.y"&gt;Y Tick Label Angle&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickangle.y" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="-180" max="180" step="15"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.ticks-label" for="BarPlot-axis.ticks"&gt;Tick Position&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-axis.ticks" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -719,37 +741,37 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-axis.tickcolor"&gt;Tick Mark Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickcolor" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.ticklen-label" for="BarPlot-axis.ticklen"&gt;Tick Mark Length&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.ticklen" type="number" class="shiny-input-number form-control" value="5" data-update-on="change" min="0" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-axis.tickwidth-label" for="BarPlot-axis.tickwidth"&gt;Tick Mark Width&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-axis.tickwidth" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.title.font.size-label" for="BarPlot-facet.title.font.size"&gt;Facet Subplot Title Size&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" data-shiny-input-type="colour"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" for="BarPlot-facet.title.font.color"&gt;Facet Title Color&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-facet.title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" style="width:100%;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-facet.title.font.family-label" for="BarPlot-facet.title.font.family"&gt;Facet Title Font&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="BarPlot-facet.title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change"&gt;</span>
@@ -759,119 +781,119 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-4838-8"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify248861"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div class="tab-pane" data-value="Lines" id="tab-4951-8"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="vizmodules-input-grid" style="--viz-input-columns: 2;"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9579191"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-hline.intercepts-label" for="BarPlot-hline.intercepts"&gt;Y-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify248861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9579191', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6264565"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4530892"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-hline.colors-label" for="BarPlot-hline.colors"&gt;Y Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6264565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4530892', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8279213"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9815318"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-hline.widths-label" for="BarPlot-hline.widths"&gt;Y Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8279213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815318', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6430690"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5447052"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-hline.linetypes-label" for="BarPlot-hline.linetypes"&gt;Y Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6430690', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5447052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7084842"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3600424"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-hline.opacities-label" for="BarPlot-hline.opacities"&gt;Y Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7084842', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3600424', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8707271"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5031461"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-vline.intercepts-label" for="BarPlot-vline.intercepts"&gt;X-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8707271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5031461', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify2818126"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify746337"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-vline.colors-label" for="BarPlot-vline.colors"&gt;X Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2818126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify746337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1732249"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9697918"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-vline.widths-label" for="BarPlot-vline.widths"&gt;X Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1732249', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9697918', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify1096701"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6485013"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-vline.linetypes-label" for="BarPlot-vline.linetypes"&gt;X Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1096701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6485013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5862222"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9845654"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-vline.opacities-label" for="BarPlot-vline.opacities"&gt;X Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5862222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9845654', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify8507213"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5361333"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.slopes-label" for="BarPlot-abline.slopes"&gt;Ab Slopes&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8507213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5361333', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify9215261"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7610594"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.intercepts-label" for="BarPlot-abline.intercepts"&gt;Ab Y-intercepts&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9215261', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7610594', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &amp;#39;Audi&amp;#39;, &amp;#39;Mercedes&amp;#39;, &amp;#39;Bugatti&amp;#39;, enter 2 to place a line at &amp;#39;Mercedes&amp;#39;.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6756619"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify5643857"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.colors-label" for="BarPlot-abline.colors"&gt;Ab Colors&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6756619', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5643857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3505882"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify7784543"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.widths-label" for="BarPlot-abline.widths"&gt;Ab Widths&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3505882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify86581"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify6390610"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.linetypes-label" for="BarPlot-abline.linetypes"&gt;Ab Line Types&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify86581', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify4308988"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="vizmodules-input-cell"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="form-group shiny-input-container" id="tipify3789607"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;label class="control-label" id="BarPlot-abline.opacities-label" for="BarPlot-abline.opacities"&gt;Ab Opacities (0-1)&lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;input id="BarPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4308988', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
@@ -890,11 +912,11 @@ back to the default palette and user edits take precedence.</p></li>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="module-tack-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button class="btn btn-default action-button btn-primary" id="BarPlot-update" style="flex: 1 1 45%;" type="button"&gt;&lt;span class="action-label"&gt;Update&lt;/span&gt;&lt;/button&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;button class="btn btn-default action-button btn-secondary" id="BarPlot-reset" style="flex: 1 1 45%;" type="button"&gt;&lt;span class="action-label"&gt;Reset&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="BarPlot-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary viz-source-download" data-viz-source-ns="BarPlot-" download href="" id="BarPlot-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;i class="far fa-file-code" role="presentation" aria-label="file-code icon"&gt;&lt;/i&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       Source Download</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('BarPlot-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('BarPlot-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file and as SVG and PNG images of it as it looks now, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
 </code></pre></div>

@@ -17,7 +17,7 @@ plot."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -56,7 +56,7 @@ plot."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create an Example Module App from Any Module Trio</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/createModuleApp.R" class="external-link"><code>R/createModuleApp.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/createModuleApp.R" class="external-link"><code>R/createModuleApp.R</code></a></small>
       <div class="d-none name"><code>createModuleApp.Rd</code></div>
     </div>
 
@@ -80,7 +80,9 @@ plot.</p>
 <span>  hide.inputs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hide.tabs <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  show.table <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  title <span class="op">=</span> <span class="st">"VizModules App"</span></span>
+<span>  title <span class="op">=</span> <span class="st">"VizModules App"</span>,</span>
+<span>  primary.table <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sidebar.width <span class="op">=</span> <span class="fl">4</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -106,8 +108,12 @@ returns the module's output UI (e.g. <code><a href="plotthis_BarPlotOutputUI.htm
 
 
 <dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
-<dd><p>A named list of data frames.
-At least one element is required.</p></dd>
+<dd><p>A named list of datasets. Each element is either a data
+frame, or a named list of data frames for a module that needs companion
+tables alongside the one being filtered — e.g.
+<code>list(matrix = , column_annotations = )</code> for <code>ComplexHeatmap_Heatmap</code>. Only
+the primary table (see <code>primary.table</code>) is filtered and shown in the Data
+Table; the rest are passed through to the module untouched.</p></dd>
 
 
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
@@ -138,6 +144,18 @@ the full (unfiltered) dataset is passed directly to the plot module.</p></dd>
 <dt id="arg-title">title<a class="anchor" aria-label="anchor" href="#arg-title"></a></dt>
 <dd><p>A character string used as the page title
 (default: <code>"VizModules App"</code>).</p></dd>
+
+
+<dt id="arg-primary-table">primary.table<a class="anchor" aria-label="anchor" href="#arg-primary-table"></a></dt>
+<dd><p>For a <code>data_list</code> entry that is a list of tables, the
+name of the one to filter and show in the Data Table. Defaults to the first
+data frame in the entry. Ignored for entries that are a plain data frame.</p></dd>
+
+
+<dt id="arg-sidebar-width">sidebar.width<a class="anchor" aria-label="anchor" href="#arg-sidebar-width"></a></dt>
+<dd><p>Bootstrap column width (1-11) for the controls sidebar;
+the plot area takes the rest. Raise the plot's share for a module whose
+output needs room, e.g. <code>sidebar.width = 3</code> for the heatmap.</p></dd>
 
 </dl></div>
     <div class="section level2">

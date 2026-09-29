@@ -7,7 +7,7 @@ to fit a model and how to predict from it.
 
 ## Details
 
-Backends are stored in a package-level environment. The four built-in
-types (`lm`, `glm`, `loess`, `nls`) are registered automatically when
-the package loads. Users add new ones with
+Backends are stored in a package-level environment. The three built-in
+types (`lm`, `glm`, `loess`) are registered automatically when the
+package loads. Users add new ones with
 [`register_model_backend()`](https://j-andrews7.github.io/VizModules/reference/register_model_backend.md).

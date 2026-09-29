@@ -20,7 +20,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
       <h1>Building Custom Modules</h1>
             
       
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/vignettes/custom-modules.Rmd" class="external-link"><code>vignettes/custom-modules.Rmd</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/vignettes/custom-modules.Rmd" class="external-link"><code>vignettes/custom-modules.Rmd</code></a></small>
       <div class="d-none name"><code>custom-modules.Rmd</code></div>
     </div>
 
@@ -89,6 +89,16 @@ custom logic such as data filtering, transformations, or additional UI
 controls while reusing the full functionality of the base modules.</p>
 <p>This vignette demonstrates how to create a custom module by building
 on top of the <code>scatterPlot</code> module.</p>
+<p>If you are working with an AI coding agent, the package ships an <a href="https://agentskills.io" class="external-link">Agent Skill</a> covering exactly this
+material - <strong><code>vizmodules-custom-module</code></strong> -
+along with the namespace contract, reactive <code>defaults</code>,
+avoiding double renders, manual-edit persistence, and model-line
+backends. Install it (and its two siblings) into your project with
+<code>VizModules::use_vizmodules_skills(".")</code>, or pass
+<code>client = "copilot"</code> / <code>client = "claude"</code> to
+write to <code>.github/skills/</code> or <code>.claude/skills/</code>
+instead of the default <code>.agents/skills/</code>. See the README for
+details.</p>
 </div>
 <div class="section level2">
 <h2 id="the-pattern">The Pattern<a class="anchor" aria-label="anchor" href="#the-pattern"></a>
@@ -298,6 +308,31 @@ these helpers, but this is pretty much all you need to do.</p>
 <div class="section level2">
 <h2 id="best-practices">Best Practices<a class="anchor" aria-label="anchor" href="#best-practices"></a>
 </h2>
+<p>When you add a free-text control of your own, debounce it.
+<code><a href="https://rdrr.io/pkg/shiny/man/textInput.html" class="external-link">textInput()</a></code> reports on every keystroke, so a base module
+reading it directly is rebuilt once per character — and if the text is
+an expression, most of those characters describe something that cannot
+parse yet:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">myModuleServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">filtered</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="co"># Once, in the moduleServer body (where the wrapper's own input lives),</span></span>
+<span>        <span class="co"># not inside the reactive below. 500-800ms is a good range.</span></span>
+<span>        <span class="va">query</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/debounce.html" class="external-link">debounce</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">query</span><span class="op">)</span>, <span class="fl">700</span><span class="op">)</span></span>
+<span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>            <span class="va">keep</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">query</span><span class="op">(</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">keep</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="va">keep</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span></span>
+<span>        <span class="op">}</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">filtered</span><span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Select, numeric, and checkbox inputs need no such treatment — they
+report discrete choices, not keystrokes. See the “Debouncing Free-Text
+Inputs” section of
+<code><a href="../articles/adding-a-new-module.html">vignette("adding-a-new-module", package = "VizModules")</a></code> for
+the full rationale.</p>
 <ol style="list-style-type: decimal">
 <li><p><strong>Keep wrapper logic focused</strong>: Each wrapper should
 add a cohesive set of related functionality.</p></li>

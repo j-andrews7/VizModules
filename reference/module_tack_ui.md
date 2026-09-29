@@ -2,8 +2,8 @@
 
 Generates a consistent set of control buttons for VizModules that
 includes Auto Update toggle, Update and Reset buttons, and a full source
-download button (self-contained HTML of the plot, source data, and
-statistics).
+download button (self-contained HTML of the plot, SVG and PNG images of
+it, and the source data and statistics as CSVs).
 
 ## Usage
 
@@ -24,6 +24,14 @@ module_tack_ui(ns, defaults = NULL)
 ## Value
 
 A Shiny tagList containing the standard control buttons and inputs.
+
+## Details
+
+The download button carries the markup the image capture needs: the
+class the script binds to, and the module's namespace prefix, which is
+how the script works out which plot on the page belongs to this button.
+See
+[`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md).
 
 ## Author
 
@@ -49,11 +57,11 @@ module_tack_ui(ns)
 #>   <div class="module-tack-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
 #>     <button class="btn btn-default action-button btn-primary" id="myModule-update" style="flex: 1 1 45%;" type="button"><span class="action-label">Update</span></button>
 #>     <button class="btn btn-default action-button btn-secondary" id="myModule-reset" style="flex: 1 1 45%;" type="button"><span class="action-label">Reset</span></button>
-#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="myModule-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary viz-source-download" data-viz-source-ns="myModule-" download href="" id="myModule-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
 #>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
 #>       Source Download
 #>     </a>
-#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('myModule-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});</script>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('myModule-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file and as SVG and PNG images of it as it looks now, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});</script>
 #>   </div>
 #> </div>
 ```

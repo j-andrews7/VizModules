@@ -16,7 +16,9 @@ build_facet_annotations(
   title.font.size = 14,
   nrows = 1,
   fig = NULL,
-  title.offset = 0.02
+  title.offset = 0.02,
+  axis.title.font = NULL,
+  facet.title.font = NULL
 )
 ```
 
@@ -57,6 +59,18 @@ build_facet_annotations(
 
   Numeric fraction of the figure height to place each subplot title
   above the top of its panel. Default: `0.02`.
+
+- axis.title.font:
+
+  Optional named list of plotly font properties (`size`, `color`,
+  `family`) for the shared X/Y axis title annotations. If `NULL` (the
+  default), they use `title.font.size` like the facet titles.
+
+- facet.title.font:
+
+  Optional named list of plotly font properties (`size`, `color`,
+  `family`) for the per-panel facet titles. If `NULL` (the default),
+  they use `title.font.size`.
 
 ## Value
 

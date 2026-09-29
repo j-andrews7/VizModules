@@ -18,7 +18,9 @@ createModuleApp(
   hide.inputs = NULL,
   hide.tabs = NULL,
   show.table = TRUE,
-  title = "VizModules App"
+  title = "VizModules App",
+  primary.table = NULL,
+  sidebar.width = 4
 )
 ```
 
@@ -44,7 +46,12 @@ createModuleApp(
 
 - data_list:
 
-  A named list of data frames. At least one element is required.
+  A named list of datasets. Each element is either a data frame, or a
+  named list of data frames for a module that needs companion tables
+  alongside the one being filtered — e.g.
+  `list(matrix = , column_annotations = )` for `ComplexHeatmap_Heatmap`.
+  Only the primary table (see `primary.table`) is filtered and shown in
+  the Data Table; the rest are passed through to the module untouched.
 
 - defaults:
 
@@ -80,6 +87,18 @@ createModuleApp(
 
   A character string used as the page title (default:
   `"VizModules App"`).
+
+- primary.table:
+
+  For a `data_list` entry that is a list of tables, the name of the one
+  to filter and show in the Data Table. Defaults to the first data frame
+  in the entry. Ignored for entries that are a plain data frame.
+
+- sidebar.width:
+
+  Bootstrap column width (1-11) for the controls sidebar; the plot area
+  takes the rest. Raise the plot's share for a module whose output needs
+  room, e.g. `sidebar.width = 3` for the heatmap.
 
 ## Value
 

@@ -11,7 +11,7 @@ generation."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ generation."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Collect plot and source data for download</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/plot_source_data.R" class="external-link"><code>R/plot_source_data.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_source_data.R" class="external-link"><code>R/plot_source_data.R</code></a></small>
       <div class="d-none name"><code>collect_source_data.Rd</code></div>
     </div>
 
@@ -85,9 +85,9 @@ included.</p></dd>
 
 
 <dt id="arg-inputs-reactive">inputs_reactive<a class="anchor" aria-label="anchor" href="#arg-inputs-reactive"></a></dt>
-<dd><p>Optional. A reactive expression returning a named
-list of UI input values. When <code>NULL</code> or when it returns <code>NULL</code>, no UI
-input data is included.</p></dd>
+<dd><p>Optional. A named list of UI input values (for
+example <code>reactiveValuesToList(input)</code>), or a reactive expression returning
+one. When <code>NULL</code> or when it returns <code>NULL</code>, no UI input data is included.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -144,9 +144,12 @@ returned unchanged.</p>
 <span class="r-in"><span>       <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plot_ly.html" class="external-link">plot_ly</a></span><span class="op">(</span><span class="va">mtcars</span>, x <span class="op">=</span> <span class="op">~</span><span class="va">mpg</span>, y <span class="op">=</span> <span class="op">~</span><span class="va">hp</span>, type <span class="op">=</span> <span class="st">"scatter"</span>, mode <span class="op">=</span> <span class="st">"markers"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span>    <span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu">collect_source_data</span><span class="op">(</span><span class="va">plot_reactive</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">my_plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly</a></span><span class="op">(</span><span class="fu">plot_reactive</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">download_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_source_download_handler.html">create_source_download_handler</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># collect_source_data() reads reactives, so it has to run inside one.</span></span></span>
+<span class="r-in"><span>    <span class="va">inputs_reactive</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValuesToList.html" class="external-link">reactiveValuesToList</a></span><span class="op">(</span><span class="va">input</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">download_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="create_source_download_handler.html">create_source_download_handler</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="fu">collect_source_data</span><span class="op">(</span><span class="va">plot_reactive</span>, inputs_reactive <span class="op">=</span> <span class="va">inputs_reactive</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>

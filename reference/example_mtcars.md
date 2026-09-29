@@ -1,7 +1,7 @@
 # Example mtcars dataset with factors
 
-The classic mtcars dataset with key numeric columns converted to factors
-for categorical plotting examples.
+The classic mtcars dataset with the `cyl`, `vs`, and `gear` columns
+converted to factors for categorical plotting examples.
 
 ## Usage
 
@@ -47,7 +47,7 @@ A data frame with 32 rows and 11 columns:
 
 - am:
 
-  Transmission (0 = automatic, 1 = manual) (factor)
+  Transmission (0 = automatic, 1 = manual)
 
 - gear:
 
@@ -55,7 +55,7 @@ A data frame with 32 rows and 11 columns:
 
 - carb:
 
-  Number of carburetors (factor)
+  Number of carburetors
 
 ## Source
 

@@ -1,5 +1,6 @@
 <urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
 <url><loc>https://j-andrews7.github.io/VizModules/404.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/AGENTS.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/LICENSE-text.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/LICENSE.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html</loc></url>
@@ -12,7 +13,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/articles/quick-start.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/articles/statistical-testing.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/authors.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/copilot-instructions.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/news/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/paper.html</loc></url>
@@ -22,6 +22,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapMainOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapStaticOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapSubOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/add_ablines.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/add_hlines.html</loc></url>
@@ -32,6 +33,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/adjusted_axis_label.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_axis_title_to_annotations.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_facet_subplot_spacing.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/apply_legend_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_legend_styling.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_plotly_newshape.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_render_margins.html</loc></url>
@@ -66,6 +68,8 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dot-onLoad.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/draw_to_png.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/draw_to_svg.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/dumbbellPlotInputsUI.html</loc></url>
@@ -93,6 +97,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/get_default.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/get_documentation.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/get_model_backend.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/heatmap_fit_width.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/hide_input.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/is_pure_type.html</loc></url>
@@ -104,6 +109,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/linetype_to_dash.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/list_model_backends.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/model_backends.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/module_tack_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/multiColorPicker.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.html</loc></url>
@@ -148,10 +154,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotServer.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotInputsUI.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotOutputUI.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/radarPlotInputsUI.html</loc></url>

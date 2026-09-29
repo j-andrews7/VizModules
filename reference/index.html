@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -528,43 +528,6 @@
         </dt>
         <dd>Server logic for BoxPlot module</dd>
       </dl></div><div class="section level2">
-      <h2 id="violinplot-module">ViolinPlot Module<a class="anchor" aria-label="anchor" href="#violinplot-module"></a></h2>
-
-      <div class="section-desc"><p>plotthis-based interactive violin plot module.</p></div>
-
-      <dl></dl></div><div class="section level2">
-
-
-
-
-      <dl><dt>
-
-          <code><a href="plotthis_ViolinPlotApp.html">plotthis_ViolinPlotApp()</a></code>
-
-        </dt>
-        <dd>Create an example Modular ViolinPlot Shiny Application</dd>
-
-        <dt>
-
-          <code><a href="plotthis_ViolinPlotInputsUI.html">plotthis_ViolinPlotInputsUI()</a></code>
-
-        </dt>
-        <dd>Input UI components for the ViolinPlot module</dd>
-
-        <dt>
-
-          <code><a href="plotthis_ViolinPlotOutputUI.html">plotthis_ViolinPlotOutputUI()</a></code>
-
-        </dt>
-        <dd>Output UI components for the ViolinPlot module</dd>
-
-        <dt>
-
-          <code><a href="plotthis_ViolinPlotServer.html">plotthis_ViolinPlotServer()</a></code>
-
-        </dt>
-        <dd>Server logic for ViolinPlot module</dd>
-      </dl></div><div class="section level2">
       <h2 id="densityplot-module">DensityPlot Module<a class="anchor" aria-label="anchor" href="#densityplot-module"></a></h2>
 
       <div class="section-desc"><p>plotthis-based interactive density plot module.</p></div>
@@ -708,6 +671,13 @@
 
         <dt>
 
+          <code><a href="ComplexHeatmap_HeatmapStaticOutputUI.html">ComplexHeatmap_HeatmapStaticOutputUI()</a></code>
+
+        </dt>
+        <dd>Static (non-interactive) heatmap output UI component for the ComplexHeatmap module</dd>
+
+        <dt>
+
           <code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>
 
         </dt>
@@ -764,9 +734,9 @@
         </dt>
         <dd>Translate column names or positions into DT column targets</dd>
       </dl></div><div class="section level2">
-      <h2 id="figure-builder-module">Figure Builder Module<a class="anchor" aria-label="anchor" href="#figure-builder-module"></a></h2>
+      <h2 id="module-gallery-figure-builder">Module Gallery &amp; Figure Builder<a class="anchor" aria-label="anchor" href="#module-gallery-figure-builder"></a></h2>
 
-      <div class="section-desc"><p>Multi-panel figure builder module.</p></div>
+      <div class="section-desc"><p>The gallery of every module on its example data, and the multi-panel figure builder module.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -774,6 +744,13 @@
 
 
       <dl><dt>
+
+          <code><a href="moduleGalleryApp.html">moduleGalleryApp()</a></code>
+
+        </dt>
+        <dd>Launch the VizModules module gallery</dd>
+
+        <dt>
 
           <code><a href="figureBuilderApp.html">figureBuilderApp()</a></code>
 
@@ -1138,7 +1115,14 @@
           <code><a href="apply_legend_styling.html">apply_legend_styling()</a></code>
 
         </dt>
-        <dd>Apply uniform legend font styling to a plotly figure</dd>
+        <dd>Apply uniform legend styling to a plotly figure</dd>
+
+        <dt>
+
+          <code><a href="apply_legend_inputs.html">apply_legend_inputs()</a></code>
+
+        </dt>
+        <dd>Apply the uniform Legend inputs to a plotly figure</dd>
 
         <dt>
 
@@ -1209,6 +1193,13 @@
 
         </dt>
         <dd>Parse and validate linetype string to a vector</dd>
+
+        <dt>
+
+          <code><a href="heatmap_fit_width.html">heatmap_fit_width()</a></code>
+
+        </dt>
+        <dd>Fit a hand-built InteractiveComplexHeatmap widget to its container's width</dd>
       </dl></div><div class="section level2">
       <h2 id="manual-plot-edits">Manual Plot Edits<a class="anchor" aria-label="anchor" href="#manual-plot-edits"></a></h2>
 
@@ -1351,9 +1342,9 @@
         </dt>
         <dd>Track the group-to-color mapping a plot should draw with</dd>
       </dl></div><div class="section level2">
-      <h2 id="data-download-utilities">Data Download Utilities<a class="anchor" aria-label="anchor" href="#data-download-utilities"></a></h2>
+      <h2 id="export-download-utilities">Export &amp; Download Utilities<a class="anchor" aria-label="anchor" href="#export-download-utilities"></a></h2>
 
-      <div class="section-desc"><p>Functions for preparing plot and source data for download.</p></div>
+      <div class="section-desc"><p>Functions for preparing plot and source data for download, and for rendering a plot that is not a plotly graph to a vector or raster image.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -1373,6 +1364,20 @@
 
         </dt>
         <dd>Create download handler for plot with source data</dd>
+
+        <dt>
+
+          <code><a href="draw_to_png.html">draw_to_png()</a></code>
+
+        </dt>
+        <dd>Render a grid or base drawing to PNG bytes</dd>
+
+        <dt>
+
+          <code><a href="draw_to_svg.html">draw_to_svg()</a></code>
+
+        </dt>
+        <dd>Render a grid or base drawing to a self-contained SVG fragment</dd>
       </dl></div><div class="section level2">
       <h2 id="utility-functions">Utility Functions<a class="anchor" aria-label="anchor" href="#utility-functions"></a></h2>
 
@@ -1502,14 +1507,14 @@
           <code><a href="example_population.html">example_population</a></code>
 
         </dt>
-        <dd>Example population dataset A simulated population dataset with 400 rows covering 50 years and 8 age groups. Designed for line, area, and stacked bar plot examples.</dd>
+        <dd>Example population dataset</dd>
 
         <dt>
 
           <code><a href="example_rnaseq.html">example_rnaseq</a></code>
 
         </dt>
-        <dd>Example RNA-seq dataset for the RNA-seq showcase app</dd>
+        <dd>Example pseudo-bulk RNA-seq dataset</dd>
 
         <dt>
 

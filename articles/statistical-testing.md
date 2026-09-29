@@ -1,18 +1,37 @@
 # Statistical Testing
 
-The **BoxPlot**, **ViolinPlot**, and **yPlot** modules include a
-**Stats** tab that adds pairwise statistical test results as bracket
-annotations directly on the plotly figure. The same helpers are exported
-so you can add bracket annotations to any custom plotly figure.
+The **BoxPlot**, **yPlot**, and **freqPlot** modules include a **Stats**
+tab that adds pairwise statistical test results as bracket annotations
+directly on the plotly figure. The same helpers are exported so you can
+add bracket annotations to any custom plotly figure.
 
 ## Using the Stats tab
 
-Enable testing from the Stats tab in any supported module app:
+Enable testing from the Stats tab in any supported module app. The
+bundled example apps open with it already on; the box plot compares
+salaries between neighbouring job levels:
 
 ``` r
 
 library(VizModules)
 plotthis_BoxPlotApp()
+```
+
+Every Stats control can also be set from `defaults`, including which
+comparisons to draw, as `"A vs B"` strings (either order matches):
+
+``` r
+
+plotthis_BoxPlotApp(
+    data_list = list("iris" = example_iris),
+    defaults = list(
+        x.data        = "Species",
+        y.data        = "Sepal.Length",
+        stats.enabled = TRUE,
+        stat.display  = "symbol",
+        stat.pairs    = c("setosa vs versicolor", "versicolor vs virginica")
+    )
+)
 ```
 
 The Stats tab exposes these controls:
@@ -24,9 +43,9 @@ The Stats tab exposes these controls:
 | P-value Adjustment | holm | Any `p.adjust` method |
 | Display | Adjusted P-value | `p.adj`, `p.value`, or `symbol` (`*`/`**`/`***`/`****`) |
 | Significance Threshold | 0.05 | Boundary for `*` vs `ns` |
-| Hide Non-Significant | OFF | Suppress `ns` brackets |
+| Hide Non-Significant | ON | Suppress `ns` brackets |
 | Paired Test | OFF | Paired Wilcoxon or paired t-test |
-| Comparisons | (all pairs) | Restrict to specific pairs |
+| Comparisons | (all pairs) | Restrict to specific pairs (`stat.pairs` in `defaults`) |
 | Bracket Style | Capped | `capped` (ticked) or `flat` |
 | Bracket Spacing / Text Offset / Bracket Inset | — | Fine layout control (fractions of y-range) |
 | Per Facet Panel | ON | Test independently per facet, or across the full dataset |
@@ -43,6 +62,26 @@ The Stats tab exposes these controls:
 When **Paired Test** is enabled, each group must have the same number of
 observations, sorted so paired samples align row-by-row within each
 group.
+
+### Adjusted, faceted and rotated axes
+
+Tests run on the values as plotted. In the `yPlot` module a **Y
+Adjustment** (z-score, log10, …) is applied before testing, so a t-test
+on log-scaled data tests the log values, and the brackets and **Y Axis
+Min/Max** are in those units too. The **Y Adjustment Function** is
+applied first and the **Y Adjustment** then rescales the result, so
+log10 with z-score gives z-scored log values. Rank-based tests
+(Wilcoxon, Kruskal-Wallis) give the same p-values either way for an
+order-preserving adjustment.
+
+Under a free y facet scale (`"free"` or `"free_y"`) each panel keeps its
+own range, so the **Y Axis Min/Max** are not applied and each panel’s
+brackets sit just above that panel’s data.
+
+Brackets are stacked above the data on the y-axis, so none are drawn
+while the values run along the x-axis: a rotated `BoxPlot`, or a
+`yPlot`/`freqPlot` that includes a ridge plot. The tests still run, and
+their results are in the source data download.
 
 ### Downloading statistics
 
@@ -142,7 +181,7 @@ category:
 compute_pairwise_stats(
     df        = example_rnaseq,
     x         = "condition",
-    y         = "expression",
+    y         = "log2_cpm",
     test      = "wilcox.test",
     facet.by  = "gene",
     per.facet = TRUE
@@ -151,7 +190,34 @@ compute_pairwise_stats(
 
 Pass the same `facet.by`/`group.by` values to
 [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
-so brackets land on the correct subplot axes.
+so brackets land on the correct subplot axes. If the panels have free y
+scales, also pass `free.y = TRUE`, so each panel’s brackets are measured
+against that panel’s data rather than the tallest one’s.
+
+### Test and draw on the plotted values
+
+[`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md),
+[`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
+and
+[`stat_bracket_y_max()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_y_max.md)
+use whatever values they are given. If the plot transforms a column
+before drawing it (dittoViz’s `var.adjustment`/`var.adj.fxn`, say), give
+them the transformed values, or the brackets land in a different
+coordinate space from the data.
+[`adjust_column_values()`](https://j-andrews7.github.io/VizModules/reference/adjust_column_values.md)
+reproduces dittoViz’s transforms:
+
+``` r
+
+plotted <- adjust_column_values(example_iris, y.col = "Sepal.Length", y.adj.fun = "log10")
+
+stats_df <- compute_pairwise_stats(plotted, x = "Species", y = "Sepal.Length.adj")
+fig <- dittoViz::yPlot(example_iris, "Sepal.Length", "Species",
+    var.adj.fxn = log10, plots = "boxplot", do.hover = TRUE)
+stat_result <- create_stat_annotations(stats_df, fig = fig, df = plotted,
+    x = "Species", y = "Sepal.Length.adj")
+apply_stat_annotations(fig, stat_result)
+```
 
 ### `compute_pairwise_stats()` return value
 

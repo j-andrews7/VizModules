@@ -1,7 +1,7 @@
 # Reset uniform Legend inputs to defaults
 
-Resets the legend styling inputs (legend title and entry label font
-sizes) created by
+Resets the legend inputs (visibility, font family and color, and the
+legend title and entry label font sizes) created by
 [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md)
 back to their default values.
 

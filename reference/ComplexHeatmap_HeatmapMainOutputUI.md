@@ -23,6 +23,7 @@ ComplexHeatmap_HeatmapMainOutputUI(
   title = NULL,
   width = 450,
   height = 350,
+  fit.width = TRUE,
   ...
 )
 ```
@@ -42,6 +43,13 @@ ComplexHeatmap_HeatmapMainOutputUI(
 - width, height:
 
   Panel dimensions in pixels.
+
+- fit.width:
+
+  Logical; when `TRUE` (the default) the panel is scaled once on load to
+  fit the width of its container, making `width` a starting proportion
+  rather than an absolute size. See
+  [`ComplexHeatmap_HeatmapOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapOutputUI.md).
 
 - ...:
 
@@ -68,7 +76,9 @@ Jacob Martin
 
 ``` r
 library(VizModules)
-ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
+if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
+    ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
+}
 #> <div id="heatmap_Heatmap_heatmap_group">
 #>   <h5>Heatmap</h5>
 #>   <div id="heatmap_Heatmap_heatmap_resize">
@@ -83,22 +93,22 @@ ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 #>      </script>
 #>   <div id="heatmap_Heatmap_heatmap_control" style="display:none;">
 #>     <div class="tabbable">
-#>       <ul class="nav nav-tabs" data-tabsetid="6954">
+#>       <ul class="nav nav-tabs" data-tabsetid="6057">
 #>         <li class="active">
-#>           <a href="#tab-6954-1" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-search&#39;&gt;&lt;/i&gt;"><i class='fa fa-search'></i></a>
+#>           <a href="#tab-6057-1" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-search&#39;&gt;&lt;/i&gt;"><i class='fa fa-search'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-6954-2" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-brush&#39;&gt;&lt;/i&gt;"><i class='fa fa-brush'></i></a>
+#>           <a href="#tab-6057-2" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-brush&#39;&gt;&lt;/i&gt;"><i class='fa fa-brush'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-6954-3" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;"><i class='fa fa-images'></i></a>
+#>           <a href="#tab-6057-3" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;"><i class='fa fa-images'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-6954-4" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;"><i class='fa fa-expand-arrows-alt'></i></a>
+#>           <a href="#tab-6057-4" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;"><i class='fa fa-expand-arrows-alt'></i></a>
 #>         </li>
 #>       </ul>
-#>       <div class="tab-content" data-tabsetid="6954">
-#>         <div class="tab-pane active" data-value="&lt;i class=&#39;fa fa-search&#39;&gt;&lt;/i&gt;" id="tab-6954-1">
+#>       <div class="tab-content" data-tabsetid="6057">
+#>         <div class="tab-pane active" data-value="&lt;i class=&#39;fa fa-search&#39;&gt;&lt;/i&gt;" id="tab-6057-1">
 #>           <div id="heatmap_Heatmap_tabs-search">
 #>             <div style="width:250px;float:left;">
 #>               <div class="form-group shiny-input-container">
@@ -156,7 +166,7 @@ ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 #>           </div>
 #>           <p style="display:none;">Search Heatmap</p>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-brush&#39;&gt;&lt;/i&gt;" id="tab-6954-2">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-brush&#39;&gt;&lt;/i&gt;" id="tab-6057-2">
 #>           <div id="heatmap_Heatmap_tabs-brush">
 #>             
 #>                              <div class="form-group shiny-input-container" style="float:left; width:120px;">
@@ -183,7 +193,7 @@ ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 #>             </div>
 #>           </div>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;" id="tab-6954-3">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;" id="tab-6057-3">
 #>           <div id="heatmap_Heatmap_tabs-save-image">
 #>             <div id="heatmap_Heatmap_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_heatmap_download_format-label">
 #>               <label class="control-label" id="heatmap_Heatmap_heatmap_download_format-label" for="heatmap_Heatmap_heatmap_download_format">Which format?</label>
@@ -216,7 +226,7 @@ ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 #>             </a>
 #>           </div>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;" id="tab-6954-4">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;" id="tab-6057-4">
 #>           <div id="heatmap_Heatmap_tabs-resize">
 #>             <div class="form-group shiny-input-container">
 #>               <label class="control-label" id="heatmap_Heatmap_heatmap_input_width-label" for="heatmap_Heatmap_heatmap_input_width">Box width</label>
@@ -239,4 +249,5 @@ ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 #>          </script>
 #>   </div>
 #> </div>
+#> <script>VizModules.heatmapFitWidth({"id":"heatmap_Heatmap","root":"#heatmap_Heatmap_heatmap_group","panels":["heatmap"],"output":false});</script>
 ```

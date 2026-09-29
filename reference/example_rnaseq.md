@@ -1,4 +1,4 @@
-# Example RNA-seq dataset for the RNA-seq showcase app
+# Example pseudo-bulk RNA-seq dataset
 
 A simulated pseudo-bulk RNA-seq dataset with 288 rows covering six
 immune cell types, eight canonical marker genes, two conditions (Healthy
@@ -57,7 +57,7 @@ Simulated in data-raw/generate_example_data.R.
 The dataset is designed to simultaneously support three VizModules plot
 types:
 
-- DotPlot — summarised `avg_expression` and `pct_expressed` columns per
+- DotPlot — summarised `avg_expression` and `neg_log10_pval` columns per
   cell type \\\times\\ gene \\\times\\ condition combination.
 
 - yPlot — per-replicate `log2_cpm` values grouped by `cell_type` and

@@ -33,8 +33,9 @@ add_plot_config(
 
 - facet.by:
 
-  Logical. Whether the figure is facetted to determine if axes labels
-  for each plot should be editable or not.
+  Whether the figure is faceted into panels carrying their own titles:
+  the facet column name(s), or `TRUE`. `NULL`, `FALSE`, an empty vector,
+  or empty strings mean not faceted.
 
 ## Value
 
@@ -53,6 +54,11 @@ annotations (see
 [`axis_titles_as_annotations()`](https://j-andrews7.github.io/VizModules/reference/axis_titles_as_annotations.md)
 and
 [`build_facet_annotations()`](https://j-andrews7.github.io/VizModules/reference/build_facet_annotations.md)).
+
+When the figure is faceted, plot title editing is disabled too. An empty
+editable title still draws plotly's "Click to enter Plot title"
+placeholder, which sits on top of the facet panel titles and swallows
+clicks meant for them.
 
 ## Author
 
@@ -87,12 +93,6 @@ add_plot_config()
 #> $edits$annotationTail
 #> [1] TRUE
 #> 
-#> $edits$editText
-#> [1] TRUE
-#> 
-#> $edits$editTitle
-#> [1] TRUE
-#> 
 #> $edits$annotationPosition
 #> [1] TRUE
 #> 
@@ -102,7 +102,7 @@ add_plot_config()
 #> [1] "png"
 #> 
 #> $toImageButtonOptions$filename
-#> [1] "2026-08-28"
+#> [1] "2026-09-29"
 #> 
 #> 
 #> $displaylogo
@@ -154,12 +154,6 @@ add_plot_config(download.format = "svg", include.modebar.buttons = FALSE)
 #> $edits$annotationTail
 #> [1] TRUE
 #> 
-#> $edits$editText
-#> [1] TRUE
-#> 
-#> $edits$editTitle
-#> [1] TRUE
-#> 
 #> $edits$annotationPosition
 #> [1] TRUE
 #> 
@@ -169,7 +163,7 @@ add_plot_config(download.format = "svg", include.modebar.buttons = FALSE)
 #> [1] "svg"
 #> 
 #> $toImageButtonOptions$filename
-#> [1] "2026-08-28"
+#> [1] "2026-09-29"
 #> 
 #> 
 #> $displaylogo

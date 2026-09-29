@@ -13,7 +13,7 @@ passed to figureBuilderServer()."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,7 +52,7 @@ passed to figureBuilderServer()."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>UI component for the Figure Builder module</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/figureBuilder_module_ui.R" class="external-link"><code>R/figureBuilder_module_ui.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/figureBuilder_module_ui.R" class="external-link"><code>R/figureBuilder_module_ui.R</code></a></small>
       <div class="d-none name"><code>figureBuilderUI.Rd</code></div>
     </div>
 
@@ -92,13 +92,14 @@ which is useful when the host page supplies its own title.</p></dd>
     <p>Unlike <code><a href="figureBuilderApp.html">figureBuilderApp()</a></code> (which returns a complete, standalone app), this
 function returns a <code>tagList</code> you can drop into any page, so the builder can be
 embedded alongside other content and instantiated more than once (each
-instance keeps its own namespace, canvas, and downloads).</p>
+instance keeps its own namespace, canvas, and downloads). The module gallery,
+<code><a href="moduleGalleryApp.html">moduleGalleryApp()</a></code>, embeds it this way as its <strong>Figure Builder</strong> tab.</p>
 <p>The returned UI bundles the JavaScript and CSS the canvas needs, and calls
 <code><a href="https://rdrr.io/pkg/shinyjs/man/useShinyjs.html" class="external-link">shinyjs::useShinyjs()</a></code>, so no extra setup is required in the host app.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="figureBuilderServer.html">figureBuilderServer()</a></code>, <code><a href="figureBuilderApp.html">figureBuilderApp()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="figureBuilderServer.html">figureBuilderServer()</a></code>, <code><a href="figureBuilderApp.html">figureBuilderApp()</a></code>, <code><a href="moduleGalleryApp.html">moduleGalleryApp()</a></code></p></div>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -110,7 +111,7 @@ instance keeps its own namespace, canvas, and downloads).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">figureBuilderUI</span><span class="op">(</span><span class="st">"figure_builder"</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;h2&gt;VizModules Figure Builder&lt;/h2&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="row pb-app"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="col-sm-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;form class="well" role="complementary"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="row"&gt;</span>
@@ -118,11 +119,11 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;button class="btn btn-default action-button btn-primary btn-block" id="figure_builder-pb_add" type="button"&gt;&lt;span class="action-icon"&gt;&lt;i class="fas fa-plus" role="presentation" aria-label="plus icon"&gt;&lt;/i&gt;&lt;/span&gt;&lt;span class="action-label"&gt;Add Plot&lt;/span&gt;&lt;/button&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="col-sm-6"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-primary btn-block" download href="" id="figure_builder-download.source" tabindex="-1" target="_blank"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-primary btn-block viz-source-download" data-viz-canvas="figure_builder-pb_canvas" data-viz-source-ns="figure_builder-" download href="" id="figure_builder-download.source" tabindex="-1" target="_blank"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             Source Data &amp;amp; Plots</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('figure_builder-download.source', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Download a ZIP of the source data, HTML plots, and statistics (if applied) for all plots on the canvas.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('figure_builder-download.source', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Download a ZIP of the source data, HTML plots, SVG and PNG images, and statistics (if applied) for all plots on the canvas.'})}, 500)});&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span class="help-block"&gt;</span>
@@ -132,7 +133,7 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;details class="pb-details"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;summary&gt;Load Data&lt;/summary&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;span class="help-block"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           Upload a CSV, TSV, TXT, or RDS file to make it available</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           Upload a CSV, TSV, or tab-delimited TXT file to make it available</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           as a dataset when adding plots.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/span&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="shiny-split-layout"&gt;</span>
@@ -149,7 +150,7 @@ instance keeps its own namespace, canvas, and downloads).</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="input-group-btn input-group-prepend"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;span class="btn btn-default btn-file"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                     Browse...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input id="figure_builder-pb_data_file" class="shiny-input-file" name="figure_builder-pb_data_file" type="file" style="position: absolute !important; top: -99999px !important; left: -99999px !important;" accept=".csv,.tsv,.txt,.rds,.RDS"/&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input id="figure_builder-pb_data_file" class="shiny-input-file" name="figure_builder-pb_data_file" type="file" style="position: absolute !important; top: -99999px !important; left: -99999px !important;" accept=".csv,.tsv,.txt"/&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/span&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/label&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/&gt;</span>

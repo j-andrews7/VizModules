@@ -17,6 +17,7 @@ dumbbellPlot(
   show.legend = TRUE,
   facet.by = NULL,
   line.colour = "gray80",
+  point.size = 12,
   facet.scales = "fixed",
   subplot.margin = 0.05,
   axis.showline = TRUE,
@@ -32,6 +33,15 @@ dumbbellPlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  axis.title.font.size = 18,
+  axis.title.font.color = "black",
+  axis.title.font.family = "Arial",
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
+  grid.color = "#CCCCCC",
+  facet.title.font.size = 18,
+  facet.title.font.color = "black",
+  facet.title.font.family = "Arial",
   title.text = "",
   title.font.size = 26,
   title.font.family = "Arial",
@@ -71,7 +81,12 @@ dumbbellPlot(
 
 - palette.selection:
 
-  Character vector of hex colors for marker colors.
+  Character vector of hex colors for marker colors. A named vector is
+  matched by name to the x variables (`colour.by = "X variables"`) or
+  the y categories (`"Y variables"`); an unnamed one is assigned in
+  order, to the x variables as given or to the y categories in their
+  order of appearance in `data`. Either way a category keeps its colour
+  in every facet.
 
 - show.legend:
 
@@ -86,6 +101,10 @@ dumbbellPlot(
 
   Character, hex color for the connecting lines between dumbbell points.
   Default: "gray80".
+
+- point.size:
+
+  Numeric, diameter of the markers in pixels. Default: 12.
 
 - facet.scales:
 
@@ -153,6 +172,42 @@ dumbbellPlot(
 - axis.tickwidth:
 
   Numeric, width of tick marks in pixels. Default: 1.
+
+- axis.title.font.size:
+
+  Numeric, font size for the x/y axis titles. Default: 18.
+
+- axis.title.font.color:
+
+  Character, hex color for the x/y axis titles. Default: "black".
+
+- axis.title.font.family:
+
+  Character, font family for the x/y axis titles. Default: "Arial".
+
+- show.grid.x:
+
+  Logical, whether to show gridlines on the x-axis. Default: TRUE.
+
+- show.grid.y:
+
+  Logical, whether to show gridlines on the y-axis. Default: TRUE.
+
+- grid.color:
+
+  Character, hex color for gridlines. Default: "#CCCCCC".
+
+- facet.title.font.size:
+
+  Numeric, font size for the facet panel titles. Default: 18.
+
+- facet.title.font.color:
+
+  Character, hex color for the facet panel titles. Default: "black".
+
+- facet.title.font.family:
+
+  Character, font family for the facet panel titles. Default: "Arial".
 
 - title.text:
 

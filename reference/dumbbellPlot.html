@@ -9,7 +9,7 @@ or dumbbell mode (2 x variables), with flexible coloring by either X or Y variab
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,7 +48,7 @@ or dumbbell mode (2 x variables), with flexible coloring by either X or Y variab
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create an Interactive Dumbbell Plot with plotly</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/dumbbellPlot.R" class="external-link"><code>R/dumbbellPlot.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/dumbbellPlot.R" class="external-link"><code>R/dumbbellPlot.R</code></a></small>
       <div class="d-none name"><code>dumbbellPlot.Rd</code></div>
     </div>
 
@@ -68,6 +68,7 @@ or dumbbell mode (2 x variables), with flexible coloring by either X or Y variab
 <span>  show.legend <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  facet.by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  line.colour <span class="op">=</span> <span class="st">"gray80"</span>,</span>
+<span>  point.size <span class="op">=</span> <span class="fl">12</span>,</span>
 <span>  facet.scales <span class="op">=</span> <span class="st">"fixed"</span>,</span>
 <span>  subplot.margin <span class="op">=</span> <span class="fl">0.05</span>,</span>
 <span>  axis.showline <span class="op">=</span> <span class="cn">TRUE</span>,</span>
@@ -83,6 +84,15 @@ or dumbbell mode (2 x variables), with flexible coloring by either X or Y variab
 <span>  axis.tickcolor <span class="op">=</span> <span class="st">"black"</span>,</span>
 <span>  axis.ticklen <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  axis.tickwidth <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  axis.title.font.size <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>  axis.title.font.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  axis.title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
+<span>  show.grid.x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  show.grid.y <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  grid.color <span class="op">=</span> <span class="st">"#CCCCCC"</span>,</span>
+<span>  facet.title.font.size <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>  facet.title.font.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  facet.title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  title.text <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  title.font.size <span class="op">=</span> <span class="fl">26</span>,</span>
 <span>  title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
@@ -120,7 +130,11 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 
 
 <dt id="arg-palette-selection">palette.selection<a class="anchor" aria-label="anchor" href="#arg-palette-selection"></a></dt>
-<dd><p>Character vector of hex colors for marker colors.</p></dd>
+<dd><p>Character vector of hex colors for marker colors. A named vector
+is matched by name to the x variables (<code>colour.by = "X variables"</code>) or the y categories
+(<code>"Y variables"</code>); an unnamed one is assigned in order, to the x variables as given or to
+the y categories in their order of appearance in <code>data</code>. Either way a category keeps its
+colour in every facet.</p></dd>
 
 
 <dt id="arg-show-legend">show.legend<a class="anchor" aria-label="anchor" href="#arg-show-legend"></a></dt>
@@ -133,6 +147,10 @@ or "Y variables" (different colors for each y category). Default: "X variables".
 
 <dt id="arg-line-colour">line.colour<a class="anchor" aria-label="anchor" href="#arg-line-colour"></a></dt>
 <dd><p>Character, hex color for the connecting lines between dumbbell points. Default: "gray80".</p></dd>
+
+
+<dt id="arg-point-size">point.size<a class="anchor" aria-label="anchor" href="#arg-point-size"></a></dt>
+<dd><p>Numeric, diameter of the markers in pixels. Default: 12.</p></dd>
 
 
 <dt id="arg-facet-scales">facet.scales<a class="anchor" aria-label="anchor" href="#arg-facet-scales"></a></dt>
@@ -196,6 +214,42 @@ May be a single value (applied to both directions) or a length-2 vector
 
 <dt id="arg-axis-tickwidth">axis.tickwidth<a class="anchor" aria-label="anchor" href="#arg-axis-tickwidth"></a></dt>
 <dd><p>Numeric, width of tick marks in pixels. Default: 1.</p></dd>
+
+
+<dt id="arg-axis-title-font-size">axis.title.font.size<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-size"></a></dt>
+<dd><p>Numeric, font size for the x/y axis titles. Default: 18.</p></dd>
+
+
+<dt id="arg-axis-title-font-color">axis.title.font.color<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-color"></a></dt>
+<dd><p>Character, hex color for the x/y axis titles. Default: "black".</p></dd>
+
+
+<dt id="arg-axis-title-font-family">axis.title.font.family<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-family"></a></dt>
+<dd><p>Character, font family for the x/y axis titles. Default: "Arial".</p></dd>
+
+
+<dt id="arg-show-grid-x">show.grid.x<a class="anchor" aria-label="anchor" href="#arg-show-grid-x"></a></dt>
+<dd><p>Logical, whether to show gridlines on the x-axis. Default: TRUE.</p></dd>
+
+
+<dt id="arg-show-grid-y">show.grid.y<a class="anchor" aria-label="anchor" href="#arg-show-grid-y"></a></dt>
+<dd><p>Logical, whether to show gridlines on the y-axis. Default: TRUE.</p></dd>
+
+
+<dt id="arg-grid-color">grid.color<a class="anchor" aria-label="anchor" href="#arg-grid-color"></a></dt>
+<dd><p>Character, hex color for gridlines. Default: "#CCCCCC".</p></dd>
+
+
+<dt id="arg-facet-title-font-size">facet.title.font.size<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-size"></a></dt>
+<dd><p>Numeric, font size for the facet panel titles. Default: 18.</p></dd>
+
+
+<dt id="arg-facet-title-font-color">facet.title.font.color<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-color"></a></dt>
+<dd><p>Character, hex color for the facet panel titles. Default: "black".</p></dd>
+
+
+<dt id="arg-facet-title-font-family">facet.title.font.family<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-family"></a></dt>
+<dd><p>Character, font family for the facet panel titles. Default: "Arial".</p></dd>
 
 
 <dt id="arg-title-text">title.text<a class="anchor" aria-label="anchor" href="#arg-title-text"></a></dt>

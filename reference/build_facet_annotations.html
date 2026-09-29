@@ -15,7 +15,7 @@ rotated Y-axis title (left centre)."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@ rotated Y-axis title (left centre)."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Build facet subplot annotations</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/plot_facets.R" class="external-link"><code>R/plot_facets.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_facets.R" class="external-link"><code>R/plot_facets.R</code></a></small>
       <div class="d-none name"><code>build_facet_annotations.Rd</code></div>
     </div>
 
@@ -75,7 +75,9 @@ rotated Y-axis title (left centre).</p>
 <span>  title.font.size <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>  nrows <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  fig <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  title.offset <span class="op">=</span> <span class="fl">0.02</span></span>
+<span>  title.offset <span class="op">=</span> <span class="fl">0.02</span>,</span>
+<span>  axis.title.font <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  facet.title.font <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -118,6 +120,18 @@ panels filling the full paper area.</p></dd>
 <dt id="arg-title-offset">title.offset<a class="anchor" aria-label="anchor" href="#arg-title-offset"></a></dt>
 <dd><p>Numeric fraction of the figure height to place each
 subplot title above the top of its panel. Default: <code>0.02</code>.</p></dd>
+
+
+<dt id="arg-axis-title-font">axis.title.font<a class="anchor" aria-label="anchor" href="#arg-axis-title-font"></a></dt>
+<dd><p>Optional named list of plotly font properties
+(<code>size</code>, <code>color</code>, <code>family</code>) for the shared X/Y axis title annotations.
+If <code>NULL</code> (the default), they use <code>title.font.size</code> like the facet titles.</p></dd>
+
+
+<dt id="arg-facet-title-font">facet.title.font<a class="anchor" aria-label="anchor" href="#arg-facet-title-font"></a></dt>
+<dd><p>Optional named list of plotly font properties
+(<code>size</code>, <code>color</code>, <code>family</code>) for the per-panel facet titles. If <code>NULL</code>
+(the default), they use <code>title.font.size</code>.</p></dd>
 
 </dl></div>
     <div class="section level2">

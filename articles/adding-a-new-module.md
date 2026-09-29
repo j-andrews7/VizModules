@@ -12,6 +12,17 @@ helpers to implement them.
 And a fair few are to keep you from shooting yourself in the foot and
 avoiding most of the common module pitfalls.
 
+If you are working with an AI coding agent, the package ships an [Agent
+Skill](https://agentskills.io) covering exactly this checklist -
+**`vizmodules-new-module`** - along with the required roxygen sections,
+the uniform input helpers, the traps that have cost real time here, and
+file templates to copy. Install it (and its two siblings) into your
+project with `VizModules::use_vizmodules_skills(".")`, or pass
+`client = "copilot"` / `client = "claude"` to write to `.github/skills/`
+or `.claude/skills/` instead of the default `.agents/skills/`. The
+skills live in `inst/skills/` in this repository, so **keep them in step
+with this vignette** when you change a convention it documents.
+
 ## Quick Checklist
 
 Pick the plot function you are wrapping and name your module
@@ -56,6 +67,11 @@ Freeze any input you update from the server so the plot does not render
 twice (see [Updating Your Own Inputs From the
 Server](#updating-your-own-inputs-from-the-server)).
 
+Debounce any free-text input the plot reads, so a
+[`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html) does not
+rebuild the plot once per keystroke (see [Debouncing Free-Text
+Inputs](#debouncing-free-text-inputs)).
+
 Wire up manual layout-edit persistence so user-dragged titles, legends,
 annotations, and colorbars survive re-renders (see [Persisting Manual
 Layout Edits](#persisting-manual-layout-edits)).
@@ -72,6 +88,10 @@ or
 [`safe_resolve_adj_fxn()`](https://j-andrews7.github.io/VizModules/reference/safe_resolve_adj_fxn.md)
 instead (see [Sanitizing User-Provided
 Expressions](#sanitizing-user-provided-expressions) below).
+
+If you write any CSS, anchor every selector on a class this package owns
+— a stylesheet goes into the host app’s document unscoped (see [Styling
+and CSS Containment](#styling-and-css-containment)).
 
 ## Naming & Organization
 
@@ -185,15 +205,22 @@ Provide an app in `<plot>_module_app.R` as a thin wrapper around
 
 ``` r
 
-myPlotApp <- function(data_list = NULL) {
+myPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hide.tabs = NULL) {
+    # With no data, open on the module's showcase example (its entry in
+    # .module_showcase()), layering any caller defaults over its own.
     if (is.null(data_list)) {
-        data_list <- list("example" = my_default_data)
+        example <- .module_example("myplot")
+        data_list <- example$data_list
+        defaults <- utils::modifyList(example$defaults, defaults %||% list())
     }
     createModuleApp(
         inputs_ui_fn = myPlotInputsUI,
         output_ui_fn = myPlotOutputUI,
         server_fn    = myPlotServer,
         data_list    = data_list,
+        defaults     = defaults,
+        hide.inputs  = hide.inputs,
+        hide.tabs    = hide.tabs,
         title        = "Modular myPlots"
     )
 }
@@ -203,8 +230,11 @@ myPlotApp <- function(data_list = NULL) {
 already handles validation, data import, data filtering, and dataset
 switching — no need to duplicate that logic.
 
-Add the module to the gallery app (`inst/apps/module-gallery/app.R`),
-placing it in its own tab alongside the other modules.
+Open the `*App()` on the module’s showcase example when no `data_list`
+is given, as the other `*App()` functions do:
+`example <- .module_example("<id>")`, then use `example$data_list` and
+layer the caller’s `defaults` over `example$defaults` (see “Gallery App
+and Figure Builder” below).
 
 ## Testing Requirements
 
@@ -239,6 +269,21 @@ inputs).
 
 Only after the plotting function is stable, build the module
 UI/server/app wrappers around it.
+
+If you pass an array to a trace by value (such as
+`error_y = list(array = ...)`) on a plot coloured by a discrete column,
+sort the data by that column first. plotly re-sorts its own copy by the
+colour column before splitting it into traces, but not your array, so
+otherwise each series is drawn with other series’ values.
+[`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
+does this with `.group_rows_by_trace()`; test it on the built figure,
+with colour columns stored as character, factor and ordered factor.
+
+Inside
+[`summarise()`](https://dplyr.tidyverse.org/reference/summarise.html)/[`mutate()`](https://dplyr.tidyverse.org/reference/mutate.html),
+a data column named like one of your arguments (`y`, say) masks it.
+Resolve what the verb needs into local variables before calling it, and
+test with a data frame whose columns are literally named `x` and `y`.
 
 ## Supporting Reactive Defaults
 
@@ -309,7 +354,9 @@ observeEvent(input$stat.x, {
     pairs <- generate_pair_strings(data(), input$stat.x)
     if (length(pairs) > 0) {
         freezeReactiveValue(input, "stat.pairs")
-        update_viz_select(session, "stat.pairs", choices = c("", pairs), selected = "")
+        update_viz_select(session, "stat.pairs",
+            choices = c("", pairs), selected = .default_stat_pairs(defaults, pairs)
+        )
     }
 })
 ```
@@ -453,6 +500,63 @@ too, as `y.min` and `y.max`. It has the last word on the drawn range,
 and knowing what you asked for is what lets it leave a large maximum
 alone rather than shrinking the axis onto the brackets.
 
+## Debouncing Free-Text Inputs
+
+The re-render problems above come from the *server* pushing values at
+the client. Free text has the opposite problem:
+[`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html) and
+[`textAreaInput()`](https://rdrr.io/pkg/shiny/man/textAreaInput.html)
+report to the server on **every keystroke**, so a plot that reads one
+directly is rebuilt once per character.
+
+That matters most when the input is an expression, because the
+intermediate states are not just wasted work, they are mostly *invalid*
+work. Typing `condition == "Disease"` walks through `c`, `co`, `con`, …
+and every one of those is a complete render cycle spent on an expression
+that cannot parse.
+
+Wrap the read in
+[`shiny::debounce()`](https://rdrr.io/pkg/shiny/man/debounce.html) so a
+burst of typing collapses into one render once the user pauses:
+
+``` r
+
+# Once, in the module server body -- not inside a reactive.
+filter_text <- debounce(reactive(input$row_filter), 700)
+
+filtered <- reactive({
+    keep <- safe_eval_filter(filter_text(), data())
+    if (is.null(keep)) data() else data()[keep, , drop = FALSE]
+})
+```
+
+[`debounce()`](https://rdrr.io/pkg/shiny/man/debounce.html) emits its
+initial value immediately and then holds the previous value while
+typing, so startup is unaffected and there is no blank first render to
+design around.
+
+Debounce any
+[`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html)/[`textAreaInput()`](https://rdrr.io/pkg/shiny/man/textAreaInput.html)
+a plot reads, especially one holding an expression. 500-800ms is a good
+range; the more expensive the plot, the longer the delay earns its keep.
+
+Leave select, numeric, checkbox, and slider inputs alone. They report
+discrete choices rather than keystrokes, so there is nothing to
+collapse.
+
+Create the debounced reactive **once** in the server body. Creating it
+inside another reactive rebuilds the timer on every invalidation, which
+defeats it.
+
+Debouncing is not a substitute for the Auto Update tack. The tack lets
+the user opt out of live updates entirely; debouncing makes live updates
+bearable for the user who leaves it on.
+
+[`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md)’s
+Row/Column Filter inputs are the worked example — a heatmap is drawn to
+a device and measured before it can be shown, so a per-keystroke rebuild
+is especially painful there.
+
 ## Persisting Manual Layout Edits
 
 Every VizModules plot is interactively editable: users can drag the
@@ -556,9 +660,12 @@ Store the result: `last_stats_df(stats_df)`.
 
 Add an `observeEvent` to update `stat.pairs` choices when the x or
 grouping column changes, using
-[`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md).
+[`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md),
+selecting `.default_stat_pairs(defaults, pairs)` so a `stat.pairs`
+default is honoured.
 
-Call `.reset_stats_inputs(session)` in the reset observer.
+Call `.reset_stats_inputs(session, defaults, pairs)` in the reset
+observer, with the pairs currently on offer.
 
 ### Key helpers (all in `R/stat_helper.R`)
 
@@ -570,22 +677,48 @@ Call `.reset_stats_inputs(session)` in the reset observer.
 | [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md) | Build `"A vs B"` strings for the comparison selector |
 | [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md) | Convert selected pair strings back to list of length-2 vectors |
 
-See the `plotthis_BoxPlotServer`, `plotthis_ViolinPlotServer`, or
-`dittoViz_yPlotServer` implementations for complete integration
+See the `plotthis_BoxPlotServer`, `dittoViz_yPlotServer`, or
+`dittoViz_freqPlotServer` implementations for complete integration
 examples.
 
-## Gallery App
+## Gallery App and Figure Builder
 
-Add or update the gallery app at `inst/apps/module-gallery/app.R` to
-include the new module in its own tab.
+Register the module in `.module_showcase()` (`R/module_showcase.R`).
+That one entry gives it a tab in the gallery
+([`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.md)),
+a place in the Figure Builder, and the example its `*App()` opens on. It
+holds the module’s three functions, a `label` and a shorter `tab_label`,
+the `.example_datasets()` entry it is shown on, and the `defaults` it
+opens with.
 
-Each tab should load a small sample dataset and show the module’s inputs
-and outputs together.
+Make those `defaults` show the module off: switch on its distinctive
+features (statistics, highlights, fit lines, annotations, splits), not
+just the column mapping. If no bundled dataset gives a feature anything
+to show, extend one in `data-raw/generate_example_data.R` rather than
+leaving the feature off.
+
+`tests/testthat/test-showcase.R` checks every entry’s defaults name real
+columns and are accepted by the controls they seed; add an assertion
+there for any data effect your demo depends on (e.g. that a showcased
+comparison is significant).
 
 Verify namespacing: each module instance should have a unique `id` and
 independent state.
 
 Keep dependencies minimal (prefer built-in or generated datasets).
+
+If the module’s output is not a plotly graph, give it a `vector_svg` and
+a `raster_png` function of `(width, height, res)` so its panels appear
+in the Figure Builder’s SVG export and its source download carries
+images;
+[`draw_to_svg()`](https://j-andrews7.github.io/VizModules/reference/draw_to_svg.md)
+and
+[`draw_to_png()`](https://j-andrews7.github.io/VizModules/reference/draw_to_png.md)
+build them from any grid or base drawing. Put them on the summary list
+the server’s reactive returns (the source download reads them there),
+and attach `vector_svg` to the reactive as an attribute as well (the
+Figure Builder’s canvas export reads it there). See
+[`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md).
 
 ## Review Before Submitting
 
@@ -597,6 +730,13 @@ Confirm UI text/tooltips mention any missing or altered plot features.
 
 Verify both module instances in the example app work independently
 (namespacing correct).
+
+If you added CSS, render the module beside a stock
+[`selectInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html),
+[`sidebarPanel()`](https://rdrr.io/pkg/shiny/man/sidebarLayout.html) and
+[`DT::datatable()`](https://rdrr.io/pkg/DT/man/datatable.html) and
+confirm none of them changed (see [Styling and CSS
+Containment](#styling-and-css-containment)).
 
 ## Style Guide
 
@@ -693,7 +833,7 @@ covers your needs:
 | [`uniform_axes_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.md) | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
 | [`uniform_plotly_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_plotly_inputs_ui.md) | Download buttons, margins, subplot spacing, and draw-shape styling |
-| [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md) | Legend title and entry label font sizes |
+| [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md) | Legend visibility, font family and colour, and title and entry label font sizes |
 | [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.md) | Highlighting and labelling of individual data points |
 
 Each UI helper has a matching `reset_*_inputs()` function to call from
@@ -740,6 +880,150 @@ where the full qualified name aids readability.
   instead.
 - Do not edit `NAMESPACE` manually; always regenerate with
   `devtools::document()`.
+
+## Styling and CSS Containment
+
+**Every stylesheet a module loads is injected into the host app’s
+document.** There is no shadow DOM and no automatic scoping: a rule you
+write for your widget applies to the whole page. Because each plot
+module pulls in a colour picker, attaching *any* module to a page brings
+the package’s stylesheets with it — so a careless selector silently
+restyles an app that merely embedded one plot.
+
+This has bitten the package three times (#355), and every case was the
+same mistake: styling a class the package does not own.
+
+### Only ever style classes this package created
+
+Anchor every selector on a package-owned prefix — `.multi-color-picker`,
+`.mc-`, `.mdi-`, `.vizmodules-`, `.viz-`, `.pb-`. Never write a bare
+rule against a class that belongs to Bootstrap, Shiny, selectize, DT or
+any other library:
+
+``` css
+/* WRONG — restyles every dropdown, well and tab strip in the host app */
+.selectize-dropdown .option { padding: 0 !important; }
+.well .btn { padding: 4px 10px; }
+.nav-tabs { flex-wrap: wrap; }
+
+/* RIGHT — reaches only markup this package rendered */
+.mc-palette-dropdown .option { padding: 0 !important; }
+.pb-app .well .btn { padding: 4px 10px; }
+.vizmodules-input-tabs > .nav-tabs { flex-wrap: wrap; }
+```
+
+The trap is that these rules *look* scoped. `.well .btn` reads like “the
+buttons in my well” — but `.well` is what
+[`shiny::sidebarPanel()`](https://rdrr.io/pkg/shiny/man/sidebarLayout.html)
+renders, so it is every sidebar on the page. If a selector’s leftmost
+class is not one you invented, it is not scoped.
+
+`tests/testthat/test-ui_utils.R` enforces this: it parses every selector
+in every bundled and inline stylesheet and fails on anything not
+anchored to a package prefix. Add your widget’s prefix there if you
+introduce one.
+
+### A dropdown or popover parented to `<body>` needs its own marker class
+
+Anything that escapes its container to avoid clipping — selectize’s
+`dropdownParent: "body"`, a tooltip, a popper — can no longer be reached
+by a `.my-widget .thing` selector, which is exactly why the leaking
+rules were written unscoped in the first place. Give the escaped element
+a class of its own instead:
+
+``` js
+$(select).selectize({
+  dropdownParent: "body",
+  // Selectize replaces its default dropdownClass wholesale, so its own class
+  // has to be restated alongside ours.
+  dropdownClass: "selectize-dropdown mc-palette-dropdown",
+  ...
+});
+```
+
+### Check that the rule matches what you think it does
+
+`.selectize-dropdown .option` never matched the colour picker’s own
+options at all — its custom `render.option` emits `.mc-palette-option`,
+and selectize does not add `.option` to that. The rule’s *only* effect
+was on other people’s dropdowns: a selector that misses everything you
+own and hits everything you don’t. Open the widget, inspect the element,
+and confirm the class you are targeting is actually on it.
+
+### Keep layout out of inline styles
+
+An inline `style=` attribute can only be overridden with `!important`,
+which makes a host app fight your widget rather than theme it. Put
+layout in a stylesheet and pass only the values that vary per instance,
+as CSS custom properties:
+
+``` r
+
+# organize_inputs() emits just the column count; the rest lives in vizModules.css
+div(
+    class = "vizmodules-input-grid",
+    style = paste0("--viz-input-columns: ", columns, ";"),
+    lapply(cells, function(x) div(class = "vizmodules-input-cell", x))
+)
+```
+
+### Do not assume anything about the parent
+
+The control grid used Bootstrap’s negative-margin row idiom
+(`margin-left: -15px` on the row, matching padding on each cell), which
+assumes a parent with at least that much horizontal padding to absorb
+it. Dropped into a
+[`bslib::sidebar()`](https://rstudio.github.io/bslib/reference/sidebar.html)
+with less, the grid overhung on both sides and the sidebar grew a
+horizontal scrollbar. Use `gap` instead — it needs nothing from the
+parent.
+
+Give flex children `min-width: 0` as well. Without it a long select or
+label refuses to shrink below its intrinsic width and pushes the
+container wider — the same overflow by a different route.
+
+### Shipping a stylesheet
+
+Put it in `inst/src/`, serve it through an `htmlDependency()`, and
+attach it to the UI that needs it rather than to the app as a whole:
+
+``` r
+
+.viz_modules_dependency <- function() {
+    htmlDependency(
+        name = "viz-modules",
+        version = as.character(utils::packageVersion("VizModules")),
+        src = "src", package = "VizModules",
+        stylesheet = "vizModules.css"
+    )
+}
+```
+
+Attaching it with
+`htmltools::attachDependencies(ui, dep, append = TRUE)` means the styles
+travel with the markup — including through a runtime
+[`insertUI()`](https://rdrr.io/pkg/shiny/man/insertUI.html), which the
+Figure Builder relies on when it injects a panel’s controls.
+
+### Verifying containment
+
+Automated checks catch an unscoped *selector*, but not whether your rule
+actually changed anything. To see the real effect, load the widget
+beside a stock
+[`selectInput()`](https://rdrr.io/pkg/shiny/man/selectInput.html),
+[`sidebarPanel()`](https://rdrr.io/pkg/shiny/man/sidebarLayout.html) and
+[`DT::datatable()`](https://rdrr.io/pkg/DT/man/datatable.html), then
+disable just your stylesheet in the browser and re-measure:
+
+``` js
+document.querySelectorAll('link[rel=stylesheet]').forEach(function (l) {
+  if (l.href.indexOf('yourFile.css') !== -1) { l.disabled = true; }
+});
+```
+
+If a computed style on the host’s own controls changes, your CSS is
+leaking. If nothing in your widget changes, your rule was never matching
+in the first place.
 
 ## Sanitizing User-Provided Expressions
 
@@ -802,14 +1086,29 @@ allowed list.
 
 ### What counts as “allowed”?
 
-All three helpers share the same whitelist of safe AST nodes:
+[`safe_eval_filter()`](https://j-andrews7.github.io/VizModules/reference/safe_eval_filter.md)
+and
+[`validate_expression()`](https://j-andrews7.github.io/VizModules/reference/validate_expression.md)
+share one whitelist of safe AST nodes:
 
 - **Comparisons:** `<`, `>`, `<=`, `>=`, `==`, `!=`
-- **Logical operators:** `&`, `&&`, `|`, `||`, `!`
+- **Logical operators:** `&`, `&&`, `|`, `||`, `!`,
+  [`xor()`](https://rdrr.io/r/base/Logic.html)
 - **Utilities:** `%in%`, [`c()`](https://rdrr.io/r/base/c.html),
   [`is.na()`](https://rdrr.io/r/base/NA.html),
   [`is.null()`](https://rdrr.io/r/base/NULL.html)
-- **Arithmetic:** `-`, `+`, `*`, `/`, `:`, `%%`
+- **Arithmetic:** `-`, `+`, `*`, `/`, `:`, `%%`,
+  [`abs()`](https://rdrr.io/r/base/MathFun.html),
+  [`round()`](https://rdrr.io/r/base/Round.html)
+- **Strings and patterns:**
+  [`grepl()`](https://rdrr.io/r/base/grep.html),
+  [`startsWith()`](https://rdrr.io/r/base/startsWith.html),
+  [`endsWith()`](https://rdrr.io/r/base/startsWith.html),
+  [`substr()`](https://rdrr.io/r/base/substr.html),
+  [`nchar()`](https://rdrr.io/r/base/nchar.html),
+  [`toupper()`](https://rdrr.io/r/base/chartr.html),
+  [`tolower()`](https://rdrr.io/r/base/chartr.html),
+  [`trimws()`](https://rdrr.io/r/base/trimws.html)
 - **Grouping:** `()`
 - **Column names** from the data
 - **Literals:** numbers, strings, `TRUE`, `FALSE`, `NA`, `NULL`, `Inf`,
@@ -819,4 +1118,24 @@ Anything outside this list (including function calls like
 [`system()`](https://rdrr.io/r/base/system.html),
 [`file.remove()`](https://rdrr.io/r/base/files.html),
 [`library()`](https://rdrr.io/r/base/library.html), etc.) is rejected
-and a warning is issued.
+and a warning is issued. So is a namespaced or extracted call such as
+`base::log(x)`, which would otherwise slip past a name-based check.
+
+The expression must also be a **single statement**: anything after a `;`
+or a newline is rejected rather than silently ignored.
+
+[`safe_resolve_adj_fxn()`](https://j-andrews7.github.io/VizModules/reference/safe_resolve_adj_fxn.md)
+is the exception — it does not walk an AST at all. It matches the whole
+input against its own short list of numeric transforms (`log2`, `log`,
+`log10`, `neg_log10`, `log1p`, `as.factor`, `abs`, `sqrt`) and resolves
+it with [`match.fun()`](https://rdrr.io/r/base/match.fun.html).
+
+Model formulas (`.safe_build_model()`, behind the custom fit lines)
+reuse the same walker with a formula-specific vocabulary: `~`, `+`, `-`,
+`*`, `/`, `^`, `(`, `:`, [`I()`](https://rdrr.io/r/base/AsIs.html), and
+the transforms [`log()`](https://rdrr.io/r/base/Log.html),
+[`log2()`](https://rdrr.io/r/base/Log.html),
+[`log10()`](https://rdrr.io/r/base/Log.html),
+[`sqrt()`](https://rdrr.io/r/base/MathFun.html),
+[`exp()`](https://rdrr.io/r/base/Log.html),
+[`poly()`](https://rdrr.io/r/stats/poly.html).

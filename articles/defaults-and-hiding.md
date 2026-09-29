@@ -8,32 +8,33 @@ vignette covers both in depth.
 
 Pass a named list to the `defaults` argument of any `*InputsUI()` call.
 Each name is an input ID (matching the underlying plot function
-argument), and its value is what the control initialises to.
+argument), and its value is what the control initialises to. Pass the
+same list to the module’s `*Server()` too, so its **Reset** button
+returns the controls to these values rather than to the built-in ones.
 
 ``` r
 
 library(VizModules)
 
+scatter_defaults <- list(
+    x.by        = "wt",
+    y.by        = "mpg",
+    color.by    = "cyl",
+    size        = 3,
+    best.fit    = TRUE
+)
+
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_scatterPlotInputsUI(
-                "p", mtcars,
-                defaults = list(
-                    x.by        = "wt",
-                    y.by        = "mpg",
-                    color.by    = "cyl",
-                    size        = 3,
-                    best.fit    = TRUE
-                )
-            )
+            dittoViz_scatterPlotInputsUI("p", mtcars, defaults = scatter_defaults)
         ),
         mainPanel(dittoViz_scatterPlotOutputUI("p"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_scatterPlotServer("p", data = reactive(mtcars))
+    dittoViz_scatterPlotServer("p", data = reactive(mtcars), defaults = scatter_defaults)
 }
 
 shinyApp(ui, server)
@@ -160,13 +161,22 @@ difference.
 ``` r
 
 plotthis_BoxPlotApp(
+    data_list = list("iris" = example_iris),
     defaults = list(
-        x.by     = "Species",
-        y.by     = "Sepal.Length",
-        pt.size  = 0
+        x.data     = "Species",
+        y.data     = "Sepal.Length",
+        add.points = TRUE,
+        pt.size    = 2
     )
 )
 ```
+
+Run on its bundled example data instead (no `data_list`), a `*App()`
+opens with the settings the module gallery
+([`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.md))
+shows it with, and any `defaults` you pass are layered over those:
+`plotthis_BoxPlotApp(defaults = list(stats.enabled = FALSE))` is the
+gallery’s box plot without its significance brackets.
 
 The same `defaults` list is accepted by
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
@@ -179,7 +189,7 @@ app <- createModuleApp(
     output_ui_fn = plotthis_BoxPlotOutputUI,
     server_fn    = plotthis_BoxPlotServer,
     data_list    = list("iris" = iris),
-    defaults     = list(x.by = "Species", y.by = "Sepal.Length")
+    defaults     = list(x.data = "Species", y.data = "Sepal.Length")
 )
 if (interactive()) runApp(app)
 ```
@@ -268,14 +278,14 @@ relevant `*InputsUI()` source, or open `?<module>InputsUI` and look for
 the tab headings described there. Common tabs across most modules
 include:
 
-| Tab        | Contents                                      |
-|------------|-----------------------------------------------|
-| `"Data"`   | Column selectors (x, y, color, split, etc.)   |
-| `"Axes"`   | Title font, gridlines, tick styling           |
-| `"Legend"` | Legend title and text sizes                   |
-| `"Lines"`  | Reference lines (h/v/ablines)                 |
+| Tab | Contents |
+|----|----|
+| `"Data"` | Column selectors (x, y, color, split, etc.) |
+| `"Axes"` | Title font, gridlines, tick styling |
+| `"Legend"` | Legend visibility, font family and colour, title and text sizes |
+| `"Lines"` | Reference lines (h/v/ablines) |
 | `"Plotly"` | Download format, margins, drawn shape styling |
-| `"Facet"`  | Facet rows/columns, scales, subplot spacing   |
+| `"Facet"` | Facet rows/columns, scales, subplot spacing |
 
 ------------------------------------------------------------------------
 
@@ -291,24 +301,24 @@ tabs that are irrelevant for your use case:
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            plotthis_ViolinPlotInputsUI(
-                "v", example_rnaseq,
+            plotthis_BoxPlotInputsUI(
+                "b", example_rnaseq,
                 defaults = list(
-                    x.by     = "condition",
-                    y.by     = "expression",
-                    color.by = "condition"
+                    x.data   = "cell_type",
+                    y.data   = "log2_cpm",
+                    group.by = "condition"
                 )
             )
         ),
-        mainPanel(plotthis_ViolinPlotOutputUI("v"))
+        mainPanel(plotthis_BoxPlotOutputUI("b"))
     )
 )
 
 server <- function(input, output, session) {
-    plotthis_ViolinPlotServer(
-        "v",
+    plotthis_BoxPlotServer(
+        "b",
         data        = reactive(example_rnaseq),
-        hide.inputs = c("color.by"),
+        hide.inputs = c("group.by"),
         hide.tabs   = c("Plotly", "Lines")
     )
 }
@@ -316,9 +326,10 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
-Here `color.by` is fixed to `"condition"` and hidden. The entire
-`"Plotly"` and `"Lines"` tabs are removed because they aren’t relevant
-to this app.
+Here each cell type’s boxes are always split by `"condition"`:
+`group.by` is set and then hidden, so users can change what is plotted
+but not the comparison. The entire `"Plotly"` and `"Lines"` tabs are
+removed because they aren’t relevant to this app.
 
 ------------------------------------------------------------------------
 
@@ -329,9 +340,10 @@ if it supports those arguments:
 
 ``` r
 
-plotthis_ViolinPlotApp(
-    defaults    = list(x.by = "Species", y.by = "Sepal.Length"),
-    hide.inputs = "color.by",
+plotthis_BoxPlotApp(
+    data_list   = list("iris" = example_iris),
+    defaults    = list(x.data = "Species", y.data = "Sepal.Length"),
+    hide.inputs = "group.by",
     hide.tabs   = "Plotly"
 )
 ```
@@ -351,9 +363,10 @@ library(shinyjs)
 
 myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
-        # Hide the 'size' input whenever a size.by column is chosen
+        # Hide the 'size' input whenever a size.by column is chosen. isTRUE()
+        # because input$size.by is NULL until the control first reports in.
         observe({
-            if (nzchar(input$size.by)) {
+            if (isTRUE(nzchar(input$size.by))) {
                 shinyjs::hide(id = "size")
             } else {
                 shinyjs::show(id = "size")
@@ -381,7 +394,7 @@ helpers instead, which target the wrapping cell in the flexbox grid:
 myModuleServer <- function(id, data_reactive) {
     moduleServer(id, function(input, output, session) {
         observe({
-            if (nzchar(input$size.by)) {
+            if (isTRUE(nzchar(input$size.by))) {
                 VizModules::hide_input(session, "size")
             } else {
                 VizModules::show_input(session, "size")
@@ -392,3 +405,9 @@ myModuleServer <- function(id, data_reactive) {
     dittoViz_scatterPlotServer(id, data_reactive)
 }
 ```
+
+If your server also takes `hide.inputs`, show only the ids the app did
+not list there (`show_input(session, setdiff("size", hide.inputs))`).
+Otherwise the next toggle un-hides an input the app meant to keep
+hidden. The built-in modules that toggle their own controls, such as
+`linePlot` with its error bar inputs, do this.

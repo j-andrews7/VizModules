@@ -63,20 +63,20 @@ ui.inputs <- tagList(
     selectInput("gender", "Gender", choices = c("Male", "Female", "Other"))
 )
 organize_inputs(ui.inputs, columns = 2, rows = 2)
-#> <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#> <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="name-label" for="name">Name</label>
 #>       <input id="name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>     </div>
 #>   </div>
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="age-label" for="age">Age</label>
 #>       <input id="age" type="number" class="shiny-input-number form-control" value="30" data-update-on="change"/>
 #>     </div>
 #>   </div>
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="gender-label" for="gender">Gender</label>
 #>       <div>
@@ -101,25 +101,25 @@ ui.inputs.tabs <- list(
     )
 )
 organize_inputs(ui.inputs.tabs, columns = 1)
-#> <div class="tabbable">
-#>   <ul class="nav nav-tabs" data-tabsetid="3448">
+#> <div class="tabbable vizmodules-input-tabs">
+#>   <ul class="nav nav-tabs" data-tabsetid="2575">
 #>     <li class="active">
-#>       <a href="#tab-3448-1" data-toggle="tab" data-bs-toggle="tab" data-value="Personal">Personal</a>
+#>       <a href="#tab-2575-1" data-toggle="tab" data-bs-toggle="tab" data-value="Personal">Personal</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3448-2" data-toggle="tab" data-bs-toggle="tab" data-value="Settings">Settings</a>
+#>       <a href="#tab-2575-2" data-toggle="tab" data-bs-toggle="tab" data-value="Settings">Settings</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3448">
-#>     <div class="tab-pane active" data-value="Personal" id="tab-3448-1">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 1); max-width: calc(100% / 1); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="tab-content" data-tabsetid="2575">
+#>     <div class="tab-pane active" data-value="Personal" id="tab-2575-1">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="firstname-label" for="firstname">First Name</label>
 #>             <input id="firstname" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 1); max-width: calc(100% / 1); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="lastname-label" for="lastname">Last Name</label>
 #>             <input id="lastname" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
@@ -127,9 +127,9 @@ organize_inputs(ui.inputs.tabs, columns = 1)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Settings" id="tab-3448-2">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 1); max-width: calc(100% / 1); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Settings" id="tab-2575-2">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
 #>             <div class="checkbox">
 #>               <label>
@@ -139,7 +139,7 @@ organize_inputs(ui.inputs.tabs, columns = 1)
 #>             </div>
 #>           </div>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 1); max-width: calc(100% / 1); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="volume-label" for="volume">Volume</label>
 #>             <input class="js-range-slider" id="volume" data-skin="shiny" data-min="0" data-max="100" data-from="50" data-step="1" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
@@ -153,20 +153,20 @@ organize_inputs(ui.inputs.tabs, columns = 1)
 # Example 3: Adding an additional UI element with 'tack'
 additional.ui <- actionButton("submit", "Submit")
 organize_inputs(ui.inputs, tack = additional.ui, columns = 3)
-#> <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 3); max-width: calc(100% / 3); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#> <div class="vizmodules-input-grid" style="--viz-input-columns: 3;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="name-label" for="name">Name</label>
 #>       <input id="name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>     </div>
 #>   </div>
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 3); max-width: calc(100% / 3); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="age-label" for="age">Age</label>
 #>       <input id="age" type="number" class="shiny-input-number form-control" value="30" data-update-on="change"/>
 #>     </div>
 #>   </div>
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 3); max-width: calc(100% / 3); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="vizmodules-input-cell">
 #>     <div class="form-group shiny-input-container">
 #>       <label class="control-label" id="gender-label" for="gender">Gender</label>
 #>       <div>
@@ -183,8 +183,8 @@ organize_inputs(ui.inputs, tack = additional.ui, columns = 3)
 # Example 4: Handling a case with more inputs than grid cells
 many.inputs <- tagList(replicate(10, textInput("input", "Input")))
 organize_inputs(many.inputs, columns = 3) # Creates more than one row
-#> <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>   <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 3); max-width: calc(100% / 3); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#> <div class="vizmodules-input-grid" style="--viz-input-columns: 3;">
+#>   <div class="vizmodules-input-cell">
 #>     div
 #>     form-group shiny-input-container
 #>     <label class="control-label" id="input-label" for="input">Input</label>

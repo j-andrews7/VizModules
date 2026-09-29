@@ -24,15 +24,18 @@ ComplexHeatmap_HeatmapApp(
 - data_list:
 
   An optional named list of data frames. If `NULL` (the default),
-  `list("matrix" = example_heatmap_matrix)` is used as example data.
-  Ignored (only its first element is used, as the matrix) when
-  `column_data` is supplied — that path has no dataset
-  picker/upload/filter UI.
+  `example_heatmap_matrix` is used as example data — paired with
+  `example_heatmap_column_data` unless `column_data` says otherwise.
+  When `column_data` is supplied it is attached to the first entry,
+  which becomes `list(matrix = , column_annotations = )`.
 
 - column_data:
 
   An optional data frame of per-sample metadata, enabling column
-  annotations (see
+  annotations, column splitting, and metadata-aware column filtering.
+  Defaults to `example_heatmap_column_data` when `data_list` is also
+  `NULL`; pass `data_list` explicitly to opt out. Attached to the first
+  `data_list` entry (see
   [`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md)'s
   `data` parameter for the expected shape — a key column matching the
   matrix's column names, plus arbitrary annotation columns). When
@@ -67,25 +70,31 @@ A Shiny app object.
 
 ## Details
 
-When `data_list` is not provided (or `NULL`), the app launches with
-`example_heatmap_matrix` (a simulated gene x sample expression matrix)
-as an example dataset. Uploaded data files are added to the available
-datasets and can be selected for plotting. If an uploaded file shares a
-name with an existing dataset, the existing one is overwritten with a
-warning.
+When neither `data_list` nor `column_data` is provided, the app launches
+on the bundled pair — `example_heatmap_matrix` (a simulated gene x
+sample expression matrix) together with `example_heatmap_column_data`
+(its per-sample metadata), with `column_key` seeded to `"sample"`. The
+column-annotation, column-split, and column-filter features are all
+inert without a metadata table, so this way a bare
+`ComplexHeatmap_HeatmapApp()` demonstrates the whole module.
+
+Either way the app has the usual **Data Import** section for uploading
+data and a **Data Table** for filtering the active dataset. Filtering
+applies to the matrix; any companion metadata table rides along
+untouched. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an
+existing dataset, the existing one is overwritten with a warning.
 
 Unlike the other modules, this one depends on the Bioconductor packages
 ComplexHeatmap, InteractiveComplexHeatmap, and circlize, which must be
 installed (e.g. via `BiocManager::install()`).
 
 This is a convenience wrapper around
-[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
-— *except* when `column_data` is supplied (see below), which needs a
-small bespoke app instead, since
-[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
-always hands the module server a single data frame and can't carry the
-two-table `list(matrix = , column_annotations = )` shape the module's
-column-annotation feature needs (see
+[`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md),
+which accepts a dataset entry that is a list of tables and filters only
+the primary one, so the two-table
+`list(matrix = , column_annotations = )` shape this module's column
+features need is carried through without a bespoke app (see
 [`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md)'s
 `data` parameter).
 
@@ -104,11 +113,12 @@ Jacob Martin, Jared Andrews
 
 ``` r
 library(VizModules)
-# Launch with default example data (row annotations only):
+# Launch on the bundled matrix + its per-sample metadata, so the column
+# annotation/split/filter features are all usable:
 app <- ComplexHeatmap_HeatmapApp()
 if (interactive()) shiny::runApp(app)
 
-# Launch with column annotations too:
-app2 <- ComplexHeatmap_HeatmapApp(column_data = example_heatmap_column_data)
+# Matrix only, without the per-sample metadata:
+app2 <- ComplexHeatmap_HeatmapApp(data_list = list(matrix = example_heatmap_matrix))
 if (interactive()) shiny::runApp(app2)
 ```

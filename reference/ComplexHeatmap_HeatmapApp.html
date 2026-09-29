@@ -15,7 +15,7 @@ Plot area for configuring and displaying the interactive heatmap."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -54,7 +54,7 @@ Plot area for configuring and displaying the interactive heatmap."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create an example Modular ComplexHeatmap Shiny Application</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/ComplexHeatmap_Heatmap_module_app.R" class="external-link"><code>R/ComplexHeatmap_Heatmap_module_app.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/ComplexHeatmap_Heatmap_module_app.R" class="external-link"><code>R/ComplexHeatmap_Heatmap_module_app.R</code></a></small>
       <div class="d-none name"><code>ComplexHeatmap_HeatmapApp.Rd</code></div>
     </div>
 
@@ -83,14 +83,18 @@ uploading data, a <strong>Data Table</strong> for filtering the active dataset, 
 
 <dl><dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
 <dd><p>An optional named list of data frames. If <code>NULL</code> (the
-default), <code>list("matrix" = example_heatmap_matrix)</code> is used as example data.
-Ignored (only its first element is used, as the matrix) when <code>column_data</code>
-is supplied — that path has no dataset picker/upload/filter UI.</p></dd>
+default), <code>example_heatmap_matrix</code> is used as example data — paired with
+<code>example_heatmap_column_data</code> unless <code>column_data</code> says otherwise. When
+<code>column_data</code> is supplied it is attached to the first entry, which becomes
+<code>list(matrix = , column_annotations = )</code>.</p></dd>
 
 
 <dt id="arg-column-data">column_data<a class="anchor" aria-label="anchor" href="#arg-column-data"></a></dt>
 <dd><p>An optional data frame of per-sample metadata, enabling
-column annotations (see <code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>'s <code>data</code>
+column annotations, column splitting, and metadata-aware column filtering.
+Defaults to <code>example_heatmap_column_data</code> when <code>data_list</code> is also <code>NULL</code>;
+pass <code>data_list</code> explicitly to opt out. Attached to the first <code>data_list</code>
+entry (see <code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>'s <code>data</code>
 parameter for the expected shape — a key column matching the matrix's
 column names, plus arbitrary annotation columns). When supplied, the app
 is a minimal single-dataset <code><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp()</a></code> (no Data Import/Data Table
@@ -120,20 +124,26 @@ are still initialized and used, but the controls are not shown in the UI.</p></d
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When <code>data_list</code> is not provided (or <code>NULL</code>), the app launches with
-<code>example_heatmap_matrix</code> (a simulated gene x sample expression matrix) as an
-example dataset. Uploaded
-data files are added to the available datasets and can be selected for
-plotting. If an uploaded file shares a name with an existing dataset, the
-existing one is overwritten with a warning.</p>
+    <p>When neither <code>data_list</code> nor <code>column_data</code> is provided, the app launches on the
+bundled pair — <code>example_heatmap_matrix</code> (a simulated gene x sample expression
+matrix) together with <code>example_heatmap_column_data</code> (its per-sample metadata),
+with <code>column_key</code> seeded to <code>"sample"</code>. The column-annotation, column-split, and
+column-filter features are all inert without a metadata table, so this way a bare
+<code>ComplexHeatmap_HeatmapApp()</code> demonstrates the whole module.</p>
+<p>Either way the app has the usual <strong>Data Import</strong> section for uploading data and a
+<strong>Data Table</strong> for filtering the active dataset. Filtering applies to the matrix;
+any companion metadata table rides along untouched. Uploaded data files are added
+to the available datasets and can be selected for plotting. If an uploaded file
+shares a name with an existing dataset, the existing one is overwritten with a
+warning.</p>
 <p>Unlike the other modules, this one depends on the Bioconductor packages
 <span class="pkg">ComplexHeatmap</span>, <span class="pkg">InteractiveComplexHeatmap</span>, and <span class="pkg">circlize</span>,
 which must be installed (e.g. via <code>BiocManager::install()</code>).</p>
-<p>This is a convenience wrapper around <code><a href="createModuleApp.html">createModuleApp()</a></code> — <em>except</em> when
-<code>column_data</code> is supplied (see below), which needs a small bespoke app
-instead, since <code><a href="createModuleApp.html">createModuleApp()</a></code> always hands the module server a single
-data frame and can't carry the two-table <code>list(matrix = , column_annotations = )</code> shape the module's column-annotation feature needs
-(see <code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>'s <code>data</code> parameter).</p>
+<p>This is a convenience wrapper around <code><a href="createModuleApp.html">createModuleApp()</a></code>, which accepts a
+dataset entry that is a list of tables and filters only the primary one, so
+the two-table <code>list(matrix = , column_annotations = )</code> shape this module's
+column features need is carried through without a bespoke app (see
+<code><a href="ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>'s <code>data</code> parameter).</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -148,12 +158,13 @@ data frame and can't carry the two-table <code>list(matrix = , column_annotation
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Launch with default example data (row annotations only):</span></span></span>
+<span class="r-in"><span><span class="co"># Launch on the bundled matrix + its per-sample metadata, so the column</span></span></span>
+<span class="r-in"><span><span class="co"># annotation/split/filter features are all usable:</span></span></span>
 <span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap_HeatmapApp</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Launch with column annotations too:</span></span></span>
-<span class="r-in"><span><span class="va">app2</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap_HeatmapApp</span><span class="op">(</span>column_data <span class="op">=</span> <span class="va">example_heatmap_column_data</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Matrix only, without the per-sample metadata:</span></span></span>
+<span class="r-in"><span><span class="va">app2</span> <span class="op">&lt;-</span> <span class="fu">ComplexHeatmap_HeatmapApp</span><span class="op">(</span>data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>matrix <span class="op">=</span> <span class="va">example_heatmap_matrix</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app2</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>

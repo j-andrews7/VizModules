@@ -11,7 +11,7 @@ in the modebar."></head><body>
 
     <a class="navbar-brand me-2" href="../index.html">VizModules</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.4.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,7 +50,7 @@ in the modebar."></head><body>
   <main id="main" class="col-md-9"><div class="page-header">
 
       <h1>Create default Plotly configuration</h1>
-      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/v0.4.0/R/plot_helpers.R" class="external-link"><code>R/plot_helpers.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/j-andrews7/VizModules/blob/devel/R/plot_helpers.R" class="external-link"><code>R/plot_helpers.R</code></a></small>
       <div class="d-none name"><code>add_plot_config.Rd</code></div>
     </div>
 
@@ -87,7 +87,8 @@ in the modebar.</p>
 
 
 <dt id="arg-facet-by">facet.by<a class="anchor" aria-label="anchor" href="#arg-facet-by"></a></dt>
-<dd><p>Logical. Whether the figure is facetted to determine if axes labels for each plot should be editable or not.</p></dd>
+<dd><p>Whether the figure is faceted into panels carrying their own titles: the facet
+column name(s), or <code>TRUE</code>. <code>NULL</code>, <code>FALSE</code>, an empty vector, or empty strings mean not faceted.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -105,6 +106,9 @@ rectangles, and an eraser) to the modebar. Native cartesian axis-title
 text editing is disabled because axis titles are rendered as draggable,
 editable annotations (see <code><a href="axis_titles_as_annotations.html">axis_titles_as_annotations()</a></code> and
 <code><a href="build_facet_annotations.html">build_facet_annotations()</a></code>).</p>
+<p>When the figure is faceted, plot title editing is disabled too. An empty editable title still
+draws plotly's "Click to enter Plot title" placeholder, which sits on top of the facet panel
+titles and swallows clicks meant for them.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -139,12 +143,6 @@ editable annotations (see <code><a href="axis_titles_as_annotations.html">axis_t
 <span class="r-out co"><span class="r-pr">#&gt;</span> $edits$annotationTail</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edits$editText</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edits$editTitle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $edits$annotationPosition</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -154,7 +152,7 @@ editable annotations (see <code><a href="axis_titles_as_annotations.html">axis_t
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "png"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $toImageButtonOptions$filename</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-08-28"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-09-29"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $displaylogo</span>
@@ -206,12 +204,6 @@ editable annotations (see <code><a href="axis_titles_as_annotations.html">axis_t
 <span class="r-out co"><span class="r-pr">#&gt;</span> $edits$annotationTail</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edits$editText</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $edits$editTitle</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $edits$annotationPosition</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -221,7 +213,7 @@ editable annotations (see <code><a href="axis_titles_as_annotations.html">axis_t
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "svg"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $toImageButtonOptions$filename</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-08-28"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "2026-09-29"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $displaylogo</span>

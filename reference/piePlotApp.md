@@ -20,10 +20,10 @@ piePlotApp(
 
 - data_list:
 
-  An optional named list of summary data frames (one row per slice). If
-  `NULL` (the default), aggregated example data is used. Each data frame
-  should already contain a label column and an aggregated numeric value
-  column.
+  An optional named list of data frames. If `NULL` (the default), the
+  module's example dataset is used, along with its showcase defaults.
+  Each data frame should already contain a label column and an
+  aggregated numeric value column, one row per slice.
 
 - defaults:
 
@@ -50,11 +50,15 @@ A Shiny app object.
 
 ## Details
 
-When `data_list` is not provided (or `NULL`), the app launches with an
-aggregated `example_sales` dataset (revenue by product line). Uploaded
-data files are added to the available datasets and can be selected for
-plotting. If an uploaded file shares a name with an existing dataset,
-the existing one is overwritten with a warning.
+When `data_list` is not provided (or `NULL`), the app launches on
+`sales_by_region` (`example_sales` revenue summed by region) with the
+settings the module gallery
+([`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.md))
+opens this module on, so its main features are on show from the start;
+any `defaults` you pass are applied over those. Uploaded data files are
+added to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 This is a convenience wrapper around
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md).

@@ -167,19 +167,6 @@ plotthis-based interactive box plot module.
 - [`plotthis_BoxPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_BoxPlotServer.md)
   : Server logic for BoxPlot module
 
-## ViolinPlot Module
-
-plotthis-based interactive violin plot module.
-
-- [`plotthis_ViolinPlotApp()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.md)
-  : Create an example Modular ViolinPlot Shiny Application
-- [`plotthis_ViolinPlotInputsUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotInputsUI.md)
-  : Input UI components for the ViolinPlot module
-- [`plotthis_ViolinPlotOutputUI()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotOutputUI.md)
-  : Output UI components for the ViolinPlot module
-- [`plotthis_ViolinPlotServer()`](https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotServer.md)
-  : Server logic for ViolinPlot module
-
 ## DensityPlot Module
 
 plotthis-based interactive density plot module.
@@ -229,6 +216,9 @@ ComplexHeatmap-based interactive heatmap module.
   : Input UI components for the ComplexHeatmap module
 - [`ComplexHeatmap_HeatmapOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapOutputUI.md)
   : Output UI components for the ComplexHeatmap module
+- [`ComplexHeatmap_HeatmapStaticOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapStaticOutputUI.md)
+  : Static (non-interactive) heatmap output UI component for the
+  ComplexHeatmap module
 - [`ComplexHeatmap_HeatmapServer()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapServer.md)
   : Server logic for the ComplexHeatmap module
 - [`ComplexHeatmap_HeatmapMainOutputUI()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapMainOutputUI.md)
@@ -249,10 +239,13 @@ Reusable data filtering module for use with plot modules.
 - [`resolve_column_targets()`](https://j-andrews7.github.io/VizModules/reference/resolve_column_targets.md)
   : Translate column names or positions into DT column targets
 
-## Figure Builder Module
+## Module Gallery & Figure Builder
 
-Multi-panel figure builder module.
+The gallery of every module on its example data, and the multi-panel
+figure builder module.
 
+- [`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.md)
+  : Launch the VizModules module gallery
 - [`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderApp.md)
   : Create a VizModules Figure Builder Application
 - [`figureBuilderServer()`](https://j-andrews7.github.io/VizModules/reference/figureBuilderServer.md)
@@ -386,7 +379,9 @@ configuration.
 - [`reset_axis_title_text()`](https://j-andrews7.github.io/VizModules/reference/reset_axis_title_text.md)
   : Drop persisted axis-title text edits
 - [`apply_legend_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_legend_styling.md)
-  : Apply uniform legend font styling to a plotly figure
+  : Apply uniform legend styling to a plotly figure
+- [`apply_legend_inputs()`](https://j-andrews7.github.io/VizModules/reference/apply_legend_inputs.md)
+  : Apply the uniform Legend inputs to a plotly figure
 - [`apply_plotly_newshape()`](https://j-andrews7.github.io/VizModules/reference/apply_plotly_newshape.md)
   : Apply Plotly newshape styling from uniform Plotly inputs
 - [`apply_render_margins()`](https://j-andrews7.github.io/VizModules/reference/apply_render_margins.md)
@@ -407,6 +402,9 @@ configuration.
   : Recycle style vector to match line count
 - [`string_to_linetypes()`](https://j-andrews7.github.io/VizModules/reference/string_to_linetypes.md)
   : Parse and validate linetype string to a vector
+- [`heatmap_fit_width()`](https://j-andrews7.github.io/VizModules/reference/heatmap_fit_width.md)
+  : Fit a hand-built InteractiveComplexHeatmap widget to its container's
+  width
 
 ## Manual Plot Edits
 
@@ -463,14 +461,19 @@ Functions for managing color palettes.
 - [`setup_group_colors()`](https://j-andrews7.github.io/VizModules/reference/setup_group_colors.md)
   : Track the group-to-color mapping a plot should draw with
 
-## Data Download Utilities
+## Export & Download Utilities
 
-Functions for preparing plot and source data for download.
+Functions for preparing plot and source data for download, and for
+rendering a plot that is not a plotly graph to a vector or raster image.
 
 - [`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
   : Collect plot and source data for download
 - [`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/reference/create_source_download_handler.md)
   : Create download handler for plot with source data
+- [`draw_to_png()`](https://j-andrews7.github.io/VizModules/reference/draw_to_png.md)
+  : Render a grid or base drawing to PNG bytes
+- [`draw_to_svg()`](https://j-andrews7.github.io/VizModules/reference/draw_to_svg.md)
+  : Render a grid or base drawing to a self-contained SVG fragment
 
 ## Utility Functions
 
@@ -514,11 +517,9 @@ Built-in datasets for demos and testing.
 - [`example_mtcars`](https://j-andrews7.github.io/VizModules/reference/example_mtcars.md)
   : Example mtcars dataset with factors
 - [`example_population`](https://j-andrews7.github.io/VizModules/reference/example_population.md)
-  : Example population dataset A simulated population dataset with 400
-  rows covering 50 years and 8 age groups. Designed for line, area, and
-  stacked bar plot examples.
+  : Example population dataset
 - [`example_rnaseq`](https://j-andrews7.github.io/VizModules/reference/example_rnaseq.md)
-  : Example RNA-seq dataset for the RNA-seq showcase app
+  : Example pseudo-bulk RNA-seq dataset
 - [`example_sales`](https://j-andrews7.github.io/VizModules/reference/example_sales.md)
   : Example sales dataset
 - [`example_school_earnings`](https://j-andrews7.github.io/VizModules/reference/example_school_earnings.md)
