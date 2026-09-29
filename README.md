@@ -340,12 +340,13 @@ To contribute a new module to the package, see the vignette for clear guidelines
 ![](man/figures/Figure_builder.png)
 
 ## AI Usage Statement
+
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
 AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs/hands to ensure accuracy and quality.
 Our own hands are all over this project, and we are invested in it. 
 Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
 
-Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend the use of the skills provided by the package or prefixing prompts with the below to aid LLM usage.
+Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend the use of the skills provided by the package detailed below.
 
 ### Agent Skills (GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools)
 
@@ -367,39 +368,6 @@ column-mapping keys (`x.data` vs `x.by` vs `x.value` vs `var`), colour key, tab 
 and stats keys, which is what an agent otherwise spends its budget grepping for.
 
 In rough benchmarking, `vizmodules-app` saves ~40-60% of token usage versus just chucking an agent at the docs/repo/prompt below and generates a functional app in about half the time. The other skills show more variable and modest savings (~10-20% fewer tokens), but they tend to avoid common pitfalls and better utilize some of the more advanced features. Skills are difficult to benchmark, as the benefits are context-dependent and vary with the request.
-
-For tools that cannot read local skill files, the prompt below does the same job less
-efficiently.
-
-### LLM Instructions
-
-Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) before asking it to build a Shiny app with **VizModules**. It points the model to the authoritative, locally-installed sources of truth so it can use the package correctly.
-
-> You are helping me build a Shiny application using the installed R package **VizModules**, which provides interactivity-first, plotly-based Shiny modules for common plot types. Before writing code, ground yourself in the package's own documentation rather than guessing at the API.
->
-> **Core concept.** Every module is a trio of functions that share an `id`: `*InputsUI(id, ...)` renders the controls, `*OutputUI(id)` renders the plotly output, and `*Server(id, data, ...)` holds the logic. `InputsUI` and `OutputUI` are separate so controls and plot can be placed anywhere in the layout. `data` is passed to the server as a `reactive()`. Use the `defaults` argument to pre-fill inputs and `hide.inputs`/`hide.tabs` to lock values while hiding their controls.
->
-> **Where to look (all available after `install.packages`/`remotes::install_github`):**
-> - `vignette("quick-start", package = "VizModules")` — start here: end-to-end walkthrough of wiring `*InputsUI()`, `*OutputUI()`, and `*Server()` into an app, using `defaults`, and the example `*App()` functions.
-> - `vignette("custom-modules", package = "VizModules")` — how to **extend existing modules** by building wrapper modules (adding custom logic/inputs while reusing a base module). Follow the namespace pattern: process namespaced inputs *inside* `moduleServer()`, then call the base `*Server()` *outside* it with the bare `id` to avoid double-namespacing.
-> - `vignette("adding-a-new-module", package = "VizModules")` — how to **author a brand-new module** from scratch (the InputsUI/OutputUI/Server contract, conventions, and helpers).
-> - `vignette("defaults-and-hiding", package = "VizModules")` — using `defaults`, `hide.inputs`, and `hide.tabs` to pre-fill or hide controls.
-> - `vignette("statistical-testing", package = "VizModules")` — the Stats tab and the exported `compute_pairwise_stats()` / `create_stat_annotations()` / `apply_stat_annotations()` helpers.
-> - `vignette("custom-model-lines", package = "VizModules")` — the pluggable model-line backend registry (`register_model_backend()`).
-> - `vignette("custom-shiny-inputs", package = "VizModules")` — the reusable `multiDynamicInput()` widget.
-> - The README — overview, install, the full list of available modules, the App Factory (`createModuleApp()`), statistical-testing features, and summary-data export.
-> - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
-> - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
->
-> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, `ComplexHeatmap_Heatmap`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
->
-> **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
-> - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
-> - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, yPlot, and freqPlot modules.
-> - Summary-data export — `?collect_source_data` and `?create_source_download_handler`.
-> - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
->
-> **Rules:** All plots are plotly-based except `ComplexHeatmap_Heatmap`, which renders through `InteractiveComplexHeatmap` and needs its Bioconductor dependencies installed; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
 
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
