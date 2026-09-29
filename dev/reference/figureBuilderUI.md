@@ -36,7 +36,9 @@ Unlike
 (which returns a complete, standalone app), this function returns a
 `tagList` you can drop into any page, so the builder can be embedded
 alongside other content and instantiated more than once (each instance
-keeps its own namespace, canvas, and downloads).
+keeps its own namespace, canvas, and downloads). The module gallery,
+[`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/dev/reference/moduleGalleryApp.md),
+embeds it this way as its **Figure Builder** tab.
 
 The returned UI bundles the JavaScript and CSS the canvas needs, and
 calls
@@ -46,7 +48,8 @@ so no extra setup is required in the host app.
 ## See also
 
 [`figureBuilderServer()`](https://j-andrews7.github.io/VizModules/dev/reference/figureBuilderServer.md),
-[`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/dev/reference/figureBuilderApp.md)
+[`figureBuilderApp()`](https://j-andrews7.github.io/VizModules/dev/reference/figureBuilderApp.md),
+[`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/dev/reference/moduleGalleryApp.md)
 
 ## Author
 
@@ -58,7 +61,7 @@ Jared Andrews
 library(VizModules)
 figureBuilderUI("figure_builder")
 #> <h2>VizModules Figure Builder</h2>
-#> <div class="row">
+#> <div class="row pb-app">
 #>   <div class="col-sm-4">
 #>     <form class="well" role="complementary">
 #>       <div class="row">
@@ -66,11 +69,11 @@ figureBuilderUI("figure_builder")
 #>           <button class="btn btn-default action-button btn-primary btn-block" id="figure_builder-pb_add" type="button"><span class="action-icon"><i class="fas fa-plus" role="presentation" aria-label="plus icon"></i></span><span class="action-label">Add Plot</span></button>
 #>         </div>
 #>         <div class="col-sm-6">
-#>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-primary btn-block" download href="" id="figure_builder-download.source" tabindex="-1" target="_blank">
+#>           <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-primary btn-block viz-source-download" data-viz-canvas="figure_builder-pb_canvas" data-viz-source-ns="figure_builder-" download href="" id="figure_builder-download.source" tabindex="-1" target="_blank">
 #>             <i class="fas fa-download" role="presentation" aria-label="download icon"></i>
 #>             Source Data &amp; Plots
 #>           </a>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('figure_builder-download.source', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Download a ZIP of the source data, HTML plots, and statistics (if applied) for all plots on the canvas.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('figure_builder-download.source', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Download a ZIP of the source data, HTML plots, SVG and PNG images, and statistics (if applied) for all plots on the canvas.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>       <span class="help-block">
@@ -80,7 +83,7 @@ figureBuilderUI("figure_builder")
 #>       <details class="pb-details">
 #>         <summary>Load Data</summary>
 #>         <span class="help-block">
-#>           Upload a CSV, TSV, TXT, or RDS file to make it available
+#>           Upload a CSV, TSV, or tab-delimited TXT file to make it available
 #>           as a dataset when adding plots.
 #>         </span>
 #>         <div class="shiny-split-layout">
@@ -97,7 +100,7 @@ figureBuilderUI("figure_builder")
 #>                 <label class="input-group-btn input-group-prepend">
 #>                   <span class="btn btn-default btn-file">
 #>                     Browse...
-#>                     <input id="figure_builder-pb_data_file" class="shiny-input-file" name="figure_builder-pb_data_file" type="file" style="position: absolute !important; top: -99999px !important; left: -99999px !important;" accept=".csv,.tsv,.txt,.rds,.RDS"/>
+#>                     <input id="figure_builder-pb_data_file" class="shiny-input-file" name="figure_builder-pb_data_file" type="file" style="position: absolute !important; top: -99999px !important; left: -99999px !important;" accept=".csv,.tsv,.txt"/>
 #>                   </span>
 #>                 </label>
 #>                 <input type="text" class="form-control" placeholder="No file selected" readonly="readonly"/>

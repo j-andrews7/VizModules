@@ -85,6 +85,13 @@
 <span>  axis.tickwidth <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  show.grid.x <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  show.grid.y <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  grid.color <span class="op">=</span> <span class="st">"#CCCCCC"</span>,</span>
+<span>  axis.title.font.size <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>  axis.title.font.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  axis.title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
+<span>  facet.title.font.size <span class="op">=</span> <span class="fl">18</span>,</span>
+<span>  facet.title.font.color <span class="op">=</span> <span class="st">"black"</span>,</span>
+<span>  facet.title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
 <span>  title.text <span class="op">=</span> <span class="st">""</span>,</span>
 <span>  title.font.size <span class="op">=</span> <span class="fl">14</span>,</span>
 <span>  title.font.family <span class="op">=</span> <span class="st">"Arial"</span>,</span>
@@ -100,7 +107,9 @@
 <span>  order.by <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  error.colour <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  error.width <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  error.bar <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  error.bar <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  error.type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"sd"</span>, <span class="st">"sem"</span>, <span class="st">"ci95"</span><span class="op">)</span>,</span>
+<span>  error.ci.method <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"normal"</span>, <span class="st">"t"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -236,6 +245,34 @@ May be a single value (applied to both directions) or a length-2 vector
 <dd><p>Logical, whether to show gridlines on the y-axis. Default: TRUE.</p></dd>
 
 
+<dt id="arg-grid-color">grid.color<a class="anchor" aria-label="anchor" href="#arg-grid-color"></a></dt>
+<dd><p>Character, hex color for gridlines. Default: "#CCCCCC".</p></dd>
+
+
+<dt id="arg-axis-title-font-size">axis.title.font.size<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-size"></a></dt>
+<dd><p>Numeric, font size for the x/y axis titles. Default: 18.</p></dd>
+
+
+<dt id="arg-axis-title-font-color">axis.title.font.color<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-color"></a></dt>
+<dd><p>Character, hex color for the x/y axis titles. Default: "black".</p></dd>
+
+
+<dt id="arg-axis-title-font-family">axis.title.font.family<a class="anchor" aria-label="anchor" href="#arg-axis-title-font-family"></a></dt>
+<dd><p>Character, font family for the x/y axis titles. Default: "Arial".</p></dd>
+
+
+<dt id="arg-facet-title-font-size">facet.title.font.size<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-size"></a></dt>
+<dd><p>Numeric, font size for the facet panel titles. Default: 18.</p></dd>
+
+
+<dt id="arg-facet-title-font-color">facet.title.font.color<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-color"></a></dt>
+<dd><p>Character, hex color for the facet panel titles. Default: "black".</p></dd>
+
+
+<dt id="arg-facet-title-font-family">facet.title.font.family<a class="anchor" aria-label="anchor" href="#arg-facet-title-font-family"></a></dt>
+<dd><p>Character, font family for the facet panel titles. Default: "Arial".</p></dd>
+
+
 <dt id="arg-title-text">title.text<a class="anchor" aria-label="anchor" href="#arg-title-text"></a></dt>
 <dd><p>Character, main title text for the plot. Default: "".</p></dd>
 
@@ -302,7 +339,23 @@ Same options as x.adjustment and y.adjustment. Default: NULL.</p></dd>
 
 
 <dt id="arg-error-bar">error.bar<a class="anchor" aria-label="anchor" href="#arg-error-bar"></a></dt>
-<dd><p>Boolean value to determine if error bars will be on or off on a plot with a categorical X axis and only 1 Y axis variable</p></dd>
+<dd><p>Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
+and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus the amount <code>error.type</code> selects,
+computed from that group's y-values, where a group is a single x category, split further by <code>colour.group.by</code> and
+<code>facet.by</code> when those are set. A group with fewer than two observations has no spread and is drawn without a bar.</p></dd>
+
+
+<dt id="arg-error-type">error.type<a class="anchor" aria-label="anchor" href="#arg-error-type"></a></dt>
+<dd><p>What the error bars show, one of <code>"sd"</code> (one standard deviation, the default), <code>"sem"</code> (one
+standard error of the mean, <code>sd / sqrt(n)</code>) or <code>"ci95"</code> (a 95% confidence interval for the mean). Missing values
+are ignored when counting <code>n</code>.</p></dd>
+
+
+<dt id="arg-error-ci-method">error.ci.method<a class="anchor" aria-label="anchor" href="#arg-error-ci-method"></a></dt>
+<dd><p>How <code>error.type = "ci95"</code> is computed, one of <code>"normal"</code> (the default; the standard error
+times the 97.5th percentile of the normal distribution, 1.96) or <code>"t"</code> (the standard error times the 97.5th
+percentile of the t distribution with <code>n - 1</code> degrees of freedom). The t interval is wider for small groups and
+converges on the normal one as <code>n</code> grows. Ignored for the other error types.</p></dd>
 
 </dl></div>
     <div class="section level2">

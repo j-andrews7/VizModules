@@ -21,8 +21,8 @@ dittoViz_freqPlotApp(
 
 - data_list:
 
-  An optional named list of data frames. If `NULL` (the default),
-  `list("composition" = example_composition)` is used as example data.
+  An optional named list of data frames. If `NULL` (the default), the
+  module's example dataset is used, along with its showcase defaults.
 
 - defaults:
 
@@ -49,11 +49,18 @@ A Shiny app object.
 
 ## Details
 
-When `data_list` is not provided (or `NULL`), the app launches with
-`example_composition` as an example dataset, which has twelve donors
-nested inside two conditions - the shape
+When `data_list` is not provided (or `NULL`), the app launches on
+`example_composition` (twelve donors nested inside two conditions, the
+shape
 [`dittoViz::freqPlot()`](https://rdrr.io/pkg/dittoViz/man/freqPlot.html)
-needs to compare per-sample frequencies across groups.
+needs to compare per-sample frequencies across groups) with the settings
+the module gallery
+([`moduleGalleryApp()`](https://j-andrews7.github.io/VizModules/dev/reference/moduleGalleryApp.md))
+opens this module on, so its main features are on show from the start;
+any `defaults` you pass are applied over those. Uploaded data files are
+added to the available datasets and can be selected for plotting. If an
+uploaded file shares a name with an existing dataset, the existing one
+is overwritten with a warning.
 
 This is a convenience wrapper around
 [`createModuleApp()`](https://j-andrews7.github.io/VizModules/dev/reference/createModuleApp.md).
@@ -77,11 +84,7 @@ library(VizModules)
 app <- dittoViz_freqPlotApp()
 if (interactive()) runApp(app)
 
-# Launch on the cell-type composition of each donor, split by disease state:
-app2 <- dittoViz_freqPlotApp(
-    defaults = list(
-        var = "cell_type", sample.by = "sample", group.by = "condition"
-    )
-)
+# The same example data, as raw cell counts and without the statistics:
+app2 <- dittoViz_freqPlotApp(defaults = list(scale = "count", stats.enabled = FALSE))
 if (interactive()) runApp(app2)
 ```

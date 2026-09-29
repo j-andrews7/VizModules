@@ -2,9 +2,10 @@
 
 This function validates that a vector of column names from a data frame
 contains columns of only one data type category: either all numeric OR
-all categorical (factor/character). Returns `FALSE` for mixed numeric +
-categorical columns. Single columns always return `TRUE`. Used for Shiny
-plotting module input validation.
+all categorical (anything non-numeric: factor, character, logical, Date,
+...). Returns `FALSE` for mixed numeric + categorical columns. Single
+columns always return `TRUE`. Used for Shiny plotting module input
+validation.
 
 ## Usage
 
@@ -24,13 +25,8 @@ is_pure_type(inputs, d)
 
 ## Value
 
-Logical scalar: `TRUE` if all numeric OR all categorical
-(factor/character); `FALSE` if mixed numeric + categorical/factor
-detected.
-
-## See also
-
-[`base::for()`](https://rdrr.io/r/base/Control.html)
+Logical scalar: `TRUE` if all numeric OR all categorical (non-numeric);
+`FALSE` if mixed numeric + categorical/factor detected.
 
 ## Author
 

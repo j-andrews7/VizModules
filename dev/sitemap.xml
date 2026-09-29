@@ -21,6 +21,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapMainOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapServer.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapStaticOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/ComplexHeatmap_HeatmapSubOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/add_ablines.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/add_hlines.html</loc></url>
@@ -31,6 +32,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/adjusted_axis_label.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_axis_title_to_annotations.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_facet_subplot_spacing.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_legend_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_legend_styling.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_plotly_newshape.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/apply_render_margins.html</loc></url>
@@ -65,6 +67,8 @@
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_yPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dittoViz_yPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dot-onLoad.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/draw_to_png.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/draw_to_svg.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dumbbellPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dumbbellPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/dumbbellPlotInputsUI.html</loc></url>
@@ -104,6 +108,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/linetype_to_dash.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/list_model_backends.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/model_backends.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/moduleGalleryApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/module_tack_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/multiColorPicker.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/multiDynamicInput.html</loc></url>
@@ -148,10 +153,6 @@
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_SplitBarPlotInputsUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_SplitBarPlotOutputUI.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_SplitBarPlotServer.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_ViolinPlotApp.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_ViolinPlotInputsUI.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_ViolinPlotOutputUI.html</loc></url>
-<url><loc>https://j-andrews7.github.io/VizModules/dev/reference/plotthis_ViolinPlotServer.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/radarPlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/radarPlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/dev/reference/radarPlotInputsUI.html</loc></url>

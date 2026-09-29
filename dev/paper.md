@@ -6,8 +6,8 @@ Data visualization is central to modern data analysis, enabling
 exploration of complex datasets, hypothesis generation, and
 communication of results. `VizModules` is an R package that provides a
 curated library of interactivity-first `shiny` \[@shiny\] modules for
-common plot types, including scatter, bar, line, box, violin, density,
-area, dot, histogram, pie, radar, heatmap, and more. Most modules render
+common plot types, including scatter, bar, line, box, density, area,
+dot, histogram, pie, radar, heatmap, and more. Most modules render
 interactive `plotly` \[@plotly\] graphics with input tooltips, hover
 highlighting, draggable text and shape annotations, and one-click export
 in multiple formats, while exposing the full aesthetic controls of the
@@ -134,19 +134,19 @@ adding and removing rows of heterogeneous controls. Select inputs are
 virtualized and searchable, so columns with tens of thousands of
 distinct values remain usable. Documentation tooltips for plotting
 functions are automatically extracted with `roclang` to attach detailed
-descriptions to each control on hover. The `BoxPlot`, `ViolinPlot`,
-`yPlot`, and `freqPlot` modules add an integrated statistics tab
-supporting pairwise tests (Wilcoxon rank-sum and paired or unpaired
-t-tests) and omnibus tests (Kruskal–Wallis and ANOVA), with bracket
-annotations placed by an interval-packing algorithm, configurable
-p-value adjustment, and per-facet or nested-group comparisons. The
-scatter module fits any number of user-specified trend lines through an
-extensible backend registry, with `lm`, `glm`, `loess`, and `nls`
-supplied and additional backends registrable from user code. Finally,
-helper functions collect each plot together with its underlying data
-(limited to the rows actually drawn), the inputs used to generate it,
-and any statistical results into a single downloadable archive at the
-click of a button, supporting reproducibility and downstream editing.
+descriptions to each control on hover. The `BoxPlot`, `yPlot`, and
+`freqPlot` modules add an integrated statistics tab supporting pairwise
+tests (Wilcoxon rank-sum and paired or unpaired t-tests) and omnibus
+tests (Kruskal–Wallis and ANOVA), with bracket annotations placed by an
+interval-packing algorithm, configurable p-value adjustment, and
+per-facet or nested-group comparisons. The scatter module fits any
+number of user-specified trend lines through an extensible backend
+registry, with `lm`, `glm`, `loess`, and `nls` supplied and additional
+backends registrable from user code. Finally, helper functions collect
+each plot together with its underlying data (limited to the rows
+actually drawn), the inputs used to generate it, and any statistical
+results into a single downloadable archive at the click of a button,
+supporting reproducibility and downstream editing.
 
 ## Research impact statement
 

@@ -81,18 +81,34 @@
 
     
     
-<p>The <strong>BoxPlot</strong>, <strong>ViolinPlot</strong>, and
-<strong>yPlot</strong> modules include a <strong>Stats</strong> tab that
-adds pairwise statistical test results as bracket annotations directly
-on the plotly figure. The same helpers are exported so you can add
-bracket annotations to any custom plotly figure.</p>
+<p>The <strong>BoxPlot</strong>, <strong>yPlot</strong>, and
+<strong>freqPlot</strong> modules include a <strong>Stats</strong> tab
+that adds pairwise statistical test results as bracket annotations
+directly on the plotly figure. The same helpers are exported so you can
+add bracket annotations to any custom plotly figure.</p>
 <div class="section level2">
 <h2 id="using-the-stats-tab">Using the Stats tab<a class="anchor" aria-label="anchor" href="#using-the-stats-tab"></a>
 </h2>
-<p>Enable testing from the Stats tab in any supported module app:</p>
+<p>Enable testing from the Stats tab in any supported module app. The
+bundled example apps open with it already on; the box plot compares
+salaries between neighbouring job levels:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/plotthis_BoxPlotApp.html">plotthis_BoxPlotApp</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>Every Stats control can also be set from <code>defaults</code>,
+including which comparisons to draw, as <code>"A vs B"</code> strings
+(either order matches):</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_BoxPlotApp.html">plotthis_BoxPlotApp</a></span><span class="op">(</span></span>
+<span>    data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"iris"</span> <span class="op">=</span> <span class="va">example_iris</span><span class="op">)</span>,</span>
+<span>    defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>        x.data        <span class="op">=</span> <span class="st">"Species"</span>,</span>
+<span>        y.data        <span class="op">=</span> <span class="st">"Sepal.Length"</span>,</span>
+<span>        stats.enabled <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        stat.display  <span class="op">=</span> <span class="st">"symbol"</span>,</span>
+<span>        stat.pairs    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa vs versicolor"</span>, <span class="st">"versicolor vs virginica"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <p>The Stats tab exposes these controls:</p>
 <table class="table">
 <colgroup>
@@ -139,7 +155,7 @@ bracket annotations to any custom plotly figure.</p>
 </tr>
 <tr class="even">
 <td>Hide Non-Significant</td>
-<td>OFF</td>
+<td>ON</td>
 <td>Suppress <code>ns</code> brackets</td>
 </tr>
 <tr class="odd">
@@ -150,7 +166,8 @@ bracket annotations to any custom plotly figure.</p>
 <tr class="even">
 <td>Comparisons</td>
 <td>(all pairs)</td>
-<td>Restrict to specific pairs</td>
+<td>Restrict to specific pairs (<code>stat.pairs</code> in
+<code>defaults</code>)</td>
 </tr>
 <tr class="odd">
 <td>Bracket Style</td>
@@ -191,6 +208,28 @@ the same number of observations, sorted so paired samples align
 row-by-row within each group.</p>
 </div>
 <div class="section level3">
+<h3 id="adjusted-faceted-and-rotated-axes">Adjusted, faceted and rotated axes<a class="anchor" aria-label="anchor" href="#adjusted-faceted-and-rotated-axes"></a>
+</h3>
+<p>Tests run on the values as plotted. In the <code>yPlot</code> module
+a <strong>Y Adjustment</strong> (z-score, log10, …) is applied before
+testing, so a t-test on log-scaled data tests the log values, and the
+brackets and <strong>Y Axis Min/Max</strong> are in those units too. The
+<strong>Y Adjustment Function</strong> is applied first and the
+<strong>Y Adjustment</strong> then rescales the result, so log10 with
+z-score gives z-scored log values. Rank-based tests (Wilcoxon,
+Kruskal-Wallis) give the same p-values either way for an
+order-preserving adjustment.</p>
+<p>Under a free y facet scale (<code>"free"</code> or
+<code>"free_y"</code>) each panel keeps its own range, so the <strong>Y
+Axis Min/Max</strong> are not applied and each panel’s brackets sit just
+above that panel’s data.</p>
+<p>Brackets are stacked above the data on the y-axis, so none are drawn
+while the values run along the x-axis: a rotated <code>BoxPlot</code>,
+or a <code>yPlot</code>/<code>freqPlot</code> that includes a ridge
+plot. The tests still run, and their results are in the source data
+download.</p>
+</div>
+<div class="section level3">
 <h3 id="downloading-statistics">Downloading statistics<a class="anchor" aria-label="anchor" href="#downloading-statistics"></a>
 </h3>
 <p>The <strong>Download Summary</strong> button (Source Data, at the
@@ -214,7 +253,7 @@ shapes and annotations.</li>
 <code><a href="../reference/apply_stat_annotations.html">apply_stat_annotations()</a></code> — append them to a plotly
 figure.</li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://plotly-r.com" class="external-link">plotly</a></span><span class="op">)</span></span>
@@ -264,7 +303,7 @@ length-2 character vectors to <code>pairs</code>, or convert to/from the
 UI’s <code>"A vs B"</code> strings with
 <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code> /
 <code><a href="../reference/parse_pair_strings.html">parse_pair_strings()</a></code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_pair_strings.html">generate_pair_strings</a></span><span class="op">(</span><span class="va">example_iris</span>, x <span class="op">=</span> <span class="st">"Species"</span><span class="op">)</span></span>
 <span><span class="va">pairs</span>   <span class="op">&lt;-</span> <span class="fu"><a href="../reference/parse_pair_strings.html">parse_pair_strings</a></span><span class="op">(</span><span class="va">choices</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">)</span></span>
 <span></span>
@@ -282,18 +321,41 @@ UI’s <code>"A vs B"</code> strings with
 <p>Pass <code>facet.by</code> with <code>per.facet = TRUE</code> to test
 independently within each panel, or <code>group.by</code> to compare
 group levels within each x category:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats</a></span><span class="op">(</span></span>
 <span>    df        <span class="op">=</span> <span class="va">example_rnaseq</span>,</span>
 <span>    x         <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>    y         <span class="op">=</span> <span class="st">"expression"</span>,</span>
+<span>    y         <span class="op">=</span> <span class="st">"log2_cpm"</span>,</span>
 <span>    test      <span class="op">=</span> <span class="st">"wilcox.test"</span>,</span>
 <span>    facet.by  <span class="op">=</span> <span class="st">"gene"</span>,</span>
 <span>    per.facet <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Pass the same <code>facet.by</code>/<code>group.by</code> values to
 <code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code> so brackets land on the correct
-subplot axes.</p>
+subplot axes. If the panels have free y scales, also pass
+<code>free.y = TRUE</code>, so each panel’s brackets are measured
+against that panel’s data rather than the tallest one’s.</p>
+</div>
+<div class="section level3">
+<h3 id="test-and-draw-on-the-plotted-values">Test and draw on the plotted values<a class="anchor" aria-label="anchor" href="#test-and-draw-on-the-plotted-values"></a>
+</h3>
+<p><code><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats()</a></code>,
+<code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code> and
+<code><a href="../reference/stat_bracket_y_max.html">stat_bracket_y_max()</a></code> use whatever values they are given. If
+the plot transforms a column before drawing it (dittoViz’s
+<code>var.adjustment</code>/<code>var.adj.fxn</code>, say), give them
+the transformed values, or the brackets land in a different coordinate
+space from the data. <code><a href="../reference/adjust_column_values.html">adjust_column_values()</a></code> reproduces
+dittoViz’s transforms:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">plotted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/adjust_column_values.html">adjust_column_values</a></span><span class="op">(</span><span class="va">example_iris</span>, y.col <span class="op">=</span> <span class="st">"Sepal.Length"</span>, y.adj.fun <span class="op">=</span> <span class="st">"log10"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">stats_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/compute_pairwise_stats.html">compute_pairwise_stats</a></span><span class="op">(</span><span class="va">plotted</span>, x <span class="op">=</span> <span class="st">"Species"</span>, y <span class="op">=</span> <span class="st">"Sepal.Length.adj"</span><span class="op">)</span></span>
+<span><span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu">dittoViz</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/dittoViz/man/yPlot.html" class="external-link">yPlot</a></span><span class="op">(</span><span class="va">example_iris</span>, <span class="st">"Sepal.Length"</span>, <span class="st">"Species"</span>,</span>
+<span>    var.adj.fxn <span class="op">=</span> <span class="va">log10</span>, plots <span class="op">=</span> <span class="st">"boxplot"</span>, do.hover <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">stat_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_stat_annotations.html">create_stat_annotations</a></span><span class="op">(</span><span class="va">stats_df</span>, fig <span class="op">=</span> <span class="va">fig</span>, df <span class="op">=</span> <span class="va">plotted</span>,</span>
+<span>    x <span class="op">=</span> <span class="st">"Species"</span>, y <span class="op">=</span> <span class="st">"Sepal.Length.adj"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/apply_stat_annotations.html">apply_stat_annotations</a></span><span class="op">(</span><span class="va">fig</span>, <span class="va">stat_result</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="compute_pairwise_stats-return-value">

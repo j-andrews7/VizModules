@@ -1,8 +1,11 @@
-# Example population dataset A simulated population dataset with 400 rows covering 50 years and 8 age groups. Designed for line, area, and stacked bar plot examples.
+# Example population dataset
 
-Example population dataset A simulated population dataset with 400 rows
-covering 50 years and 8 age groups. Designed for line, area, and stacked
-bar plot examples.
+A simulated population dataset with 400 rows covering 50 years and 8 age
+groups. The youngest groups shrink over the period while those over 45
+grow, so the population visibly ages in a stacked area plot
+(particularly one scaled to each year's total). Used as the default data
+for
+[`plotthis_AreaPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_AreaPlotApp.md).
 
 ## Usage
 

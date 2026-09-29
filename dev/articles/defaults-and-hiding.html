@@ -92,30 +92,31 @@ depth.</p>
 <p>Pass a named list to the <code>defaults</code> argument of any
 <code>*InputsUI()</code> call. Each name is an input ID (matching the
 underlying plot function argument), and its value is what the control
-initialises to.</p>
+initialises to. Pass the same list to the module’s
+<code>*Server()</code> too, so its <strong>Reset</strong> button returns
+the controls to these values rather than to the built-in ones.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">scatter_defaults</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    x.by        <span class="op">=</span> <span class="st">"wt"</span>,</span>
+<span>    y.by        <span class="op">=</span> <span class="st">"mpg"</span>,</span>
+<span>    color.by    <span class="op">=</span> <span class="st">"cyl"</span>,</span>
+<span>    size        <span class="op">=</span> <span class="fl">3</span>,</span>
+<span>    best.fit    <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="../reference/dittoViz_scatterPlotInputsUI.html">dittoViz_scatterPlotInputsUI</a></span><span class="op">(</span></span>
-<span>                <span class="st">"p"</span>, <span class="va">mtcars</span>,</span>
-<span>                defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    x.by        <span class="op">=</span> <span class="st">"wt"</span>,</span>
-<span>                    y.by        <span class="op">=</span> <span class="st">"mpg"</span>,</span>
-<span>                    color.by    <span class="op">=</span> <span class="st">"cyl"</span>,</span>
-<span>                    size        <span class="op">=</span> <span class="fl">3</span>,</span>
-<span>                    best.fit    <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span>                <span class="op">)</span></span>
-<span>            <span class="op">)</span></span>
+<span>            <span class="fu"><a href="../reference/dittoViz_scatterPlotInputsUI.html">dittoViz_scatterPlotInputsUI</a></span><span class="op">(</span><span class="st">"p"</span>, <span class="va">mtcars</span>, defaults <span class="op">=</span> <span class="va">scatter_defaults</span><span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="../reference/dittoViz_scatterPlotOutputUI.html">dittoViz_scatterPlotOutputUI</a></span><span class="op">(</span><span class="st">"p"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="st">"p"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="st">"p"</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span>, defaults <span class="op">=</span> <span class="va">scatter_defaults</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
@@ -240,12 +241,20 @@ counters if you want to see the difference.</p>
 factory:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_BoxPlotApp.html">plotthis_BoxPlotApp</a></span><span class="op">(</span></span>
+<span>    data_list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"iris"</span> <span class="op">=</span> <span class="va">example_iris</span><span class="op">)</span>,</span>
 <span>    defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>        x.by     <span class="op">=</span> <span class="st">"Species"</span>,</span>
-<span>        y.by     <span class="op">=</span> <span class="st">"Sepal.Length"</span>,</span>
-<span>        pt.size  <span class="op">=</span> <span class="fl">0</span></span>
+<span>        x.data     <span class="op">=</span> <span class="st">"Species"</span>,</span>
+<span>        y.data     <span class="op">=</span> <span class="st">"Sepal.Length"</span>,</span>
+<span>        add.points <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>        pt.size    <span class="op">=</span> <span class="fl">2</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>Run on its bundled example data instead (no <code>data_list</code>),
+a <code>*App()</code> opens with the settings the module gallery
+(<code><a href="../reference/moduleGalleryApp.html">moduleGalleryApp()</a></code>) shows it with, and any
+<code>defaults</code> you pass are layered over those:
+<code>plotthis_BoxPlotApp(defaults = list(stats.enabled = FALSE))</code>
+is the gallery’s box plot without its significance brackets.</p>
 <p>The same <code>defaults</code> list is accepted by
 <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> directly:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -254,7 +263,7 @@ factory:</p>
 <span>    output_ui_fn <span class="op">=</span> <span class="va">plotthis_BoxPlotOutputUI</span>,</span>
 <span>    server_fn    <span class="op">=</span> <span class="va">plotthis_BoxPlotServer</span>,</span>
 <span>    data_list    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"iris"</span> <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
-<span>    defaults     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x.by <span class="op">=</span> <span class="st">"Species"</span>, y.by <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span></span>
+<span>    defaults     <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x.data <span class="op">=</span> <span class="st">"Species"</span>, y.data <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></code></pre></div>
 <hr>
@@ -333,6 +342,10 @@ inside the relevant <code>*InputsUI()</code> source, or open
 <code>?&lt;module&gt;InputsUI</code> and look for the tab headings
 described there. Common tabs across most modules include:</p>
 <table class="table">
+<colgroup>
+<col width="33%">
+<col width="66%">
+</colgroup>
 <thead><tr class="header">
 <th>Tab</th>
 <th>Contents</th>
@@ -348,7 +361,7 @@ described there. Common tabs across most modules include:</p>
 </tr>
 <tr class="odd">
 <td><code>"Legend"</code></td>
-<td>Legend title and text sizes</td>
+<td>Legend visibility, font family and colour, title and text sizes</td>
 </tr>
 <tr class="even">
 <td><code>"Lines"</code></td>
@@ -379,32 +392,34 @@ tabs that are irrelevant for your use case:</p>
 <code class="sourceCode R"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarLayout</a></span><span class="op">(</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel</a></span><span class="op">(</span></span>
-<span>            <span class="fu"><a href="../reference/plotthis_ViolinPlotInputsUI.html">plotthis_ViolinPlotInputsUI</a></span><span class="op">(</span></span>
-<span>                <span class="st">"v"</span>, <span class="va">example_rnaseq</span>,</span>
+<span>            <span class="fu"><a href="../reference/plotthis_BoxPlotInputsUI.html">plotthis_BoxPlotInputsUI</a></span><span class="op">(</span></span>
+<span>                <span class="st">"b"</span>, <span class="va">example_rnaseq</span>,</span>
 <span>                defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>                    x.by     <span class="op">=</span> <span class="st">"condition"</span>,</span>
-<span>                    y.by     <span class="op">=</span> <span class="st">"expression"</span>,</span>
-<span>                    color.by <span class="op">=</span> <span class="st">"condition"</span></span>
+<span>                    x.data   <span class="op">=</span> <span class="st">"cell_type"</span>,</span>
+<span>                    y.data   <span class="op">=</span> <span class="st">"log2_cpm"</span>,</span>
+<span>                    group.by <span class="op">=</span> <span class="st">"condition"</span></span>
 <span>                <span class="op">)</span></span>
 <span>            <span class="op">)</span></span>
 <span>        <span class="op">)</span>,</span>
-<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="../reference/plotthis_ViolinPlotOutputUI.html">plotthis_ViolinPlotOutputUI</a></span><span class="op">(</span><span class="st">"v"</span><span class="op">)</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="../reference/plotthis_BoxPlotOutputUI.html">plotthis_BoxPlotOutputUI</a></span><span class="op">(</span><span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>    <span class="fu"><a href="../reference/plotthis_ViolinPlotServer.html">plotthis_ViolinPlotServer</a></span><span class="op">(</span></span>
-<span>        <span class="st">"v"</span>,</span>
+<span>    <span class="fu"><a href="../reference/plotthis_BoxPlotServer.html">plotthis_BoxPlotServer</a></span><span class="op">(</span></span>
+<span>        <span class="st">"b"</span>,</span>
 <span>        data        <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">example_rnaseq</span><span class="op">)</span>,</span>
-<span>        hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"color.by"</span><span class="op">)</span>,</span>
+<span>        hide.inputs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"group.by"</span><span class="op">)</span>,</span>
 <span>        hide.tabs   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Plotly"</span>, <span class="st">"Lines"</span><span class="op">)</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></code></pre></div>
-<p>Here <code>color.by</code> is fixed to <code>"condition"</code> and
-hidden. The entire <code>"Plotly"</code> and <code>"Lines"</code> tabs
-are removed because they aren’t relevant to this app.</p>
+<p>Here each cell type’s boxes are always split by
+<code>"condition"</code>: <code>group.by</code> is set and then hidden,
+so users can change what is plotted but not the comparison. The entire
+<code>"Plotly"</code> and <code>"Lines"</code> tabs are removed because
+they aren’t relevant to this app.</p>
 <hr>
 </div>
 <div class="section level2">
@@ -414,9 +429,10 @@ are removed because they aren’t relevant to this app.</p>
 <p>Both accept <code>hide.inputs</code> and <code>hide.tabs</code>,
 forwarding them to the server if it supports those arguments:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_ViolinPlotApp.html">plotthis_ViolinPlotApp</a></span><span class="op">(</span></span>
-<span>    defaults    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x.by <span class="op">=</span> <span class="st">"Species"</span>, y.by <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span>,</span>
-<span>    hide.inputs <span class="op">=</span> <span class="st">"color.by"</span>,</span>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/plotthis_BoxPlotApp.html">plotthis_BoxPlotApp</a></span><span class="op">(</span></span>
+<span>    data_list   <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"iris"</span> <span class="op">=</span> <span class="va">example_iris</span><span class="op">)</span>,</span>
+<span>    defaults    <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>x.data <span class="op">=</span> <span class="st">"Species"</span>, y.data <span class="op">=</span> <span class="st">"Sepal.Length"</span><span class="op">)</span>,</span>
+<span>    hide.inputs <span class="op">=</span> <span class="st">"group.by"</span>,</span>
 <span>    hide.tabs   <span class="op">=</span> <span class="st">"Plotly"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <hr>
@@ -433,9 +449,10 @@ can hide and show inputs at runtime in response to other inputs using
 <span></span>
 <span><span class="va">myModuleServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="co"># Hide the 'size' input whenever a size.by column is chosen</span></span>
+<span>        <span class="co"># Hide the 'size' input whenever a size.by column is chosen. isTRUE()</span></span>
+<span>        <span class="co"># because input$size.by is NULL until the control first reports in.</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html" class="external-link">observe</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">size.by</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">size.by</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                <span class="fu">shinyjs</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html" class="external-link">hide</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"size"</span><span class="op">)</span></span>
 <span>            <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>                <span class="fu">shinyjs</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shinyjs/man/visibilityFuncs.html" class="external-link">show</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"size"</span><span class="op">)</span></span>
@@ -453,7 +470,7 @@ helpers instead, which target the wrapping cell in the flexbox grid:</p>
 <code class="sourceCode R"><span><span class="va">myModuleServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html" class="external-link">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html" class="external-link">observe</a></span><span class="op">(</span><span class="op">{</span></span>
-<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">size.by</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>            <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Logic.html" class="external-link">isTRUE</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nzchar</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">size.by</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>                <span class="fu">VizModules</span><span class="fu">::</span><span class="fu"><a href="../reference/hide_input.html">hide_input</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
 <span>            <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span></span>
 <span>                <span class="fu">VizModules</span><span class="fu">::</span><span class="fu"><a href="../reference/show_input.html">show_input</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"size"</span><span class="op">)</span></span>
@@ -463,6 +480,12 @@ helpers instead, which target the wrapping cell in the flexbox grid:</p>
 <span></span>
 <span>    <span class="fu"><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">data_reactive</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
+<p>If your server also takes <code>hide.inputs</code>, show only the ids
+the app did not list there
+(<code>show_input(session, setdiff("size", hide.inputs))</code>).
+Otherwise the next toggle un-hides an input the app meant to keep
+hidden. The built-in modules that toggle their own controls, such as
+<code>linePlot</code> with its error bar inputs, do this.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

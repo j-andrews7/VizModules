@@ -24,7 +24,8 @@ stat_bracket_y_max(
   sig.threshold = 0.05,
   test = "wilcox.test",
   p.adjust.method = "holm",
-  paired = FALSE
+  paired = FALSE,
+  dodge.width = 1
 )
 ```
 
@@ -32,9 +33,12 @@ stat_bracket_y_max(
 
 - df:
 
-  Data frame the statistics are computed on. For a module that reshapes
-  its data for testing (e.g. a multi-variable Y selection), pass the
-  reshaped frame, not the raw one.
+  Data frame the statistics are computed on, holding the values as they
+  are plotted. For a module that reshapes its data for testing (e.g. a
+  multi-variable Y selection), pass the reshaped frame, not the raw one;
+  for one that transforms a column before plotting it (e.g. a dittoViz
+  `var.adjustment`), pass the transformed values (see
+  [`adjust_column_values()`](https://j-andrews7.github.io/VizModules/dev/reference/adjust_column_values.md)).
 
 - x:
 
@@ -93,6 +97,12 @@ stat_bracket_y_max(
   [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/dev/reference/compute_pairwise_stats.md),
   and used only when `hide.ns` is `TRUE`. Match them to the render's
   settings, or the wrong comparisons are counted.
+
+- dodge.width:
+
+  Numeric; width the `group.by` levels at one x category are dodged
+  across. Match the plot's, or the brackets will not line up with the
+  boxes. Default 1.
 
 ## Value
 

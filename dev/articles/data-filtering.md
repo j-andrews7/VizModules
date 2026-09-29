@@ -67,9 +67,11 @@ drawn without them – no column, no filter box:
 
 ``` r
 
-filtered <- dataFilterServer("filter", reactive(example_bar),
-    hide.columns = c("internal_id", "batch")
-)
+server <- function(input, output, session) {
+    filtered <- dataFilterServer("filter", reactive(example_sales),
+        hide.columns = c("sale_id", "profit")
+    )
+}
 ```
 
 Two things to keep in mind:
@@ -83,10 +85,12 @@ Two things to keep in mind:
 
 ``` r
 
-filtered <- dataFilterServer("filter", reactive(example_bar),
-    hide.columns = c("internal_id", "batch"),
-    col.visibility = TRUE
-)
+server <- function(input, output, session) {
+    filtered <- dataFilterServer("filter", reactive(example_sales),
+        hide.columns = c("sale_id", "profit"),
+        col.visibility = TRUE
+    )
+}
 ```
 
 The name-to-position lookup behind `hide.columns` is exported as
@@ -101,12 +105,12 @@ friends:
 ``` r
 
 DT::datatable(
-    example_bar,
+    example_sales,
     rownames = FALSE,
     options = list(
         columnDefs = list(list(
             visible = FALSE,
-            targets = resolve_column_targets(example_bar, c("internal_id", "batch"))
+            targets = resolve_column_targets(example_sales, c("sale_id", "profit"))
         ))
     )
 )
@@ -189,15 +193,6 @@ The only rule to remember is namespacing: **each plotting module’s
 `id`** (`"bar"` and `"box"` above). Nothing wraps the module servers, so
 their ids resolve to the top-level namespace where their UI lives, and
 everything connects.
-
-A ready-to-run version of this app ships with the package:
-
-``` r
-
-shiny::runApp(
-    system.file("examples", "linked-filter", package = "VizModules")
-)
-```
 
 ## How it compares to `createModuleApp()`
 

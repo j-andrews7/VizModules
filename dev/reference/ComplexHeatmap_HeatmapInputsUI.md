@@ -176,7 +176,20 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 
 - `row_title` - Row title (UI: "Row Title", default: "")
 
-- `column_title` - Column title (UI: "Column Title", default: "")
+- `column_title` - Column title (UI: "Column Title", default: ""). A
+  title, when set, replaces the group names a split would otherwise
+  title its slices with; a `%s` in it is filled in with each slice's
+  group name. The same goes for `row_title`.
+
+- `show_row_slice_titles` - Title each row slice with its group name
+  when the rows are split and `row_title` is blank (UI: "Show Row Slice
+  Titles", default: TRUE). Applies to every split method: annotation
+  values for "Annotation", cluster numbers for "K-means" and
+  "Hierarchical". Untick it to remove the titles and the space they
+  take.
+
+- `show_column_slice_titles` - The same for columns (UI: "Show Column
+  Slice Titles", default: TRUE)
 
 - `show_row_names` - Show row names (UI: "Show Row Names", default:
   TRUE)
@@ -307,31 +320,31 @@ Jacob Martin, Jared Andrews
 ``` r
 library(VizModules)
 ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
-#> <div class="tabbable">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="heatmap-HeatmapTabsetPanel" data-tabsetid="9187">
+#> <div class="tabbable vizmodules-input-tabs">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="heatmap-HeatmapTabsetPanel" data-tabsetid="3385">
 #>     <li class="active">
-#>       <a href="#tab-9187-1" data-toggle="tab" data-bs-toggle="tab" data-value="Matrix">Matrix</a>
+#>       <a href="#tab-3385-1" data-toggle="tab" data-bs-toggle="tab" data-value="Matrix">Matrix</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9187-2" data-toggle="tab" data-bs-toggle="tab" data-value="Filter">Filter</a>
+#>       <a href="#tab-3385-2" data-toggle="tab" data-bs-toggle="tab" data-value="Filter">Filter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9187-3" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
+#>       <a href="#tab-3385-3" data-toggle="tab" data-bs-toggle="tab" data-value="Colors">Colors</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9187-4" data-toggle="tab" data-bs-toggle="tab" data-value="Clustering">Clustering</a>
+#>       <a href="#tab-3385-4" data-toggle="tab" data-bs-toggle="tab" data-value="Clustering">Clustering</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9187-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-3385-5" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9187-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-3385-6" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9187">
-#>     <div class="tab-pane active" data-value="Matrix" id="tab-9187-1">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>   <div class="tab-content" data-tabsetid="3385">
+#>     <div class="tab-pane active" data-value="Matrix" id="tab-3385-1">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify807502">
 #>             <label class="control-label" id="heatmap-matrix.cols-label" for="heatmap-matrix.cols">Matrix Columns</label>
 #>             <div id="heatmap-matrix.cols" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="close">
@@ -340,7 +353,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify807502', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric columns that form the heatmap matrix'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8343330">
 #>             <label class="control-label" id="heatmap-rowname.col-label" for="heatmap-rowname.col">Row Name Column</label>
 #>             <div id="heatmap-rowname.col" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -349,21 +362,21 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8343330', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional column whose values are used as row names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6007609">
 #>             <label class="control-label" id="heatmap-name-label" for="heatmap-name">Heatmap Name</label>
 #>             <input id="heatmap-name" type="text" class="shiny-input-text form-control" value="value" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6007609', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Name of the heatmap, used as the legend title'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1572085">
 #>             <label class="control-label" for="heatmap-na_col">NA Color</label>
 #>             <input id="heatmap-na_col" type="text" class="form-control shiny-colour-input" data-init-value="grey" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1572085', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color used for NA cells'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify73995">
 #>             <label class="control-label" id="heatmap-scale-label" for="heatmap-scale">Scale</label>
 #>             <div id="heatmap-scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -374,16 +387,16 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Filter" id="tab-9187-2">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Filter" id="tab-3385-2">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4663935">
 #>             <label class="control-label" id="heatmap-row_filter-label" for="heatmap-row_filter">Row Filter</label>
 #>             <input id="heatmap-row_filter" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4663935', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Keep only the rows matching this expression, e.g. pathway == &#39;Immune&#39;, or grepl(&#39;^RP&#39;, gene). Leave blank to keep every row. Fields: gene, pathway, mean_expression, Healthy_1, Healthy_2, Healthy_3, Healthy_4, Healthy_5, Healthy_6, Disease_1, Disease_2, Disease_3, Disease_4, Disease_5, Disease_6. Available: comparisons, & | !, %in%, is.na(), arithmetic, and grepl/startsWith/endsWith/substr/nchar/toupper/tolower/trimws. Filtering happens before scaling, so a Z-score describes only what is shown.'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4977774">
 #>             <label class="control-label" id="heatmap-column_filter-label" for="heatmap-column_filter">Column Filter</label>
 #>             <input id="heatmap-column_filter" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
@@ -392,51 +405,51 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Colors" id="tab-9187-3">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Colors" id="tab-3385-3">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2897673">
 #>             <label class="control-label" for="heatmap-low_color">Low Color</label>
 #>             <input id="heatmap-low_color" type="text" class="form-control shiny-colour-input" data-init-value="#2166AC" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2897673', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for the lowest (or Min Value) end of the scale'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7328820">
 #>             <label class="control-label" id="heatmap-min_value-label" for="heatmap-min_value">Min Value</label>
 #>             <input id="heatmap-min_value" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7328820', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value mapped to the Low Color (blank = the matrix minimum)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7725215">
 #>             <label class="control-label" for="heatmap-mid_color">Mid Color</label>
 #>             <input id="heatmap-mid_color" type="text" class="form-control shiny-colour-input" data-init-value="#F7F7F7" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7725215', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for the midpoint of the scale'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8746006">
 #>             <label class="control-label" id="heatmap-mid_value-label" for="heatmap-mid_value">Mid Value</label>
 #>             <input id="heatmap-mid_value" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8746006', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value mapped to the Mid Color (blank = the midpoint between Min and Max Value; set to 0 to center a z-scored matrix)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1749407">
 #>             <label class="control-label" for="heatmap-high_color">High Color</label>
 #>             <input id="heatmap-high_color" type="text" class="form-control shiny-colour-input" data-init-value="#B2182B" data-show-colour="both" data-palette="square"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1749407', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color for the highest (or Max Value) end of the scale'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify342414">
 #>             <label class="control-label" id="heatmap-max_value-label" for="heatmap-max_value">Max Value</label>
 #>             <input id="heatmap-max_value" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify342414', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value mapped to the High Color (blank = the matrix maximum)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3203857">
 #>             <div class="checkbox">
 #>               <label>
@@ -447,7 +460,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3203857', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Reverse the direction of the color scheme'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4023282">
 #>             <div class="checkbox">
 #>               <label>
@@ -458,7 +471,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4023282', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the heatmap color legend'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1956699">
 #>             <div class="checkbox">
 #>               <label>
@@ -471,9 +484,9 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Clustering" id="tab-9187-4">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Clustering" id="tab-3385-4">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4035381">
 #>             <div class="checkbox">
 #>               <label>
@@ -484,7 +497,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4035381', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Perform hierarchical clustering on rows'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify636615">
 #>             <div class="checkbox">
 #>               <label>
@@ -495,7 +508,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify636615', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Perform hierarchical clustering on columns'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3887013">
 #>             <label class="control-label" id="heatmap-clustering_distance_rows-label" for="heatmap-clustering_distance_rows">Row Distance</label>
 #>             <div id="heatmap-clustering_distance_rows" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -504,7 +517,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3887013', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Distance metric for row clustering'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9755478">
 #>             <label class="control-label" id="heatmap-clustering_distance_columns-label" for="heatmap-clustering_distance_columns">Column Distance</label>
 #>             <div id="heatmap-clustering_distance_columns" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -513,7 +526,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9755478', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Distance metric for column clustering'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2898923">
 #>             <label class="control-label" id="heatmap-clustering_method_rows-label" for="heatmap-clustering_method_rows">Row Method</label>
 #>             <div id="heatmap-clustering_method_rows" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -522,7 +535,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2898923', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Linkage method for row clustering'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6783804">
 #>             <label class="control-label" id="heatmap-clustering_method_columns-label" for="heatmap-clustering_method_columns">Column Method</label>
 #>             <div id="heatmap-clustering_method_columns" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -531,7 +544,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6783804', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Linkage method for column clustering'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7353196">
 #>             <div class="checkbox">
 #>               <label>
@@ -542,7 +555,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7353196', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the row dendrogram'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1959568">
 #>             <div class="checkbox">
 #>               <label>
@@ -553,7 +566,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1959568', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the column dendrogram'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9805396">
 #>             <label class="control-label" id="heatmap-row_split_by-label" for="heatmap-row_split_by">Row Split Method</label>
 #>             <div id="heatmap-row_split_by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -562,14 +575,14 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9805396', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How to split rows into groups: k-means, or hierarchical (cutting the row dendrogram)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7415215">
 #>             <label class="control-label" id="heatmap-row_split_n-label" for="heatmap-row_split_n">Row Groups</label>
 #>             <input id="heatmap-row_split_n" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="2" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7415215', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number of row groups (used when Row Split Method is &#39;K-means&#39; or &#39;Hierarchical&#39;)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify514463">
 #>             <label class="control-label" id="heatmap-row_split_cols-label" for="heatmap-row_split_cols">Row Split Columns</label>
 #>             <div id="heatmap-row_split_cols" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="close">
@@ -578,7 +591,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify514463', 'tooltip', {'container': 'body', 'placement': 'bottom', 'trigger': 'hover', 'title': 'Columns whose values group the rows (used when Row Split Method is &#39;Annotation&#39;). Several columns give nested slices, one per observed combination.'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5302125">
 #>             <label class="control-label" id="heatmap-column_split_by-label" for="heatmap-column_split_by">Column Split Method</label>
 #>             <div id="heatmap-column_split_by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
@@ -587,21 +600,21 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5302125', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'How to split columns into groups: k-means, or hierarchical (cutting the column dendrogram)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6958239">
 #>             <label class="control-label" id="heatmap-column_split_n-label" for="heatmap-column_split_n">Column Groups</label>
 #>             <input id="heatmap-column_split_n" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="2" step="1"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6958239', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Number of column groups (used when Column Split Method is &#39;K-means&#39; or &#39;Hierarchical&#39;)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6885560">
 #>             <label class="control-label" id="heatmap-row_gap-label" for="heatmap-row_gap">Row Gap (mm)</label>
 #>             <input id="heatmap-row_gap" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.5"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6885560', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Gap between row slices in millimeters (used when Row Split Method is not &#39;None&#39;)'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify312304">
 #>             <label class="control-label" id="heatmap-column_gap-label" for="heatmap-column_gap">Column Gap (mm)</label>
 #>             <input id="heatmap-column_gap" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.5"/>
@@ -610,24 +623,46 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-9187-5">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Labels" id="tab-3385-5">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2255626">
 #>             <label class="control-label" id="heatmap-row_title-label" for="heatmap-row_title">Row Title</label>
 #>             <input id="heatmap-row_title" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2255626', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title placed alongside the rows'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3008308">
 #>             <label class="control-label" id="heatmap-column_title-label" for="heatmap-column_title">Column Title</label>
 #>             <input id="heatmap-column_title" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
 #>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3008308', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title placed alongside the columns'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6364656">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="heatmap-show_row_slice_titles" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Row Slice Titles</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6364656', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title each row slice with its group name when the rows are split. Ignored if Row Title is set, which replaces the group names (use %s in it for each group&#39;s name).'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4790246">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="heatmap-show_column_slice_titles" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
+#>                 <span>Show Column Slice Titles</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4790246', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title each column slice with its group name when the columns are split. Ignored if Column Title is set, which replaces the group names (use %s in it for each group&#39;s name).'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4321713">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="heatmap-show_row_names" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -635,10 +670,10 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6364656', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show row names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4321713', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show row names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify4790246">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify7064338">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="heatmap-show_column_names" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -646,59 +681,59 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4790246', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show column names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7064338', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show column names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify4321713">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9485765">
 #>             <label class="control-label" id="heatmap-row_names_side-label" for="heatmap-row_names_side">Row Names Side</label>
 #>             <div id="heatmap-row_names_side" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="heatmap-row_names_side">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["right","left"],"value":["right","left"]}},"config":{"multiple":false,"search":false,"selectedValue":"right","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4321713', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which side to place row names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9485765', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which side to place row names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify7064338">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1803388">
 #>             <label class="control-label" id="heatmap-column_names_side-label" for="heatmap-column_names_side">Column Names Side</label>
 #>             <div id="heatmap-column_names_side" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="heatmap-column_names_side">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["bottom","top"],"value":["bottom","top"]}},"config":{"multiple":false,"search":false,"selectedValue":"bottom","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7064338', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which side to place column names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1803388', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Which side to place column names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify9485765">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify2168999">
 #>             <label class="control-label" id="heatmap-column_names_rot-label" for="heatmap-column_names_rot">Column Name Rotation</label>
 #>             <input id="heatmap-column_names_rot" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" step="15"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9485765', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Rotation angle for column names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2168999', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Rotation angle for column names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify1803388">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify6801629">
 #>             <label class="control-label" id="heatmap-row_names_fontsize-label" for="heatmap-row_names_fontsize">Row Name Size</label>
 #>             <input id="heatmap-row_names_fontsize" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1803388', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for row names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6801629', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for row names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify2168999">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4988456">
 #>             <label class="control-label" id="heatmap-column_names_fontsize-label" for="heatmap-column_names_fontsize">Column Name Size</label>
 #>             <input id="heatmap-column_names_fontsize" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2168999', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for column names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4988456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for column names'})}, 500)});</script>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
-#>           <div class="form-group shiny-input-container" id="tipify6801629">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify6416793">
 #>             <label class="control-label" id="heatmap-title_fontsize-label" for="heatmap-title_fontsize">Title Size</label>
 #>             <input id="heatmap-title_fontsize" type="number" class="shiny-input-number form-control" value="13.2" data-update-on="change" min="1" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6801629', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for row and column titles'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6416793', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size for row and column titles'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-9187-6">
-#>       <div class="vizmodules-input-grid" style="display: flex; flex-wrap: wrap; align-items: flex-start; margin-left: -15px; margin-right: -15px;">
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-3385-6">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
 #>           <div class="multi-dynamic-input shiny-input-container form-group " id="heatmap-row_annotations" data-keys="[&quot;column&quot;,&quot;side&quot;,&quot;label_side&quot;,&quot;label_size&quot;,&quot;show_legend&quot;]" data-initial="[]" data-input-id="heatmap-row_annotations" data-row-prefix="row annotations">
 #>             <div class="mdi-top">
 #>               <label class="control-label" for="heatmap-row_annotations">Row Annotations</label>
@@ -761,7 +796,7 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>           </div>
 #>           <div id="heatmap-row_annotation_colors_ui" class="shiny-html-output"></div>
 #>         </div>
-#>         <div class="vizmodules-input-cell" style="flex: 0 0 calc(100% / 2); max-width: calc(100% / 2); padding-left: 15px; padding-right: 15px; box-sizing: border-box;">
+#>         <div class="vizmodules-input-cell">
 #>           <span class="help-block">
 #>             Supply data as list(matrix = ..., column_annotations = ...) to 
 #>             enable column annotations.
@@ -784,11 +819,11 @@ ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 #>   <div class="module-tack-buttons" style="display: flex; flex-wrap: wrap; gap: 8px;">
 #>     <button class="btn btn-default action-button btn-primary" id="heatmap-update" style="flex: 1 1 45%;" type="button"><span class="action-label">Update</span></button>
 #>     <button class="btn btn-default action-button btn-secondary" id="heatmap-reset" style="flex: 1 1 45%;" type="button"><span class="action-label">Reset</span></button>
-#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary" download href="" id="heatmap-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
+#>     <a aria-disabled="true" class="btn btn-default shiny-download-link disabled btn-secondary viz-source-download" data-viz-source-ns="heatmap-" download href="" id="heatmap-download.source" style="flex: 1 1 100%;" tabindex="-1" target="_blank">
 #>       <i class="far fa-file-code" role="presentation" aria-label="file-code icon"></i>
 #>       Source Download
 #>     </a>
-#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('heatmap-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});</script>
+#>     <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('heatmap-download.source', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Download the plot as a self-contained HTML file and as SVG and PNG images of it as it looks now, along with the plot source data and statistics (if applicable) as CSV files.'})}, 500)});</script>
 #>   </div>
 #> </div>
 ```

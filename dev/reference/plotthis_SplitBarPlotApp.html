@@ -79,7 +79,7 @@ for configuring and displaying an interactive split bar plot.</p>
 
 <dl><dt id="arg-data-list">data_list<a class="anchor" aria-label="anchor" href="#arg-data-list"></a></dt>
 <dd><p>An optional named list of data frames. If <code>NULL</code> (the default),
-<code>list("Bar" = example_bar)</code> is used as example data.</p></dd>
+the module's example dataset is used, along with its showcase defaults.</p></dd>
 
 
 <dt id="arg-defaults">defaults<a class="anchor" aria-label="anchor" href="#arg-defaults"></a></dt>
@@ -104,11 +104,12 @@ still initialized and used, but the controls are not shown in the UI.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When <code>data_list</code> is not provided (or <code>NULL</code>), the app launches with
-<code>example_bar</code> as an example dataset. Uploaded data files are added
-to the available datasets and can be selected for plotting. If an uploaded
-file shares a name with an existing dataset, the existing one is overwritten
-with a warning.</p>
+    <p>When <code>data_list</code> is not provided (or <code>NULL</code>), the app launches on <code>example_bar</code>
+with the settings the module gallery (<code><a href="moduleGalleryApp.html">moduleGalleryApp()</a></code>) opens this module on,
+so its main features are on show from the start; any <code>defaults</code> you pass are
+applied over those. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an existing
+dataset, the existing one is overwritten with a warning.</p>
 <p>This is a convenience wrapper around <code><a href="createModuleApp.html">createModuleApp()</a></code>.</p>
     </div>
     <div class="section level2">

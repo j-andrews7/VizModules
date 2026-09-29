@@ -53,29 +53,31 @@
 
 <div class="section level2">
 <h2 id="repository-overview">Repository Overview<a class="anchor" aria-label="anchor" href="#repository-overview"></a></h2>
-<p><strong>VizModules</strong> is an R package (74 R files) providing interactivity-first Shiny modules for common plot types. It ships ~18 plot modules (e.g. scatter, bar, box, violin, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable <code>dataFilter</code> module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).</p>
+<p><strong>VizModules</strong> is an R package providing interactivity-first Shiny modules for common plot types. It ships ~17 plot modules (e.g. scatter, bar, box, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable <code>dataFilter</code> module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).</p>
 <p><strong>Stack</strong>: R 4.6.1+, Shiny, roxygen2 | <strong>Version</strong>: 0.5.0.9000 (dev) | <strong>License</strong>: MIT</p>
 </div>
 <div class="section level2">
 <h2 id="repository-structure">Repository Structure<a class="anchor" aria-label="anchor" href="#repository-structure"></a></h2>
+<p>File counts below are deliberately approximate — check the directory rather than trusting a number here.</p>
 <ul><li>
-<strong>R/</strong> - 74 source files: <code>*_module_ui.R</code> (UI), <code>*_module_server.R</code> (logic), <code>*_module_app.R</code> (examples), plus utils and standalone plot functions</li>
+<strong>R/</strong> - ~85 source files: <code>*_module_ui.R</code> (UI), <code>*_module_server.R</code> (logic), <code>*_module_app.R</code> (examples), plus utils and standalone plot functions</li>
 <li>
-<strong>man/</strong> - Auto-generated roxygen2 docs (171 .Rd files)</li>
+<strong>man/</strong> - Auto-generated roxygen2 docs (~275 .Rd files). <code>INTERNAL_*.Rd</code> are gitignored by design</li>
 <li>
-<strong>data/</strong> - 10 example datasets (<code>example_bar</code>, <code>example_demographics</code>, <code>example_iris</code>, <code>example_markers</code>, <code>example_mtcars</code>, <code>example_population</code>, <code>example_rnaseq</code>, <code>example_sales</code>, <code>example_school_earnings</code>, <code>example_skills</code>)</li>
+<strong>data/</strong> - 13 example datasets (<code>example_bar</code>, <code>example_composition</code>, <code>example_demographics</code>, <code>example_heatmap_column_data</code>, <code>example_heatmap_matrix</code>, <code>example_iris</code>, <code>example_markers</code>, <code>example_mtcars</code>, <code>example_population</code>, <code>example_rnaseq</code>, <code>example_sales</code>, <code>example_school_earnings</code>, <code>example_skills</code>)</li>
 <li>
 <strong>data-raw/</strong> - <code>generate_example_data.R</code> script that builds the example datasets</li>
 <li>
-<strong>inst/apps/</strong> - Standalone Shiny apps (<code>figure-builder</code>, <code>module-gallery</code>); <strong>inst/src/</strong> - bundled JS/CSS assets</li>
+<strong>inst/apps/</strong> - <code>module-gallery</code>, a thin deploy wrapper around <code><a href="reference/moduleGalleryApp.html">moduleGalleryApp()</a></code>; <strong>inst/src/</strong> - bundled JS/CSS assets; <strong>inst/skills/</strong> - agent skills shipped with the package and installed by <code><a href="reference/use_vizmodules_skills.html">use_vizmodules_skills()</a></code>
+</li>
 <li>
-<strong>vignettes/</strong> - quick-start.Rmd, custom-modules.Rmd, adding-a-new-module.Rmd</li>
+<strong>vignettes/</strong> - adding-a-new-module, custom-model-lines, custom-modules, custom-shiny-inputs, data-filtering, defaults-and-hiding, quick-start, statistical-testing (all <code>eval = FALSE</code>, so <code>R CMD check</code> never runs their code)</li>
 <li>
-<strong>tests/testthat/</strong> - 11 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)</li>
+<strong>tests/testthat/</strong> - ~22 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)</li>
 <li>
 <strong>paper.md / paper.bib</strong> - JOSS manuscript sources</li>
 <li>
-<strong>.github/workflows/pkgdown.yaml</strong> - Builds/deploys package website to GitHub Pages</li>
+<strong>.github/workflows/</strong> - <code>R-CMD-check.yaml</code>, <code>pkgdown.yaml</code> (docs site to GitHub Pages), <code>draft-pdf.yaml</code> (JOSS paper)</li>
 <li>
 <strong>DESCRIPTION</strong> - Package metadata and dependencies</li>
 <li>
@@ -89,7 +91,8 @@
 <h2 id="build-and-validation">Build and Validation<a class="anchor" aria-label="anchor" href="#build-and-validation"></a></h2>
 <div class="section level3">
 <h3 id="prerequisites">Prerequisites<a class="anchor" aria-label="anchor" href="#prerequisites"></a></h3>
-<p>R 4.5+ is declared in DESCRIPTION, but use <strong>R 4.6.1</strong> for development/build/test (required by current <code>plotthis</code>): C:Files.1.exe For <code>shinytest2</code> AppDriver tests, set <code>NOT_CRAN=true</code> (else they skip with “On CRAN”). The AppDriver background process uses the <strong>installed</strong> package, so run <code>R CMD INSTALL</code> on the dev code first (<code>load_all</code> is not seen by that process).</p>
+<p>R 4.5+ is declared in DESCRIPTION, but use <strong>R 4.6.1</strong> for development/build/test (required by current <code>plotthis</code>): C:Files.1.exe</p>
+<p>Note <code><a href="https://rdrr.io/pkg/shiny/man/testServer.html" class="external-link">shiny::testServer()</a></code> cannot drive a plotly output, so anything downstream of a rendered figure (download handlers, client-side capture) needs a real browser to verify. <code>chromote</code> is available for that.</p>
 </div>
 <div class="section level3">
 <h3 id="key-r-commands">Key R Commands<a class="anchor" aria-label="anchor" href="#key-r-commands"></a></h3>
@@ -118,13 +121,19 @@
 </div>
 <div class="section level2">
 <h2 id="cicd">CI/CD<a class="anchor" aria-label="anchor" href="#cicd"></a></h2>
-<p><strong>pkgdown.yaml</strong> - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses <code>use-public-rspm: true</code> for fast binary installs on Ubuntu.</p>
-</div>
+<ul><li>
+<strong>R-CMD-check.yaml</strong> - Runs <code>R CMD check</code> on push/PR to main/master.</li>
+<li>
+<strong>pkgdown.yaml</strong> - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses <code>use-public-rspm: true</code> for fast binary installs on Ubuntu.</li>
+<li>
+<strong>draft-pdf.yaml</strong> - Renders the JOSS paper.</li>
+</ul></div>
 <div class="section level2">
 <h2 id="coding-conventions">Coding Conventions<a class="anchor" aria-label="anchor" href="#coding-conventions"></a></h2>
 <div class="section level3">
 <h3 id="module-structure-pattern">Module Structure Pattern<a class="anchor" aria-label="anchor" href="#module-structure-pattern"></a></h3>
 <p>Each module has 3 files: <code>*_module_ui.R</code> (InputsUI/OutputUI functions), <code>*_module_server.R</code> (Server function), <code>*_module_app.R</code> (create*App example).</p>
+<p>Each module also has one entry in <code>.module_showcase()</code> (<code>R/module_showcase.R</code>), the single registry behind the gallery (<code><a href="reference/moduleGalleryApp.html">moduleGalleryApp()</a></code>), the Figure Builder, and the example every <code>*App()</code> opens on. Its <code>defaults</code> switch on the module’s main features, and the bundled data (<code>data-raw/generate_example_data.R</code>) is built so they have something to show; <code>tests/testthat/test-showcase.R</code> checks both.</p>
 </div>
 <div class="section level3">
 <h3 id="critical-namespace-pattern-for-wrapper-modules">Critical Namespace Pattern for Wrapper Modules<a class="anchor" aria-label="anchor" href="#critical-namespace-pattern-for-wrapper-modules"></a></h3>
@@ -146,15 +155,21 @@
 <li>Document missing/broken plotly functionality explicitly</li>
 <li>Add self-contained, clear examples for functions wherever possible</li>
 <li>Update vignettes when adding new modules, features, or changing existing functionality</li>
-<li>Update <code>NEWS.md</code> with new features, bug fixes, etc. Be succinct, most entries should only be a line or two. Minute details need not be added, only key info/rationale. New features, modules, or changes to a development version (i.e. any ending in .9000) should just be kept up to date rather than appended to given they’ve not yet been released and changes to them are expected.</li>
+<li>Update <code>NEWS.md</code> with new features, bug fixes, etc. Be succinct, most entries should only be a line or two. Minute details need not be added, only key info/rationale. New features, modules, or changes to a development version (i.e. any ending in .9000) should just be kept up to date rather than appended to given they’ve not yet been released and changes to them are expected. Organize it as below.</li>
 </ul></div>
+<div class="section level3">
+<h3 id="newsmd-layout">NEWS.md Layout<a class="anchor" aria-label="anchor" href="#newsmd-layout"></a></h3>
+<p>From 0.5.0 on, each release is organized by module so a reader can find what changed in the one they use. Leave earlier releases as they are. - Sections, in order, omitting any that are empty: <code>## New Modules</code>, <code>## Improved/New Functionality</code>, <code>## Deprecations and Removals</code>, <code>## Bug Fixes</code>, <code>## Documentation</code>. - Within each section except Documentation, group entries under <code>###</code> headings, in this order: <code>All modules</code>, <code>Module gallery and Figure Builder</code>, then one heading per module in case-insensitive alphabetical order, then <code>Helpers and exported functions</code> last. Omit empty headings. - Name modules by their short, backticked name (<code>`yPlot`</code>, <code>`BoxPlot`</code>, <code>`ComplexHeatmap`</code>, <code>`scatterPlot`</code>, …), as the entries do. - An entry touching one module goes under that module. One touching a few modules goes under a combined heading naming them in alphabetical order (<code>### `BoxPlot`, `freqPlot` and `yPlot`</code>), filed by its first name; reuse an existing combined heading rather than repeating the entry under each module. One touching every module goes under <code>All modules</code>. Non-module functions (exported helpers, <code><a href="reference/safe_eval_filter.html">safe_eval_filter()</a></code>, …) go under <code>Helpers and exported functions</code>. - Each entry leads with what a user sees, then why, and ends with its issue numbers, e.g. <code>(#361)</code>. Use sub-bullets only for details worth knowing on their own. Mark security fixes <code>**Security:**</code> and put them first under their heading. - When adding to a development version, fold the change into the existing entry for that feature (or move the entry to the right heading) rather than appending a new one.</p>
+</div>
 <div class="section level3">
 <h3 id="code-style">Code Style<a class="anchor" aria-label="anchor" href="#code-style"></a></h3>
 <p>4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled. You do not need to specifically lint.</p>
 </div>
 <div class="section level3">
 <h3 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a></h3>
-<p><strong>Depends</strong>: shiny, dittoViz, plotly, shinyBS, plotthis (&gt;= 0.12.1), R (&gt;= 4.5) | <strong>Imports</strong>: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | <strong>Suggests</strong>: withr, knitr, rmarkdown, shinytest2, testthat (&gt;= 3.0.0), ComplexHeatmap, InteractiveComplexHeatmap</p>
+<p>DESCRIPTION is the source of truth; this is a summary.</p>
+<p><strong>Depends</strong>: shiny, dittoViz, plotly, shinyBS, plotthis (&gt;= 0.13.0), R (&gt;= 4.5) | <strong>Imports</strong>: roclang, colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | <strong>Suggests</strong>: drc, withr, ComplexHeatmap, InteractiveComplexHeatmap, circlize, grid, svglite, knitr, rmarkdown, testthat (&gt;= 3.0.0)</p>
+<p>Anything in Suggests must be reached through <code><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace(..., quietly = TRUE)</a></code> with a working fallback, and any <code>@examples</code> touching one must be wrapped in that check — a check machine may not have the Bioconductor packages.</p>
 </div>
 </div>
 <div class="section level2">
@@ -194,7 +209,13 @@
 <div class="section level2">
 <h2 id="best-practices">Best Practices<a class="anchor" aria-label="anchor" href="#best-practices"></a></h2>
 <ul><li>Avoid <code>sapply</code> usage, it is unsafe in package code.</li>
-</ul><p>Trust these instructions - only search for additional info if incomplete or incorrect.</p>
+<li>A Shiny input that has not reported yet is <code>NULL</code>, and both <code>nzchar(NULL)</code> and <code>NULL == ""</code> are <code>logical(0)</code>, which makes <code>if (...)</code> an error rather than a <code>FALSE</code>. Use the internal <code>.nz_value()</code> predicate for “is this input set to a non-empty string?”.</li>
+<li>User-typed expressions (filters, highlights, model formulas) go through <code><a href="reference/safe_eval_filter.html">safe_eval_filter()</a></code> / <code><a href="reference/validate_expression.html">validate_expression()</a></code> / <code>.safe_build_model()</code>, which share one AST walker and allowlist in <code>R/parse_utils.R</code>. Never add a second copy of that allowlist, and never widen it with anything impure.</li>
+<li>Anything drawn over a plot (significance brackets, fit/model lines, point labels, axis limits, headroom) is computed from the values the plot <em>draws</em>, after any data adjustment, never raw <code><a href="https://rdrr.io/r/utils/data.html" class="external-link">data()</a></code>. Use dittoViz’s <code>data.out</code> frame, <code>.as_plotted()</code> inside the package, or the exported <code><a href="reference/adjust_column_values.html">adjust_column_values()</a></code>; the adjustment choices live in <code>.adjustment_choices</code> / <code>.adj_fxn_choices</code>. Check new overlays with the <code>expect_brackets_within_axes()</code> / <code>expect_fit_lines_on_points()</code> / <code>expect_point_labels_on_points()</code> expectations in <code>tests/testthat/helper-overlays.R</code>, which test the built figure.</li>
+<li>The modules apply an adjustment function <em>before</em> the z-score/relative-to-max rescaling (log, then z-score); dittoViz does the reverse when given both. So never pass dittoViz both <code>*.adjustment</code> and <code>*.adj.fxn</code>: pass <code>*.adj.fxn = .adjustment_fn(adjustment, fxn)</code> and no <code>*.adjustment</code>, which keeps its <code>.adj</code> columns and hover text while plotting <code>.adjusted_values()</code>.</li>
+<li>Never queue a copy of an existing layout element (a whole axis, say) through <code>plotly::layout()</code>. Queued updates are merged in at build time, after anything written straight into <code>fig$x$layout</code>, so the copy silently reverts those writes. Queue only the properties being changed.</li>
+<li>Map facet levels to panels by their strip labels (<code>.build_facet_axis_map()</code>, <code>.fit_panels()</code>), never by the order rows or axes appear in: ggplot orders facets alphabetically, and ggplotly shares axes across a row or column of panels.</li>
+</ul><p>These instructions are a starting point, not an authority — verify against the code before relying on any specific claim here, and correct this file when you find it stale.</p>
 </div>
 </div>
 

@@ -51,36 +51,253 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.5.0.9000" id="vizmodules-0509000">VizModules 0.5.0.9000<a class="anchor" aria-label="anchor" href="#vizmodules-0509000"></a></h2>
-<p>The one where we make the heatmap module not suck.</p>
+<p>The one where we make the heatmap module not suck and stop accidentally butchering app CSS.</p>
 <div class="section level3">
 <h3 id="improvednew-functionality-0-5-0-9000">Improved/New Functionality<a class="anchor" aria-label="anchor" href="#improvednew-functionality-0-5-0-9000"></a></h3>
+<div class="section level4">
+<h4 id="all-modules-0-5-0-9000">All modules<a class="anchor" aria-label="anchor" href="#all-modules-0-5-0-9000"></a></h4>
 <ul><li>
-<code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> now accepts a <code>data_list</code> entry that is a <em>list</em> of data frames rather than a single one, filtering and displaying only the primary table (<code>primary.table</code>, defaulting to the first) and passing companions through to the module untouched. Also gains <code>sidebar.width</code> for modules whose output needs more room. <code><a href="../reference/ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code> is a thin wrapper around it again, rather than a bespoke app.</li>
-<li>The <code>ComplexHeatmap</code> module’s row and column split methods gained an <strong>“Annotation”</strong> option (<a href="https://github.com/j-andrews7/VizModules/issues/349" class="external-link">#349</a>), grouping rows or columns by the values of one or more annotation columns instead of by a derived clustering. Several columns give nested slices; pairing it with clustering off is also the fast path, since no distance matrix is needed.</li>
-<li>The <code>ComplexHeatmap</code> module gained a <strong>Filter</strong> tab with expression-based row and column filters (<a href="https://github.com/j-andrews7/VizModules/issues/346" class="external-link">#346</a>), so a specific set of features or samples can be plotted without the <code>dataFilter</code> module. Row filters see the matrix data frame; column filters see a synthetic <code>column</code> field plus any per-sample metadata joined via <code>column_key</code>. Filtering runs before everything else, so scaling, annotations, splits, and the source download all describe the filtered matrix.
-<ul><li>Both <code>ComplexHeatmap</code> filter inputs are debounced by 700ms, so typing an expression does not redraw the heatmap once per keystroke. The “Adding a New Module” and “Building Custom Modules” vignettes document the pattern for free-text inputs generally.</li>
+<strong>Source Download</strong> now also saves a <code>&lt;name&gt;_plot.svg</code> and a <code>&lt;name&gt;_plot.png</code> of each plot (<a href="https://github.com/j-andrews7/VizModules/issues/353" class="external-link">#353</a>). The Figure Builder saves one pair per panel, named after the panel’s label.
+<ul><li>The images are captured in the browser from the graph as displayed, so they include everything applied after the figure was built. The button pauses briefly while capturing; if capture fails, the archive still downloads without them.</li>
+<li>A WebGL plot (the scatter plot’s WebGL toggle) can only be captured as a raster, embedded in an otherwise editable SVG. Turn WebGL off for a fully editable file.</li>
+<li>A module whose output isn’t a plotly graph can draw itself instead, via <code>vector_svg</code> and/or <code>raster_png</code> functions of <code>(width, height, res)</code> on its summary list or on the reactive its server returns. <code><a href="../reference/ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code> provides both.</li>
 </ul></li>
-<li>Each <code>ComplexHeatmap</code> annotation track gained its own <strong>Label Side</strong> and <strong>Label Size</strong> controls, and a <strong>Show Legend</strong> checkbox suppressing just that track’s legend (default on). Set it from <code>defaults</code> with a <code>show_legend</code> field on the <code>row_annotations</code>/<code>column_annotations</code> row.</li>
-<li>The <code>ComplexHeatmap</code> module’s row and column <strong>“Annotation”</strong> splits now honour a factor column’s level order, so a caller can choose the order the slices come out in (model families by ID rather than alphabetically, say) rather than having ComplexHeatmap sort the groups itself. Unused levels are dropped, since an empty slice is an error.</li>
-<li>The <code>ComplexHeatmap</code> output UI functions gained <code>fit.width</code> (default <code>TRUE</code>), scaling the widget’s panels to their container’s width on load (<a href="https://github.com/j-andrews7/VizModules/issues/350" class="external-link">#350</a>) rather than sitting at <code>InteractiveComplexHeatmap</code>’s fixed pixel widths until the resize handle is dragged. <code>width</code>/<code>width1</code>/<code>width2</code> become relative sizes; heights are untouched and the widget’s own resize controls still win afterwards. Pass <code>fit.width = FALSE</code> for the old fixed-width behaviour.</li>
-<li>Added <code><a href="../reference/heatmap_fit_width.html">heatmap_fit_width()</a></code>, the <code>fit.width</code> behaviour above as a standalone wrapper, for apps that call <code><a href="https://rdrr.io/pkg/InteractiveComplexHeatmap/man/InteractiveComplexHeatmapOutput.html" class="external-link">InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()</a></code> directly rather than going through the module.</li>
-<li>
-<code><a href="../reference/ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code> now opens on <code>example_heatmap_matrix</code> paired with <code>example_heatmap_column_data</code>, so the column annotation, split, and filter features are usable out of the box.</li>
-<li>
-<code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code> and <code><a href="../reference/validate_expression.html">validate_expression()</a></code> gained a wider shared vocabulary: <code>grepl</code>, <code>startsWith</code>, <code>endsWith</code>, <code>substr</code>, <code>nchar</code>, <code>toupper</code>, <code>tolower</code>, <code>trimws</code>, <code>abs</code>, <code>round</code>, and <code>xor</code>. All are pure, so the sandbox is unchanged. The two functions previously carried duplicate copies of the allowlist and AST walker and now share one.</li>
+<li>Without pandoc, which <code><a href="https://rdrr.io/pkg/htmlwidgets/man/saveWidget.html" class="external-link">htmlwidgets::saveWidget()</a></code> needs, the source download now warns and leaves out the self-contained HTML instead of writing an empty <code>.htm</code>, so the data and images still download.</li>
+<li>The shared <strong>Legend</strong> tab gained <strong>Show Legend</strong>, <strong>Legend Font</strong> and <strong>Legend Font Color</strong> (<a href="https://github.com/j-andrews7/VizModules/issues/360" class="external-link">#360</a>, <a href="https://github.com/j-andrews7/VizModules/issues/362" class="external-link">#362</a>). The legend can now be hidden in <code>yPlot</code>, <code>freqPlot</code>, <code>linePlot</code>, <code>dumbbellPlot</code> and the <code>plotthis</code> modules too, and hiding it also hides colorbars and the scatter/<code>DotPlot</code> size legend.</li>
+<li>Each module’s app now opens on defaults that show more of what it can do, with more interesting example datasets to match.</li>
 </ul></div>
+<div class="section level4">
+<h4 id="module-gallery-and-figure-builder-0-5-0-9000">Module gallery and Figure Builder<a class="anchor" aria-label="anchor" href="#module-gallery-and-figure-builder-0-5-0-9000"></a></h4>
+<ul><li>The module gallery is now a function, <code><a href="../reference/moduleGalleryApp.html">moduleGalleryApp()</a></code>, with a tab per module plus the <strong>Figure Builder</strong>. The bundled <code>inst/apps/module-gallery</code> app is a thin deployment wrapper around it.</li>
+<li>The <code>ComplexHeatmap</code> module can now be added to the <strong>Figure Builder</strong> (<a href="https://github.com/j-andrews7/VizModules/issues/352" class="external-link">#352</a>).
+<ul><li>The figure export read an SVG out of each panel’s plotly graph, so any other kind of panel contributed only its label. A module can now attach a <code>vector_svg</code> attribute (a <code>function(width, height, res)</code> returning an <code>&lt;svg&gt;</code>) to the reactive its server returns, and the export uses that instead.</li>
+</ul></li>
+<li>
+<code><a href="../reference/figureBuilderServer.html">figureBuilderServer()</a></code>, <code><a href="../reference/figureBuilderApp.html">figureBuilderApp()</a></code> and <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> accept a <code>data_list</code> entry that is a <em>list</em> of data frames, as the <code>ComplexHeatmap</code> module needs. <code><a href="../reference/createModuleApp.html">createModuleApp()</a></code> filters and displays only the primary table (<code>primary.table</code>, default the first) and passes the others through untouched. It also gained <code>sidebar.width</code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="boxplot-freqplot-and-yplot-0-5-0-9000">
+<code>BoxPlot</code>, <code>freqPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#boxplot-freqplot-and-yplot-0-5-0-9000"></a></h4>
+<ul><li>
+<code>stat.pairs</code> can be set from <code>defaults</code>, as <code>"A vs B"</code> strings in either order.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="complexheatmap-0-5-0-9000"><code>ComplexHeatmap</code><a class="anchor" aria-label="anchor" href="#complexheatmap-0-5-0-9000"></a></h4>
+<ul><li>Added <code><a href="../reference/ComplexHeatmap_HeatmapStaticOutputUI.html">ComplexHeatmap_HeatmapStaticOutputUI()</a></code>, a plain <code><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html" class="external-link">plotOutput()</a></code> of the same heatmap. It gives up cell hover/click, the sub-heatmap and the brush info panel, and with them all of the widget’s own chrome. The gallery and <code><a href="../reference/ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code> keep the interactive widget.</li>
+<li>Row and column splits gained an <strong>“Annotation”</strong> method (<a href="https://github.com/j-andrews7/VizModules/issues/349" class="external-link">#349</a>), slicing by one or more annotation columns (several give nested slices). With clustering off it is also the fast path, since no distance matrix is needed.</li>
+<li>New <strong>Filter</strong> tab with expression-based row and column filters (<a href="https://github.com/j-andrews7/VizModules/issues/346" class="external-link">#346</a>), so a subset can be plotted without the <code>dataFilter</code> module. Row filters see the matrix data frame; column filters see a <code>column</code> field plus any per-sample metadata joined via <code>column_key</code>. Filtering runs first, so scaling, annotations, splits and the source download all describe the filtered matrix.
+<ul><li>Both filters are debounced by 700ms, so typing doesn’t redraw the heatmap on every keystroke. The “Adding a New Module” and “Building Custom Modules” vignettes document the pattern for free-text inputs.</li>
+</ul></li>
+<li>New <strong>Show Row Slice Titles</strong> and <strong>Show Column Slice Titles</strong> checkboxes (<a href="https://github.com/j-andrews7/VizModules/issues/366" class="external-link">#366</a>). Clearing the title box never removed the group names a split titles its slices with (annotation values, or cluster numbers for k-means and hierarchical splits), because <code><a href="https://pwwang.github.io/plotthis/reference/Heatmap.html" class="external-link">Heatmap()</a></code> reads a blank title as “use the group names”. Unticking one drops the titles and the space they take. A typed title still replaces them, and a <code>%s</code> in it is filled in with each group’s name.</li>
+<li>Each annotation track gained <strong>Label Side</strong>, <strong>Label Size</strong> and <strong>Show Legend</strong> controls. Set the last from <code>defaults</code> with a <code>show_legend</code> field on a <code>row_annotations</code>/<code>column_annotations</code> row.</li>
+<li>The output UI functions gained <code>fit.width</code> (default <code>TRUE</code>), fitting the widget’s panels to their container on load (<a href="https://github.com/j-andrews7/VizModules/issues/350" class="external-link">#350</a>) instead of <code>InteractiveComplexHeatmap</code>’s fixed pixel widths. <code><a href="../reference/heatmap_fit_width.html">heatmap_fit_width()</a></code> does the same for apps calling <code><a href="https://rdrr.io/pkg/InteractiveComplexHeatmap/man/InteractiveComplexHeatmapOutput.html" class="external-link">InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()</a></code> directly.</li>
+<li>
+<code><a href="../reference/ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code>’s default data now exercises the column annotation, split and filter features.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="dumbbellplot-0-5-0-9000"><code>dumbbellPlot</code><a class="anchor" aria-label="anchor" href="#dumbbellplot-0-5-0-9000"></a></h4>
+<ul><li>New <strong>Point Size</strong> input (<code>point.size</code> in <code><a href="../reference/dumbbellPlot.html">dumbbellPlot()</a></code>, default 12) (<a href="https://github.com/j-andrews7/VizModules/issues/361" class="external-link">#361</a>).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="lineplot-0-5-0-9000"><code>linePlot</code><a class="anchor" aria-label="anchor" href="#lineplot-0-5-0-9000"></a></h4>
+<ul><li>
+<strong>Error Bars</strong> can now show the standard deviation (still the default), the standard error of the mean, or a 95% confidence interval (<a href="https://github.com/j-andrews7/VizModules/issues/368" class="external-link">#368</a>), through the new <strong>Error Bar Type</strong> input (<code>error.type</code> in <code><a href="../reference/linePlot.html">linePlot()</a></code>). A confidence interval uses the normal approximation unless the <strong>Confidence Interval Method</strong> input (<code>error.ci.method</code>, shown only while a CI is selected) switches it to the t distribution, which is wider for small groups. A group with fewer than two observations is drawn without a bar. The tooltips say what the bars show (the plotted group mean plus or minus that amount).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="parallelcoordinatesplot-pieplot-and-radarplot-0-5-0-9000">
+<code>parallelCoordinatesPlot</code>, <code>piePlot</code> and <code>radarPlot</code>
+<a class="anchor" aria-label="anchor" href="#parallelcoordinatesplot-pieplot-and-radarplot-0-5-0-9000"></a></h4>
+<ul><li>The shape-drawing controls are gone, since plotly’s drawing tools need cartesian axes and they did nothing here. The pie and radar modebars no longer offer the drawing buttons either. <code><a href="../reference/uniform_plotly_inputs_ui.html">uniform_plotly_inputs_ui()</a></code> gained <code>include.shapes</code> for this.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="scatterplot-and-yplot-0-5-0-9000">
+<code>scatterPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#scatterplot-and-yplot-0-5-0-9000"></a></h4>
+<ul><li>The <strong>Adjustment Function</strong> now runs before the z-score/relative-to-max <strong>Adjustment</strong> (log10, then z-score), and axis titles read accordingly (<code>z-score(log10(salary))</code>). dittoViz does the reverse, which took the log of every below-average value, so those points vanished. The rescaling also skips non-finite values, so a <code>log(0)</code> drops that one point instead of making the whole column <code>NaN</code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="splitbarplot-0-5-0-9000"><code>SplitBarPlot</code><a class="anchor" aria-label="anchor" href="#splitbarplot-0-5-0-9000"></a></h4>
+<ul><li>
+<strong>Facet Scale</strong> now defaults to <code>"fixed"</code> rather than <code>"free_y"</code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="helpers-and-exported-functions-0-5-0-9000">Helpers and exported functions<a class="anchor" aria-label="anchor" href="#helpers-and-exported-functions-0-5-0-9000"></a></h4>
+<ul><li>Exported <code><a href="../reference/draw_to_svg.html">draw_to_svg()</a></code> (previously the internal <code>.draw_to_svg()</code>) and added <code><a href="../reference/draw_to_png.html">draw_to_png()</a></code>. They render any grid or base drawing, for the <code>vector_svg</code>/<code>raster_png</code> hooks above.</li>
+<li>
+<code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code> and <code><a href="../reference/validate_expression.html">validate_expression()</a></code> now share one allowlist and AST walker (each had its own copy), with a wider but still pure vocabulary: <code>grepl</code>, <code>startsWith</code>, <code>endsWith</code>, <code>substr</code>, <code>nchar</code>, <code>toupper</code>, <code>tolower</code>, <code>trimws</code>, <code>abs</code>, <code>round</code> and <code>xor</code>.</li>
+<li>
+<code><a href="../reference/adjust_column_values.html">adjust_column_values()</a></code> gained <code>x.adjustment</code>, <code>y.adjustment</code> and <code>color.adjustment</code> (<code>"z-score"</code>, <code>"relative.to.max"</code>), reproducing exactly what the modules plot. Use it to compute anything drawn over such a plot.</li>
+<li>
+<code><a href="../reference/create_stat_annotations.html">create_stat_annotations()</a></code> gained <code>free.y</code>, stacking each facet panel’s brackets above that panel’s own data, and <code><a href="../reference/apply_stat_annotations.html">apply_stat_annotations()</a></code> then raises each panel’s axis separately.</li>
+<li>
+<code><a href="../reference/apply_legend_styling.html">apply_legend_styling()</a></code> gained <code>show</code>, <code>font.family</code> and <code>font.color</code>, and the new <code><a href="../reference/apply_legend_inputs.html">apply_legend_inputs()</a></code> applies the whole <strong>Legend</strong> tab from a module’s inputs.</li>
+<li>
+<code><a href="../reference/collect_source_data.html">collect_source_data()</a></code> accepts <code>inputs_reactive</code> as a reactive, as documented, as well as a plain list.</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="deprecations-and-removals-0-5-0-9000">Deprecations and Removals<a class="anchor" aria-label="anchor" href="#deprecations-and-removals-0-5-0-9000"></a></h3>
+<div class="section level4">
+<h4 id="module-gallery-and-figure-builder-0-5-0-9000-1">Module gallery and Figure Builder<a class="anchor" aria-label="anchor" href="#module-gallery-and-figure-builder-0-5-0-9000-1"></a></h4>
+<ul><li>The Figure Builder no longer accepts <code>.rds</code> uploads.</li>
+<li>Removed the bundled <code>inst/apps/figure-builder</code> app, since the builder is part of the gallery now.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="barplot-and-splitbarplot-0-5-0-9000">
+<code>BarPlot</code> and <code>SplitBarPlot</code>
+<a class="anchor" aria-label="anchor" href="#barplot-and-splitbarplot-0-5-0-9000"></a></h4>
+<ul><li>Removed the <strong>Split By</strong> input. It returns a patchwork object, which <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">ggplotly()</a></code> can’t convert, so it never did anything.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="scatterplot-0-5-0-9000"><code>scatterPlot</code><a class="anchor" aria-label="anchor" href="#scatterplot-0-5-0-9000"></a></h4>
+<ul><li>Removed the built-in <code>nls</code> backend for custom model lines. An nls formula names its parameters, which the formula safety check rejects, so it could never fit.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="violinplot-0-5-0-9000"><code>ViolinPlot</code><a class="anchor" aria-label="anchor" href="#violinplot-0-5-0-9000"></a></h4>
+<ul><li>Removed the <code>plotthis_ViolinPlot</code> module (<code>plotthis_ViolinPlotApp()</code>, <code>plotthis_ViolinPlotInputsUI()</code>, <code>plotthis_ViolinPlotOutputUI()</code>, <code>plotthis_ViolinPlotServer()</code>) (<a href="https://github.com/j-andrews7/VizModules/issues/358" class="external-link">#358</a>). <code>plotthis</code> 0.14.0 draws violins with a geom of its own that <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">ggplotly()</a></code> can’t convert, and <code>yPlot</code> covers the same ground. Use <code>dittoViz_yPlot</code> with <code>defaults = list(plots = "vlnplot")</code>, adding <code>"boxplot"</code>/<code>"jitter"</code> for the inner box and points.</li>
+</ul></div>
+</div>
 <div class="section level3">
 <h3 id="bug-fixes-0-5-0-9000">Bug Fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-0-9000"></a></h3>
-<ul><li>Fixed a multi-select dropping a deselection made from its value tags. <code><a href="../reference/viz_select_input.html">viz_select_input()</a></code> reports on dropdown close for multi-selects, but removing a value via a tag’s x (or the clear-all x) never opens the dropdown, so the change was silently never sent: the control showed the value gone while the server kept the old selection. Affected every multi-select in the package; most visible on the heatmap’s annotation split, where removing a column left the old slices in place.</li>
-<li>Fixed default annotations in the <code>ComplexHeatmap</code> module failing to render their color pickers and annotation tracks on load. Initial rows in <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code> are now reported to Shiny during initialization before deferred DOM binding, omitted fields backfill from <code>row_spec</code>, and the module server resolves palettes immediately and disables output suspension for annotation color controls.</li>
-<li>Fixed every module-hosted <code>ComplexHeatmap</code> heatmap silently never drawing. <code>InteractiveComplexHeatmap</code> keys its registry by <code>validate_heatmap_id()</code>, which rewrites each non-word character to <code>_</code>, so the guard added alongside the annotation fix above looked up the raw namespaced id (<code>mymod-heatmap-Heatmap</code>) against a key stored as <code>mymod_heatmap_Heatmap</code>, found nothing, and returned before <code>makeInteractiveComplexHeatmap()</code> could run. Every <code><a href="../reference/ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code> instance was affected, since a module id always contains a <code>-</code>; the widget rendered its empty shell with no error or warning.</li>
-<li>Fixed the <code>ComplexHeatmap</code> module’s <code>compact = TRUE</code> widget (and any use of <code>output_ui_float = TRUE</code>) adding a ~10,000px horizontal scrollbar to the host app. <code>InteractiveComplexHeatmap</code> detaches the floating click/brush info panel onto <code>&lt;body&gt;</code> and parks it at <code>right: -10000px</code> while idle, which extends the <em>document’s</em> scrollable width – on every page of the app, not just the one holding the heatmap – and scrolling right revealed the parked panel stuck on “Retrieving from server… Don’t move mouse.”. The panel is now re-parked to the left, where it contributes no overflow, leaving the floating behaviour otherwise untouched.</li>
+<div class="section level4">
+<h4 id="all-modules-0-5-0-9000-1">All modules<a class="anchor" aria-label="anchor" href="#all-modules-0-5-0-9000-1"></a></h4>
+<ul><li>
+<strong>Reset</strong> now discards manually dragged legends, annotations, axis titles and colorbars. It also returns every control to the value it started at; several fallbacks disagreed with the UI (<code>stat.hide.ns</code>, the top and right margins, subplot spacing, and a few module-specific ones).</li>
+<li>Stopped the package’s stylesheets leaking into host apps (<a href="https://github.com/j-andrews7/VizModules/issues/355" class="external-link">#355</a>). CSS still sucks.
+<ul><li>
+<code>multiColorPicker</code>’s dropdown, which is parented to <code>&lt;body&gt;</code>, was styled through selectize’s generic class names. That restyled every <code><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput()</a></code> and DT column filter on the page, most visibly rendering long dropdowns as an empty panel. Every plot module has a colour picker, so this affected any app using any module. The rules are now scoped to the picker’s own <code>.mc-palette-dropdown</code>.</li>
+<li>The Figure Builder styled <code>.well</code>, so embedding it respaced every <code><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel()</a></code> on the page. Its rules are now scoped to <code>.pb-app</code>.</li>
+<li>
+<code><a href="../reference/organize_inputs.html">organize_inputs()</a></code> used inline negative margins that assume a padded parent, so in a narrow sidebar the grid overhung and scrolled sideways, and undoing that took <code>!important</code>. It now uses a stylesheet and a column gap; only the column count is still inline, as <code>--viz-input-columns</code>.</li>
+</ul></li>
+<li>Faceted plots no longer offer an editable main title, whose empty placeholder sat over the facet panel titles and caught the clicks meant for them. The <strong>Title</strong> inputs are hidden and the facet title inputs shown while a plot is faceted, without re-showing anything hidden via <code>hide.inputs</code>. <code>yPlot</code> now also counts several Y variables split into panels as faceted.</li>
+<li>Multi-selects no longer drop a deselection made from a value tag’s x (or the clear-all x). <code><a href="../reference/viz_select_input.html">viz_select_input()</a></code> reports a multi-select when its dropdown closes, and removing a tag never opens it.</li>
+<li>An input that has not reported yet (<code>NULL</code>) no longer throws “argument is of length zero” while a module initializes.</li>
+<li>The source download no longer writes the captured plot images (up to tens of MB) into <code>*_ui_inputs.csv</code>.</li>
+<li>The <strong>Lines</strong> tab’s line-type tooltips list the names actually accepted.</li>
 </ul></div>
+<div class="section level4">
+<h4 id="module-gallery-and-figure-builder-0-5-0-9000-2">Module gallery and Figure Builder<a class="anchor" aria-label="anchor" href="#module-gallery-and-figure-builder-0-5-0-9000-2"></a></h4>
+<ul><li>The module gallery passes its <code>defaults</code> to the module servers too, so Reset matches the initial state.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="areaplot-0-5-0-9000"><code>AreaPlot</code><a class="anchor" aria-label="anchor" href="#areaplot-0-5-0-9000"></a></h4>
+<ul><li>
+<strong>Group By</strong> and <strong>Facet By</strong> no longer leave out the dataset’s first categorical column when it isn’t the X column, which silently dropped a <code>group.by</code>/<code>facet.by</code> default naming it.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="barplot-boxplot-splitbarplot-and-yplot-0-5-0-9000">
+<code>BarPlot</code>, <code>BoxPlot</code>, <code>SplitBarPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#barplot-boxplot-splitbarplot-and-yplot-0-5-0-9000"></a></h4>
+<ul><li>Axis limits given in <code>defaults</code> (<code>y.min</code>/<code>y.max</code>, or <code>x.min</code>/<code>x.max</code> in <code>SplitBarPlot</code>) are no longer replaced by the data’s range at startup; they stand until the plotted columns change. <code>yPlot</code>’s keys are now <code>y.min</code>/<code>y.max</code> too, matching its inputs and Reset (its UI read <code>min</code>/<code>max</code>).</li>
+<li>
+<strong>Reset</strong> restores the <code>BoxPlot</code> and <code>BarPlot</code> y limits for the column it resets <code>y.data</code> to. It measured the first numeric column, which clipped a plot whose default <code>y.data</code> was another one.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="boxplot-0-5-0-9000"><code>BoxPlot</code><a class="anchor" aria-label="anchor" href="#boxplot-0-5-0-9000"></a></h4>
+<ul><li>
+<strong>Security:</strong> <strong>Sort X By</strong> was passed straight to <code><a href="https://pwwang.github.io/plotthis/reference/boxviolinplot.html" class="external-link">plotthis::BoxPlot()</a></code>, which evaluates it, so R code typed there ran on the server. It now goes through the same expression check as every other user-typed expression, allowing summary functions (<code>mean</code>, <code>median</code>, <code>sd</code>, …) and ignoring anything else with a notification.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="boxplot-freqplot-and-yplot-0-5-0-9000-1">
+<code>BoxPlot</code>, <code>freqPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#boxplot-freqplot-and-yplot-0-5-0-9000-1"></a></h4>
+<ul><li>Boxes, points and significance brackets now line up when a <code>color.by</code> group is missing from some <code>group.by</code> categories (<a href="https://github.com/j-andrews7/VizModules/issues/356" class="external-link">#356</a>). The new <code>.align_box_positions()</code> puts the boxes back on ggplot’s coordinates under plotly’s <code>boxmode = "overlay"</code>, replacing the old faceting workaround.
+<ul><li>Brackets now use the same dodge as the boxes rather than a formula of their own, and a comparison against a group with no data in that category (an NA p-value) is no longer drawn as “NA” at an invented position.</li>
+<li>A panel is now identified by its <em>pair</em> of axes, which mattered for any facet grid more than one row deep (so most <code>freqPlot</code>s). Box width comes from the most crowded x position in the whole figure, so boxes no longer change size between facets.</li>
+<li>
+<code>boxmode = "overlay"</code> is only set once every box has an explicit position, where it could leave boxes stacked on a categorical tick. The <code>boxgap</code>/<code>boxgroupgap</code> attributes plotly’s schema rejects are no longer set, which silences a pile of rebuild warnings.</li>
+</ul></li>
+<li>Overlays are now computed from the values drawn, after any Y adjustment, rather than from the raw columns (<a href="https://github.com/j-andrews7/VizModules/issues/319" class="external-link">#319</a>, <a href="https://github.com/j-andrews7/VizModules/issues/365" class="external-link">#365</a>).
+<ul><li>
+<code>yPlot</code> brackets were drawn at raw heights under a Y adjustment (log10, z-score, …), far above the axis, and tested on the raw values. Tests, brackets and the <strong>Y Axis Min/Max</strong> now all use the adjusted values; the limits used to be ignored whenever an adjustment was on.</li>
+<li>
+<code>yPlot</code> and <code>freqPlot</code> brackets could be clipped even without an adjustment. <code><a href="../reference/apply_subplot_axis_styling.html">apply_subplot_axis_styling()</a></code> queued a copy of each whole axis, which reverted the raised range at build time; it now queues only the styling.</li>
+<li>Under a free y facet scale, each panel now keeps its own range and its brackets sit above its own data. <code>yPlot</code> and <code>freqPlot</code> pinned every panel to the <strong>Y Axis Min/Max</strong>, and all three drew brackets at the tallest panel’s height (and, after the first panel, on the first panel’s axis).</li>
+<li>A rotated <code>BoxPlot</code>, or a <code>yPlot</code>/<code>freqPlot</code> that includes a ridge plot, puts the values on the x-axis, where brackets were drawn across the category axis. They are now skipped with a notification, and the test results still go in the source download.</li>
+</ul></li>
+<li>The source download no longer ships a stale statistics CSV after stats are turned off.</li>
+<li>Significance labels for a p-value below 0.0001 read “&lt; 0.0001” rather than rounding to “0”.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="complexheatmap-0-5-0-9000-1"><code>ComplexHeatmap</code><a class="anchor" aria-label="anchor" href="#complexheatmap-0-5-0-9000-1"></a></h4>
+<ul><li>Every module-hosted heatmap silently never drew. <code>InteractiveComplexHeatmap</code> registers heatmaps under <code>validate_heatmap_id()</code>, which turns each non-word character into <code>_</code>, but the module looked up the raw namespaced id (<code>mymod-heatmap-Heatmap</code>), found nothing, and returned before <code>makeInteractiveComplexHeatmap()</code> could run. A module id always contains a <code>-</code>, so every instance rendered an empty shell with no error.</li>
+<li>Default annotations now render their colour pickers and tracks on load. <code><a href="../reference/multiDynamicInput.html">multiDynamicInput()</a></code> reports its initial rows to Shiny before deferred DOM binding, omitted fields backfill from <code>row_spec</code>, and the server resolves palettes immediately.</li>
+<li>The <code>compact = TRUE</code> widget (and any <code>output_ui_float = TRUE</code>) no longer adds a ~10,000px horizontal scrollbar to the host app.</li>
+<li>With <strong>Auto Update</strong> off, the matrix columns, row names, filters and column key no longer redraw the heatmap before <strong>Update</strong>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="datafilter-0-5-0-9000"><code>dataFilter</code><a class="anchor" aria-label="anchor" href="#datafilter-0-5-0-9000"></a></h4>
+<ul><li>
+<code><a href="../reference/dataFilterServer.html">dataFilterServer()</a></code> no longer applies the previous table’s row indices to newly supplied data while DT redraws.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="dumbbellplot-0-5-0-9000-1"><code>dumbbellPlot</code><a class="anchor" aria-label="anchor" href="#dumbbellplot-0-5-0-9000-1"></a></h4>
+<ul><li>
+<strong>Colour By</strong> “Y variables” now matches the colour picker, keeps each category’s colour across facets, and gives every category a legend entry (only the first had one). <code><a href="../reference/dumbbellPlot.html">dumbbellPlot()</a></code> matches a named <code>palette.selection</code> by name.</li>
+<li>A faceted plot now draws a border around every panel rather than only the first, which was the only one with a y axis to draw its edges.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="dumbbellplot-and-lineplot-0-5-0-9000">
+<code>dumbbellPlot</code> and <code>linePlot</code>
+<a class="anchor" aria-label="anchor" href="#dumbbellplot-and-lineplot-0-5-0-9000"></a></h4>
+<ul><li>
+<strong>Axis Title Size/Color/Font</strong> and <strong>Facet Title Size/Color/Font</strong> now work (<a href="https://github.com/j-andrews7/VizModules/issues/326" class="external-link">#326</a>), as do <strong>Show X/Y Gridlines</strong> and <strong>Gridline Color</strong> (<code>dumbbellPlot</code> ignored all three, <code>linePlot</code> the colour). <code><a href="../reference/dumbbellPlot.html">dumbbellPlot()</a></code> and <code><a href="../reference/linePlot.html">linePlot()</a></code> gained the matching <code>axis.title.font.*</code>, <code>facet.title.font.*</code>, <code>show.grid.*</code> and <code>grid.color</code> arguments, and <code><a href="../reference/build_facet_annotations.html">build_facet_annotations()</a></code> gained <code>axis.title.font</code> and <code>facet.title.font</code>.</li>
+<li>Facet titles now sit directly above their own panel under shared (fixed) axes. <code><a href="../reference/build_facet_annotations.html">build_facet_annotations()</a></code> fell back to an even grid that ignored the panel gaps, which put lower rows’ titles up against the row above.</li>
+<li>No more plotly default zero line, which couldn’t be turned off. Add one from the <strong>Lines</strong> tab instead (<a href="https://github.com/j-andrews7/VizModules/issues/363" class="external-link">#363</a>).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="freqplot-scatterplot-and-yplot-0-5-0-9000">
+<code>freqPlot</code>, <code>scatterPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#freqplot-scatterplot-and-yplot-0-5-0-9000"></a></h4>
+<ul><li>Values containing spaces (e.g. <code>"CD4 T"</code>) can now be highlighted when separated by commas or new lines. They were split on the space and so never matched.</li>
+<li>Highlight and selection labels are no longer drawn for points an adjustment leaves undrawable (<code>NaN</code>), which plotly placed at an arbitrary spot (<a href="https://github.com/j-andrews7/VizModules/issues/319" class="external-link">#319</a>, <a href="https://github.com/j-andrews7/VizModules/issues/365" class="external-link">#365</a>). Dumbest thing.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="lineplot-0-5-0-9000-1"><code>linePlot</code><a class="anchor" aria-label="anchor" href="#lineplot-0-5-0-9000-1"></a></h4>
+<ul><li>A faceted plot no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel (<a href="https://github.com/j-andrews7/VizModules/issues/357" class="external-link">#357</a>).</li>
+<li>Multi-axis plots no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and <code>show.legend = FALSE</code> now hides the legend box instead of leaving an empty one.</li>
+<li>Logical and Date columns no longer break the plot; <code><a href="../reference/is_pure_type.html">is_pure_type()</a></code> errored on them.</li>
+<li>
+<strong>Error Bars</strong> sat on the wrong points whenever <strong>Group By</strong> was set, so each series drew other series’ bars (the gallery’s default line plot included). plotly re-sorts the data by the colour column but not an error bar array handed to it, so <code><a href="../reference/linePlot.html">linePlot()</a></code> now sorts the same way first. Bars also silently vanished when the data had a column named <code>y</code>, which shadowed the argument inside <code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="parallelcoordinatesplot-0-5-0-9000"><code>parallelCoordinatesPlot</code><a class="anchor" aria-label="anchor" href="#parallelcoordinatesplot-0-5-0-9000"></a></h4>
+<ul><li>
+<code><a href="../reference/parallelCoordinatesPlot.html">parallelCoordinatesPlot()</a></code> tolerates a blank line width.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="scatterplot-0-5-0-9000-1"><code>scatterPlot</code><a class="anchor" aria-label="anchor" href="#scatterplot-0-5-0-9000-1"></a></h4>
+<ul><li>Linear, best-fit and custom model lines are now fit to the plotted values (<a href="https://github.com/j-andrews7/VizModules/issues/319" class="external-link">#319</a>, <a href="https://github.com/j-andrews7/VizModules/issues/365" class="external-link">#365</a>). They were fit to the raw columns, so on adjusted axes they were drawn off in their own space. A formula like <code>mpg ~ hp</code> models what is shown (don’t repeat the adjustment in it), no lines are drawn when <code>as.factor</code> makes an axis categorical, and a numeric <strong>Color By</strong> gives one line instead of one per distinct value.</li>
+<li>Fit lines no longer land in the wrong facet panel. Character facets are laid out alphabetically, and multi-row or two-column <code>split.by</code> layouts share axes by row and column; lines are now matched to panels by their strip labels.</li>
+<li>A custom model formula calling a function through a namespace (<code>y ~ base::log(x)</code>) crashed the render with “the condition has length &gt; 1” instead of reporting a disallowed term, while <code>y ~ log()(x)</code> was accepted. <code>.safe_build_model()</code> had its own copy of the AST walker and now shares the one in <code>R/parse_utils.R</code>. It also returns <code>NULL</code> rather than an error for an empty formula.</li>
+<li>With <strong>Auto Update</strong> off, the fit-line controls no longer redraw the plot before <strong>Update</strong>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="splitbarplot-0-5-0-9000-1"><code>SplitBarPlot</code><a class="anchor" aria-label="anchor" href="#splitbarplot-0-5-0-9000-1"></a></h4>
+<ul><li>The axis no longer clips a long negative bar beside short positive ones, or inverts when every value is negative.</li>
+<li>
+<strong>Category Label Position</strong> can be negative again, moving the labels further out from their bars (<a href="https://github.com/j-andrews7/VizModules/issues/367" class="external-link">#367</a>).</li>
+</ul></div>
+<div class="section level4">
+<h4 id="helpers-and-exported-functions-0-5-0-9000-1">Helpers and exported functions<a class="anchor" aria-label="anchor" href="#helpers-and-exported-functions-0-5-0-9000-1"></a></h4>
+<ul><li>
+<code><a href="../reference/validate_expression.html">validate_expression()</a></code> and <code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code> checked only the first statement of their input. <code><a href="../reference/validate_expression.html">validate_expression()</a></code> returned the whole string for its caller to evaluate, so anything after a <code>;</code> or a newline went unexamined, and <code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code> evaluated only the first clause, returning a row mask nobody asked for. Both now reject multi-statement input.</li>
+<li>
+<code><a href="../reference/draw_to_svg.html">draw_to_svg()</a></code> returns <code>NULL</code> instead of erroring when the build has neither <code>svglite</code> nor a working cairo, matching <code><a href="../reference/draw_to_png.html">draw_to_png()</a></code>. That includes macOS without XQuartz, where <code>capabilities("cairo")</code> is <code>TRUE</code> but the device can’t load.</li>
+<li>
+<code><a href="../reference/multiColorPicker.html">multiColorPicker()</a></code> applies unnamed <code>colors</code> in order instead of ignoring them.</li>
+<li>
+<code><a href="../reference/apply_axis_title_to_annotations.html">apply_axis_title_to_annotations()</a></code> tolerates annotations without an <code>xanchor</code>, and <code>safe_resolve_adj_fxn("neg_log10")</code> works from outside the package.</li>
+</ul></div>
+</div>
 <div class="section level3">
 <h3 id="documentation-0-5-0-9000">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-5-0-9000"></a></h3>
-<ul><li>Added the <code>ComplexHeatmap_Heatmap</code> module and <code>dittoViz_freqPlot</code> to the README (<a href="https://github.com/j-andrews7/VizModules/issues/348" class="external-link">#348</a>).</li>
-<li>Refreshed the skills for the 0.4.0 changes they had not picked up (<a href="https://github.com/j-andrews7/VizModules/issues/348" class="external-link">#348</a>).</li>
-<li>The <code>quick-start</code>, <code>custom-modules</code>, and <code>adding-a-new-module</code> vignettes now point at the bundled agent skill that covers their material and at <code><a href="../reference/use_vizmodules_skills.html">use_vizmodules_skills()</a></code> (<a href="https://github.com/j-andrews7/VizModules/issues/347" class="external-link">#347</a>). Previously the skills were documented only in the README, so a reader of the vignettes had no idea one existed for what they were doing.</li>
+<ul><li>Added the <code>ComplexHeatmap_Heatmap</code> and <code>dittoViz_freqPlot</code> modules to the README, and refreshed the skills for the 0.4.0 changes they had missed (<a href="https://github.com/j-andrews7/VizModules/issues/348" class="external-link">#348</a>).</li>
+<li>The <code>quick-start</code>, <code>custom-modules</code> and <code>adding-a-new-module</code> vignettes now point at the bundled agent skill that covers their material, and at <code><a href="../reference/use_vizmodules_skills.html">use_vizmodules_skills()</a></code> (<a href="https://github.com/j-andrews7/VizModules/issues/347" class="external-link">#347</a>). The skills were previously documented only in the README.</li>
+<li>Fixed out of date vignette examples.</li>
+<li>The bundled skills and the <code>defaults-and-hiding</code> and <code>adding-a-new-module</code> vignettes now cover the <code>linePlot</code> error bar <code>defaults</code> keys, the heatmap slice title toggles, <code>hide.inputs</code> outranking a module’s own show/hide, and two plotting traps behind the <a href="https://github.com/j-andrews7/VizModules/issues/368" class="external-link">#368</a> fixes (plotly re-sorting by the colour column, and dplyr masking an argument).</li>
 </ul></div>
 </div>
     <div class="section level2">

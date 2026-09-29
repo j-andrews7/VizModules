@@ -3,9 +3,9 @@
 Wraps a base column name with the names of any data adjustments that are
 applied to it before plotting, so that an axis title accurately
 describes the values displayed. The wrapping order mirrors how the
-adjustments are applied in dittoViz (the recognized `adjustment` is
-applied first, then the `adj.fxn`), producing labels such as
-`"log2(z-score(units))"`.
+modules apply the adjustments (the `adj.fxn` first, then the recognized
+`adjustment` rescales the result), producing labels such as
+`"z-score(log2(units))"`.
 
 ## Usage
 
@@ -50,5 +50,5 @@ adjusted_axis_label("units")
 adjusted_axis_label("units", adjustment = "z-score")
 #> [1] "z-score(units)"
 adjusted_axis_label("units", adjustment = "z-score", adj.fxn = "log2")
-#> [1] "log2(z-score(units))"
+#> [1] "z-score(log2(units))"
 ```

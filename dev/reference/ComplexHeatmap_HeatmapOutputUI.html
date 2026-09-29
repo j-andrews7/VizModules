@@ -144,8 +144,16 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://j-andrews7.github.io/VizModules/">VizModules</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="co"># Default combined widget:</span></span></span>
-<span class="r-in"><span><span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"InteractiveComplexHeatmap"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>    <span class="co"># Default combined widget:</span></span></span>
+<span class="r-in"><span>    <span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># Same widget, main heatmap on its own row above sub-heatmap + info:</span></span></span>
+<span class="r-in"><span>    <span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, layout <span class="op">=</span> <span class="st">"1|(2-3)"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># Compact: no sub-heatmap panel, click/brush info floats near the cursor</span></span></span>
+<span class="r-in"><span>    <span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="co"># Fixed pixel widths, ignoring the container:</span></span></span>
+<span class="r-in"><span>    <span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, fit.width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="container-fluid heatmap_Heatmap_widget"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_heatmap_group"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Original heatmap&lt;/h5&gt;</span>
@@ -161,22 +169,22 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_control" style="display:none;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="7082"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="6059"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7082-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-search'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6059-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-search'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7082-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-brush'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6059-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-brush'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7082-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6059-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7082-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6059-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="7082"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7082-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="6059"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6059-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-search"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="width:250px;float:left;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
@@ -234,7 +242,7 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;p style="display:none;"&gt;Search Heatmap&lt;/p&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7082-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6059-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-brush"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
@@ -261,7 +269,7 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7082-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6059-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-save-image"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_heatmap_download_format-label"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_format-label" for="heatmap_Heatmap_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
@@ -294,7 +302,7 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7082-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6059-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-resize"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_width-label" for="heatmap_Heatmap_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
@@ -328,22 +336,22 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_sub_heatmap_control" style="display:none;"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="6681"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="2349"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6681-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-tasks'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2349-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-tasks'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6681-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-table'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2349-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-table'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6681-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2349-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6681-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2349-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="6681"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6681-1"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="2349"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2349-1"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-setting"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="float:left;width:150px"&gt;</span>
@@ -432,13 +440,13 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_modal" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Interactivate sub-heatmap&lt;/span&gt;&lt;/button&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6681-2"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2349-2"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-table"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;p&gt;Export values in sub-heatmaps as a text table.&lt;/p&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_table" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Open table&lt;/span&gt;&lt;/button&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6681-3"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2349-3"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-save-image"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_sub_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_sub_heatmap_download_format-label"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_format-label" for="heatmap_Heatmap_sub_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
@@ -471,855 +479,7 @@ separated pieces (<code>originalHeatmapOutput()</code>, <code>subHeatmapOutput()
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6681-4"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_width-label" for="heatmap_Heatmap_sub_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_input_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_height-label" for="heatmap_Heatmap_sub_heatmap_input_height"&gt;Box height&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_input_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_sub_heatmap_input_size_button" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Change image size&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_download_image_width').val($('#heatmap_Heatmap_sub_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_download_image_height').val($('#heatmap_Heatmap_sub_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_input_width').val($('#heatmap_Heatmap_sub_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_input_height').val($('#heatmap_Heatmap_sub_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_output_wrapper" style="width: 850px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Output&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_info" class="shiny-html-output"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;style&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			.heatmap_Heatmap_widget #heatmap_Heatmap_heatmap_group {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				display:table-cell;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			.heatmap_Heatmap_widget #heatmap_Heatmap_sub_heatmap_group {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				display:table-cell;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/style&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;VizModules.heatmapFitWidth({"id":"heatmap_Heatmap","root":".heatmap_Heatmap_widget","panels":["heatmap","sub_heatmap"],"output":true});&lt;/script&gt;</span>
-<span class="r-in"><span><span class="co"># Same widget, main heatmap on its own row above sub-heatmap + info:</span></span></span>
-<span class="r-in"><span><span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, layout <span class="op">=</span> <span class="st">"1|(2-3)"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="container-fluid heatmap_Heatmap_widget"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_heatmap_group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Original heatmap&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-plot-output html-fill-item" data-brush-clip="TRUE" data-brush-delay="300" data-brush-delay-type="debounce" data-brush-direction="xy" data-brush-fill="#9cf" data-brush-id="heatmap_Heatmap_heatmap_brush" data-brush-opacity="0.6" data-brush-reset-on-new="FALSE" data-brush-stroke="#f00" data-click-clip="TRUE" data-click-id="heatmap_Heatmap_heatmap_click" id="heatmap_Heatmap_heatmap" style="width:800px;height:350px;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap').html('&lt;p style="position:relative;top:50%;"&gt;Making heatmap, please wait...&lt;/p&gt;');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("width", $("#heatmap_Heatmap_heatmap").width() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("height", $("#heatmap_Heatmap_heatmap").height() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_control" style="display:none;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="7626"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7626-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-search'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7626-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-brush'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7626-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-7626-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="7626"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7626-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-search"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="width:250px;float:left;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="control-label" id="heatmap_Heatmap_keyword-label" for="heatmap_Heatmap_keyword"&gt;Keywords&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;input id="heatmap_Heatmap_keyword" type="text" class="shiny-input-text form-control" value="" placeholder="Multiple keywords separated by &amp;#39;,&amp;#39;" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="width:150px;float:left;padding-top:20px;padding-left:4px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_search_regexpr" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Regular expression&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="clear: both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_where" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_search_where-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_where-label" for="heatmap_Heatmap_search_where"&gt;Which dimension to search?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_search_where" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;on rows&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_search_where" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;on columns&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_heatmaps" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="heatmap_Heatmap_search_heatmaps-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_heatmaps-label" for="heatmap_Heatmap_search_heatmaps"&gt;Which heatmaps to search?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input type="checkbox" name="heatmap_Heatmap_search_heatmaps" value="" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;loading&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_extend" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="heatmap_Heatmap_search_extend-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_extend-label" for="heatmap_Heatmap_search_extend"&gt;Extend sub-heatmap to all heatmaps and annotations?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input type="checkbox" name="heatmap_Heatmap_search_extend" value="1"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;yes&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_search_action" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Search&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;p style="display:none;"&gt;Search Heatmap&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7626-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-brush"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush border&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_border"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush fill&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_fill"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div style="clear:both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_border_width-label" for="heatmap_Heatmap_color_pickers_border_width"&gt;Border width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;select class="shiny-input-select form-control" id="heatmap_Heatmap_color_pickers_border_width"&gt;&lt;option value="1" selected&gt;1px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="2"&gt;2px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="3"&gt;3px&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;script type="application/json" data-for="heatmap_Heatmap_color_pickers_border_width" data-eval="[&amp;quot;render&amp;quot;]"&gt;{"render":"{\n\t\t\t\t\t\t\t\t\t\toption: function(item, escape) {\n\t\t\t\t\t\t\t\t\t\t\treturn '&lt;div&gt;&lt;hr style=\"border-top:' + item.value + 'px solid black;\"&gt;&lt;\/div&gt;'\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}","plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_opacity-label" for="heatmap_Heatmap_color_pickers_opacity"&gt;Opacity&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input class="js-range-slider" id="heatmap_Heatmap_color_pickers_opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.6" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7626-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-save-image"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_heatmap_download_format-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_format-label" for="heatmap_Heatmap_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;png&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;pdf&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="3"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;svg&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_width-label" for="heatmap_Heatmap_heatmap_download_image_width"&gt;Image width (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_height-label" for="heatmap_Heatmap_heatmap_download_image_height"&gt;Image height (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled" download href="" id="heatmap_Heatmap_heatmap_download_button" tabindex="-1" target="_blank"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Save image</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-7626-4"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_width-label" for="heatmap_Heatmap_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_height-label" for="heatmap_Heatmap_heatmap_input_height"&gt;Box height&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_heatmap_input_size_button" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Change image size&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_sub_heatmap_group" style="width:400; height:350;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Selected sub-heatmap&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_sub_heatmap_resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-plot-output html-fill-item" id="heatmap_Heatmap_sub_heatmap" style="width:400px;height:350px;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_sub_heatmap_resize").css("width", $("#heatmap_Heatmap_sub_heatmap").width() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_sub_heatmap_resize").css("height", $("#heatmap_Heatmap_sub_heatmap").height() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_sub_heatmap_control" style="display:none;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="6565"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6565-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-tasks'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6565-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-table'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6565-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-6565-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="6565"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6565-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-setting"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="float:left;width:150px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;input id="heatmap_Heatmap_show_row_names_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;span&gt;Show row names&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="float:left;width:160px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;input id="heatmap_Heatmap_show_column_names_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;span&gt;Show column names&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="clear: both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_show_annotation_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Show heatmap annotations&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_show_cell_fun_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Show cell decorations&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_fill_figure_checkbox" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Fill figure region&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;hr/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_remove_empty_checkbox" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Remove empty rows and columns&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;p style="padding-top:4px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						Remove &lt;input id="heatmap_Heatmap_post_remove" type="number" class="form-control" min="1" value="1" style="width:60px;display:inline;"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;span id="heatmap_Heatmap_post_remove_which"&gt;rows&lt;/span&gt; from </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;select id="heatmap_Heatmap_post_remove_dimension" class="form-control" style="width:auto;display:inline;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="top" selected&gt;top&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="bottom"&gt;bottom&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="left"&gt;left&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="right"&gt;right&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 							</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;button id="heatmap_Heatmap_post_remove_submit" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Remove&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;button id="heatmap_Heatmap_post_remove_reset" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Reset&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								$('#heatmap_Heatmap_post_remove_dimension').change(function() {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									if($(this).val() == 1 || $(this).val() == 2) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 										$('#heatmap_Heatmap_post_remove_which').text('rows');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									} else {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 										$('#heatmap_Heatmap_post_remove_which').text('columns');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								});</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 							&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;hr/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;p style="max-width:300px;"&gt;Click the button below to turn the sub-heatmap into an interactive app.&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_modal" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Interactivate sub-heatmap&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6565-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-table"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;p&gt;Export values in sub-heatmaps as a text table.&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_table" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Open table&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6565-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-save-image"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_sub_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_sub_heatmap_download_format-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_format-label" for="heatmap_Heatmap_sub_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;png&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;pdf&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="3"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;svg&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_image_width-label" for="heatmap_Heatmap_sub_heatmap_download_image_width"&gt;Image width (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_download_image_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_image_height-label" for="heatmap_Heatmap_sub_heatmap_download_image_height"&gt;Image height (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_download_image_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled" download href="" id="heatmap_Heatmap_sub_heatmap_download_button" tabindex="-1" target="_blank"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Save image</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-6565-4"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_width-label" for="heatmap_Heatmap_sub_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_input_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_height-label" for="heatmap_Heatmap_sub_heatmap_input_height"&gt;Box height&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_input_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_sub_heatmap_input_size_button" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Change image size&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_download_image_width').val($('#heatmap_Heatmap_sub_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_download_image_height').val($('#heatmap_Heatmap_sub_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_input_width').val($('#heatmap_Heatmap_sub_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_sub_heatmap_input_height').val($('#heatmap_Heatmap_sub_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_output_wrapper" style="width: 400px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Output&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_info" class="shiny-html-output"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;style&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			.heatmap_Heatmap_widget #heatmap_Heatmap_sub_heatmap_group {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				display:table-cell;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			.heatmap_Heatmap_widget #heatmap_Heatmap_output_wrapper {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				display:table-cell;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/style&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;VizModules.heatmapFitWidth({"id":"heatmap_Heatmap","root":".heatmap_Heatmap_widget","panels":["heatmap","sub_heatmap"],"output":true});&lt;/script&gt;</span>
-<span class="r-in"><span><span class="co"># Compact: no sub-heatmap panel, click/brush info floats near the cursor</span></span></span>
-<span class="r-in"><span><span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, compact <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="container-fluid heatmap_Heatmap_widget"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_heatmap_group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Original heatmap&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-plot-output html-fill-item" data-brush-clip="TRUE" data-brush-delay="300" data-brush-delay-type="debounce" data-brush-direction="xy" data-brush-fill="#9cf" data-brush-id="heatmap_Heatmap_heatmap_brush" data-brush-opacity="0.6" data-brush-reset-on-new="FALSE" data-brush-stroke="#f00" data-click-clip="TRUE" data-click-id="heatmap_Heatmap_heatmap_click" id="heatmap_Heatmap_heatmap" style="width:450px;height:350px;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap').html('&lt;p style="position:relative;top:50%;"&gt;Making heatmap, please wait...&lt;/p&gt;');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("width", $("#heatmap_Heatmap_heatmap").width() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("height", $("#heatmap_Heatmap_heatmap").height() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_control" style="display:none;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="5180"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-5180-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-brush'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-5180-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-5180-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="5180"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-5180-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-brush"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush border&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_border"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush fill&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_fill"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div style="clear:both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_border_width-label" for="heatmap_Heatmap_color_pickers_border_width"&gt;Border width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;select class="shiny-input-select form-control" id="heatmap_Heatmap_color_pickers_border_width"&gt;&lt;option value="1" selected&gt;1px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="2"&gt;2px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="3"&gt;3px&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;script type="application/json" data-for="heatmap_Heatmap_color_pickers_border_width" data-eval="[&amp;quot;render&amp;quot;]"&gt;{"render":"{\n\t\t\t\t\t\t\t\t\t\toption: function(item, escape) {\n\t\t\t\t\t\t\t\t\t\t\treturn '&lt;div&gt;&lt;hr style=\"border-top:' + item.value + 'px solid black;\"&gt;&lt;\/div&gt;'\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}","plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_opacity-label" for="heatmap_Heatmap_color_pickers_opacity"&gt;Opacity&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input class="js-range-slider" id="heatmap_Heatmap_color_pickers_opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.6" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-5180-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-save-image"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_heatmap_download_format-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_format-label" for="heatmap_Heatmap_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;png&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;pdf&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="3"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;svg&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_width-label" for="heatmap_Heatmap_heatmap_download_image_width"&gt;Image width (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_height-label" for="heatmap_Heatmap_heatmap_download_image_height"&gt;Image height (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled" download href="" id="heatmap_Heatmap_heatmap_download_button" tabindex="-1" target="_blank"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Save image</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-5180-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_width-label" for="heatmap_Heatmap_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_height-label" for="heatmap_Heatmap_heatmap_input_height"&gt;Box height&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_heatmap_input_size_button" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Change image size&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_output_wrapper" style="width: 400px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Output&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_info" class="shiny-html-output"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;$(document.body).append( $('#heatmap_Heatmap_output_wrapper').detach() );&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;VizModules.heatmapFitWidth({"id":"heatmap_Heatmap","root":".heatmap_Heatmap_widget","panels":["heatmap","sub_heatmap"],"output":true});&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;VizModules.heatmapFloatOutput({"id":"heatmap_Heatmap"});&lt;/script&gt;</span>
-<span class="r-in"><span><span class="co"># Fixed pixel widths, ignoring the container:</span></span></span>
-<span class="r-in"><span><span class="fu">ComplexHeatmap_HeatmapOutputUI</span><span class="op">(</span><span class="st">"heatmap"</span>, fit.width <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="container-fluid heatmap_Heatmap_widget"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_heatmap_group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Original heatmap&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-plot-output html-fill-item" data-brush-clip="TRUE" data-brush-delay="300" data-brush-delay-type="debounce" data-brush-direction="xy" data-brush-fill="#9cf" data-brush-id="heatmap_Heatmap_heatmap_brush" data-brush-opacity="0.6" data-brush-reset-on-new="FALSE" data-brush-stroke="#f00" data-click-clip="TRUE" data-click-id="heatmap_Heatmap_heatmap_click" id="heatmap_Heatmap_heatmap" style="width:450px;height:350px;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap').html('&lt;p style="position:relative;top:50%;"&gt;Making heatmap, please wait...&lt;/p&gt;');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("width", $("#heatmap_Heatmap_heatmap").width() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_heatmap_resize").css("height", $("#heatmap_Heatmap_heatmap").height() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_heatmap_control" style="display:none;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="2608"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2608-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-search'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2608-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-brush'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2608-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2608-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="2608"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-search&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2608-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-search"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="width:250px;float:left;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="control-label" id="heatmap_Heatmap_keyword-label" for="heatmap_Heatmap_keyword"&gt;Keywords&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;input id="heatmap_Heatmap_keyword" type="text" class="shiny-input-text form-control" value="" placeholder="Multiple keywords separated by &amp;#39;,&amp;#39;" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="width:150px;float:left;padding-top:20px;padding-left:4px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_search_regexpr" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Regular expression&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div style="clear: both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_where" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_search_where-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_where-label" for="heatmap_Heatmap_search_where"&gt;Which dimension to search?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_search_where" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;on rows&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_search_where" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;on columns&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_heatmaps" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="heatmap_Heatmap_search_heatmaps-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_heatmaps-label" for="heatmap_Heatmap_search_heatmaps"&gt;Which heatmaps to search?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input type="checkbox" name="heatmap_Heatmap_search_heatmaps" value="" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;loading&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_search_extend" class="form-group shiny-input-checkboxgroup shiny-input-container" role="group" aria-labelledby="heatmap_Heatmap_search_extend-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_search_extend-label" for="heatmap_Heatmap_search_extend"&gt;Extend sub-heatmap to all heatmaps and annotations?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input type="checkbox" name="heatmap_Heatmap_search_extend" value="1"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;yes&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_search_action" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Search&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;p style="display:none;"&gt;Search Heatmap&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-brush&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2608-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-brush"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush border&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_border"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div class="form-group shiny-input-container" style="float:left; width:120px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;label&gt;Brush fill&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div id="heatmap_Heatmap_color_pickers_fill"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								&lt;div style="clear:both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_border_width-label" for="heatmap_Heatmap_color_pickers_border_width"&gt;Border width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;select class="shiny-input-select form-control" id="heatmap_Heatmap_color_pickers_border_width"&gt;&lt;option value="1" selected&gt;1px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="2"&gt;2px&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;option value="3"&gt;3px&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;script type="application/json" data-for="heatmap_Heatmap_color_pickers_border_width" data-eval="[&amp;quot;render&amp;quot;]"&gt;{"render":"{\n\t\t\t\t\t\t\t\t\t\toption: function(item, escape) {\n\t\t\t\t\t\t\t\t\t\t\treturn '&lt;div&gt;&lt;hr style=\"border-top:' + item.value + 'px solid black;\"&gt;&lt;\/div&gt;'\n\t\t\t\t\t\t\t\t\t\t}\n\t\t\t\t\t\t\t\t\t}","plugins":["selectize-plugin-a11y"]}&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_color_pickers_opacity-label" for="heatmap_Heatmap_color_pickers_opacity"&gt;Opacity&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input class="js-range-slider" id="heatmap_Heatmap_color_pickers_opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.6" data-step="0.01" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2608-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-save-image"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_heatmap_download_format-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_format-label" for="heatmap_Heatmap_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;png&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;pdf&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_heatmap_download_format" value="3"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;svg&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_width-label" for="heatmap_Heatmap_heatmap_download_image_width"&gt;Image width (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_download_image_height-label" for="heatmap_Heatmap_heatmap_download_image_height"&gt;Image height (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_download_image_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled" download href="" id="heatmap_Heatmap_heatmap_download_button" tabindex="-1" target="_blank"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Save image</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2608-4"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_tabs-resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_width-label" for="heatmap_Heatmap_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_heatmap_input_height-label" for="heatmap_Heatmap_heatmap_input_height"&gt;Box height&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_heatmap_input_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_heatmap_input_size_button" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Change image size&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_download_image_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_width').val($('#heatmap_Heatmap_heatmap').width());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 				$('#heatmap_Heatmap_heatmap_input_height').val($('#heatmap_Heatmap_heatmap').height());</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div id="heatmap_Heatmap_sub_heatmap_group" style="width:400; height:350;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;h5&gt;Selected sub-heatmap&lt;/h5&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_sub_heatmap_resize"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="shiny-plot-output html-fill-item" id="heatmap_Heatmap_sub_heatmap" style="width:400px;height:350px;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_sub_heatmap_resize").css("width", $("#heatmap_Heatmap_sub_heatmap").width() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 			$("#heatmap_Heatmap_sub_heatmap_resize").css("height", $("#heatmap_Heatmap_sub_heatmap").height() + 4);</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 		&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;div id="heatmap_Heatmap_sub_heatmap_control" style="display:none;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;div class="tabbable"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;ul class="nav nav-tabs" data-tabsetid="2101"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li class="active"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2101-1" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-tasks'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2101-2" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-table'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2101-3" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-images'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;a href="#tab-2101-4" data-toggle="tab" data-bs-toggle="tab" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;"&gt;&lt;i class='fa fa-expand-arrows-alt'&gt;&lt;/i&gt;&lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/li&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;/ul&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>         &lt;div class="tab-content" data-tabsetid="2101"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane active" data-value="&amp;lt;i class=&amp;#39;fa fa-tasks&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2101-1"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-setting"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="float:left;width:150px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;input id="heatmap_Heatmap_show_row_names_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;span&gt;Show row names&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="float:left;width:160px"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;input id="heatmap_Heatmap_show_column_names_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                         &lt;span&gt;Show column names&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div style="clear: both;"&gt;&lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_show_annotation_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Show heatmap annotations&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_show_cell_fun_checkbox" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Show cell decorations&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_fill_figure_checkbox" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Fill figure region&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;hr/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;input id="heatmap_Heatmap_remove_empty_checkbox" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                       &lt;span&gt;Remove empty rows and columns&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;p style="padding-top:4px;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						Remove &lt;input id="heatmap_Heatmap_post_remove" type="number" class="form-control" min="1" value="1" style="width:60px;display:inline;"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;span id="heatmap_Heatmap_post_remove_which"&gt;rows&lt;/span&gt; from </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;select id="heatmap_Heatmap_post_remove_dimension" class="form-control" style="width:auto;display:inline;"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="top" selected&gt;top&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="bottom"&gt;bottom&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="left"&gt;left&lt;/option&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;option value="right"&gt;right&lt;/option&gt;&lt;/select&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 						&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 							</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;button id="heatmap_Heatmap_post_remove_submit" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Remove&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;button id="heatmap_Heatmap_post_remove_reset" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Reset&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								$('#heatmap_Heatmap_post_remove_dimension').change(function() {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									if($(this).val() == 1 || $(this).val() == 2) {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 										$('#heatmap_Heatmap_post_remove_which').text('rows');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									} else {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 										$('#heatmap_Heatmap_post_remove_which').text('columns');</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 									}</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 								});</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 							&lt;/script&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;hr/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;p style="max-width:300px;"&gt;Click the button below to turn the sub-heatmap into an interactive app.&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_modal" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Interactivate sub-heatmap&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-table&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2101-2"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-table"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;p&gt;Export values in sub-heatmaps as a text table.&lt;/p&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;button id="heatmap_Heatmap_open_table" type="button" class="btn btn-default action-button"&gt;&lt;span class="action-label"&gt;Open table&lt;/span&gt;&lt;/button&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-images&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2101-3"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-save-image"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div id="heatmap_Heatmap_sub_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_sub_heatmap_download_format-label"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_format-label" for="heatmap_Heatmap_sub_heatmap_download_format"&gt;Which format?&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;div class="shiny-options-group"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="1" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;png&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="2"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;pdf&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;label class="radio-inline"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;input type="radio" name="heatmap_Heatmap_sub_heatmap_download_format" value="3"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                     &lt;span&gt;svg&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                   &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_image_width-label" for="heatmap_Heatmap_sub_heatmap_download_image_width"&gt;Image width (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_download_image_width" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_image_height-label" for="heatmap_Heatmap_sub_heatmap_download_image_height"&gt;Image height (in px)&lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;input id="heatmap_Heatmap_sub_heatmap_download_image_height" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;a aria-disabled="true" class="btn btn-default shiny-download-link disabled" download href="" id="heatmap_Heatmap_sub_heatmap_download_button" tabindex="-1" target="_blank"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;i class="fas fa-download" role="presentation" aria-label="download icon"&gt;&lt;/i&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                 Save image</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;/a&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2101-4"&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           &lt;div class="tab-pane" data-value="&amp;lt;i class=&amp;#39;fa fa-expand-arrows-alt&amp;#39;&amp;gt;&amp;lt;/i&amp;gt;" id="tab-2349-4"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>             &lt;div id="heatmap_Heatmap_sub_tabs-resize"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>               &lt;div class="form-group shiny-input-container"&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                 &lt;label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_width-label" for="heatmap_Heatmap_sub_heatmap_input_width"&gt;Box width&lt;/label&gt;</span>

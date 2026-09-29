@@ -174,6 +174,10 @@ conversion quirks that change or drop functionality.</label></li>
 <code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code>, <code><a href="../reference/validate_expression.html">validate_expression()</a></code>, or
 <code><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn()</a></code> instead (see <a href="#sanitizing-user-provided-expressions">Sanitizing User-Provided
 Expressions</a> below).</label></li>
+<li><label><input type="checkbox">If you write any CSS, anchor every
+selector on a class this package owns — a stylesheet goes into the host
+app’s document unscoped (see <a href="#styling-and-css-containment">Styling and CSS
+Containment</a>).</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -309,15 +313,22 @@ in the UI docs so users know what to expect.</label></li>
 [createModuleApp()]:</label></li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">myPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
+<code class="sourceCode R"><span><span class="va">myPlotApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data_list</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">defaults</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">hide.inputs</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">hide.tabs</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="co"># With no data, open on the module's showcase example (its entry in</span></span>
+<span>    <span class="co"># .module_showcase()), layering any caller defaults over its own.</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">data_list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
-<span>        <span class="va">data_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="st">"example"</span> <span class="op">=</span> <span class="va">my_default_data</span><span class="op">)</span></span>
+<span>        <span class="va">example</span> <span class="op">&lt;-</span> <span class="fu">.module_example</span><span class="op">(</span><span class="st">"myplot"</span><span class="op">)</span></span>
+<span>        <span class="va">data_list</span> <span class="op">&lt;-</span> <span class="va">example</span><span class="op">$</span><span class="va">data_list</span></span>
+<span>        <span class="va">defaults</span> <span class="op">&lt;-</span> <span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/modifyList.html" class="external-link">modifyList</a></span><span class="op">(</span><span class="va">example</span><span class="op">$</span><span class="va">defaults</span>, <span class="va">defaults</span> <span class="op"><a href="https://rdrr.io/r/base/Control.html" class="external-link">%||%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span>    <span class="fu"><a href="../reference/createModuleApp.html">createModuleApp</a></span><span class="op">(</span></span>
 <span>        inputs_ui_fn <span class="op">=</span> <span class="va">myPlotInputsUI</span>,</span>
 <span>        output_ui_fn <span class="op">=</span> <span class="va">myPlotOutputUI</span>,</span>
 <span>        server_fn    <span class="op">=</span> <span class="va">myPlotServer</span>,</span>
 <span>        data_list    <span class="op">=</span> <span class="va">data_list</span>,</span>
+<span>        defaults     <span class="op">=</span> <span class="va">defaults</span>,</span>
+<span>        hide.inputs  <span class="op">=</span> <span class="va">hide.inputs</span>,</span>
+<span>        hide.tabs    <span class="op">=</span> <span class="va">hide.tabs</span>,</span>
 <span>        title        <span class="op">=</span> <span class="st">"Modular myPlots"</span></span>
 <span>    <span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
@@ -325,9 +336,13 @@ in the UI docs so users know what to expect.</label></li>
 <li><label><input type="checkbox"><code><a href="../reference/createModuleApp.html">createModuleApp()</a></code>
 already handles validation, data import, data filtering, and dataset
 switching — no need to duplicate that logic.</label></li>
-<li><label><input type="checkbox">Add the module to the gallery app
-(<code>inst/apps/module-gallery/app.R</code>), placing it in its own tab
-alongside the other modules.</label></li>
+<li><label><input type="checkbox">Open the <code>*App()</code> on the
+module’s showcase example when no <code>data_list</code> is given, as
+the other <code>*App()</code> functions do:
+<code>example &lt;- .module_example("&lt;id&gt;")</code>, then use
+<code>example$data_list</code> and layer the caller’s
+<code>defaults</code> over <code>example$defaults</code> (see “Gallery
+App and Figure Builder” below).</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -368,6 +383,21 @@ shape (e.g., pre-summarized table for pies).</label></li>
 for the plotting function (happy paths + invalid inputs).</label></li>
 <li><label><input type="checkbox">Only after the plotting function is
 stable, build the module UI/server/app wrappers around it.</label></li>
+<li><label><input type="checkbox">If you pass an array to a trace by
+value (such as <code>error_y = list(array = ...)</code>) on a plot
+coloured by a discrete column, sort the data by that column first.
+plotly re-sorts its own copy by the colour column before splitting it
+into traces, but not your array, so otherwise each series is drawn with
+other series’ values. <code><a href="../reference/linePlot.html">linePlot()</a></code> does this with
+<code>.group_rows_by_trace()</code>; test it on the built figure, with
+colour columns stored as character, factor and ordered
+factor.</label></li>
+<li><label><input type="checkbox">Inside
+<code><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise()</a></code>/<code><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate()</a></code>, a data column named like
+one of your arguments (<code>y</code>, say) masks it. Resolve what the
+verb needs into local variables before calling it, and test with a data
+frame whose columns are literally named <code>x</code> and
+<code>y</code>.</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -435,7 +465,9 @@ update it:</label></p>
 <span>    <span class="va">pairs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/generate_pair_strings.html">generate_pair_strings</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">input</span><span class="op">$</span><span class="va">stat.x</span><span class="op">)</span></span>
 <span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">pairs</span><span class="op">)</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span> <span class="op">{</span></span>
 <span>        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/freezeReactiveValue.html" class="external-link">freezeReactiveValue</a></span><span class="op">(</span><span class="va">input</span>, <span class="st">"stat.pairs"</span><span class="op">)</span></span>
-<span>        <span class="fu"><a href="../reference/update_viz_select.html">update_viz_select</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"stat.pairs"</span>, choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="va">pairs</span><span class="op">)</span>, selected <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span>        <span class="fu"><a href="../reference/update_viz_select.html">update_viz_select</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"stat.pairs"</span>,</span>
+<span>            choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">""</span>, <span class="va">pairs</span><span class="op">)</span>, selected <span class="op">=</span> <span class="fu">.default_stat_pairs</span><span class="op">(</span><span class="va">defaults</span>, <span class="va">pairs</span><span class="op">)</span></span>
+<span>        <span class="op">)</span></span>
 <span>    <span class="op">}</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 </li>
@@ -742,10 +774,12 @@ them to the plotly figure.</label></li>
 <code>last_stats_df(stats_df)</code>.</label></li>
 <li><label><input type="checkbox">Add an <code>observeEvent</code> to
 update <code>stat.pairs</code> choices when the x or grouping column
-changes, using <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code>.</label></li>
+changes, using <code><a href="../reference/generate_pair_strings.html">generate_pair_strings()</a></code>, selecting
+<code>.default_stat_pairs(defaults, pairs)</code> so a
+<code>stat.pairs</code> default is honoured.</label></li>
 <li><label><input type="checkbox">Call
-<code>.reset_stats_inputs(session)</code> in the reset
-observer.</label></li>
+<code>.reset_stats_inputs(session, defaults, pairs)</code> in the reset
+observer, with the pairs currently on offer.</label></li>
 </ul>
 </div>
 <div class="section level3">
@@ -785,25 +819,50 @@ y-axes</td>
 </tbody>
 </table>
 <p>See the <code>plotthis_BoxPlotServer</code>,
-<code>plotthis_ViolinPlotServer</code>, or
-<code>dittoViz_yPlotServer</code> implementations for complete
+<code>dittoViz_yPlotServer</code>, or
+<code>dittoViz_freqPlotServer</code> implementations for complete
 integration examples.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="gallery-app">Gallery App<a class="anchor" aria-label="anchor" href="#gallery-app"></a>
+<h2 id="gallery-app-and-figure-builder">Gallery App and Figure Builder<a class="anchor" aria-label="anchor" href="#gallery-app-and-figure-builder"></a>
 </h2>
 <ul class="task-list">
-<li><label><input type="checkbox">Add or update the gallery app at
-<code>inst/apps/module-gallery/app.R</code> to include the new module in
-its own tab.</label></li>
-<li><label><input type="checkbox">Each tab should load a small sample
-dataset and show the module’s inputs and outputs together.</label></li>
+<li><label><input type="checkbox">Register the module in
+<code>.module_showcase()</code> (<code>R/module_showcase.R</code>). That
+one entry gives it a tab in the gallery
+(<code><a href="../reference/moduleGalleryApp.html">moduleGalleryApp()</a></code>), a place in the Figure Builder, and
+the example its <code>*App()</code> opens on. It holds the module’s
+three functions, a <code>label</code> and a shorter
+<code>tab_label</code>, the <code>.example_datasets()</code> entry it is
+shown on, and the <code>defaults</code> it opens with.</label></li>
+<li><label><input type="checkbox">Make those <code>defaults</code>
+show the module off: switch on its distinctive features (statistics,
+highlights, fit lines, annotations, splits), not just the column
+mapping. If no bundled dataset gives a feature anything to show, extend
+one in <code>data-raw/generate_example_data.R</code> rather than leaving
+the feature off.</label></li>
+<li><label><input type="checkbox"><code>tests/testthat/test-showcase.R</code> checks
+every entry’s defaults name real columns and are accepted by the
+controls they seed; add an assertion there for any data effect your demo
+depends on (e.g. that a showcased comparison is
+significant).</label></li>
 <li><label><input type="checkbox">Verify namespacing: each module
 instance should have a unique <code>id</code> and independent
 state.</label></li>
 <li><label><input type="checkbox">Keep dependencies minimal (prefer
 built-in or generated datasets).</label></li>
+<li><label><input type="checkbox">If the module’s output is not a
+plotly graph, give it a <code>vector_svg</code> and a
+<code>raster_png</code> function of <code>(width, height, res)</code> so
+its panels appear in the Figure Builder’s SVG export and its source
+download carries images; <code><a href="../reference/draw_to_svg.html">draw_to_svg()</a></code> and
+<code><a href="../reference/draw_to_png.html">draw_to_png()</a></code> build them from any grid or base drawing. Put
+them on the summary list the server’s reactive returns (the source
+download reads them there), and attach <code>vector_svg</code> to the
+reactive as an attribute as well (the Figure Builder’s canvas export
+reads it there). See
+<code><a href="../reference/ComplexHeatmap_HeatmapServer.html">ComplexHeatmap_HeatmapServer()</a></code>.</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -819,6 +878,11 @@ and ensure tests pass locally.</label></li>
 missing or altered plot features.</label></li>
 <li><label><input type="checkbox">Verify both module instances in the
 example app work independently (namespacing correct).</label></li>
+<li><label><input type="checkbox">If you added CSS, render the module
+beside a stock <code><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput()</a></code>, <code><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel()</a></code>
+and <code><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">DT::datatable()</a></code> and confirm none of them changed (see
+<a href="#styling-and-css-containment">Styling and CSS
+Containment</a>).</label></li>
 </ul>
 </div>
 <div class="section level2">
@@ -938,7 +1002,8 @@ styling</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/uniform_legend_inputs_ui.html">uniform_legend_inputs_ui()</a></code></td>
-<td>Legend title and entry label font sizes</td>
+<td>Legend visibility, font family and colour, and title and entry label
+font sizes</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/uniform_annotation_inputs_ui.html">uniform_annotation_inputs_ui()</a></code></td>
@@ -1000,6 +1065,139 @@ block or vignette where the full qualified name aids readability.</p>
 </div>
 </div>
 <div class="section level2">
+<h2 id="styling-and-css-containment">Styling and CSS Containment<a class="anchor" aria-label="anchor" href="#styling-and-css-containment"></a>
+</h2>
+<p><strong>Every stylesheet a module loads is injected into the host
+app’s document.</strong> There is no shadow DOM and no automatic
+scoping: a rule you write for your widget applies to the whole page.
+Because each plot module pulls in a colour picker, attaching
+<em>any</em> module to a page brings the package’s stylesheets with it —
+so a careless selector silently restyles an app that merely embedded one
+plot.</p>
+<p>This has bitten the package three times (#355), and every case was
+the same mistake: styling a class the package does not own.</p>
+<div class="section level3">
+<h3 id="only-ever-style-classes-this-package-created">Only ever style classes this package created<a class="anchor" aria-label="anchor" href="#only-ever-style-classes-this-package-created"></a>
+</h3>
+<p>Anchor every selector on a package-owned prefix —
+<code>.multi-color-picker</code>, <code>.mc-</code>, <code>.mdi-</code>,
+<code>.vizmodules-</code>, <code>.viz-</code>, <code>.pb-</code>. Never
+write a bare rule against a class that belongs to Bootstrap, Shiny,
+selectize, DT or any other library:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a><span class="co">/* WRONG — restyles every dropdown, well and tab strip in the host app */</span></span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a><span class="fu">.selectize-dropdown</span> <span class="fu">.option</span> { <span class="kw">padding</span><span class="ch">:</span> <span class="dv">0</span> <span class="at">!important</span><span class="op">;</span> }</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a><span class="fu">.well</span> <span class="fu">.btn</span> { <span class="kw">padding</span><span class="ch">:</span> <span class="dv">4</span><span class="dt">px</span> <span class="dv">10</span><span class="dt">px</span><span class="op">;</span> }</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a><span class="fu">.nav-tabs</span> { <span class="kw">flex-wrap</span><span class="ch">:</span> <span class="dv">wrap</span><span class="op">;</span> }</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a><span class="co">/* RIGHT — reaches only markup this package rendered */</span></span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a><span class="fu">.mc-palette-dropdown</span> <span class="fu">.option</span> { <span class="kw">padding</span><span class="ch">:</span> <span class="dv">0</span> <span class="at">!important</span><span class="op">;</span> }</span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a><span class="fu">.pb-app</span> <span class="fu">.well</span> <span class="fu">.btn</span> { <span class="kw">padding</span><span class="ch">:</span> <span class="dv">4</span><span class="dt">px</span> <span class="dv">10</span><span class="dt">px</span><span class="op">;</span> }</span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a><span class="fu">.vizmodules-input-tabs</span> <span class="op">&gt;</span> <span class="fu">.nav-tabs</span> { <span class="kw">flex-wrap</span><span class="ch">:</span> <span class="dv">wrap</span><span class="op">;</span> }</span></code></pre></div>
+<p>The trap is that these rules <em>look</em> scoped.
+<code>.well .btn</code> reads like “the buttons in my well” — but
+<code>.well</code> is what <code><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">shiny::sidebarPanel()</a></code> renders,
+so it is every sidebar on the page. If a selector’s leftmost class is
+not one you invented, it is not scoped.</p>
+<p><code>tests/testthat/test-ui_utils.R</code> enforces this: it parses
+every selector in every bundled and inline stylesheet and fails on
+anything not anchored to a package prefix. Add your widget’s prefix
+there if you introduce one.</p>
+</div>
+<div class="section level3">
+<h3 id="a-dropdown-or-popover-parented-to-body-needs-its-own-marker-class">A dropdown or popover parented to <code>&lt;body&gt;</code> needs
+its own marker class<a class="anchor" aria-label="anchor" href="#a-dropdown-or-popover-parented-to-body-needs-its-own-marker-class"></a>
+</h3>
+<p>Anything that escapes its container to avoid clipping — selectize’s
+<code>dropdownParent: "body"</code>, a tooltip, a popper — can no longer
+be reached by a <code>.my-widget .thing</code> selector, which is
+exactly why the leaking rules were written unscoped in the first place.
+Give the escaped element a class of its own instead:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">$</span>(select)<span class="op">.</span><span class="fu">selectize</span>({</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="dt">dropdownParent</span><span class="op">:</span> <span class="st">"body"</span><span class="op">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>  <span class="co">// Selectize replaces its default dropdownClass wholesale, so its own class</span></span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>  <span class="co">// has to be restated alongside ours.</span></span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  <span class="dt">dropdownClass</span><span class="op">:</span> <span class="st">"selectize-dropdown mc-palette-dropdown"</span><span class="op">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="check-that-the-rule-matches-what-you-think-it-does">Check that the rule matches what you think it does<a class="anchor" aria-label="anchor" href="#check-that-the-rule-matches-what-you-think-it-does"></a>
+</h3>
+<p><code>.selectize-dropdown .option</code> never matched the colour
+picker’s own options at all — its custom <code>render.option</code>
+emits <code>.mc-palette-option</code>, and selectize does not add
+<code>.option</code> to that. The rule’s <em>only</em> effect was on
+other people’s dropdowns: a selector that misses everything you own and
+hits everything you don’t. Open the widget, inspect the element, and
+confirm the class you are targeting is actually on it.</p>
+</div>
+<div class="section level3">
+<h3 id="keep-layout-out-of-inline-styles">Keep layout out of inline styles<a class="anchor" aria-label="anchor" href="#keep-layout-out-of-inline-styles"></a>
+</h3>
+<p>An inline <code>style=</code> attribute can only be overridden with
+<code>!important</code>, which makes a host app fight your widget rather
+than theme it. Put layout in a stylesheet and pass only the values that
+vary per instance, as CSS custom properties:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># organize_inputs() emits just the column count; the rest lives in vizModules.css</span></span>
+<span><span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span>
+<span>    class <span class="op">=</span> <span class="st">"vizmodules-input-grid"</span>,</span>
+<span>    style <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"--viz-input-columns: "</span>, <span class="va">columns</span>, <span class="st">";"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">cells</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span>class <span class="op">=</span> <span class="st">"vizmodules-input-cell"</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="do-not-assume-anything-about-the-parent">Do not assume anything about the parent<a class="anchor" aria-label="anchor" href="#do-not-assume-anything-about-the-parent"></a>
+</h3>
+<p>The control grid used Bootstrap’s negative-margin row idiom
+(<code>margin-left: -15px</code> on the row, matching padding on each
+cell), which assumes a parent with at least that much horizontal padding
+to absorb it. Dropped into a <code><a href="https://rstudio.github.io/bslib/reference/sidebar.html" class="external-link">bslib::sidebar()</a></code> with less,
+the grid overhung on both sides and the sidebar grew a horizontal
+scrollbar. Use <code>gap</code> instead — it needs nothing from the
+parent.</p>
+<p>Give flex children <code>min-width: 0</code> as well. Without it a
+long select or label refuses to shrink below its intrinsic width and
+pushes the container wider — the same overflow by a different route.</p>
+</div>
+<div class="section level3">
+<h3 id="shipping-a-stylesheet">Shipping a stylesheet<a class="anchor" aria-label="anchor" href="#shipping-a-stylesheet"></a>
+</h3>
+<p>Put it in <code>inst/src/</code>, serve it through an
+<code>htmlDependency()</code>, and attach it to the UI that needs it
+rather than to the app as a whole:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">.viz_modules_dependency</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="fu">htmlDependency</span><span class="op">(</span></span>
+<span>        name <span class="op">=</span> <span class="st">"viz-modules"</span>,</span>
+<span>        version <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">as.character</a></span><span class="op">(</span><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/packageDescription.html" class="external-link">packageVersion</a></span><span class="op">(</span><span class="st">"VizModules"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        src <span class="op">=</span> <span class="st">"src"</span>, package <span class="op">=</span> <span class="st">"VizModules"</span>,</span>
+<span>        stylesheet <span class="op">=</span> <span class="st">"vizModules.css"</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">}</span></span></code></pre></div>
+<p>Attaching it with
+<code>htmltools::attachDependencies(ui, dep, append = TRUE)</code> means
+the styles travel with the markup — including through a runtime
+<code><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">insertUI()</a></code>, which the Figure Builder relies on when it
+injects a panel’s controls.</p>
+</div>
+<div class="section level3">
+<h3 id="verifying-containment">Verifying containment<a class="anchor" aria-label="anchor" href="#verifying-containment"></a>
+</h3>
+<p>Automated checks catch an unscoped <em>selector</em>, but not whether
+your rule actually changed anything. To see the real effect, load the
+widget beside a stock <code><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput()</a></code>,
+<code><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html" class="external-link">sidebarPanel()</a></code> and <code><a href="https://rdrr.io/pkg/DT/man/datatable.html" class="external-link">DT::datatable()</a></code>, then
+disable just your stylesheet in the browser and re-measure:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb22-1"><a href="#cb22-1" tabindex="-1"></a><span class="bu">document</span><span class="op">.</span><span class="fu">querySelectorAll</span>(<span class="st">'link[rel=stylesheet]'</span>)<span class="op">.</span><span class="fu">forEach</span>(<span class="kw">function</span> (l) {</span>
+<span id="cb22-2"><a href="#cb22-2" tabindex="-1"></a>  <span class="cf">if</span> (l<span class="op">.</span><span class="at">href</span><span class="op">.</span><span class="fu">indexOf</span>(<span class="st">'yourFile.css'</span>) <span class="op">!==</span> <span class="op">-</span><span class="dv">1</span>) { l<span class="op">.</span><span class="at">disabled</span> <span class="op">=</span> <span class="kw">true</span><span class="op">;</span> }</span>
+<span id="cb22-3"><a href="#cb22-3" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p>If a computed style on the host’s own controls changes, your CSS is
+leaking. If nothing in your widget changes, your rule was never matching
+in the first place.</p>
+</div>
+</div>
+<div class="section level2">
 <h2 id="sanitizing-user-provided-expressions">Sanitizing User-Provided Expressions<a class="anchor" aria-label="anchor" href="#sanitizing-user-provided-expressions"></a>
 </h2>
 <p><strong>Never use <code>eval(str2expression())</code> or
@@ -1019,7 +1217,7 @@ expression is parsed, its AST is walked to ensure only allowed
 operations are present (comparisons, logical operators, column
 references, and literals), and then it is evaluated in a restricted
 environment containing only the data frame’s columns.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — filtering rows by a textInput:</span></span>
 <span><span class="va">rows.use</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_eval_filter.html">safe_eval_filter</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rows.use</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns a logical vector (same length as <code>nrow(data)</code>), or
@@ -1034,7 +1232,7 @@ disallowed operations.</p>
 string through to a downstream plotting function that will evaluate it
 internally (e.g., <code>plotthis::BoxPlot(highlight = ...)</code>). The
 string is validated but not executed.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — passing a highlight expression to plotthis:</span></span>
 <span><span class="va">highlight</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/validate_expression.html">validate_expression</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">highlight</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the original string if safe, or <code>NULL</code>.</p>
@@ -1050,7 +1248,7 @@ the allowed list (<code>"log2"</code>, <code>"log"</code>,
 <code>"log10"</code>, <code>"neg_log10"</code>, <code>"log1p"</code>,
 <code>"as.factor"</code>, <code>"abs"</code>, <code>"sqrt"</code>) are
 accepted.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># In a module server — resolving an adjustment function:</span></span>
 <span><span class="va">x.adj.fxn</span> <span class="op">=</span> <span class="fu"><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn</a></span><span class="op">(</span><span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.adj.fxn</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Returns the function, or <code>NULL</code> if the name is empty or
@@ -1059,7 +1257,9 @@ not in the allowed list.</p>
 <div class="section level3">
 <h3 id="what-counts-as-allowed">What counts as “allowed”?<a class="anchor" aria-label="anchor" href="#what-counts-as-allowed"></a>
 </h3>
-<p>All three helpers share the same whitelist of safe AST nodes:</p>
+<p><code><a href="../reference/safe_eval_filter.html">safe_eval_filter()</a></code> and
+<code><a href="../reference/validate_expression.html">validate_expression()</a></code> share one whitelist of safe AST
+nodes:</p>
 <ul>
 <li>
 <strong>Comparisons:</strong> <code>&lt;</code>, <code>&gt;</code>,
@@ -1069,7 +1269,7 @@ not in the allowed list.</p>
 <li>
 <strong>Logical operators:</strong> <code>&amp;</code>,
 <code>&amp;&amp;</code>, <code>|</code>, <code>||</code>,
-<code>!</code>
+<code>!</code>, <code><a href="https://rdrr.io/r/base/Logic.html" class="external-link">xor()</a></code>
 </li>
 <li>
 <strong>Utilities:</strong> <code>%in%</code>, <code><a href="https://rdrr.io/r/base/c.html" class="external-link">c()</a></code>,
@@ -1077,7 +1277,14 @@ not in the allowed list.</p>
 </li>
 <li>
 <strong>Arithmetic:</strong> <code>-</code>, <code>+</code>,
-<code>*</code>, <code>/</code>, <code>:</code>, <code>%%</code>
+<code>*</code>, <code>/</code>, <code>:</code>, <code>%%</code>,
+<code><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs()</a></code>, <code><a href="https://rdrr.io/r/base/Round.html" class="external-link">round()</a></code>
+</li>
+<li>
+<strong>Strings and patterns:</strong> <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code>,
+<code><a href="https://rdrr.io/r/base/startsWith.html" class="external-link">startsWith()</a></code>, <code><a href="https://rdrr.io/r/base/startsWith.html" class="external-link">endsWith()</a></code>,
+<code><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr()</a></code>, <code><a href="https://rdrr.io/r/base/nchar.html" class="external-link">nchar()</a></code>, <code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">toupper()</a></code>,
+<code><a href="https://rdrr.io/r/base/chartr.html" class="external-link">tolower()</a></code>, <code><a href="https://rdrr.io/r/base/trimws.html" class="external-link">trimws()</a></code>
 </li>
 <li>
 <strong>Grouping:</strong> <code>()</code>
@@ -1092,7 +1299,25 @@ not in the allowed list.</p>
 </ul>
 <p>Anything outside this list (including function calls like
 <code><a href="https://rdrr.io/r/base/system.html" class="external-link">system()</a></code>, <code><a href="https://rdrr.io/r/base/files.html" class="external-link">file.remove()</a></code>,
-<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>, etc.) is rejected and a warning is issued.</p>
+<code><a href="https://rdrr.io/r/base/library.html" class="external-link">library()</a></code>, etc.) is rejected and a warning is issued. So is
+a namespaced or extracted call such as <code>base::log(x)</code>, which
+would otherwise slip past a name-based check.</p>
+<p>The expression must also be a <strong>single statement</strong>:
+anything after a <code>;</code> or a newline is rejected rather than
+silently ignored.</p>
+<p><code><a href="../reference/safe_resolve_adj_fxn.html">safe_resolve_adj_fxn()</a></code> is the exception — it does not
+walk an AST at all. It matches the whole input against its own short
+list of numeric transforms (<code>log2</code>, <code>log</code>,
+<code>log10</code>, <code>neg_log10</code>, <code>log1p</code>,
+<code>as.factor</code>, <code>abs</code>, <code>sqrt</code>) and
+resolves it with <code><a href="https://rdrr.io/r/base/match.fun.html" class="external-link">match.fun()</a></code>.</p>
+<p>Model formulas (<code>.safe_build_model()</code>, behind the custom
+fit lines) reuse the same walker with a formula-specific vocabulary:
+<code>~</code>, <code>+</code>, <code>-</code>, <code>*</code>,
+<code>/</code>, <code>^</code>, <code>(</code>, <code>:</code>,
+<code><a href="https://rdrr.io/r/base/AsIs.html" class="external-link">I()</a></code>, and the transforms <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log()</a></code>,
+<code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log2()</a></code>, <code><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10()</a></code>, <code><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt()</a></code>,
+<code><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp()</a></code>, <code><a href="https://rdrr.io/r/stats/poly.html" class="external-link">poly()</a></code>.</p>
 </div>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

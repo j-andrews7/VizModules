@@ -5,13 +5,20 @@
 Start with the hosted gallery to explore what each module can do:
 <https://j-andrews7-VizModules.share.connect.posit.cloud/>
 
-You can also run the same gallery locally from this package:
+You can also run the same gallery locally from this package. Each tab
+opens a module on an example dataset with its main features switched on,
+and the **Figure Builder** tab combines several modules into one
+multi-panel figure:
 
 ``` r
 
-library(shiny)
-shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))
+library(VizModules)
+moduleGalleryApp()
 ```
+
+Each module’s own example app
+(e.g. [`plotthis_BoxPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_BoxPlotApp.md))
+opens on the same example as its gallery tab.
 
 ## Working with an AI coding agent
 
@@ -54,24 +61,20 @@ minimal scatter plot example using the `dittoViz_scatterPlot` module:
 
 library(VizModules)
 
+# The same defaults go to the controls and the server, so Reset returns to them.
+cars_defaults <- list(x.by = "wt", y.by = "mpg", color.by = "cyl")
+
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            dittoViz_scatterPlotInputsUI("cars",
-                mtcars,
-                defaults = list(
-                    x.by = "wt",
-                    y.by = "mpg",
-                    color.by = "cyl"
-                )
-            )
+            dittoViz_scatterPlotInputsUI("cars", mtcars, defaults = cars_defaults)
         ),
         mainPanel(dittoViz_scatterPlotOutputUI("cars"))
     )
 )
 
 server <- function(input, output, session) {
-    dittoViz_scatterPlotServer("cars", data = reactive(mtcars))
+    dittoViz_scatterPlotServer("cars", data = reactive(mtcars), defaults = cars_defaults)
 }
 
 shinyApp(ui, server)
@@ -80,9 +83,11 @@ shinyApp(ui, server)
 ## Set defaults and hide controls
 
 - **Defaults**: Pass a named list to the `defaults` argument of
-  `*InputsUI()` to pre-fill inputs. Names match the underlying plot
-  function arguments (e.g.,
-  `defaults = list(fill.color = "steelblue")`).
+  `*InputsUI()` to pre-fill inputs, and the same list to the module’s
+  `*Server()` so its Reset button returns to them. Names are the
+  module’s input IDs, which mostly match the underlying plot function’s
+  arguments (e.g., `defaults = list(color.by = "cyl", size = 3)` for the
+  scatter plot).
 - **Reactive defaults**: An entry may be a
   [`reactive()`](https://rdrr.io/pkg/shiny/man/reactive.html) instead of
   a fixed value, so an input follows your app’s state
@@ -97,12 +102,14 @@ shinyApp(ui, server)
 
 ``` r
 
-dittoViz_scatterPlotServer(
-    "cars",
-    data = reactive(mtcars),
-    hide.inputs = c("split.by", "rows.use"),
-    hide.tabs = c("Plotly")
-)
+server <- function(input, output, session) {
+    dittoViz_scatterPlotServer(
+        "cars",
+        data = reactive(mtcars),
+        hide.inputs = c("split.by", "shape.by"),
+        hide.tabs = c("Plotly")
+    )
+}
 ```
 
 Hidden inputs and tabs still feed their values into the plot, so the
@@ -123,7 +130,7 @@ app <- createModuleApp(
     inputs_ui_fn = plotthis_BarPlotInputsUI,
     output_ui_fn = plotthis_BarPlotOutputUI,
     server_fn    = plotthis_BarPlotServer,
-    data_list    = list("cars" = mtcars),
+    data_list    = list("cars" = example_mtcars),
     title        = "My Bar Plot"
 )
 if (interactive()) runApp(app)
@@ -152,7 +159,20 @@ requires a reactive plotly plot; the output summary can be optionally
 enriched by both a stats reactive and a UI inputs reactive.
 [`create_source_download_handler()`](https://j-andrews7.github.io/VizModules/dev/reference/create_source_download_handler.md)
 also accepts a named list of summaries (one per plot), which is how the
-Panel Builder bundles every plot on its canvas into a single download.
+Figure Builder bundles every plot on its canvas into a single download.
+
+The `.zip` also carries an SVG and a PNG of each plot. Those are
+photographed in the browser, off the graph the user is looking at, so
+they match it exactly – including everything applied after the figure
+was built, such as reference lines, statistical brackets and dragged
+annotations. A module whose output is not a plotly graph has nothing to
+photograph and supplies its own instead, by putting a `vector_svg`
+and/or `raster_png` function of `(width, height, res)` on its summary
+list;
+[`draw_to_svg()`](https://j-andrews7.github.io/VizModules/dev/reference/draw_to_svg.md)
+and
+[`draw_to_png()`](https://j-andrews7.github.io/VizModules/dev/reference/draw_to_png.md)
+build one from any grid or base drawing.
 
 ``` r
 

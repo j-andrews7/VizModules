@@ -462,6 +462,108 @@ registered model backends</li>
 </ul>
 </div>
 </div>
+<div class="section level2">
+<h2 id="writing-your-own-custom-input">Writing Your Own Custom Input<a class="anchor" aria-label="anchor" href="#writing-your-own-custom-input"></a>
+</h2>
+<p>Both widgets above follow the same shape, and it is the one to copy
+if you add a third: a constructor in <code>R/</code>, a JS binding and a
+stylesheet in <code>inst/src/</code>, and an
+<code>htmlDependency()</code> tying them together.</p>
+<div class="section level3">
+<h3 id="styling-the-rule-that-matters-most">Styling: the rule that matters most<a class="anchor" aria-label="anchor" href="#styling-the-rule-that-matters-most"></a>
+</h3>
+<p><strong>A custom input’s stylesheet is injected into the host app’s
+document.</strong> There is no shadow DOM and no automatic scoping, so a
+rule written for your widget applies to the whole page. Since every plot
+module renders a <code>multiColorPicker</code>, attaching any module to
+an app brings these stylesheets along — which is how a single unscoped
+selector came to break stock <code><a href="https://rdrr.io/pkg/shiny/man/selectInput.html" class="external-link">selectInput()</a></code> dropdowns in
+apps that never used the picker directly (#355).</p>
+<p>Anchor every selector on a class you invented:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode css"><code class="sourceCode css"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">/* WRONG — `.selectize-dropdown`, `.option` and `.optgroup-header` all belong to</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">   selectize, so this restyles every dropdown on the page, including plain</span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="co">   selectInput()s and DT's column filters. */</span></span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">.selectize-dropdown</span> <span class="fu">.selectize-dropdown-content</span> {</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="kw">flex-direction</span><span class="ch">:</span> <span class="dv">column</span><span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>}</span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">/* RIGHT */</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="fu">.mc-palette-dropdown</span> <span class="fu">.selectize-dropdown-content</span> {</span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  <span class="kw">display</span><span class="ch">:</span> <span class="dv">flex</span><span class="op">;</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>  <span class="kw">flex-direction</span><span class="ch">:</span> <span class="dv">column</span><span class="op">;</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>}</span></code></pre></div>
+<p>The mistake is easy to make because the wrong version <em>looks</em>
+scoped — a two-part selector reads like “the content inside my
+dropdown”. The test is the <strong>leftmost</strong> class: if you did
+not invent it, the rule is not scoped.</p>
+</div>
+<div class="section level3">
+<h3 id="widgets-that-escape-their-container">Widgets that escape their container<a class="anchor" aria-label="anchor" href="#widgets-that-escape-their-container"></a>
+</h3>
+<p>A dropdown or popover often has to be parented to
+<code>&lt;body&gt;</code> so a panel with <code>overflow: hidden</code>
+cannot clip it. That is precisely what makes it unreachable from a
+<code>.my-widget .thing</code> selector — and precisely why the leaking
+rules above were written unscoped. The answer is to give the escaped
+element its own class:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a><span class="fu">$</span>(select)<span class="op">.</span><span class="fu">selectize</span>({</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>  <span class="dt">dropdownParent</span><span class="op">:</span> <span class="st">"body"</span><span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  <span class="co">// Selectize replaces its default dropdownClass wholesale, so restate its own</span></span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="co">// class alongside ours.</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>  <span class="dt">dropdownClass</span><span class="op">:</span> <span class="st">"selectize-dropdown mc-palette-dropdown"</span><span class="op">,</span></span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a>  <span class="op">...</span></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a>})<span class="op">;</span></span></code></pre></div>
+<p><code>multiColorPicker</code> does exactly this, which is why
+<code>multiColorPicker.css</code> can scope all fourteen of its dropdown
+rules to <code>.mc-palette-dropdown</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="confirm-your-selectors-actually-match">Confirm your selectors actually match<a class="anchor" aria-label="anchor" href="#confirm-your-selectors-actually-match"></a>
+</h3>
+<p>Before trusting a rule, inspect the element and check the class is
+really on it. One of the picker’s rules targeted <code>.option</code>,
+but its custom <code>render.option</code> emits
+<code>.mc-palette-option</code> and selectize never adds
+<code>.option</code> to it — so the rule matched nothing in the picker
+and <em>only</em> affected other widgets.</p>
+</div>
+<div class="section level3">
+<h3 id="other-practices-worth-copying">Other practices worth copying<a class="anchor" aria-label="anchor" href="#other-practices-worth-copying"></a>
+</h3>
+<ul>
+<li>
+<strong>Keep layout out of inline <code>style=</code>
+attributes.</strong> They can only be overridden with
+<code>!important</code>. Put layout in the stylesheet and pass
+per-instance values as CSS custom properties
+(<code>style = "--my-columns: 3;"</code>).</li>
+<li>
+<strong>Do not depend on the parent’s padding.</strong> Bootstrap’s
+negative-margin row idiom breaks in any container with less padding than
+it assumes; <code>gap</code> needs nothing from the parent.</li>
+<li>
+<strong>Give flex children <code>min-width: 0</code></strong>, or
+long content refuses to shrink and pushes the widget wider than its
+container.</li>
+<li>
+<strong>Let every row wrap.</strong> These widgets land in sidebars
+of any width, so controls that cannot shrink past a fixed width spill
+out instead of reflowing.</li>
+<li>
+<strong>Ship the CSS through an
+<code>htmlDependency()</code></strong> pointing at
+<code>inst/src/</code>, attached to the widget’s own markup with
+<code><a href="https://rstudio.github.io/htmltools/reference/htmlDependencies.html" class="external-link">htmltools::attachDependencies()</a></code>, so the styles travel with
+it through a runtime <code><a href="https://rdrr.io/pkg/shiny/man/insertUI.html" class="external-link">insertUI()</a></code>.</li>
+</ul>
+<p><code>tests/testthat/test-ui_utils.R</code> parses every selector in
+every stylesheet the package ships — bundled files and inline
+<code>&lt;style&gt;</code> blocks alike — and fails on any that is not
+anchored to a package-owned prefix. Add yours to that list when you
+introduce a widget.</p>
+</div>
+</div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>
 </div>

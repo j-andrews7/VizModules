@@ -35,6 +35,13 @@ linePlot(
   axis.tickwidth = 1,
   show.grid.x = TRUE,
   show.grid.y = TRUE,
+  grid.color = "#CCCCCC",
+  axis.title.font.size = 18,
+  axis.title.font.color = "black",
+  axis.title.font.family = "Arial",
+  facet.title.font.size = 18,
+  facet.title.font.color = "black",
+  facet.title.font.family = "Arial",
   title.text = "",
   title.font.size = 14,
   title.font.family = "Arial",
@@ -50,7 +57,9 @@ linePlot(
   order.by = NULL,
   error.colour = NULL,
   error.width = NULL,
-  error.bar = FALSE
+  error.bar = FALSE,
+  error.type = c("sd", "sem", "ci95"),
+  error.ci.method = c("normal", "t")
 )
 ```
 
@@ -189,6 +198,34 @@ linePlot(
 
   Logical, whether to show gridlines on the y-axis. Default: TRUE.
 
+- grid.color:
+
+  Character, hex color for gridlines. Default: "#CCCCCC".
+
+- axis.title.font.size:
+
+  Numeric, font size for the x/y axis titles. Default: 18.
+
+- axis.title.font.color:
+
+  Character, hex color for the x/y axis titles. Default: "black".
+
+- axis.title.font.family:
+
+  Character, font family for the x/y axis titles. Default: "Arial".
+
+- facet.title.font.size:
+
+  Numeric, font size for the facet panel titles. Default: 18.
+
+- facet.title.font.color:
+
+  Character, hex color for the facet panel titles. Default: "black".
+
+- facet.title.font.family:
+
+  Character, font family for the facet panel titles. Default: "Arial".
+
 - title.text:
 
   Character, main title text for the plot. Default: "".
@@ -267,7 +304,28 @@ linePlot(
 - error.bar:
 
   Boolean value to determine if error bars will be on or off on a plot
-  with a categorical X axis and only 1 Y axis variable
+  with a categorical X axis and only 1 Y axis variable. Each bar spans
+  the plotted group mean plus or minus the amount `error.type` selects,
+  computed from that group's y-values, where a group is a single x
+  category, split further by `colour.group.by` and `facet.by` when those
+  are set. A group with fewer than two observations has no spread and is
+  drawn without a bar.
+
+- error.type:
+
+  What the error bars show, one of `"sd"` (one standard deviation, the
+  default), `"sem"` (one standard error of the mean, `sd / sqrt(n)`) or
+  `"ci95"` (a 95% confidence interval for the mean). Missing values are
+  ignored when counting `n`.
+
+- error.ci.method:
+
+  How `error.type = "ci95"` is computed, one of `"normal"` (the default;
+  the standard error times the 97.5th percentile of the normal
+  distribution, 1.96) or `"t"` (the standard error times the 97.5th
+  percentile of the t distribution with `n - 1` degrees of freedom). The
+  t interval is wider for small groups and converges on the normal one
+  as `n` grows. Ignored for the other error types.
 
 ## Value
 

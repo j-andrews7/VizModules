@@ -1,7 +1,10 @@
 # Bar dataset for bar and split bar plot examples
 
-A small dataset with five groups, two categorical variables, and three
-numeric variables. Used as the default data for
+A small dataset with one row for each of six groups crossed with three
+types, so bars stack by `Type` and each `Type` facet of a split bar plot
+has one bar per `Group`. `Values` is positive and shrinks from Alpha to
+Gamma; `Numbers` and `Score` are signed, leaning positive for Alpha and
+negative for Gamma. Used as the default data for
 [`plotthis_BarPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_BarPlotApp.md)
 and
 [`plotthis_SplitBarPlotApp()`](https://j-andrews7.github.io/VizModules/dev/reference/plotthis_SplitBarPlotApp.md).
@@ -14,11 +17,11 @@ example_bar
 
 ## Format
 
-A data frame with 5 rows and 5 columns:
+A data frame with 18 rows and 5 columns:
 
 - Group:
 
-  Group label (A through E)
+  Group label (A through F)
 
 - Type:
 

@@ -32,7 +32,7 @@ build_model_row_spec()
 #> 
 #> $model_type$args
 #> $model_type$args$choices
-#> [1] "glm"   "lm"    "loess" "nls"  
+#> [1] "glm"   "lm"    "loess"
 #> 
 #> $model_type$args$selected
 #> [1] "lm"
