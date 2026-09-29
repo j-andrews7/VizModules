@@ -12,6 +12,8 @@ These modules contain all possible functionality for each plot with some additio
 The modules provide comprehensive plot control for app users, allowing for convenient aesthetic customizations and publication-quality images.
 They also provide developers a way to dramatically save time and reduce complexity of their plotting code or a flexible base to build more specialized Shiny modules upon.
 
+**This package is still in an experimental state undergoing active development. While each release should be stable and useable, breaking changes may occur frequently between versions until a major 1.0.0 release is made.**
+
 ## Install
 
 ```r
