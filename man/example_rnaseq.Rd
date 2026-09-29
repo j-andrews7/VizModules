@@ -3,7 +3,7 @@
 \docType{data}
 \name{example_rnaseq}
 \alias{example_rnaseq}
-\title{Example RNA-seq dataset for the RNA-seq showcase app}
+\title{Example pseudo-bulk RNA-seq dataset}
 \format{
 A data frame with 288 rows and 7 columns:
 \describe{
@@ -33,7 +33,7 @@ comparisons visually informative.
 \details{
 The dataset is designed to simultaneously support three VizModules plot types:
 \itemize{
-\item DotPlot — summarised \code{avg_expression} and \code{pct_expressed}
+\item DotPlot — summarised \code{avg_expression} and \code{neg_log10_pval}
 columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
 \item yPlot — per-replicate \code{log2_cpm} values grouped by
 \code{cell_type} and coloured by \code{condition}.

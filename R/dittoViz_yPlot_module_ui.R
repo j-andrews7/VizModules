@@ -22,12 +22,21 @@
 #' either replace the x-axis groups being compared or facet on two dimensions at once,
 #' neither of which the significance brackets can be placed against.
 #'
+#' The "Y Adjustment Function" is applied first and the "Y Adjustment" then rescales the
+#' result (e.g. log10, then z-score), the reverse of the order [dittoViz::yPlot()] applies its
+#' `var.adj.fxn` and `var.adjustment` in.
+#'
+#' Statistics are computed on the values as plotted, after any Y adjustment, and the Y
+#' Axis Min/Max and significance brackets are in those units too. With a ridge plot
+#' among the plot types the values run along the x-axis, so no brackets are drawn; the
+#' test results are still included in the source data download.
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::yPlot()] parameters are not available via UI inputs:
 #'
 #' - `xlab` - X-axis label (plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing). With several
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing). With several
 #'   Y variables only the adjustment is shown, as the variables are named by the
 #'   facet strips or the legend instead
 #' - `main` - Plot title (plotly allows interactive editing)
@@ -66,13 +75,18 @@
 #' - `split.by` - Faceting variable (UI: "Split by (facet)", default: "")
 #' - `plots` - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 #' - `color.panel` - Custom color values (UI: palette picker, derived from palette)
-#' - `min` - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
-#' - `max` - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+#' - `min` - Y-axis minimum, in the units plotted (after any `var.adjustment`/`var.adj.fxn`);
+#'   set with the `y.min` key (UI: "Y Axis Min", auto-calculated). Not applied under a free
+#'   y facet scale, where each panel spans its own data.
+#' - `max` - Y-axis maximum, in the units plotted; set with the `y.max` key (UI: "Y Axis Max",
+#'   auto-calculated). Not applied under a free y facet scale.
 #' - `var.adjustment` - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 #' - `var.adj.fxn` - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 #' - `split.nrow` - Number of facet rows (UI: "Rows", default: 4)
 #' - `split.ncol` - Number of facet columns (UI: "Columns", default: 4)
-#' - `split.adjust` - Facet scale behavior (UI: "Facet Scaling", default: "fixed")
+#' - `split.adjust` - Facet scale behavior (UI: "Facet Scaling", default: "fixed"). A free y
+#'   scale ("free", "free_y") ignores Y Axis Min/Max and stacks each panel's significance
+#'   brackets above that panel's own data.
 #' - `do.raster` - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 #' - `raster.dpi` - DPI for rasterization (UI: "Raster DPI", default: 600)
 #' - `jitter.size` - Jitter point size (UI: "Jitter Point Size", default: 1)
@@ -97,12 +111,17 @@
 #' - `hover.data` - Columns shown on hover (UI: "Hover Data", default: "";
 #'   empty uses a sensible default set of columns)
 #' - `hover.round.digits` - Hover value rounding (UI: "Hover Round Digits", default: 5)
-#' - `legend.show` - Show legend (always `TRUE`; not directly settable)
+#' - `legend.show` - Show the legend (UI: "Show Legend", default: TRUE)
+#' - `stats.enabled` and the other `stat.*` parameters - Pairwise testing between the `group.by`
+#'   groups, or between the `color.by` levels within each group when `color.by` is set (Stats tab).
+#'   `stat.pairs` takes a character vector of `"A vs B"` strings naming those levels, e.g.
+#'   `"Office vs Remote"`; left unset, every pair is tested
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #'
-#' - `boxmode` - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
+#' - `boxmode` - Always "overlay": the boxes carry explicit x positions matching
+#'   ggplot's dodge, so plotly.js is not asked to dodge them
 #' - `boxgap` - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 #' - `boxgroupgap` - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
 #' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
@@ -126,6 +145,10 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -146,7 +169,9 @@
 #'   `c(A = "#FF0000", B = "blue")` (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 #'   back to the default palette and user edits take precedence.
 #' - `annotate.by` - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
-#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight",
+#'   default: ""). Values containing spaces
+#'   (e.g. "CD4 T") must be separated by commas or new lines
 #' - `highlight.color` - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 #' - `highlight.size` - Size of highlighted points (UI: "Highlight Size", default: 7)
 #' - `highlight.border.color` - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")
@@ -195,13 +220,19 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Recognized data adjustments for the (numeric) continuous variable.
-    adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adjustment_choices)
+    adj.fxn.choices <- c("", .adj_fxn_choices)
 
     # `var` may hold several columns, in which case the limits span all of them.
+    # The limits are in the units plotted, so any default adjustment applies.
     default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
     y.range <- .calculate_range(
-        df = data, data_col_y = default.var,
+        df = .as_plotted(
+            data, default.var,
+            get_default(defaults, "var.adjustment", "", function(x) x %in% adj.choices),
+            get_default(defaults, "var.adj.fxn", "", function(x) x %in% adj.fxn.choices)
+        ),
+        data_col_y = default.var,
         axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
     )
     max.y <- if (!is.null(y.range)) y.range$max else 1
@@ -226,6 +257,13 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
         selected = selected, cap = TRUE
+    )
+    # The module applies these in the opposite order to dittoViz.
+    documentParameters$var.adj.fxn <- paste(
+        documentParameters$var.adj.fxn, .adjustment_order_note("Y Adjustment")
+    )
+    documentParameters$var.adjustment <- paste(
+        documentParameters$var.adjustment, .adjustment_order_note("Y Adjustment")
     )
 
     inputs <- list(
@@ -310,7 +348,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.max"), "Y Axis Max",
-                    value = get_default(defaults, "max", max.y, is.numeric),
+                    value = get_default(defaults, "y.max", max.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$max,
@@ -318,7 +356,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 numericInput(ns("y.min"), "Y Axis Min",
-                    value = get_default(defaults, "min", min.y, is.numeric),
+                    value = get_default(defaults, "y.min", min.y, is.numeric),
                     min = -1000, max = 1000
                 ),
                 documentParameters$min,

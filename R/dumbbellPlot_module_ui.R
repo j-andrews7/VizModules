@@ -26,6 +26,7 @@
 #' - `facet.by` - Faceting variable (UI: "Facet By", default: "")
 #' - `facet.scales` - Facet scale behavior (UI: "Facet Scales", default: "fixed")
 #' - `line.colour` - Color of connecting lines (UI: "Colour of Connectors", default: "gray30")
+#' - `point.size` - Marker diameter in pixels (UI: "Point Size", default: 12)
 #' - `palette.selection` - Color palette (UI: palette picker)
 #'
 #' @section Parameters controlling additional functionality:
@@ -58,6 +59,11 @@
 #' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 #' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 #' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+#' - `legend.show` - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -125,11 +131,11 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-    adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adj_fxn_choices)
 
     selected <- list(
         "x", "y", "x.adjustment", "colour.by",
-        "facet.by", "facet.scales", "line.colour"
+        "facet.by", "facet.scales", "line.colour", "point.size"
     )
 
     documentParameters <- get_documentation(
@@ -193,7 +199,11 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
                 value = get_default(defaults, "line.colour", "gray30")),
                 documentParameters$line.colour,
                 placement = "top", options = list(container = "body")
-            )
+            ),
+            tipify(numericInput(ns("point.size"), "Point Size",
+                value = get_default(defaults, "point.size", 12, is.numeric),
+                min = 0, step = 1
+            ), documentParameters$point.size, placement = "top", options = list(container = "body"))
         ),
 
         "Legend" = uniform_legend_inputs_ui(ns, defaults),

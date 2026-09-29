@@ -95,11 +95,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
     cat.choices <- c("", names(data)[!vapply(data, is.numeric, logical(1))])
     all.choices <- c("", names(data))
 
-    font.choices <- c(
-        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif", "Droid Sans Mono", "Gravitas One",
-        "Old Standard TT", "Open Sans", "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman", "Verdana",
-        "sans-serif", "serif", "monospace"
-    )
+    font.choices <- .font_family_choices
 
     selected <- list(
         "theta", "r", "group", "fill", "line.width", "line.dash",
@@ -270,7 +266,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 value = get_default(defaults, "legend.font.color", "#000000")
             ), documentParameters$legend.font.color, placement = "top", options = list(container = "body"))
         ),
-        "Plotly" = uniform_plotly_inputs_ui(ns, defaults)
+        "Plotly" = uniform_plotly_inputs_ui(ns, defaults, include.shapes = FALSE)
     )
 
     organize_inputs(

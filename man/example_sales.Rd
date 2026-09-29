@@ -5,15 +5,17 @@
 \alias{example_sales}
 \title{Example sales dataset}
 \format{
-A data frame with 720 rows and 7 columns:
+A data frame with 720 rows and 8 columns:
 \describe{
 \item{region}{Region of the sale (factor: North, South, East, West, Central, International)}
-\item{revenue}{Revenue for month}
-\item{year}{The year}
-\item{month}{The month}
-\item{units}{Units sold}
+\item{revenue}{Revenue of the sale (thousands of USD)}
+\item{year}{The year (factor: 2015-2024)}
+\item{month}{The month (factor: Jan-Dec)}
+\item{units}{Units sold (integer)}
 \item{sale_id}{Unique sale identifier}
 \item{product_line}{Product line (factor: Gadgets, Widgets, Doohickeys)}
+\item{profit}{Profit on the sale after a fixed overhead (thousands of USD; negative
+for a few low-volume Doohickey sales)}
 }
 }
 \source{
@@ -23,9 +25,15 @@ Generated in data-raw/generate_example_data.R.
 example_sales
 }
 \description{
-A simulated product-sales dataset (720 rows total).
-Designed to showcase bar, box, violin,
-area, line, scatter, split-bar, density, and histogram plot modules.
+A simulated product-sales dataset: one sale for each month of 2015-2024 in
+each of six regions (720 rows), with each year's sales split evenly across
+three product lines. Units sold follow a trend per product line (Gadgets
+growing, Widgets flat, Doohickeys declining), peak in November and December,
+and scale by region. Revenue is units times a per-product unit price, so
+revenue against units falls on one line per product line. Two sales are
+planted outliers: \code{Sale_352}, a promotion that shifted far more units than
+usual, and \code{Sale_540}, a clearance sale at well under half price. Designed
+to showcase the scatter, line, parallel coordinates and pie plot modules.
 }
 \author{
 Jared Andrews

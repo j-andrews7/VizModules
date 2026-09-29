@@ -2,9 +2,17 @@
 % Please edit documentation in R/plot_legend.R
 \name{apply_legend_styling}
 \alias{apply_legend_styling}
-\title{Apply uniform legend font styling to a plotly figure}
+\title{Apply uniform legend styling to a plotly figure}
 \usage{
-apply_legend_styling(fig, title.size = NULL, text.size = NULL, position = NULL)
+apply_legend_styling(
+  fig,
+  title.size = NULL,
+  text.size = NULL,
+  position = NULL,
+  font.family = NULL,
+  font.color = NULL,
+  show = NULL
+)
 }
 \arguments{
 \item{fig}{A plotly figure object.}
@@ -15,27 +23,39 @@ apply_legend_styling(fig, title.size = NULL, text.size = NULL, position = NULL)
 \item{text.size}{Numeric font size for the legend entry labels (or colorbar
 tick labels), or \code{NULL} to leave unchanged.}
 
-\item{position}{vector of an integer, an xanchor string, and a orientation argument. e.g. c(1.02, "left", "v"). Controls horizontal positioning of the legend.}
+\item{position}{Optional length-2 vector \code{c(x, xanchor)} placing the legend
+horizontally, e.g. \code{c(1.02, "left")}. \code{NULL} (the default) leaves the
+position unchanged.}
+
+\item{font.family}{Character font family for the legend title and entry
+labels (and colorbar title and ticks), or \code{NULL} to leave unchanged.}
+
+\item{font.color}{Character color for the legend title and entry labels (and
+colorbar title and ticks), or \code{NULL} to leave unchanged.}
+
+\item{show}{Logical. \code{FALSE} hides the legend and every colorbar; \code{TRUE} or
+\code{NULL} (the default) leave their visibility unchanged.}
 }
 \value{
-The plotly figure with the requested legend font sizes applied.
-Returns the figure unchanged when \code{fig} is \code{NULL} or no valid
-sizes are supplied.
+The plotly figure with the requested legend styling applied.
+Returns the figure unchanged when \code{fig} is \code{NULL} or nothing valid is
+supplied.
 }
 \description{
-Sets the legend title and entry-label font sizes on a plotly figure so the
-"Legend" UI inputs behave consistently across plot types. Existing legend
-settings (orientation, position, font family/colour) are preserved because
-\code{plotly::layout()} merges the supplied attributes into the current
-layout. \code{NULL} or \code{NA} sizes are ignored, leaving the
-corresponding font size untouched.
+Shows or hides the legend and sets the font family, color and sizes of its
+title and entry labels, so the "Legend" UI inputs behave consistently across
+plot types. Existing legend settings (orientation, position, and any font
+property not supplied) are preserved because \code{plotly::layout()} merges the
+supplied attributes into the current layout. \code{NULL}, \code{NA} or blank values
+are ignored, leaving the corresponding property untouched.
 }
 \details{
 Numeric colour mappings (for example \code{fill.by}/\code{color.by} on a
 continuous variable) are rendered as a \emph{colorbar} rather than a
-categorical legend. The layout-level legend font does not affect a colorbar,
-so the colorbar title and tick fonts are updated directly on each trace (and
-on any shared \code{coloraxis}) using the same sizes. This keeps the "Legend"
+categorical legend. The layout-level legend font and visibility do not affect
+a colorbar, so the colorbar title and tick fonts are updated directly on each
+trace (and on any shared \code{coloraxis}) using the same values, and hiding the
+legend turns each colorbar's \code{showscale} off. This keeps the "Legend"
 controls functional for both categorical and continuous legends.
 }
 \examples{
@@ -43,7 +63,8 @@ fig <- plotly::plot_ly(iris,
     x = ~Sepal.Length, y = ~Sepal.Width,
     color = ~Species, type = "scatter", mode = "markers"
 )
-apply_legend_styling(fig, title.size = 16, text.size = 10)
+apply_legend_styling(fig, title.size = 16, text.size = 10, font.family = "Courier New")
+apply_legend_styling(fig, show = FALSE)
 }
 \author{
 Jared Andrews

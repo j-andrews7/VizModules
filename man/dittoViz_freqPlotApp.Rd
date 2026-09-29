@@ -13,7 +13,7 @@ dittoViz_freqPlotApp(
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("composition" = example_composition)} is used as example data.}
+the module's example dataset is used, along with its showcase defaults.}
 
 \item{defaults}{A named list of input IDs and their default values to apply on startup.
 An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to have the input
@@ -35,10 +35,14 @@ a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive frequency plot.
 }
 \details{
-When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{example_composition} as an example dataset, which has twelve donors nested
-inside two conditions - the shape \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} needs to compare
-per-sample frequencies across groups.
+When \code{data_list} is not provided (or \code{NULL}), the app launches on
+\code{example_composition} (twelve donors nested inside two conditions, the shape
+\code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} needs to compare per-sample frequencies across groups)
+with the settings the module gallery (\code{\link[=moduleGalleryApp]{moduleGalleryApp()}}) opens this module on,
+so its main features are on show from the start; any \code{defaults} you pass are
+applied over those. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an existing
+dataset, the existing one is overwritten with a warning.
 
 This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }
@@ -48,12 +52,8 @@ library(VizModules)
 app <- dittoViz_freqPlotApp()
 if (interactive()) runApp(app)
 
-# Launch on the cell-type composition of each donor, split by disease state:
-app2 <- dittoViz_freqPlotApp(
-    defaults = list(
-        var = "cell_type", sample.by = "sample", group.by = "condition"
-    )
-)
+# The same example data, as raw cell counts and without the statistics:
+app2 <- dittoViz_freqPlotApp(defaults = list(scale = "count", stats.enabled = FALSE))
 if (interactive()) runApp(app2)
 }
 \seealso{

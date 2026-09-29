@@ -5,9 +5,9 @@
 \alias{example_skills}
 \title{Example multi-player skills dataset for radar plots}
 \format{
-A data frame with 15 rows and 3 columns:
+A data frame with 18 rows and 3 columns:
 \describe{
-\item{category}{Skill category (Speed, Strength, Defense, Stamina, Agility)}
+\item{category}{Skill category (Speed, Strength, Defense, Stamina, Agility, Vision)}
 \item{value}{Skill rating (1-10)}
 \item{player}{Player identifier (Player A, B, or C)}
 }
@@ -19,8 +19,9 @@ Simulated in data-raw/generate_example_data.R.
 example_skills
 }
 \description{
-A dataset of skill ratings across five categories for three players,
-suitable for radar/spider chart examples.
+A dataset of skill ratings across six categories for three players with
+distinct profiles (a runner, a defender, and a playmaker), suitable for
+radar/spider chart examples.
 }
 \author{
 Jacob Martin

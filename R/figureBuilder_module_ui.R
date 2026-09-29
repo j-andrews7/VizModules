@@ -8,7 +8,8 @@
 #' Unlike [figureBuilderApp()] (which returns a complete, standalone app), this
 #' function returns a `tagList` you can drop into any page, so the builder can be
 #' embedded alongside other content and instantiated more than once (each
-#' instance keeps its own namespace, canvas, and downloads).
+#' instance keeps its own namespace, canvas, and downloads). The module gallery,
+#' [moduleGalleryApp()], embeds it this way as its **Figure Builder** tab.
 #'
 #' The returned UI bundles the JavaScript and CSS the canvas needs, and calls
 #' [shinyjs::useShinyjs()], so no extra setup is required in the host app.
@@ -26,7 +27,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [figureBuilderServer()], [figureBuilderApp()]
+#' @seealso [figureBuilderServer()], [figureBuilderApp()], [moduleGalleryApp()]
 #' @examples
 #' library(VizModules)
 #' figureBuilderUI("figure_builder")
@@ -36,6 +37,10 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
     tagList(
         shinyjs::useShinyjs(),
         tags$head(tags$style(.figure_builder_css()), tags$script(.figure_builder_js())),
+        # The builder's own Source Data & Plots button needs the image capture
+        # too, and the canvas starts empty, so it cannot wait to arrive with the
+        # first panel's module_tack_ui().
+        .source_export_dependency(),
         if (!is.null(title)) titlePanel(title),
         sidebarLayout(
             sidebarPanel(
@@ -51,11 +56,18 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                         6,
                         tipify(
                             downloadButton(ns("download.source"), "Source Data & Plots",
-                                class = "btn-primary btn-block"
+                                class = "btn-primary btn-block viz-source-download",
+                                `data-viz-source-ns` = ns(""),
+                                # Unlike a single module's button, this one wants
+                                # an image per card. Naming the canvas keeps two
+                                # Figure Builders on one page from photographing
+                                # each other's panels.
+                                `data-viz-canvas` = ns("pb_canvas")
                             ),
                             paste(
-                                "Download a ZIP of the source data, HTML plots, and",
-                                "statistics (if applied) for all plots on the canvas."
+                                "Download a ZIP of the source data, HTML plots,",
+                                "SVG and PNG images, and statistics (if applied)",
+                                "for all plots on the canvas."
                             ),
                             options = list(container = "body")
                         )
@@ -71,7 +83,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                     class = "pb-details",
                     tags$summary("Load Data"),
                     helpText(
-                        "Upload a CSV, TSV, TXT, or RDS file to make it available",
+                        "Upload a CSV, TSV, or tab-delimited TXT file to make it available",
                         "as a dataset when adding plots."
                     ),
                     splitLayout(
@@ -79,7 +91,7 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                             placeholder = "Defaults to the file name"
                         ),
                         fileInput(ns("pb_data_file"), "File:",
-                            accept = c(".csv", ".tsv", ".txt", ".rds", ".RDS")
+                            accept = c(".csv", ".tsv", ".txt")
                         )
                     ),
                     actionButton(ns("pb_data_add"), "Add dataset",
@@ -155,6 +167,6 @@ figureBuilderUI <- function(id, title = "VizModules Figure Builder") {
                     )
                 )
             )
-        )
+        ) |> tagAppendAttributes(class = "pb-app")
     )
 }

@@ -124,9 +124,11 @@
 #' - `stat.p.adjust` - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
 #' - `stat.display` - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
 #' - `stat.sig.threshold` - Significance threshold for symbols/hiding (UI: "Significance Threshold")
-#' - `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
+#' - `stat.hide.ns` - Hide non-significant comparisons (UI: "Hide Non-Significant", default: TRUE)
 #' - `stat.paired` - Use a paired test (UI: "Paired Test", default: FALSE)
-#' - `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple selection)
+#' - `stat.pairs` - Group comparisons to test (UI: "Comparisons", multiple selection, default: all
+#'   pairs). As a default, a character vector of `"A vs B"` strings naming levels of `x.data` (or of
+#'   `group.by`, when set), e.g. `c("Entry vs Mid", "Mid vs Senior")`; either order matches
 #' - `stat.line.color` - Bracket line color (UI: "Line Color", default: "#000000")
 #' - `stat.line.width` - Bracket line width (UI: "Line Width")
 #' - `stat.bracket.style` - Bracket style, capped or flat (UI: "Bracket Style")
@@ -134,6 +136,11 @@
 #' - `stat.text.bump` - Offset of the significance text above the bracket (UI: "Text Offset")
 #' - `stat.bracket.inset` - Horizontal inset of the brackets (UI: "Bracket Inset")
 #' - `stat.per.facet` - Compute statistics independently per facet panel (UI: "Per Facet Panel")
+#'
+#' Brackets are stacked above the data, so none are drawn while the plot is rotated (the values
+#' then run along the x-axis); the test results are still included in the source data download.
+#' Under a free y facet scale ("free", "free_y") each panel's brackets sit above that panel's own
+#' data, and the Y axis min/max are not applied.
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
@@ -162,6 +169,11 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick mark color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick mark length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick mark width", default: 1)
+#' - `legend.show` - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")

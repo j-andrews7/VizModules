@@ -17,8 +17,9 @@ passed to the UI function.}
 Called for side effects; returns \code{invisible(NULL)}.
 }
 \description{
-Resets the legend styling inputs (legend title and entry label font sizes)
-created by \code{\link[=uniform_legend_inputs_ui]{uniform_legend_inputs_ui()}} back to their default values.
+Resets the legend inputs (visibility, font family and color, and the legend
+title and entry label font sizes) created by \code{\link[=uniform_legend_inputs_ui]{uniform_legend_inputs_ui()}}
+back to their default values.
 }
 \examples{
 \dontrun{

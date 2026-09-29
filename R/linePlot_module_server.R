@@ -56,13 +56,19 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # manual title text for that axis so it regenerates for the new variable.
         last_axis_val <- reactiveVal(NULL)
 
-        observeEvent(input$x.value, {
+        # Error bars need a single categorical X, and only a confidence interval has a
+        # method to choose. What the app hid via hide.inputs is never shown again here.
+        observeEvent(list(input$x.value, input$error.bar.type), {
             req(input$x.value)
-            if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
-            } else {
-                show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
+            bars_apply <- length(input$x.value) == 1 && !is.numeric(data()[[input$x.value]])
+            ci_applies <- bars_apply && identical(input$error.bar.type, "ci95")
+
+            toggle_cells <- function(ids, show) {
+                ids <- setdiff(ids, hide.inputs)
+                if (show) show_input(session, ids) else hide_input(session, ids)
             }
+            toggle_cells(c("error.bar", "error.bar.type", "error.bar.width", "error.bar.colour"), bars_apply)
+            toggle_cells("error.bar.ci.method", ci_applies)
         })
 
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -189,6 +195,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
                 value = get_default(defaults, "error.bar", TRUE, is.logical))
+            update_viz_select(session, "error.bar.type",
+                selected = get_default(defaults, "error.bar.type", "sd"))
+            update_viz_select(session, "error.bar.ci.method",
+                selected = get_default(defaults, "error.bar.ci.method", "normal"))
             updateNumericInput(session, "error.bar.width",
                 value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
@@ -201,6 +211,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -209,17 +220,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c(
-                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
-                    "facet.nrow", "facet.ncol"
-                ))
-            } else {
-                hide_input(session, c(
-                    "facet.title.font.size", "facet.title.font.color", "facet.title.font.family",
-                    "facet.nrow", "facet.ncol"
-                ))
-            }
+            .toggle_facet_title_inputs(
+                session, .nz_value(input$facet.by),
+                extra = c("facet.nrow", "facet.ncol"), hidden = hide.inputs
+            )
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -286,12 +290,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             y.adjustment <- NULL
-            if (!isolate_fn(input$y.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$y.adjustment))) {
                 y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (!isolate_fn(input$x.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -332,7 +336,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
@@ -346,7 +350,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
-                show.legend = show_legend,
+                show.legend = show_legend && !isFALSE(isolate_fn(input$legend.show)),
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 facet.nrow = facet.nrow.val,
@@ -368,6 +372,13 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
                 show.grid.x = isolate_fn(input$show.grid.x),
                 show.grid.y = isolate_fn(input$show.grid.y),
+                grid.color = isolate_fn(input$grid.color),
+                axis.title.font.size = isolate_fn(input$axis.title.font.size),
+                axis.title.font.color = isolate_fn(input$axis.title.font.color),
+                axis.title.font.family = isolate_fn(input$axis.title.font.family),
+                facet.title.font.size = isolate_fn(input$facet.title.font.size),
+                facet.title.font.color = isolate_fn(input$facet.title.font.color),
+                facet.title.font.family = isolate_fn(input$facet.title.font.family),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
                 title.font.color = isolate_fn(input$title.font.color),
@@ -380,12 +391,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 y.adjustment = y.adjustment,
                 error.colour = isolate_fn(input$error.bar.colour),
                 error.width = isolate_fn(input$error.bar.width),
-                error.bar = isolate_fn(input$error.bar)
+                error.bar = isolate_fn(input$error.bar),
+                error.type = isolate_fn(input$error.bar.type),
+                error.ci.method = isolate_fn(input$error.bar.ci.method)
             )
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
             # Add reference lines
             fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),
@@ -410,12 +419,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)
@@ -454,7 +459,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             } else if (dual_multiAxis) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
-            } else if (multi_axis && !(input$group.by == "")) {
+            } else if (multi_axis && .nz_value(input$group.by)) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }

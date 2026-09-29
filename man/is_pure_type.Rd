@@ -12,13 +12,14 @@ is_pure_type(inputs, d)
 \item{d}{Data frame containing the columns specified in \code{inputs}.}
 }
 \value{
-Logical scalar: \code{TRUE} if all numeric OR all categorical (factor/character);
+Logical scalar: \code{TRUE} if all numeric OR all categorical (non-numeric);
 \code{FALSE} if mixed numeric + categorical/factor detected.
 }
 \description{
 This function validates that a vector of column names from a data frame contains
 columns of only one data type category: either all numeric OR all categorical
-(factor/character). Returns \code{FALSE} for mixed numeric + categorical columns.
+(anything non-numeric: factor, character, logical, Date, ...). Returns \code{FALSE} for mixed
+numeric + categorical columns.
 Single columns always return \code{TRUE}. Used for Shiny plotting module input validation.
 }
 \examples{
@@ -28,9 +29,6 @@ is_pure_type(c("cat1", "fac1"), df) # TRUE (all categorical)
 is_pure_type(c("num1"), df) # TRUE (single)
 is_pure_type(c("num1", "cat1"), df) # FALSE (mixed numeric + cat)
 
-}
-\seealso{
-\code{\link[base:for]{base::for()}}
 }
 \author{
 Jacob Martin

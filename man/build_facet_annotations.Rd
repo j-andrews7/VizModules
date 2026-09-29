@@ -11,7 +11,9 @@ build_facet_annotations(
   title.font.size = 14,
   nrows = 1,
   fig = NULL,
-  title.offset = 0.02
+  title.offset = 0.02,
+  axis.title.font = NULL,
+  facet.title.font = NULL
 )
 }
 \arguments{
@@ -37,6 +39,14 @@ panels filling the full paper area.}
 
 \item{title.offset}{Numeric fraction of the figure height to place each
 subplot title above the top of its panel. Default: \code{0.02}.}
+
+\item{axis.title.font}{Optional named list of plotly font properties
+(\code{size}, \code{color}, \code{family}) for the shared X/Y axis title annotations.
+If \code{NULL} (the default), they use \code{title.font.size} like the facet titles.}
+
+\item{facet.title.font}{Optional named list of plotly font properties
+(\code{size}, \code{color}, \code{family}) for the per-panel facet titles. If \code{NULL}
+(the default), they use \code{title.font.size}.}
 }
 \value{
 A list of annotation lists suitable for \code{plotly::layout(annotations = ...)}.

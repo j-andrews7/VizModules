@@ -317,10 +317,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Annotations
             reset_annotation_inputs(session, defaults, choices)
 
-            # Legend
-            updateCheckboxInput(session, "legend.show",
-                value = get_default(defaults, "legend.show", TRUE, is.logical)
-            )
+            # Legend (legend.show is reset with the other uniform legend inputs)
             updateTextInput(session, "legend.color.title",
                 value = get_default(defaults, "legend.color.title", "make")
             )
@@ -344,9 +341,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.legend.x",
-                value = get_default(defaults, "size.legend.x", 1.04, is.numeric)
+                value = get_default(defaults, "size.legend.x", 1.03, is.numeric)
             )
             updateNumericInput(session, "size.legend.y",
                 value = get_default(defaults, "size.legend.y", 0.35, is.numeric)
@@ -367,20 +365,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Lines & Axes
             reset_lines_inputs(session, include.fit.lines = TRUE, defaults = defaults)
             reset_axes_inputs(session, defaults)
-
-            # Discard captured manual layout edits so positions revert to defaults
-            edit_store$legend <- NULL
-            edit_store$annotations <- list()
-            edit_store$colorbar <- NULL
         })
 
         observeEvent(input$split.by, {
-            if (!is.null(input$split.by) && any(nzchar(input$split.by))) {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
-        })
+            split.set <- !is.null(input$split.by) && any(nzchar(input$split.by))
+            .toggle_facet_title_inputs(session, split.set, hidden = hide.inputs)
+        }, ignoreNULL = FALSE)
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
@@ -451,7 +441,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
               
             # Reflect any applied data adjustments in the axis titles so they
-            # accurately describe the values displayed (e.g. "log2(z-score(units))").
+            # accurately describe the values displayed (e.g. "z-score(log2(units))").
             x_axis_label <- adjusted_axis_label(
                 isolate_fn(input$x.by), null.na.inputs$x.adjustment, isolate_fn(input$x.adj.fxn)
             )
@@ -483,7 +473,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
 
             # Reflect any applied color data adjustments in the color.by legend title so it
-            # accurately describes the values displayed (e.g. "log2(z-score(units))"). Only
+            # accurately describes the values displayed (e.g. "z-score(log2(units))"). Only
             # the auto-generated title ("make") is rewritten so user-supplied titles are kept.
             legend_color_title <- isolate_fn(input$legend.color.title)
             color_adjustment_active <- !is.null(null.na.inputs$color.adjustment) ||
@@ -513,12 +503,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     isolate_fn(input$size)
                 },
                 show.others = isolate_fn(input$show.others),
-                x.adjustment = null.na.inputs$x.adjustment,
-                y.adjustment = null.na.inputs$y.adjustment,
-                color.adjustment = null.na.inputs$color.adjustment,
-                x.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$x.adj.fxn)),
-                y.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$y.adj.fxn)),
-                color.adj.fxn = safe_resolve_adj_fxn(isolate_fn(input$color.adj.fxn)),
+                # dittoViz would rescale before applying the function; handing it the
+                # whole transform as one function applies the function first (log,
+                # then z-score), which is what the axis titles and fit lines assume.
+                x.adjustment = NULL,
+                y.adjustment = NULL,
+                color.adjustment = NULL,
+                x.adj.fxn = .adjustment_fn(null.na.inputs$x.adjustment, null.na.inputs$x.adj.fxn),
+                y.adj.fxn = .adjustment_fn(null.na.inputs$y.adjustment, null.na.inputs$y.adj.fxn),
+                color.adj.fxn = .adjustment_fn(null.na.inputs$color.adjustment, null.na.inputs$color.adj.fxn),
                 split.show.all.others = isolate_fn(input$split.show.all.others),
                 opacity = isolate_fn(input$opacity),
                 color.panel = unname(palette_values),
@@ -624,9 +617,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             if (!is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
-                highlight_vals <- .string_to_vector(highlight_points_raw)
-                # Remove empty strings that may result from parsing
-                highlight_vals <- highlight_vals[highlight_vals != ""]
+                highlight_vals <- .parse_highlight_values(
+                    highlight_points_raw, data()[[null.na.inputs$annotate.by]]
+                )
 
                 if (length(highlight_vals) > 0) {
                     fig <- .apply_highlight_styling(
@@ -675,8 +668,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 !is.null(null.na.inputs$annotate.by) &&
                 !is.null(highlight_points_raw) &&
                 highlight_points_raw != "") {
-                highlight_vals <- .string_to_vector(highlight_points_raw)
-                highlight_vals <- highlight_vals[highlight_vals != ""]
+                highlight_vals <- .parse_highlight_values(
+                    highlight_points_raw, data()[[null.na.inputs$annotate.by]]
+                )
 
                 if (length(highlight_vals) > 0) {
                     # Create annotations for highlighted points
@@ -726,41 +720,62 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 fig <- fig |> toWebGL()
             }
 
-            # Add fit lines if requested
-            # Determine grouping
-            group_col <- if (!is.null(input$color.by) && input$color.by != "") {
-                input$color.by
-            } else {
-                NULL
+            # Add fit lines if requested. Every read goes through isolate_fn so a
+            # paused (Auto Update off) plot does not redraw for a fit-line tweak.
+            #
+            # Lines are fit to the values as plotted: dittoViz draws the points from
+            # its adjusted columns (x.adjustment/x.adj.fxn and the y equivalents),
+            # which p$cols_used names, so a fit to the raw columns would be drawn in
+            # a different coordinate space from the points.
+            x.plot <- p$cols_used$x.by
+            y.plot <- p$cols_used$y.by
+            want.fits <- isTRUE(isolate_fn(input$linear.model)) || isTRUE(isolate_fn(input$best.fit)) ||
+                isTRUE(isolate_fn(input$custom.model.enable))
+            fits.possible <- is.numeric(plot_data[[x.plot]]) && is.numeric(plot_data[[y.plot]])
+            if (want.fits && !fits.possible) {
+                showNotification(
+                    paste(
+                        "Fit lines need a numeric X and Y axis, so none are drawn while",
+                        "an axis adjustment makes one categorical."
+                    ),
+                    id = session$ns("fit-lines-skipped"), type = "message"
+                )
+            }
+            fit_df <- if (fits.possible) {
+                plot_data[is.finite(plot_data[[x.plot]]) & is.finite(plot_data[[y.plot]]), , drop = FALSE]
             }
 
+            # A numeric color.by is a gradient, not groups; grouping by it would fit
+            # one line per distinct value.
+            group_col <- .blank_to_null(null.na.inputs$color.by, data(), numeric_is_null = TRUE)
+
             # Linear model fits
-            if (isTRUE(input$linear.model)) {
+            if (fits.possible && isTRUE(isolate_fn(input$linear.model))) {
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
-                    df = data(),
-                    x.col = isolate_fn(input$x.by),
-                    y.col = isolate_fn(input$y.by),
+                    df = fit_df,
+                    x.col = x.plot,
+                    y.col = y.plot,
                     split.by = null.na.inputs$split.by,
                     group.col = group_col,
                     color_mapping = color_mapping,
-                    line_color = input$line.best.colour,
+                    line_color = isolate_fn(input$line.best.colour),
                     fit_type = "linear",
                     line_width = 3
                 )
-            } else if (isTRUE(input$best.fit)) {
+            } else if (fits.possible && isTRUE(isolate_fn(input$best.fit))) {
                 # LOESS smooth fit lines (only if linear model not selected)
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
-                    df = data(),
-                    x.col = isolate_fn(input$x.by),
-                    y.col = isolate_fn(input$y.by),
+                    df = fit_df,
+                    x.col = x.plot,
+                    y.col = y.plot,
                     split.by = null.na.inputs$split.by,
                     group.col = group_col,
                     color_mapping = color_mapping,
-                    line_color = input$line.best.colour,
+                    line_color = isolate_fn(input$line.best.colour),
                     fit_type = "loess",
-                    span = input$line.best.smoothness,
+                    span = isolate_fn(input$line.best.smoothness),
                     line_width = 3
                 )
             }
@@ -770,7 +785,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # backend-specific extra fields. Formula text is validated by
             # .safe_build_model() (allow-listed fit function + AST whitelist),
             # so no arbitrary code is executed.
-            if (isTRUE(input$custom.model.enable)) {
+            #
+            # Formulas name the raw columns (e.g. `mpg ~ hp`), so the plotted values
+            # are put under those names: a model is then fit to, and drawn over,
+            # exactly what the points show.
+            if (fits.possible && isTRUE(isolate_fn(input$custom.model.enable))) {
+                model_df <- fit_df
+                model_df[[isolate_fn(input$x.by)]] <- fit_df[[x.plot]]
+                model_df[[isolate_fn(input$y.by)]] <- fit_df[[y.plot]]
+
                 model_rows <- isolate_fn(input$custom.models)
                 if (!is.null(model_rows) && length(model_rows) > 0) {
                     for (row_name in names(model_rows)) {
@@ -785,7 +808,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                         extra_args <- row[!names(row) %in% known_keys]
                         user_model <- do.call(.safe_build_model, c(
                             list(formula_text = formula_text,
-                                 data         = data(),
+                                 data         = model_df,
                                  fit_fn_name  = row$model_type),
                             extra_args
                         ))
@@ -795,7 +818,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                             backend <- get_model_backend(row$model_type)
                             fig <- .add_custom_model_lines_to_subplots(
                                 fig           = fig,
-                                df            = data(),
+                                df            = model_df,
                                 x.col         = isolate_fn(input$x.by),
                                 custom.models = setNames(list(user_model), row_name),
                                 split.by      = null.na.inputs$split.by,
@@ -821,24 +844,23 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Custom size legend:
             # plotly drops the size legend when point size encodes a numeric
             # column (see plotly.R#705), so draw a manual circle legend that
-            # mirrors the plotted marker sizes when `size.by` is set.
+            # mirrors the plotted marker sizes when `size.by` is set. Hiding the
+            # legend hides this one too.
             fig <- .custom_legend(
                 fig,
                 data = data(),
-                size_by = null.na.inputs$size.by,
+                size_by = if (isFALSE(isolate_fn(input$legend.show))) NULL else null.na.inputs$size.by,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
                 start_y = isolate_fn(input$size.legend.y),
-                start_x = isolate_fn(input$size.legend.x)
+                start_x = isolate_fn(input$size.legend.x),
+                font.family = isolate_fn(input$legend.font.family),
+                font.color = isolate_fn(input$legend.font.color)
             )
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

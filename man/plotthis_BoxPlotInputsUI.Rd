@@ -155,9 +155,11 @@ the plotthis significance-testing features). The following inputs are available:
 \item \code{stat.p.adjust} - P-value adjustment method (UI: "P-value Adjustment", default: "holm")
 \item \code{stat.display} - Value to display: adjusted p-value, p-value, or symbols (UI: "Display")
 \item \code{stat.sig.threshold} - Significance threshold for symbols/hiding (UI: "Significance Threshold")
-\item \code{stat.hide.ns} - Hide non-significant comparisons (UI: "Hide Non-Significant", default: FALSE)
+\item \code{stat.hide.ns} - Hide non-significant comparisons (UI: "Hide Non-Significant", default: TRUE)
 \item \code{stat.paired} - Use a paired test (UI: "Paired Test", default: FALSE)
-\item \code{stat.pairs} - Group comparisons to test (UI: "Comparisons", multiple selection)
+\item \code{stat.pairs} - Group comparisons to test (UI: "Comparisons", multiple selection, default: all
+pairs). As a default, a character vector of \code{"A vs B"} strings naming levels of \code{x.data} (or of
+\code{group.by}, when set), e.g. \code{c("Entry vs Mid", "Mid vs Senior")}; either order matches
 \item \code{stat.line.color} - Bracket line color (UI: "Line Color", default: "#000000")
 \item \code{stat.line.width} - Bracket line width (UI: "Line Width")
 \item \code{stat.bracket.style} - Bracket style, capped or flat (UI: "Bracket Style")
@@ -166,6 +168,11 @@ the plotthis significance-testing features). The following inputs are available:
 \item \code{stat.bracket.inset} - Horizontal inset of the brackets (UI: "Bracket Inset")
 \item \code{stat.per.facet} - Compute statistics independently per facet panel (UI: "Per Facet Panel")
 }
+
+Brackets are stacked above the data, so none are drawn while the plot is rotated (the values
+then run along the x-axis); the test results are still included in the source data download.
+Under a free y facet scale ("free", "free_y") each panel's brackets sit above that panel's own
+data, and the Y axis min/max are not applied.
 }
 
 \section{Parameters controlling additional functionality}{
@@ -196,6 +203,11 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

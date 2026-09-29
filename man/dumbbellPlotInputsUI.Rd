@@ -54,6 +54,7 @@ The following \code{\link[=dumbbellPlot]{dumbbellPlot()}} parameters can be acce
 \item \code{facet.by} - Faceting variable (UI: "Facet By", default: "")
 \item \code{facet.scales} - Facet scale behavior (UI: "Facet Scales", default: "fixed")
 \item \code{line.colour} - Color of connecting lines (UI: "Colour of Connectors", default: "gray30")
+\item \code{point.size} - Marker diameter in pixels (UI: "Point Size", default: 12)
 \item \code{palette.selection} - Color palette (UI: palette picker)
 }
 }
@@ -89,6 +90,11 @@ The following parameters controlling plotly-specific features and styling are al
 \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

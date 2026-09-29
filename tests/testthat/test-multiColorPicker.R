@@ -134,3 +134,22 @@ test_that("input handler returns named vector and handles null", {
     expect_identical(handler(list(list(name = "setosa"))), c("setosa" = ""))
     expect_identical(handler(NULL), setNames(character(0), character(0)))
 })
+
+test_that("unnamed colors are applied to the groups in order", {
+    widget <- multiColorPicker("cols", groups = c("a", "b", "c"), colors = c("red", "#00FF00"))
+    initial <- jsonlite::fromJSON(widget$attribs[["data-initial"]])
+    expect_equal(initial$a, "#FF0000")
+    expect_equal(initial$b, "#00FF00")
+    # Beyond the supplied colors, the palette carries on.
+    expect_false(identical(initial$c, "#FF0000"))
+})
+
+test_that(".normalize_hex keeps names it was given and adds none", {
+    expect_null(names(.normalize_hex(c("red", "#00F"))))
+    expect_equal(.normalize_hex(c(a = "red", b = "#00F")), c(a = "#FF0000", b = "#0000FF"))
+})
+
+test_that("updateMultiColorPicker rejects unnamed colors", {
+    session <- shiny::MockShinySession$new()
+    expect_error(updateMultiColorPicker(session, "cols", colors = c("red", "blue")), "named")
+})

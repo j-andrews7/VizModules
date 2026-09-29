@@ -101,6 +101,39 @@
 }
 
 
+#' Resolve a row/column title box + slice-title toggle into a Heatmap() title
+#'
+#' [ComplexHeatmap::Heatmap()] treats `""`, `NA` and `character(0)` alike: no
+#' title of its own, so a split axis is titled slice by slice with the group
+#' names (annotation values, or cluster numbers for k-means/hierarchical splits).
+#' Only `NULL` drops the titles, and the band they occupy with them. A blank
+#' title box therefore cannot switch the slice titles off by itself, which is
+#' what the "Show Row/Column Slice Titles" checkboxes are for.
+#'
+#' Typed text always wins: `Heatmap()` cannot draw a spanning title and slice
+#' titles at once, so the text replaces the group names (a single string spans
+#' every slice; a `%s` in it is filled in with each group's name).
+#'
+#' @param text The title box's value. `NULL` (an input that has not reported
+#'   yet) is treated as blank.
+#' @param show_slice_titles Whether a split axis is titled with its group names
+#'   when `text` is blank. Anything but `TRUE` counts as `FALSE`.
+#'
+#' @return `text` when it is non-blank; otherwise `character(0)` (group names
+#'   shown, which is also no title at all when the axis is not split) or `NULL`
+#'   (no title). Suitable for `Heatmap(row_title = , column_title = )`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_resolve_title
+#' @keywords internal
+.heatmap_resolve_title <- function(text, show_slice_titles = TRUE) {
+    if (.nz_value(text)) {
+        return(text)
+    }
+    if (isTRUE(show_slice_titles)) character(0) else NULL
+}
+
+
 #' The heatmap module's default low/mid/high value colors
 #'
 #' Blue/white/red, used to seed the "Low Color"/"Mid Color"/"High Color"

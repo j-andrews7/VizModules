@@ -1,56 +1,42 @@
-test_that("resolve_palette recycles the default palette when nothing else applies", {
+test_that("resolve_palette prefers user picks, then manual colours, then the recycled default", {
     expect_null(resolve_palette(character(0), NULL, "#CCCCCC"))
+
+    # Nothing else applies: the default palette is recycled.
     expect_equal(
         resolve_palette(c("A", "B", "C"), NULL, c("#111111", "#222222")),
         c(A = "#111111", B = "#222222", C = "#111111")
     )
-})
-
-test_that("resolve_palette uses manual_colors when the user has picked nothing", {
+    # manual_colors apply where the user has picked nothing, and groups they do
+    # not name fall back.
     expect_equal(
         resolve_palette(c("A", "B"), NULL, "#CCCCCC", c(A = "#FF0000", B = "#00FF00")),
         c(A = "#FF0000", B = "#00FF00")
     )
-})
-
-test_that("resolve_palette falls back for groups manual_colors does not name", {
     expect_equal(
         resolve_palette(c("A", "B"), NULL, "#CCCCCC", c(B = "#00FF00")),
         c(A = "#CCCCCC", B = "#00FF00")
     )
-})
-
-test_that("resolve_palette lets the user's picks win over manual_colors", {
+    # The user's picks win over manual_colors.
     expect_equal(
-        resolve_palette(
-            c("A", "B", "C"),
-            c(A = "#FF0000"),
-            "#CCCCCC",
-            c(A = "#000000", B = "#00FF00")
-        ),
+        resolve_palette(c("A", "B", "C"), c(A = "#FF0000"), "#CCCCCC", c(A = "#000000", B = "#00FF00")),
         c(A = "#FF0000", B = "#00FF00", C = "#CCCCCC")
     )
 })
 
-test_that(".default_group_colors normalizes color names and rejects unnamed vectors", {
+test_that(".default_group_colors normalizes color names, resolves reactives, and rejects unnamed vectors", {
     expect_equal(
         .default_group_colors(list(palette.colours = c(A = "red", B = "#0f0")), "palette.colours"),
         c(A = "#FF0000", B = "#00FF00")
+    )
+    mapping <- shiny::reactiveVal(c(A = "red"))
+    expect_equal(
+        shiny::isolate(.default_group_colors(list(palette.colours = mapping), "palette.colours")),
+        c(A = "#FF0000")
     )
     expect_null(.default_group_colors(list(palette.colours = c("red", "blue")), "palette.colours"))
     expect_null(.default_group_colors(list(palette.colours = 1:3), "palette.colours"))
     expect_null(.default_group_colors(NULL, "palette.colours"))
     expect_null(.default_group_colors(list(other = c(A = "red")), "palette.colours"))
-})
-
-test_that(".default_group_colors resolves reactive defaults entries", {
-    mapping <- shiny::reactiveVal(c(A = "red"))
-    shiny::isolate(
-        expect_equal(
-            .default_group_colors(list(palette.colours = mapping), "palette.colours"),
-            c(A = "#FF0000")
-        )
-    )
 })
 
 # A minimal module assembled from the real helpers, wired exactly as every plot
@@ -90,19 +76,20 @@ mini_color_server <- function(id, groups, defaults = NULL, runs) {
 }
 
 
-test_that("the store resolves a palette before the picker has reported anything", {
-    shiny::testServer(
-        mini_color_server,
-        args = list(
-            groups = shiny::reactive(c("A", "B")),
-            runs = shiny::reactiveVal(0L)
-        ),
-        {
-            session$setInputs(auto.update = TRUE)
-            expect_equal(palette_store(), c(A = "#111111", B = "#222222"))
-            expect_equal(generate(), c(A = "#111111", B = "#222222"))
-        }
-    )
+test_that("before the picker reports, the store holds the default palette, or nothing without groups", {
+    cases <- list(list(groups = c("A", "B"), expected = c(A = "#111111", B = "#222222")),
+                  list(groups = character(0), expected = NULL))
+    for (case in cases) {
+        shiny::testServer(
+            mini_color_server,
+            args = list(groups = shiny::reactive(case$groups), runs = shiny::reactiveVal(0L)),
+            {
+                session$setInputs(auto.update = TRUE)
+                expect_equal(palette_store(), case$expected)
+                expect_equal(generate(), case$expected)
+            }
+        )
+    }
 })
 
 test_that("the picker echoing the palette already in use costs no extra render", {
@@ -171,32 +158,7 @@ test_that("the store follows a reactive defaults entry rather than the client in
     )
 })
 
-test_that("the store stays empty until there are groups to colour", {
-    shiny::testServer(
-        mini_color_server,
-        args = list(
-            groups = shiny::reactive(character(0)),
-            runs = shiny::reactiveVal(0L)
-        ),
-        {
-            session$setInputs(auto.update = TRUE)
-            expect_null(palette_store())
-            expect_null(generate())
-        }
-    )
-})
 
-test_that("reactive default sync reshapes color maps for the multi-color picker", {
-    expect_equal(
-        .input_sync_message(c(A = "#FF0000", B = "#00FF00")),
-        list(value = list(
-            list(name = "A", value = "#FF0000"),
-            list(name = "B", value = "#00FF00")
-        ))
-    )
-    expect_equal(.input_sync_message("a title"), list(value = "a title"))
-    expect_equal(.input_sync_message(c("#FF0000")), list(value = "#FF0000"))
-})
 
 
 # The axis-range store, wired the way the plot modules wire it: the limits are
@@ -282,42 +244,25 @@ test_that("the maximum is raised to clear headroom, and the control follows", {
     )
 })
 
-test_that("headroom never lowers a larger limit the user chose", {
-    runs <- shiny::reactiveVal(0L)
-
-    shiny::testServer(
-        mini_range_server,
-        args = list(headroom = function() 25, runs = runs),
-        {
-            session$setInputs(y.min = 0, y.max = 100)
-            session$flushReact()
-            expect_equal(generate()$max, 100)
-        }
+test_that("headroom only ever raises a limit, and ignores a blank one", {
+    cases <- list(
+        # A larger limit the user chose is never lowered.
+        list(headroom = function() 25, inputs = list(y.min = 0, y.max = 100), expected = list(min = 0, max = 100)),
+        # No headroom leaves the requested limits alone.
+        list(headroom = function() NULL, inputs = list(y.min = -3, y.max = 7), expected = list(min = -3, max = 7)),
+        # A blank numeric control reports NA, which must not be mistaken for a
+        # limit that already clears the headroom.
+        list(headroom = function() 12, inputs = list(y.min = 0, y.max = NA), expected = list(min = 0, max = 12))
     )
-})
-
-test_that("a blank or absent headroom leaves the requested limits alone", {
-    runs <- shiny::reactiveVal(0L)
-
-    shiny::testServer(
-        mini_range_server,
-        args = list(headroom = function() NULL, runs = runs),
-        {
-            session$setInputs(y.min = -3, y.max = 7)
-            session$flushReact()
-            expect_equal(generate(), list(min = -3, max = 7))
-        }
-    )
-
-    # A blank numeric control reports NA, which must not be mistaken for a limit
-    # that already clears the headroom.
-    shiny::testServer(
-        mini_range_server,
-        args = list(headroom = function() 12, runs = shiny::reactiveVal(0L)),
-        {
-            session$setInputs(y.min = 0, y.max = NA)
-            session$flushReact()
-            expect_equal(generate()$max, 12)
-        }
-    )
+    for (case in cases) {
+        shiny::testServer(
+            mini_range_server,
+            args = list(headroom = case$headroom, runs = shiny::reactiveVal(0L)),
+            {
+                do.call(session$setInputs, case$inputs)
+                session$flushReact()
+                expect_equal(generate(), case$expected)
+            }
+        )
+    }
 })

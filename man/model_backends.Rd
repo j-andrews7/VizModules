@@ -10,8 +10,8 @@ be used in the custom-model-lines pipeline without modifying core code. Each
 and how to predict from it.
 }
 \details{
-Backends are stored in a package-level environment. The four built-in types
-(\code{lm}, \code{glm}, \code{loess}, \code{nls}) are registered automatically when the package
+Backends are stored in a package-level environment. The three built-in types
+(\code{lm}, \code{glm}, \code{loess}) are registered automatically when the package
 loads. Users add new ones with \code{\link[=register_model_backend]{register_model_backend()}}.
 }
 \keyword{internal}

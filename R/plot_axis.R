@@ -10,7 +10,15 @@
 #' @param yaxis_style A named list of axis styling parameters for y-axes.
 #'
 #' @return The modified plotly figure with axis styling applied to all subplots.
-#' 
+#'
+#' @details
+#' The styling is queued with [plotly::layout()], which merges it into each
+#' axis when the figure is built, so the axes' other properties (range, domain,
+#' title text, ...) are kept. Only the styling is queued, never a copy of the
+#' axis as it stands, so a property written to the figure's layout after this
+#' call (such as a range raised by [apply_stat_annotations()]) is not reverted
+#' at build time.
+#'
 #' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
@@ -47,43 +55,36 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
         yaxis_names <- "yaxis"
     }
 
-    # Build a list of layout updates
+    # Build a list of layout updates. Only the styling is queued: plotly_build()
+    # merges queued updates recursively into the existing axis, so its other
+    # properties survive anyway. Queuing a copy of the whole axis instead would
+    # freeze it as it stands now, and at build time that copy would overwrite
+    # anything written to the layout since (e.g. the range raised to fit
+    # significance brackets).
     layout_updates <- list()
+
+    # A NULL in the style (an input that has not reported) means "leave this
+    # alone"; queued as is, the recursive merge would delete the property instead.
+    drop_nulls <- function(x) {
+        if (!is.list(x)) {
+            return(x)
+        }
+        x <- lapply(x, drop_nulls)
+        x[!vapply(x, is.null, logical(1))]
+    }
+    xaxis_style <- drop_nulls(xaxis_style)
+    yaxis_style <- drop_nulls(yaxis_style)
 
     # Apply x-axis styling to all x-axes
     for (xaxis_name in xaxis_names) {
-        # Preserve existing axis properties and merge with new styling
-        existing_axis <- fig$x$layout[[xaxis_name]]
-        if (!is.null(existing_axis)) {
-            layout_updates[[xaxis_name]] <- modifyList(existing_axis, xaxis_style)
-        } else {
-            layout_updates[[xaxis_name]] <- xaxis_style
-        }
+        layout_updates[[xaxis_name]] <- xaxis_style
     }
 
-    # Apply y-axis styling to all y-axes
+    # Apply y-axis styling to all y-axes. Matched subplot axes (yaxis2 with
+    # matches = "y", ...) get the full style too, border properties included, so
+    # plotly draws their axis lines rather than hiding them.
     for (yaxis_name in yaxis_names) {
-        # Preserve existing axis properties and merge with new styling
-        existing_axis <- fig$x$layout[[yaxis_name]]
-        if (!is.null(existing_axis)) {
-            layout_updates[[yaxis_name]] <- modifyList(existing_axis, yaxis_style)
-        } else {
-            layout_updates[[yaxis_name]] <- yaxis_style
-        }
-
-        # For subplots with matched axes (yaxis2, yaxis3, etc.), explicitly ensure
-        # showline and mirror properties are set even if matches="y" is present.
-        # This forces plotly to render the axis lines on all subplot borders.
-        if (yaxis_name != "yaxis" && !is.null(layout_updates[[yaxis_name]]$matches)) {
-            # Force border styling properties for matched axes
-            # This overrides plotly's default behavior of hiding borders on matched axes
-            style_props <- c("showline", "mirror", "linecolor", "linewidth")
-            for (prop in style_props) {
-                if (!is.null(yaxis_style[[prop]])) {
-                    layout_updates[[yaxis_name]][[prop]] <- yaxis_style[[prop]]
-                }
-            }
-        }
+        layout_updates[[yaxis_name]] <- yaxis_style
     }
 
     # Apply all updates at once using do.call
@@ -210,13 +211,36 @@ axis_titles_as_annotations <- function(fig) {
 }
 
 
+#' Build a plotly axis title spec carrying its font
+#'
+#' Plot functions that set an axis title as a bare string leave it without a font, so
+#' [axis_titles_as_annotations()] has nothing to carry over to the draggable annotation. This
+#' returns the `list(text, font)` form instead, omitting `text` when it is `NULL` so no
+#' empty title is serialised.
+#'
+#' @param text Character scalar or `NULL`. The axis title text.
+#' @param font Named list of plotly font properties (`size`, `color`, `family`).
+#'
+#' @return A named list suitable for a plotly axis `title`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_axis_title_spec
+#' @keywords internal
+.axis_title_spec <- function(text, font) {
+    if (is.null(text)) {
+        return(list(font = font))
+    }
+    list(text = text, font = font)
+}
+
+
 #' Build an adjustment-aware axis label
 #'
 #' Wraps a base column name with the names of any data adjustments that are
 #' applied to it before plotting, so that an axis title accurately describes the
-#' values displayed. The wrapping order mirrors how the adjustments are applied
-#' in dittoViz (the recognized `adjustment` is applied first, then the
-#' `adj.fxn`), producing labels such as `"log2(z-score(units))"`.
+#' values displayed. The wrapping order mirrors how the modules apply the
+#' adjustments (the `adj.fxn` first, then the recognized `adjustment` rescales
+#' the result), producing labels such as `"z-score(log2(units))"`.
 #'
 #' Empty strings, `NA`, and `NULL` adjustments are ignored, so when no
 #' adjustment is requested the base label is returned unchanged.
@@ -246,11 +270,11 @@ adjusted_axis_label <- function(base, adjustment = NULL, adj.fxn = NULL) {
         !is.null(x) && length(x) > 0 && !is.na(x[1]) && nzchar(as.character(x[1]))
     }
 
-    if (is_set(adjustment)) {
-        label <- paste0(adjustment[1], "(", label, ")")
-    }
     if (is_set(adj.fxn)) {
         label <- paste0(adj.fxn[1], "(", label, ")")
+    }
+    if (is_set(adjustment)) {
+        label <- paste0(adjustment[1], "(", label, ")")
     }
 
     label
@@ -471,7 +495,9 @@ apply_axis_title_to_annotations <- function(fig, input, isolate_fn = isolate) {
         if (is_axis) {
             fig$x$layout$annotations[[i]]$font <- axis_font
         }
-        is_facet_title <- is.null(ann$annotationType) && ann$xanchor == "center"
+        # identical(): an annotation without an xanchor is not a facet title,
+        # and `NULL == "center"` would make this condition an error.
+        is_facet_title <- is.null(ann$annotationType) && identical(ann$xanchor, "center")
         if (is_facet_title){
             fig$x$layout$annotations[[i]]$font <- facet_font
         }

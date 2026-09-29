@@ -191,6 +191,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -276,10 +277,9 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
 
             config_list <- add_plot_config(
                 download.format = isolate_fn(input$download.format),
-                include.modebar.buttons = TRUE
+                include.modebar.buttons = FALSE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

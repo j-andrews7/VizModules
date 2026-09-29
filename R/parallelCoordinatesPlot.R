@@ -178,7 +178,7 @@ parallelCoordinatesPlot <- function(
             )
         }
 
-        if (line.width != 1) {
+        if (isTRUE(line.width != 1)) {
             line_spec$width <- line.width
         }
     } else {
@@ -186,7 +186,7 @@ parallelCoordinatesPlot <- function(
             color = "rgba(44, 123, 182, 0.5)",
             opacity = line.opacity
         )
-        if (line.width != 1) {
+        if (isTRUE(line.width != 1)) {
             line_spec$width <- line.width
         }
     }

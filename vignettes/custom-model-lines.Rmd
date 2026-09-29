@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `dittoViz_scatterPlot` module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, `loess`, and `nls`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
+The `dittoViz_scatterPlot` module lets users overlay fitted model lines on their data. Out of the box it supports `lm`, `glm`, and `loess`. This vignette explains how the system works, how to set defaults, and how to add support for any modelling package (e.g. `drc`, `mgcv`, `brms`).
 
 ## How It Works
 
@@ -39,8 +39,10 @@ A formula validation (AST whitelist) runs before any model is fitted, blocking a
 1. Open a scatter plot app (e.g. `dittoViz_scatterPlotApp()`).
 2. In the **Lines** tab, toggle **Custom Model Lines** on.
 3. Click **+ Add** to create a model row.
-4. Select a model type, enter a formula using your data's column names (e.g. `revenue ~ poly(units, 2)`), pick line colour and width.
+4. Select a model type, enter a formula using your data's column names (e.g. `revenue ~ poly(units, 2)`), pick line colour and width. Write it as `<y column> ~ <x column>`: the line is the formula's prediction across the X axis's range, drawn against the Y axis, and any other column in the formula is held at its median (or first level).
 5. The fitted line appears on the plot.
+
+The model is fit to the values as plotted. With an X or Y adjustment on the **Adjustments** tab (a z-score, `log10`, ...), `revenue ~ units` models the adjusted revenue against the adjusted units, so the line runs through the points you see. Don't repeat the adjustment inside the formula: `log10(revenue) ~ units` on a `log10` Y axis would take the log twice. No model lines are drawn while `as.factor` makes an axis categorical. The same goes for the **Linear model line** and **Line of best fit** toggles.
 
 You can add multiple rows — each draws its own line with independent settings.
 
@@ -54,8 +56,8 @@ library(VizModules)
 dittoViz_scatterPlotApp(
     data_list = list("sales" = example_sales),
     defaults = list(
-        x.by = "revenue",
-        y.by = "units",
+        x.by = "units",
+        y.by = "revenue",
         custom.model.enable = TRUE,
         custom.models = list(
             models1 = list(
@@ -81,7 +83,7 @@ Unlike most `defaults` entries, `custom.models` cannot be supplied as a `reactiv
 
 ## Adding a Custom Model Backend
 
-The built-in types (`lm`, `glm`, `loess`, `nls`) are registered automatically. To add support for another modelling package, call `register_model_backend()` before the app runs.
+The built-in types (`lm`, `glm`, `loess`) are registered automatically. To add support for another modelling package, call `register_model_backend()` before the app runs.
 
 ### Backend Spec
 
@@ -145,13 +147,13 @@ register_model_backend("gam", list(
 ))
 ```
 
-No `fields` needed here because GAM complexity is expressed in the formula itself (`s()`, `te()`, etc.). Note: you'd need to add `"s"`, `"te"`, etc. to the formula whitelist in `.safe_build_model()` for this to work.
+No `fields` needed here because GAM complexity is expressed in the formula itself (`s()`, `te()`, etc.). Note: you'd need to add `"s"`, `"te"`, etc. to the formula whitelist, `.formula_allowed_calls()` in `R/parse_utils.R`, for this to work.
 
 ## Where to Register Backends
 
 | Scenario | Where to call `register_model_backend()` |
 |----------|------------------------------------------|
-| Built into VizModules | Add to `.register_builtin_backends()` in `R/model_backends.R` |
+| Built into VizModules | Add to `.register_builtin_backends()` in `R/plot_fit_lines.R` |
 | Extension package | Your package's `.onLoad()` in `R/zzz.R` |
 | Standalone Shiny app | Before `shinyApp()` or in `global.R` |
 

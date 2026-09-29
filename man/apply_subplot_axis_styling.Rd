@@ -22,6 +22,14 @@ must be applied to all subplot axes (xaxis, xaxis2, xaxis3, etc.) individually.
 This helper function detects how many subplots exist and applies the provided
 axis styling to all of them.
 }
+\details{
+The styling is queued with \code{\link[plotly:layout]{plotly::layout()}}, which merges it into each
+axis when the figure is built, so the axes' other properties (range, domain,
+title text, ...) are kept. Only the styling is queued, never a copy of the
+axis as it stands, so a property written to the figure's layout after this
+call (such as a range raised by \code{\link[=apply_stat_annotations]{apply_stat_annotations()}}) is not reverted
+at build time.
+}
 \examples{
 fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
 xaxis_style <- list(showline = TRUE, linecolor = "black", linewidth = 1)

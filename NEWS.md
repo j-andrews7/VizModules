@@ -1,33 +1,198 @@
 # VizModules 0.5.0.9000
 
-The one where we make the heatmap module not suck.
+The one where we make the heatmap module not suck and stop accidentally butchering app CSS.
 
 ## Improved/New Functionality
 
-* `createModuleApp()` now accepts a `data_list` entry that is a *list* of data frames rather than a single one, filtering and displaying only the primary table (`primary.table`, defaulting to the first) and passing companions through to the module untouched. Also gains `sidebar.width` for modules whose output needs more room. `ComplexHeatmap_HeatmapApp()` is a thin wrapper around it again, rather than a bespoke app.
-* The `ComplexHeatmap` module's row and column split methods gained an **"Annotation"** option (#349), grouping rows or columns by the values of one or more annotation columns instead of by a derived clustering. Several columns give nested slices; pairing it with clustering off is also the fast path, since no distance matrix is needed.
-* The `ComplexHeatmap` module gained a **Filter** tab with expression-based row and column filters (#346), so a specific set of features or samples can be plotted without the `dataFilter` module. Row filters see the matrix data frame; column filters see a synthetic `column` field plus any per-sample metadata joined via `column_key`. Filtering runs before everything else, so scaling, annotations, splits, and the source download all describe the filtered matrix.
-  * Both `ComplexHeatmap` filter inputs are debounced by 700ms, so typing an expression does not redraw the heatmap once per keystroke. The "Adding a New Module" and "Building Custom Modules" vignettes document the pattern for free-text inputs generally.
-* Each `ComplexHeatmap` annotation track gained its own **Label Side** and **Label Size** controls, and a **Show Legend** checkbox suppressing just that track's legend (default on). Set it from `defaults` with a `show_legend` field on the `row_annotations`/`column_annotations` row.
-* The `ComplexHeatmap` module's row and column **"Annotation"** splits now honour a factor column's level order, so a caller can choose the order the slices come out in (model families by ID rather than alphabetically, say) rather than having ComplexHeatmap sort the groups itself. Unused levels are dropped, since an empty slice is an error.
-* The `ComplexHeatmap` output UI functions gained `fit.width` (default `TRUE`), scaling the widget's panels to their container's width on load (#350) rather than sitting at `InteractiveComplexHeatmap`'s fixed pixel widths until the resize handle is dragged. `width`/`width1`/`width2` become relative sizes; heights are untouched and the widget's own resize controls still win afterwards. Pass `fit.width = FALSE` for the old fixed-width behaviour.
-* Added `heatmap_fit_width()`, the `fit.width` behaviour above as a standalone wrapper, for apps that call `InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()` directly rather than going through the module.
-* `ComplexHeatmap_HeatmapApp()` now opens on `example_heatmap_matrix` paired with `example_heatmap_column_data`, so the column annotation, split, and filter features are usable out of the box.
-* `safe_eval_filter()` and `validate_expression()` gained a wider shared vocabulary: `grepl`, `startsWith`, `endsWith`, `substr`, `nchar`, `toupper`, `tolower`, `trimws`, `abs`, `round`, and `xor`. All are pure, so the sandbox is unchanged. The two functions previously carried duplicate copies of the allowlist and AST walker and now share one.
+### All modules
+
+* **Source Download** now also saves a `<name>_plot.svg` and a `<name>_plot.png` of each plot (#353). The Figure Builder saves one pair per panel, named after the panel's label.
+  * The images are captured in the browser from the graph as displayed, so they include everything applied after the figure was built. The button pauses briefly while capturing; if capture fails, the archive still downloads without them.
+  * A WebGL plot (the scatter plot's WebGL toggle) can only be captured as a raster, embedded in an otherwise editable SVG. Turn WebGL off for a fully editable file.
+  * A module whose output isn't a plotly graph can draw itself instead, via `vector_svg` and/or `raster_png` functions of `(width, height, res)` on its summary list or on the reactive its server returns. `ComplexHeatmap_HeatmapServer()` provides both.
+* Without pandoc, which `htmlwidgets::saveWidget()` needs, the source download now warns and leaves out the self-contained HTML instead of writing an empty `.htm`, so the data and images still download.
+* The shared **Legend** tab gained **Show Legend**, **Legend Font** and **Legend Font Color** (#360, #362). The legend can now be hidden in `yPlot`, `freqPlot`, `linePlot`, `dumbbellPlot` and the `plotthis` modules too, and hiding it also hides colorbars and the scatter/`DotPlot` size legend.
+* Each module's app now opens on defaults that show more of what it can do, with more interesting example datasets to match.
+
+### Module gallery and Figure Builder
+
+* The module gallery is now a function, `moduleGalleryApp()`, with a tab per module plus the **Figure Builder**. The bundled `inst/apps/module-gallery` app is a thin deployment wrapper around it.
+* The `ComplexHeatmap` module can now be added to the **Figure Builder** (#352).
+  * The figure export read an SVG out of each panel's plotly graph, so any other kind of panel contributed only its label. A module can now attach a `vector_svg` attribute (a `function(width, height, res)` returning an `<svg>`) to the reactive its server returns, and the export uses that instead.
+* `figureBuilderServer()`, `figureBuilderApp()` and `createModuleApp()` accept a `data_list` entry that is a *list* of data frames, as the `ComplexHeatmap` module needs. `createModuleApp()` filters and displays only the primary table (`primary.table`, default the first) and passes the others through untouched. It also gained `sidebar.width`.
+
+### `BoxPlot`, `freqPlot` and `yPlot`
+
+* `stat.pairs` can be set from `defaults`, as `"A vs B"` strings in either order.
+
+### `ComplexHeatmap`
+
+* Added `ComplexHeatmap_HeatmapStaticOutputUI()`, a plain `plotOutput()` of the same heatmap. It gives up cell hover/click, the sub-heatmap and the brush info panel, and with them all of the widget's own chrome. The gallery and `ComplexHeatmap_HeatmapApp()` keep the interactive widget.
+* Row and column splits gained an **"Annotation"** method (#349), slicing by one or more annotation columns (several give nested slices). With clustering off it is also the fast path, since no distance matrix is needed.
+* New **Filter** tab with expression-based row and column filters (#346), so a subset can be plotted without the `dataFilter` module. Row filters see the matrix data frame; column filters see a `column` field plus any per-sample metadata joined via `column_key`. Filtering runs first, so scaling, annotations, splits and the source download all describe the filtered matrix.
+  * Both filters are debounced by 700ms, so typing doesn't redraw the heatmap on every keystroke. The "Adding a New Module" and "Building Custom Modules" vignettes document the pattern for free-text inputs.
+* New **Show Row Slice Titles** and **Show Column Slice Titles** checkboxes (#366). Clearing the title box never removed the group names a split titles its slices with (annotation values, or cluster numbers for k-means and hierarchical splits), because `Heatmap()` reads a blank title as "use the group names". Unticking one drops the titles and the space they take. A typed title still replaces them, and a `%s` in it is filled in with each group's name.
+* Each annotation track gained **Label Side**, **Label Size** and **Show Legend** controls. Set the last from `defaults` with a `show_legend` field on a `row_annotations`/`column_annotations` row.
+* The output UI functions gained `fit.width` (default `TRUE`), fitting the widget's panels to their container on load (#350) instead of `InteractiveComplexHeatmap`'s fixed pixel widths. `heatmap_fit_width()` does the same for apps calling `InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()` directly.
+* `ComplexHeatmap_HeatmapApp()`'s default data now exercises the column annotation, split and filter features.
+
+### `dumbbellPlot`
+
+* New **Point Size** input (`point.size` in `dumbbellPlot()`, default 12) (#361).
+
+### `linePlot`
+
+* **Error Bars** can now show the standard deviation (still the default), the standard error of the mean, or a 95% confidence interval (#368), through the new **Error Bar Type** input (`error.type` in `linePlot()`). A confidence interval uses the normal approximation unless the **Confidence Interval Method** input (`error.ci.method`, shown only while a CI is selected) switches it to the t distribution, which is wider for small groups. A group with fewer than two observations is drawn without a bar. The tooltips say what the bars show (the plotted group mean plus or minus that amount).
+
+### `parallelCoordinatesPlot`, `piePlot` and `radarPlot`
+
+* The shape-drawing controls are gone, since plotly's drawing tools need cartesian axes and they did nothing here. The pie and radar modebars no longer offer the drawing buttons either. `uniform_plotly_inputs_ui()` gained `include.shapes` for this.
+
+### `scatterPlot` and `yPlot`
+
+* The **Adjustment Function** now runs before the z-score/relative-to-max **Adjustment** (log10, then z-score), and axis titles read accordingly (`z-score(log10(salary))`). dittoViz does the reverse, which took the log of every below-average value, so those points vanished. The rescaling also skips non-finite values, so a `log(0)` drops that one point instead of making the whole column `NaN`.
+
+### `SplitBarPlot`
+
+* **Facet Scale** now defaults to `"fixed"` rather than `"free_y"`.
+
+### Helpers and exported functions
+
+* Exported `draw_to_svg()` (previously the internal `.draw_to_svg()`) and added `draw_to_png()`. They render any grid or base drawing, for the `vector_svg`/`raster_png` hooks above.
+* `safe_eval_filter()` and `validate_expression()` now share one allowlist and AST walker (each had its own copy), with a wider but still pure vocabulary: `grepl`, `startsWith`, `endsWith`, `substr`, `nchar`, `toupper`, `tolower`, `trimws`, `abs`, `round` and `xor`.
+* `adjust_column_values()` gained `x.adjustment`, `y.adjustment` and `color.adjustment` (`"z-score"`, `"relative.to.max"`), reproducing exactly what the modules plot. Use it to compute anything drawn over such a plot.
+* `create_stat_annotations()` gained `free.y`, stacking each facet panel's brackets above that panel's own data, and `apply_stat_annotations()` then raises each panel's axis separately.
+* `apply_legend_styling()` gained `show`, `font.family` and `font.color`, and the new `apply_legend_inputs()` applies the whole **Legend** tab from a module's inputs.
+* `collect_source_data()` accepts `inputs_reactive` as a reactive, as documented, as well as a plain list.
+
+## Deprecations and Removals
+
+### Module gallery and Figure Builder
+
+* The Figure Builder no longer accepts `.rds` uploads.
+* Removed the bundled `inst/apps/figure-builder` app, since the builder is part of the gallery now.
+
+### `BarPlot` and `SplitBarPlot`
+
+* Removed the **Split By** input. It returns a patchwork object, which `ggplotly()` can't convert, so it never did anything.
+
+### `scatterPlot`
+
+* Removed the built-in `nls` backend for custom model lines. An nls formula names its parameters, which the formula safety check rejects, so it could never fit.
+
+### `ViolinPlot`
+
+* Removed the `plotthis_ViolinPlot` module (`plotthis_ViolinPlotApp()`, `plotthis_ViolinPlotInputsUI()`, `plotthis_ViolinPlotOutputUI()`, `plotthis_ViolinPlotServer()`) (#358). `plotthis` 0.14.0 draws violins with a geom of its own that `ggplotly()` can't convert, and `yPlot` covers the same ground. Use `dittoViz_yPlot` with `defaults = list(plots = "vlnplot")`, adding `"boxplot"`/`"jitter"` for the inner box and points.
 
 ## Bug Fixes
 
-* Fixed a multi-select dropping a deselection made from its value tags. `viz_select_input()` reports on dropdown close for multi-selects, but removing a value via a tag's x (or the clear-all x) never opens the dropdown, so the change was silently never sent: the control showed the value gone while the server kept the old selection. Affected every multi-select in the package; most visible on the heatmap's annotation split, where removing a column left the old slices in place.
-* Fixed default annotations in the `ComplexHeatmap` module failing to render their color pickers and annotation tracks on load. Initial rows in `multiDynamicInput()` are now reported to Shiny during initialization before deferred DOM binding, omitted fields backfill from `row_spec`, and the module server resolves palettes immediately and disables output suspension for annotation color controls.
-* Fixed every module-hosted `ComplexHeatmap` heatmap silently never drawing. `InteractiveComplexHeatmap` keys its registry by `validate_heatmap_id()`, which rewrites each non-word character to `_`, so the guard added alongside the annotation fix above looked up the raw namespaced id (`mymod-heatmap-Heatmap`) against a key stored as `mymod_heatmap_Heatmap`, found nothing, and returned before `makeInteractiveComplexHeatmap()` could run. Every `ComplexHeatmap_HeatmapServer()` instance was affected, since a module id always contains a `-`; the widget rendered its empty shell with no error or warning.
-* Fixed the `ComplexHeatmap` module's `compact = TRUE` widget (and any use of `output_ui_float = TRUE`) adding a ~10,000px horizontal scrollbar to the host app. `InteractiveComplexHeatmap` detaches the floating click/brush info panel onto `<body>` and parks it at `right: -10000px` while idle, which extends the *document's* scrollable width -- on every page of the app, not just the one holding the heatmap -- and scrolling right revealed the parked panel stuck on "Retrieving from server... Don't move mouse.". The panel is now re-parked to the left, where it contributes no overflow, leaving the floating behaviour otherwise untouched.
+### All modules
+
+* **Reset** now discards manually dragged legends, annotations, axis titles and colorbars. It also returns every control to the value it started at; several fallbacks disagreed with the UI (`stat.hide.ns`, the top and right margins, subplot spacing, and a few module-specific ones).
+* Stopped the package's stylesheets leaking into host apps (#355). CSS still sucks.
+  * `multiColorPicker`'s dropdown, which is parented to `<body>`, was styled through selectize's generic class names. That restyled every `selectInput()` and DT column filter on the page, most visibly rendering long dropdowns as an empty panel. Every plot module has a colour picker, so this affected any app using any module. The rules are now scoped to the picker's own `.mc-palette-dropdown`.
+  * The Figure Builder styled `.well`, so embedding it respaced every `sidebarPanel()` on the page. Its rules are now scoped to `.pb-app`.
+  * `organize_inputs()` used inline negative margins that assume a padded parent, so in a narrow sidebar the grid overhung and scrolled sideways, and undoing that took `!important`. It now uses a stylesheet and a column gap; only the column count is still inline, as `--viz-input-columns`.
+* Faceted plots no longer offer an editable main title, whose empty placeholder sat over the facet panel titles and caught the clicks meant for them. The **Title** inputs are hidden and the facet title inputs shown while a plot is faceted, without re-showing anything hidden via `hide.inputs`. `yPlot` now also counts several Y variables split into panels as faceted.
+* Multi-selects no longer drop a deselection made from a value tag's x (or the clear-all x). `viz_select_input()` reports a multi-select when its dropdown closes, and removing a tag never opens it.
+* An input that has not reported yet (`NULL`) no longer throws "argument is of length zero" while a module initializes.
+* The source download no longer writes the captured plot images (up to tens of MB) into `*_ui_inputs.csv`.
+* The **Lines** tab's line-type tooltips list the names actually accepted.
+
+### Module gallery and Figure Builder
+
+* The module gallery passes its `defaults` to the module servers too, so Reset matches the initial state.
+
+### `AreaPlot`
+
+* **Group By** and **Facet By** no longer leave out the dataset's first categorical column when it isn't the X column, which silently dropped a `group.by`/`facet.by` default naming it.
+
+### `BarPlot`, `BoxPlot`, `SplitBarPlot` and `yPlot`
+
+* Axis limits given in `defaults` (`y.min`/`y.max`, or `x.min`/`x.max` in `SplitBarPlot`) are no longer replaced by the data's range at startup; they stand until the plotted columns change. `yPlot`'s keys are now `y.min`/`y.max` too, matching its inputs and Reset (its UI read `min`/`max`).
+* **Reset** restores the `BoxPlot` and `BarPlot` y limits for the column it resets `y.data` to. It measured the first numeric column, which clipped a plot whose default `y.data` was another one.
+
+### `BoxPlot`
+
+* **Security:** **Sort X By** was passed straight to `plotthis::BoxPlot()`, which evaluates it, so R code typed there ran on the server. It now goes through the same expression check as every other user-typed expression, allowing summary functions (`mean`, `median`, `sd`, ...) and ignoring anything else with a notification.
+
+### `BoxPlot`, `freqPlot` and `yPlot`
+
+* Boxes, points and significance brackets now line up when a `color.by` group is missing from some `group.by` categories (#356). The new `.align_box_positions()` puts the boxes back on ggplot's coordinates under plotly's `boxmode = "overlay"`, replacing the old faceting workaround.
+  * Brackets now use the same dodge as the boxes rather than a formula of their own, and a comparison against a group with no data in that category (an NA p-value) is no longer drawn as "NA" at an invented position.
+  * A panel is now identified by its *pair* of axes, which mattered for any facet grid more than one row deep (so most `freqPlot`s). Box width comes from the most crowded x position in the whole figure, so boxes no longer change size between facets.
+  * `boxmode = "overlay"` is only set once every box has an explicit position, where it could leave boxes stacked on a categorical tick. The `boxgap`/`boxgroupgap` attributes plotly's schema rejects are no longer set, which silences a pile of rebuild warnings.
+* Overlays are now computed from the values drawn, after any Y adjustment, rather than from the raw columns (#319, #365).
+  * `yPlot` brackets were drawn at raw heights under a Y adjustment (log10, z-score, ...), far above the axis, and tested on the raw values. Tests, brackets and the **Y Axis Min/Max** now all use the adjusted values; the limits used to be ignored whenever an adjustment was on.
+  * `yPlot` and `freqPlot` brackets could be clipped even without an adjustment. `apply_subplot_axis_styling()` queued a copy of each whole axis, which reverted the raised range at build time; it now queues only the styling.
+  * Under a free y facet scale, each panel now keeps its own range and its brackets sit above its own data. `yPlot` and `freqPlot` pinned every panel to the **Y Axis Min/Max**, and all three drew brackets at the tallest panel's height (and, after the first panel, on the first panel's axis).
+  * A rotated `BoxPlot`, or a `yPlot`/`freqPlot` that includes a ridge plot, puts the values on the x-axis, where brackets were drawn across the category axis. They are now skipped with a notification, and the test results still go in the source download.
+* The source download no longer ships a stale statistics CSV after stats are turned off.
+* Significance labels for a p-value below 0.0001 read "< 0.0001" rather than rounding to "0".
+
+### `ComplexHeatmap`
+
+* Every module-hosted heatmap silently never drew. `InteractiveComplexHeatmap` registers heatmaps under `validate_heatmap_id()`, which turns each non-word character into `_`, but the module looked up the raw namespaced id (`mymod-heatmap-Heatmap`), found nothing, and returned before `makeInteractiveComplexHeatmap()` could run. A module id always contains a `-`, so every instance rendered an empty shell with no error.
+* Default annotations now render their colour pickers and tracks on load. `multiDynamicInput()` reports its initial rows to Shiny before deferred DOM binding, omitted fields backfill from `row_spec`, and the server resolves palettes immediately.
+* The `compact = TRUE` widget (and any `output_ui_float = TRUE`) no longer adds a ~10,000px horizontal scrollbar to the host app.
+* With **Auto Update** off, the matrix columns, row names, filters and column key no longer redraw the heatmap before **Update**.
+
+### `dataFilter`
+
+* `dataFilterServer()` no longer applies the previous table's row indices to newly supplied data while DT redraws.
+
+### `dumbbellPlot`
+
+* **Colour By** "Y variables" now matches the colour picker, keeps each category's colour across facets, and gives every category a legend entry (only the first had one). `dumbbellPlot()` matches a named `palette.selection` by name.
+* A faceted plot now draws a border around every panel rather than only the first, which was the only one with a y axis to draw its edges.
+
+### `dumbbellPlot` and `linePlot`
+
+* **Axis Title Size/Color/Font** and **Facet Title Size/Color/Font** now work (#326), as do **Show X/Y Gridlines** and **Gridline Color** (`dumbbellPlot` ignored all three, `linePlot` the colour). `dumbbellPlot()` and `linePlot()` gained the matching `axis.title.font.*`, `facet.title.font.*`, `show.grid.*` and `grid.color` arguments, and `build_facet_annotations()` gained `axis.title.font` and `facet.title.font`.
+* Facet titles now sit directly above their own panel under shared (fixed) axes. `build_facet_annotations()` fell back to an even grid that ignored the panel gaps, which put lower rows' titles up against the row above.
+* No more plotly default zero line, which couldn't be turned off. Add one from the **Lines** tab instead (#363).
+
+### `freqPlot`, `scatterPlot` and `yPlot`
+
+* Values containing spaces (e.g. `"CD4 T"`) can now be highlighted when separated by commas or new lines. They were split on the space and so never matched.
+* Highlight and selection labels are no longer drawn for points an adjustment leaves undrawable (`NaN`), which plotly placed at an arbitrary spot (#319, #365). Dumbest thing.
+
+### `linePlot`
+
+* A faceted plot no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel (#357).
+* Multi-axis plots no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and `show.legend = FALSE` now hides the legend box instead of leaving an empty one.
+* Logical and Date columns no longer break the plot; `is_pure_type()` errored on them.
+* **Error Bars** sat on the wrong points whenever **Group By** was set, so each series drew other series' bars (the gallery's default line plot included). plotly re-sorts the data by the colour column but not an error bar array handed to it, so `linePlot()` now sorts the same way first. Bars also silently vanished when the data had a column named `y`, which shadowed the argument inside `summarise()`.
+
+### `parallelCoordinatesPlot`
+
+* `parallelCoordinatesPlot()` tolerates a blank line width.
+
+### `scatterPlot`
+
+* Linear, best-fit and custom model lines are now fit to the plotted values (#319, #365). They were fit to the raw columns, so on adjusted axes they were drawn off in their own space. A formula like `mpg ~ hp` models what is shown (don't repeat the adjustment in it), no lines are drawn when `as.factor` makes an axis categorical, and a numeric **Color By** gives one line instead of one per distinct value.
+* Fit lines no longer land in the wrong facet panel. Character facets are laid out alphabetically, and multi-row or two-column `split.by` layouts share axes by row and column; lines are now matched to panels by their strip labels.
+* A custom model formula calling a function through a namespace (`y ~ base::log(x)`) crashed the render with "the condition has length > 1" instead of reporting a disallowed term, while `y ~ log()(x)` was accepted. `.safe_build_model()` had its own copy of the AST walker and now shares the one in `R/parse_utils.R`. It also returns `NULL` rather than an error for an empty formula.
+* With **Auto Update** off, the fit-line controls no longer redraw the plot before **Update**.
+
+### `SplitBarPlot`
+
+* The axis no longer clips a long negative bar beside short positive ones, or inverts when every value is negative.
+* **Category Label Position** can be negative again, moving the labels further out from their bars (#367).
+
+### Helpers and exported functions
+
+* `validate_expression()` and `safe_eval_filter()` checked only the first statement of their input. `validate_expression()` returned the whole string for its caller to evaluate, so anything after a `;` or a newline went unexamined, and `safe_eval_filter()` evaluated only the first clause, returning a row mask nobody asked for. Both now reject multi-statement input.
+* `draw_to_svg()` returns `NULL` instead of erroring when the build has neither `svglite` nor a working cairo, matching `draw_to_png()`. That includes macOS without XQuartz, where `capabilities("cairo")` is `TRUE` but the device can't load.
+* `multiColorPicker()` applies unnamed `colors` in order instead of ignoring them.
+* `apply_axis_title_to_annotations()` tolerates annotations without an `xanchor`, and `safe_resolve_adj_fxn("neg_log10")` works from outside the package.
 
 ## Documentation
 
-* Added the `ComplexHeatmap_Heatmap` module and `dittoViz_freqPlot` to the README (#348). 
-* Refreshed the skills for the 0.4.0 changes they had not picked up (#348).
-* The `quick-start`, `custom-modules`, and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material and at `use_vizmodules_skills()` (#347). Previously the skills were documented only in the README, so a reader of the vignettes had no idea one existed for what they were doing.
-
+* Added the `ComplexHeatmap_Heatmap` and `dittoViz_freqPlot` modules to the README, and refreshed the skills for the 0.4.0 changes they had missed (#348).
+* The `quick-start`, `custom-modules` and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material, and at `use_vizmodules_skills()` (#347). The skills were previously documented only in the README.
+* Fixed out of date vignette examples.
+* The bundled skills and the `defaults-and-hiding` and `adding-a-new-module` vignettes now cover the `linePlot` error bar `defaults` keys, the heatmap slice title toggles, `hide.inputs` outranking a module's own show/hide, and two plotting traps behind the #368 fixes (plotly re-sorting by the colour column, and dplyr masking an argument).
 
 # VizModules 0.4.0
 

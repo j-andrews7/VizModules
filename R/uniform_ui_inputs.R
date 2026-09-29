@@ -103,7 +103,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "hline.linetypes", "dashed")
             ),
-            "Line style(s) for horizontal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(
@@ -140,7 +140,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "vline.linetypes", "dashed")
             ),
-            "Line style(s) for vertical reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(
@@ -183,7 +183,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                 placeholder = "solid, dashed, dotted, ...",
                 value = get_default(defaults, "abline.linetypes", "dashed")
             ),
-            "Line style(s) for diagonal reference lines (solid, dashed, dotted, longdash, dashdot)",
+            "Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)",
             placement = "top", options = tip_opts
         ),
         tipify(
@@ -256,6 +256,15 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 }
 
 
+# Font families offered by every font picker in the module UIs.
+.font_family_choices <- c(
+    "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+    "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+    "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+    "Verdana", "sans-serif", "serif", "monospace"
+)
+
+
 #' Generate uniform Axes input UI
 #'
 #' Creates a standardized tagList of axis-related inputs for use across plot modules.
@@ -281,12 +290,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #' uniform_axes_inputs_ui(ns)
 #' uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
-    font_choices <- c(
-        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-        "Verdana", "sans-serif", "serif", "monospace"
-    )
+    font_choices <- .font_family_choices
 
     rotate_input <- if (include.rotate) {
         materialSwitch(ns("rotate"), "Rotate (swap X/Y)",
@@ -441,7 +445,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' Generate uniform Stats input UI
 #'
 #' Creates a standardized tagList of statistical testing inputs for use across
-#' plot modules that support pairwise comparisons (BoxPlot, ViolinPlot, yPlot).
+#' plot modules that support pairwise comparisons (BoxPlot, yPlot, freqPlot).
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -611,6 +615,10 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
+#' @param include.shapes Logical; whether to include the controls styling shapes
+#'   drawn with plotly's drawing tools. Pass `FALSE` for plots without cartesian
+#'   axes (pie, radar, parallel coordinates), where those tools do not work.
+#'   Default is `TRUE`.
 #'
 #' @return A `tagList` containing the Plotly input UI elements.
 #'
@@ -623,9 +631,9 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' @examples
 #' ns <- shiny::NS("plot")
 #' uniform_plotly_inputs_ui(ns)
-uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
+uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE) {
     tip_opts <- list(container = "body")
-    tagList(
+    inputs <- list(
         viz_select_input(
             ns("download.format"),
             "Download Format",
@@ -667,7 +675,14 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             ),
             "Right margin of the plot in pixels",
             placement = "top", options = tip_opts
-        ),
+        )
+    )
+
+    if (!isTRUE(include.shapes)) {
+        return(do.call(tagList, inputs))
+    }
+
+    shapes <- list(
         tipify(
             colourInput(ns("shape.fill"), "Shape Fill",
                 allowTransparent = TRUE,
@@ -712,6 +727,8 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
             placement = "top", options = tip_opts
         )
     )
+
+    do.call(tagList, c(inputs, shapes))
 }
 
 
@@ -734,11 +751,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
 #' @keywords internal
 .uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
+    spacing <- .subplot_spacing_defaults(defaults)
 
     tagList(
         tipify(
             numericInput(ns("subplot.margin.x"), "Subplot Spacing (Horizontal)",
-                value = get_default(defaults, "subplot.margin.x", 0.03, is.numeric),
+                value = spacing$x,
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -749,7 +767,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
         ),
         tipify(
             numericInput(ns("subplot.margin.y"), "Subplot Spacing (Vertical)",
-                value = get_default(defaults, "subplot.margin.y", 0.1, is.numeric),
+                value = spacing$y,
                 min = 0, max = 1, step = 0.01
             ),
             paste(
@@ -762,11 +780,42 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
 }
 
 
+#' Resolve the subplot spacing defaults
+#'
+#' Shared by [.uniform_subplot_spacing_inputs_ui()] and [reset_plotly_inputs()]
+#' so the controls start and reset to the same values. A `subplot.margin` entry
+#' sets both directions at once (linePlot uses it for its tighter default);
+#' `subplot.margin.x`/`subplot.margin.y` override it per direction.
+#'
+#' @param defaults A named list of default values, or `NULL`.
+#'
+#' @return A list with numeric `x` and `y`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_subplot_spacing_defaults
+#' @keywords internal
+.subplot_spacing_defaults <- function(defaults) {
+    both <- get_default(defaults, "subplot.margin", NULL, is.numeric)
+    list(
+        x = get_default(defaults, "subplot.margin.x", both %||% 0.03, is.numeric),
+        y = get_default(defaults, "subplot.margin.y", both %||% 0.1, is.numeric)
+    )
+}
+
+
 #' Generate uniform Legend input UI
 #'
-#' Creates a standardized tagList of legend styling inputs used across plot
-#' modules. Currently exposes the legend title and entry label font sizes so
-#' they can be adjusted consistently regardless of plot type.
+#' Creates a standardized tagList of legend inputs used across plot modules, so
+#' the legend can be shown/hidden and styled consistently regardless of plot type:
+#'
+#' - `legend.show` - Show the legend, colorbars and any size legend (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color",
+#'   default: "#000000")
+#' - `legend.title.size` - Font size of the legend title (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Font size of the legend entry labels (UI: "Legend Text Size", default: 12)
+#'
+#' Apply them to a figure with [apply_legend_inputs()] and restore them with [reset_legend_inputs()].
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -775,16 +824,47 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL) {
 #'
 #' @importFrom shiny numericInput tagList
 #' @importFrom shinyBS tipify
+#' @importFrom shinyWidgets materialSwitch
+#' @importFrom colourpicker colourInput
 #'
 #' @author Jared Andrews
 #' @export
 #' @examples
 #' ns <- shiny::NS("plot1")
 #' uniform_legend_inputs_ui(ns)
-#' uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
+#' uniform_legend_inputs_ui(ns, defaults = list(
+#'     legend.show = FALSE, legend.font.family = "Courier New",
+#'     legend.title.size = 16, legend.text.size = 12
+#' ))
 uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
+        tipify(
+            materialSwitch(ns("legend.show"), "Show Legend",
+                value = get_default(defaults, "legend.show", TRUE, is.logical),
+                status = "success"
+            ),
+            "Show the legend. Turning it off also hides colorbars and any point size legend.",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            viz_select_input(ns("legend.font.family"), "Legend Font",
+                choices = .font_family_choices,
+                selected = get_default(
+                    defaults, "legend.font.family", "Arial",
+                    function(x) x %in% .font_family_choices
+                )
+            ),
+            "Font family of the legend title and entry labels.",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("legend.font.color"), "Legend Font Color",
+                value = get_default(defaults, "legend.font.color", "#000000")
+            ),
+            "Font color of the legend title and entry labels.",
+            placement = "top", options = tip_opts
+        ),
         tipify(
             numericInput(ns("legend.title.size"), "Legend Title Size",
                 value = get_default(defaults, "legend.title.size", 14, is.numeric),
@@ -852,7 +932,10 @@ uniform_annotation_inputs_ui <- function(ns, defaults = NULL, choices = "", anno
                 placeholder = "Values from 'Annotate by' column\n(comma, space, or newline delimited)",
                 value = get_default(defaults, "highlight.points", ""),
                 rows = 3
-            ), "Enter specific values from the 'Annotate By' column to highlight those points on the plot",
+            ), paste(
+                "Enter specific values from the 'Annotate By' column to highlight those points on the plot.",
+                "Separate values that contain spaces with commas or new lines."
+            ),
             placement = "top", options = tip_opts
         ),
         tipify(

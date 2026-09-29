@@ -147,8 +147,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
-            update_viz_select(session, "split.by",
-                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% all.choices))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             updateMaterialSwitch(session, "add.bars",
                 value = get_default(defaults, "add.bars", FALSE, is.logical))
@@ -157,7 +155,6 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateSliderInput(session, "bar.alpha", value = get_default(defaults, "bar.alpha", 1, is.numeric))
             updateNumericInput(session, "bar.width", value = get_default(defaults, "bar.width", 1, is.numeric))
             updateSliderInput(session, "plot.alpha", value = get_default(defaults, "plot.alpha", 0.5, is.numeric))
-            update_viz_select(session, "theme", selected = get_default(defaults, "theme", "theme_this"))
             update_viz_select(session, "position", selected = get_default(defaults, "position", "identity"))
             updateColourInput(session, "single.fill.color",
                 value = get_default(defaults, "single.fill.color", default_palette_values[1]))
@@ -167,6 +164,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -178,23 +176,19 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         generate_DensityPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
 
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == "") {
+            if (.nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
 
@@ -257,7 +251,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
             fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
-            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Apply axis styling to all subplot axes (handles faceting)
             xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
@@ -292,12 +286,8 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

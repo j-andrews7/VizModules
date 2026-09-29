@@ -5,9 +5,9 @@
 \alias{example_bar}
 \title{Bar dataset for bar and split bar plot examples}
 \format{
-A data frame with 5 rows and 5 columns:
+A data frame with 18 rows and 5 columns:
 \describe{
-\item{Group}{Group label (A through E)}
+\item{Group}{Group label (A through F)}
 \item{Type}{Category type (Alpha, Beta, or Gamma)}
 \item{Values}{Primary numeric values (positive)}
 \item{Numbers}{Secondary numeric values (can be negative)}
@@ -21,9 +21,12 @@ Generated in data-raw/generate_example_data.R.
 example_bar
 }
 \description{
-A small dataset with five groups, two categorical variables, and three
-numeric variables. Used as the default data for \code{\link[=plotthis_BarPlotApp]{plotthis_BarPlotApp()}}
-and \code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}.
+A small dataset with one row for each of six groups crossed with three
+types, so bars stack by \code{Type} and each \code{Type} facet of a split bar plot has
+one bar per \code{Group}. \code{Values} is positive and shrinks from Alpha to Gamma;
+\code{Numbers} and \code{Score} are signed, leaning positive for Alpha and negative for
+Gamma. Used as the default data for \code{\link[=plotthis_BarPlotApp]{plotthis_BarPlotApp()}} and
+\code{\link[=plotthis_SplitBarPlotApp]{plotthis_SplitBarPlotApp()}}.
 }
 \author{
 Jacob Martin

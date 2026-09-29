@@ -4,12 +4,17 @@
 \alias{uniform_plotly_inputs_ui}
 \title{Generate uniform Plotly input UI}
 \usage{
-uniform_plotly_inputs_ui(ns, defaults = NULL)
+uniform_plotly_inputs_ui(ns, defaults = NULL, include.shapes = TRUE)
 }
 \arguments{
 \item{ns}{A namespace function, typically created by \code{NS(id)}.}
 
 \item{defaults}{A named list of default values for the inputs.}
+
+\item{include.shapes}{Logical; whether to include the controls styling shapes
+drawn with plotly's drawing tools. Pass \code{FALSE} for plots without cartesian
+axes (pie, radar, parallel coordinates), where those tools do not work.
+Default is \code{TRUE}.}
 }
 \value{
 A \code{tagList} containing the Plotly input UI elements.

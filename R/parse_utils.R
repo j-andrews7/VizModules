@@ -59,6 +59,38 @@
     x
 }
 
+#' Parse a highlight string into the values it names
+#'
+#' Highlight values are typed as a comma- or newline-separated list, but they
+#' have also always been splittable on spaces, which left a value containing a
+#' space (`"CD4 T"`, `"Player A"`) impossible to name. Each comma- or
+#' newline-delimited entry is therefore kept whole when it is one of
+#' `available`, and split on whitespace as before otherwise.
+#'
+#' @param x A single string, e.g. `"CD4 T, B"` or `"P01 P07"`, or `NULL`.
+#' @param available Character vector of the values the entries name (the
+#'   `annotate.by` column), or `NULL` to split every entry on whitespace.
+#'
+#' @return A character vector of unique, non-blank values, possibly empty.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_parse_highlight_values
+#' @keywords internal
+.parse_highlight_values <- function(x, available = NULL) {
+    if (is.null(x) || length(x) == 0 || is.na(x[1]) || !nzchar(trimws(x[1]))) {
+        return(character(0))
+    }
+
+    entries <- trimws(strsplit(x[1], "[,\r\n]")[[1]])
+    entries <- entries[nzchar(entries)]
+    available <- unique(as.character(available))
+
+    values <- unlist(lapply(entries, function(entry) {
+        if (entry %in% available) entry else strsplit(entry, "\\s+")[[1]]
+    }), use.names = FALSE)
+    unique(values[nzchar(values)])
+}
+
 #' Parse and validate linetype string to a vector
 #'
 #' Parses a comma-separated string of linetypes and validates each element.
@@ -527,6 +559,49 @@ setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max
     store
 }
 
+#' Let axis limits given in `defaults` survive a module's startup
+#'
+#' Modules recompute an axis's limits from the data whenever the columns it
+#' shows change, and those observers also run as the controls first report in,
+#' which used to replace any limits given in `defaults` before the plot was
+#' ever drawn. Pass each recomputed range through the function this returns:
+#' while the columns are still the ones the module started on, the `defaults`
+#' limits win (either may be given alone); once they change, the data's range
+#' is used from then on, since the seeded limits described other columns.
+#'
+#' @param defaults A named list of module defaults, or `NULL`.
+#' @param min_key,max_key Character strings — the limit controls' input ids,
+#'   which are also their `defaults` keys.
+#'
+#' @return A function of `(range, key)`, where `range` is a `list(min = , max = )`
+#'   computed from the data (or `NULL`) and `key` identifies the columns it was
+#'   computed for (e.g. `list(input$x.data, input$y.data)`). It returns the range
+#'   to use.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_seed_axis_limits
+#' @keywords internal
+.seed_axis_limits <- function(defaults, min_key, max_key) {
+    start_key <- NULL
+    seeding <- TRUE
+
+    function(range, key) {
+        if (is.null(range) || !seeding) {
+            return(range)
+        }
+        if (is.null(start_key)) {
+            start_key <<- key
+        }
+        if (!identical(key, start_key)) {
+            seeding <<- FALSE
+            return(range)
+        }
+        range$min <- get_default(defaults, min_key, range$min, is.numeric)
+        range$max <- get_default(defaults, max_key, range$max, is.numeric)
+        range
+    }
+}
+
 #' Normalize a module's "no selection" column input to `NULL`
 #'
 #' Module selects use `""` for "none". Statistics helpers expect `NULL`, and a
@@ -726,6 +801,95 @@ setup_auto_update_logic <- function(input, params = NULL) {
 }
 
 
+#' The call names a user-typed model formula is allowed to contain
+#'
+#' The formula counterpart to [.expr_allowed_calls()], for the custom fit-line
+#' models in [.safe_build_model()]. A formula needs a different vocabulary --
+#' `~` and the model-building operators, plus the handful of transforms that
+#' routinely appear on the right-hand side -- but it needs the same walker, so
+#' the two lists differ and [.expr_check_node()] does not.
+#'
+#' The same purity bar applies: every entry is a mathematical transform or a
+#' formula operator, with no I/O, environment access, evaluation or assignment.
+#'
+#' @return A character vector of permitted call names.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_formula_allowed_calls
+#' @keywords internal
+.formula_allowed_calls <- function() {
+    c(
+        # Formula and model-building operators
+        "~", "+", "-", "*", "/", "^", "(", ":", "I",
+        # Transforms commonly applied to a term
+        "log", "log2", "log10", "sqrt", "exp", "poly"
+    )
+}
+
+
+#' The call names a user-typed sort key is allowed to contain
+#'
+#' A sort key (the BoxPlot module's "Sort X By", handed to
+#' [plotthis::BoxPlot()]'s `sort_x`) is evaluated once per x group inside
+#' `dplyr::summarise()`, so it needs the summary functions that make it useful
+#' -- `mean(salary)`, `-median(salary)` -- on top of the ordinary expression
+#' vocabulary in [.expr_allowed_calls()]. Every addition is pure, which is the
+#' bar the shared list sets.
+#'
+#' @return A character vector of permitted call names.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_sort_allowed_calls
+#' @keywords internal
+.sort_allowed_calls <- function() {
+    c(
+        .expr_allowed_calls(),
+        "mean", "median", "min", "max", "sum", "sd", "var", "length"
+    )
+}
+
+
+#' Has a Shiny input reported an actual value?
+#'
+#' A Shiny input that has not reported yet is `NULL`, and every obvious test
+#' against one is `logical(0)` rather than `FALSE` -- `nzchar(NULL)`,
+#' `NULL == ""`, `is.na(NULL)` alike. `if (logical(0))` is an
+#' `argument is of length zero` error, so each of those reads crashes the
+#' reactive it sits in. Module servers read column and size inputs constantly,
+#' and [viz_select_input()] is a custom binding that reports late, so the empty
+#' value is reachable far more often than it looks.
+#'
+#' @param x A value from a Shiny input.
+#'
+#' @return `TRUE` for a length-1, non-`NA` value; `FALSE` for anything else,
+#'   `NULL` and `character(0)` included.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_has_value
+#' @keywords internal
+.has_value <- function(x) {
+    !is.null(x) && length(x) == 1L && !is.na(x)
+}
+
+
+#' Is an input's value a usable, non-empty string?
+#'
+#' [.has_value()] narrowed to the column-selecting inputs, whose "nothing
+#' chosen" state is the empty string rather than `NULL`.
+#'
+#' @param x A value from a Shiny input.
+#'
+#' @return `TRUE` for a length-1, non-`NA`, non-empty character scalar;
+#'   `FALSE` for anything else, `NULL` included.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_nz_value
+#' @keywords internal
+.nz_value <- function(x) {
+    .has_value(x) && nzchar(x)
+}
+
+
 #' Walk a parsed expression and reject anything outside the allowlist
 #'
 #' The shared guard behind [safe_eval_filter()] and [validate_expression()].
@@ -740,13 +904,18 @@ setup_auto_update_logic <- function(input, params = NULL) {
 #'
 #' @param node A node of a parsed expression, as from [parse()].
 #' @param col_names Character vector of column names the expression may refer to.
+#' @param allowed Character vector of permitted call names. Defaults to
+#'   [.expr_allowed_calls()], the filter/highlight vocabulary; model formulas
+#'   pass [.formula_allowed_calls()] instead. The vocabulary is the only thing
+#'   that varies between the two -- the walking and the rejection rules are
+#'   deliberately shared.
 #'
 #' @return `TRUE` if every node is permitted, `FALSE` otherwise.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_expr_check_node
 #' @keywords internal
-.expr_check_node <- function(node, col_names) {
+.expr_check_node <- function(node, col_names, allowed = .expr_allowed_calls()) {
     if (is.atomic(node) || is.null(node)) {
         return(TRUE)
     }
@@ -763,18 +932,21 @@ setup_auto_update_logic <- function(input, params = NULL) {
         if (!is.symbol(fn)) {
             return(FALSE)
         }
-        if (!as.character(fn) %in% .expr_allowed_calls()) {
+        if (!as.character(fn) %in% allowed) {
             return(FALSE)
         }
         for (i in seq_along(node)[-1]) {
-            if (!.expr_check_node(node[[i]], col_names)) {
+            if (!.expr_check_node(node[[i]], col_names, allowed)) {
                 return(FALSE)
             }
         }
         return(TRUE)
     }
     if (is.pairlist(node)) {
-        return(all(vapply(node, .expr_check_node, logical(1), col_names = col_names)))
+        return(all(vapply(
+            node, .expr_check_node, logical(1),
+            col_names = col_names, allowed = allowed
+        )))
     }
     FALSE
 }
@@ -816,6 +988,15 @@ safe_eval_filter <- function(expr_text, data) {
         return(NULL)
     }
 
+    # One statement only. Checking parsed[[1L]] and evaluating the same node is
+    # safe, but it silently throws away everything after a `;` or a newline --
+    # so a two-clause filter would quietly return the mask for its first clause
+    # alone. Saying so beats guessing on the user's behalf.
+    if (length(parsed) > 1) {
+        warning("Filter expression must be a single statement.")
+        return(NULL)
+    }
+
     # Walk the AST and ensure only allowlisted operations are used. The
     # allowlist and the walker are shared with validate_expression() -- see
     # .expr_allowed_calls() / .expr_check_node().
@@ -838,6 +1019,12 @@ safe_eval_filter <- function(expr_text, data) {
         }
     )
 }
+
+# Adjustment functions a user may pick by name. This is the allowlist
+# safe_resolve_adj_fxn() enforces, and the module UIs offer exactly these, so a
+# name added here is at once allowed, offered, and covered by the tests that
+# check each one against dittoViz.
+.adj_fxn_choices <- c("log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
 
 #' Safely resolve an adjustment function name to an actual function
 #'
@@ -866,13 +1053,15 @@ safe_resolve_adj_fxn <- function(fn_name) {
         return(NULL)
     }
 
-    allowed <- c("log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
-    if (!fn_name %in% allowed) {
+    if (!fn_name %in% .adj_fxn_choices) {
         warning("Unrecognized adjustment function: ", fn_name)
         return(NULL)
     }
 
-    match.fun(fn_name)
+    # Looked up from this package's namespace, not the caller's frame (which is
+    # what match.fun() searches): neg_log10 is not exported, so a caller outside
+    # the package could not otherwise resolve it.
+    get(fn_name, envir = asNamespace("VizModules"), mode = "function")
 }
 
 #' Validate a user-provided expression string for safety
@@ -901,7 +1090,29 @@ safe_resolve_adj_fxn <- function(fn_name) {
 #' validate_expression("system('echo pwned')", names(iris)) # NULL + warning
 #' validate_expression("", names(iris)) # NULL
 validate_expression <- function(expr_text, col_names) {
-    if (is.null(expr_text) || !nzchar(trimws(expr_text))) {
+    .validate_expression_with(expr_text, col_names, .expr_allowed_calls())
+}
+
+
+#' Validate an expression string against a given call vocabulary
+#'
+#' The body of [validate_expression()], parameterised on the allowlist so an
+#' expression with a different job (a sort key, say) can be checked by the same
+#' parser and walker rather than a second copy of them.
+#'
+#' @param expr_text Character string containing the expression to validate.
+#' @param col_names Character vector of allowed column/symbol names.
+#' @param allowed Character vector of permitted call names.
+#'
+#' @return The original `expr_text` string if safe, or `NULL` (with a warning
+#'   for anything that was not simply empty).
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_validate_expression_with
+#' @keywords internal
+.validate_expression_with <- function(expr_text, col_names, allowed) {
+    if (is.null(expr_text) || length(expr_text) != 1L || is.na(expr_text) ||
+        !nzchar(trimws(expr_text))) {
         return(NULL)
     }
 
@@ -911,10 +1122,19 @@ validate_expression <- function(expr_text, col_names) {
         return(NULL)
     }
 
-    # Allowlist and walker shared with safe_eval_filter() -- see
-    # .expr_allowed_calls() / .expr_check_node().
+    # One statement only, and this one is load-bearing: unlike
+    # safe_eval_filter(), which evaluates the node it checked, this returns the
+    # *original string* for a caller to evaluate. Checking parsed[[1L]] and
+    # handing back the whole text would let everything after a `;` through
+    # entirely unexamined.
+    if (length(parsed) > 1) {
+        warning("Expression must be a single statement.")
+        return(NULL)
+    }
+
+    # Walker shared with safe_eval_filter() -- see .expr_check_node().
     expr <- parsed[[1L]]
-    if (!.expr_check_node(expr, col_names)) {
+    if (!.expr_check_node(expr, col_names, allowed)) {
         warning(
             "Expression contains disallowed operations. ",
             "Only column references, comparisons, and logical operators are permitted."

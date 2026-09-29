@@ -14,16 +14,26 @@ figureBuilderApp(
 \arguments{
 \item{data_list}{An optional named list of data frames that seed the dataset
 registry. If \code{NULL} (the default), the bundled example datasets (plus a
-\code{sales_by_product} summary suited to the pie plot) are used. At least one
-element is required and every element must be a data frame.}
+\code{sales_by_region} summary suited to the pie plot) are used. At least one
+element is required. An element is either a data frame, or a named list of
+data frames for a module that needs companion tables (the \code{ComplexHeatmap}
+module's \code{list(matrix = , column_annotations = )}); in the latter case only
+the primary table is filtered and shown in the panel's table pane.}
 
 \item{module_registry}{An optional named list describing the plot modules to
-offer. If \code{NULL} (the default), all bundled VizModules modules are offered.
+offer. If \code{NULL} (the default), all bundled VizModules modules are offered,
+each opening on the same example figure as in \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}.
 Each entry is itself a list with components: \code{label} (character, shown in the
 picker), \code{dataset} (character, the dataset name its \code{defaults} were written
 for), \code{inputs_ui}, \code{output_ui}, and \code{server_fn} (the module's three
 functions), and \code{defaults} (a named list of input defaults applied only when
-\code{dataset} is the chosen dataset).}
+\code{dataset} is the chosen dataset). An entry may also carry \code{primary.table},
+naming which table of a multi-table dataset gets filtered (the first by
+default); its presence is also what marks the module as able to take a
+multi-table dataset at all, so modules without it are handed the primary
+table alone and any dataset stays usable with any module. See
+\code{\link[=figureBuilderServer]{figureBuilderServer()}} for the \code{vector_svg} hook that lets a non-plotly
+module take part in the SVG figure export.}
 
 \item{title}{A character string used as the page title and header
 (default: \code{"VizModules Figure Builder"}).}
@@ -47,16 +57,15 @@ SVG (or bundle every plot's source data, HTML plot, and statistics into one
 }
 \details{
 Datasets are supplied via \code{data_list} and seed the "Add Plot" dialog; users
-can also upload additional datasets (CSV, TSV, TXT, or RDS) at runtime. The
+can also upload additional datasets (CSV, TSV, or tab-delimited TXT) at runtime. The
 set of available plot modules is controlled by \code{module_registry}, so the app
 can be extended with custom wrapper modules without editing the package.
 
 This is the recommended way to launch a standalone Figure Builder. Internally
 it is a thin wrapper around the \code{\link[=figureBuilderUI]{figureBuilderUI()}} / \code{\link[=figureBuilderServer]{figureBuilderServer()}}
 Shiny module, so the same builder can be embedded inside a larger app (and
-instantiated more than once) by calling those two functions directly. The
-bundled app at \code{system.file("apps/figure-builder", package = "VizModules")} is
-itself a thin wrapper around this function.
+instantiated more than once) by calling those two functions directly. It is
+also the \strong{Figure Builder} tab of \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}.
 }
 \examples{
 library(VizModules)
@@ -74,7 +83,7 @@ parts <- figureBuilderApp(return_components = TRUE)
 if (interactive()) shinyApp(parts$ui, parts$server)
 }
 \seealso{
-\code{\link[=figureBuilderUI]{figureBuilderUI()}}, \code{\link[=figureBuilderServer]{figureBuilderServer()}}
+\code{\link[=figureBuilderUI]{figureBuilderUI()}}, \code{\link[=figureBuilderServer]{figureBuilderServer()}}, \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}
 }
 \author{
 Jared Andrews

@@ -13,8 +13,8 @@ parallelCoordinatesPlotApp(
 }
 \arguments{
 \item{data_list}{An optional named list of data frames. If \code{NULL} (the default),
-\code{list("sales" = example_sales)} is used as example data. Each data frame
-should contain at least two numeric or categorical columns.}
+the module's example dataset is used, along with its showcase defaults.
+Each data frame should contain at least two numeric or categorical columns.}
 
 \item{defaults}{A named list of input IDs and their default values to apply on startup.
 An entry may also be a \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} to have the input
@@ -37,11 +37,12 @@ a \strong{Data Table} for filtering the active dataset, and a \strong{Plot} area
 for configuring and displaying an interactive parallel coordinates plot.
 }
 \details{
-When \code{data_list} is not provided (or \code{NULL}), the app launches with
-\code{gallery_sales} as an example dataset. Uploaded data files are added
-to the available datasets and can be selected for plotting. If an uploaded
-file shares a name with an existing dataset, the existing one is overwritten
-with a warning.
+When \code{data_list} is not provided (or \code{NULL}), the app launches on \code{example_sales}
+with the settings the module gallery (\code{\link[=moduleGalleryApp]{moduleGalleryApp()}}) opens this module on,
+so its main features are on show from the start; any \code{defaults} you pass are
+applied over those. Uploaded data files are added to the available datasets and
+can be selected for plotting. If an uploaded file shares a name with an existing
+dataset, the existing one is overwritten with a warning.
 
 This is a convenience wrapper around \code{\link[=createModuleApp]{createModuleApp()}}.
 }

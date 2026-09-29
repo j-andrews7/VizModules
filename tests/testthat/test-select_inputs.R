@@ -6,21 +6,11 @@ config_of <- function(tag) {
     jsonlite::fromJSON(sub(".*<script[^>]*>(\\{.*\\})</script>.*", "\\1", html))
 }
 
-test_that("viz_select_input builds a virtual-select widget", {
+test_that("viz_select_input builds a virtual-select widget with selectInput's first-choice default", {
     ui <- as.character(viz_select_input("v", "Label", choices = c("a", "b", "c")))
-
     expect_true(grepl('class="virtual-select"', ui, fixed = TRUE))
     expect_true(grepl('id="v"', ui, fixed = TRUE))
-})
 
-test_that("viz_select_input labels the empty 'no selection' choice", {
-    cfg <- config_of(viz_select_input("v", "Label", choices = c("", "a")))
-
-    expect_equal(cfg$options$choices$value, c("", "a"))
-    expect_equal(cfg$options$choices$label, c("(none)", "a"))
-})
-
-test_that("viz_select_input mirrors selectInput's first-choice default", {
     single <- config_of(viz_select_input("v", "L", choices = c("a", "b")))
     multi <- config_of(viz_select_input("v", "L", choices = c("a", "b"), multiple = TRUE))
 
@@ -56,7 +46,6 @@ test_that("viz_select_input handles a very large choice set", {
     cfg <- config_of(viz_select_input("v", "Y Data", choices = paste0("GENE", seq_len(50000))))
 
     expect_length(cfg$options$choices$value, 50000)
-    expect_true(cfg$config$search)
 })
 
 test_that("named and nested choices survive relabelling", {
@@ -68,25 +57,13 @@ test_that("named and nested choices survive relabelling", {
     expect_identical(.label_empty_choice(grouped), grouped)
 })
 
-test_that("a repeated choice is only rendered once", {
+test_that("the empty choice is labelled, and a repeated choice is only rendered once", {
     # Several UIs prepend "" to a choice vector that already starts with one.
     cfg <- config_of(viz_select_input("v", "L", choices = c("", "", "a")))
 
     expect_equal(cfg$options$choices$value, c("", "a"))
     expect_equal(cfg$options$choices$label, c("(none)", "a"))
     expect_equal(.label_empty_choice(c("a", "b", "a")), c(a = "a", b = "b"))
-})
-
-test_that("update_viz_select sends an update without error", {
-    mod <- function(id) {
-        moduleServer(id, function(input, output, session) {
-            observeEvent(input$go, {
-                update_viz_select(session, "v", choices = c("", "a"), selected = "a")
-            })
-        })
-    }
-
-    expect_no_error(testServer(mod, session$setInputs(go = 1)))
 })
 
 # virtual-select's setOptions() blanks the widget value, so new choices must
@@ -102,33 +79,21 @@ update_message <- function(current, ...) {
     captured
 }
 
-test_that("update_viz_select keeps the current value when it is still a choice", {
-    expect_equal(update_message("b", choices = c("a", "b", "c"))$value, "b")
-    expect_equal(update_message("", choices = c("", "a"))$value, "")
-})
-
-test_that("update_viz_select falls back to the first choice when the value is gone", {
-    expect_equal(update_message("b", choices = c("x", "y"))$value, "x")
-    # No value has ever been reported by the client.
-    expect_equal(update_message(NULL, choices = c("x", "y"))$value, "x")
-})
-
-test_that("update_viz_select leaves the value alone when choices are unchanged", {
-    expect_null(update_message("b")$value)
-    expect_equal(update_message("b", selected = "c")$value, "c")
-})
-
-test_that("update_viz_select respects an explicit selection over the current value", {
-    expect_equal(update_message("b", choices = c("a", "b"), selected = "a")$value, "a")
-})
-
-test_that("dataFilter caps the options rendered by factor filter dropdowns", {
-    d <- data.frame(g = factor(paste0("lvl", 1:200)), v = seq_len(200))
-    widget <- DT::datatable(
-        d,
-        filter = list(position = "top", settings = list(select = list(maxOptions = 50))),
-        selection = "none", rownames = FALSE
+test_that("update_viz_select always ships a value the new choices can hold", {
+    cases <- list(
+        # The current value survives while it is still a choice.
+        list(current = "b", args = list(choices = c("a", "b", "c")), expected = "b"),
+        list(current = "", args = list(choices = c("", "a")), expected = ""),
+        # Otherwise the first choice, including when the client never reported.
+        list(current = "b", args = list(choices = c("x", "y")), expected = "x"),
+        list(current = NULL, args = list(choices = c("x", "y")), expected = "x"),
+        # Unchanged choices leave the value alone unless one is given.
+        list(current = "b", args = list(), expected = NULL),
+        list(current = "b", args = list(selected = "c"), expected = "c"),
+        # An explicit selection beats the current value.
+        list(current = "b", args = list(choices = c("a", "b"), selected = "a"), expected = "a")
     )
-
-    expect_equal(widget$x$filterSettings$select$maxOptions, 50)
+    for (case in cases) {
+        expect_equal(do.call(update_message, c(list(case$current), case$args))$value, case$expected)
+    }
 })

@@ -16,7 +16,6 @@
 #' @details Background traces (show.others) are identified by checking for:
 #'   - name field containing "show.others"
 #'   - legendgroup field containing "show.others"
-#'   - Single text element (this check is REMOVED as it's unreliable)
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_should_include_trace
@@ -104,6 +103,25 @@
     }
 
     return(NULL)
+}
+
+
+#' Which points of a trace have a drawable position?
+#'
+#' @param x,y A trace's coordinate vectors. Non-numeric (categorical) coordinates
+#'   count as drawable; numeric ones must be finite.
+#'
+#' @return A logical vector, one element per point.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_finite_coords
+#' @keywords internal
+.finite_coords <- function(x, y) {
+    ok <- function(v) {
+        v <- unlist(v)
+        if (is.numeric(v)) is.finite(v) else !is.na(v)
+    }
+    ok(x) & ok(y)
 }
 
 
@@ -271,7 +289,7 @@
             point_idx <- which(trace_coords == selected_coord)
         }
 
-        if (length(point_idx) == 0) {
+        if (length(point_idx) == 0 || !.finite_coords(trace$x, trace$y)[point_idx[1]]) {
             next
         }
 
@@ -385,7 +403,11 @@
             next
         }
 
-        matching_rows <- which(trace_map$anno_value %in% highlight_vals_chr)
+        # A point whose plotted position is not finite (log of a negative, say) is
+        # not drawn, so there is nothing for a label to point at; plotly would
+        # place one given a missing coordinate somewhere arbitrary.
+        matching_rows <- which(trace_map$anno_value %in% highlight_vals_chr &
+            .finite_coords(trace$x, trace$y))
 
         for (row in matching_rows) {
             xref <- trace_axis_map[[i]]$xaxis

@@ -12,6 +12,8 @@ These modules contain all possible functionality for each plot with some additio
 The modules provide comprehensive plot control for app users, allowing for convenient aesthetic customizations and publication-quality images.
 They also provide developers a way to dramatically save time and reduce complexity of their plotting code or a flexible base to build more specialized Shiny modules upon.
 
+**This package is still in an experimental state undergoing active development. While each release should be stable and useable, breaking changes may occur frequently between versions until a major 1.0.0 release is made.**
+
 ## Install
 
 ```r
@@ -24,10 +26,9 @@ remotes::install_github("j-andrews7/VizModules")
 
 ## Quick Start
 
-- Explore the hosted [example gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/).
-- Run the same gallery locally after installation: `shiny::runApp(system.file("apps/module-gallery", package = "VizModules"))`
-- Check out the hosted [Figure Builder app](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/) for a demo of how the modules can be used together to build a free-form, multi-pane figure.
-- Run the Figure Builder app locally: `VizModules::figureBuilderApp()`
+- Explore the hosted [example gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/). Each module opens on an example with its main features switched on (statistical comparisons, highlighted points, fit lines, annotations, and so on), and the **Figure Builder** tab shows how the modules combine into a free-form, multi-panel figure.
+- Run the same gallery locally after installation: `VizModules::moduleGalleryApp()`
+- Run the Figure Builder on its own: `VizModules::figureBuilderApp()`
 - See the vignette for a full walkthrough of using the modules in your own apps: [`vignette("quick-start", package = "VizModules")`][18]
 
 ### Using Modules in Your Own App
@@ -108,9 +109,9 @@ runApp(app)
 ```
 
 
-## Figure Builder App
+## Figure Builder
 
-The **Figure Builder** is now a fully reusable, namespaced Shiny module (`figureBuilderUI()` / `figureBuilderServer()`) that turns the plot modules into a free-form figure builder. It can be launched as a standalone app, embedded inside a larger app, or even instantiated more than once on a single page. Launch the standalone app with `figureBuilderApp()`:
+The **Figure Builder** is a fully reusable, namespaced Shiny module (`figureBuilderUI()` / `figureBuilderServer()`) that turns the plot modules into a free-form figure builder. It can be launched as a standalone app, embedded inside a larger app, or even instantiated more than once on a single page. It is also the **Figure Builder** tab of the gallery (`moduleGalleryApp()`, or the [hosted gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/)). Launch the standalone app with `figureBuilderApp()`:
 
 ```r
 library(VizModules)
@@ -123,8 +124,6 @@ figureBuilderApp(data_list = list("iris" = iris, "mtcars" = mtcars))
 ```
 
 `figureBuilderApp()` accepts `data_list` to seed datasets, `module_registry` to add custom modules, and `return_components = TRUE` to get separate `ui`/`server` objects instead of a `shinyApp()`. See `?figureBuilderApp` for details.
-
-Or try the [hosted example](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/).
 
 The Figure Builder is also a self-contained Shiny module, so you can embed it in a larger app (and even use more than one instance on a page) with `figureBuilderUI()` / `figureBuilderServer()`, just like the plot modules:
 
@@ -145,7 +144,7 @@ shinyApp(ui, server)
 It allows you to interactively compose complicated figures using the modules in a single page:
 
 - **Add plots on demand.** Click *Add Plot* to drop any VizModule onto the canvas, choosing both the plot type and the dataset it should use.
-- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or `RDS` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples. Each plot can use a different dataset if desired.
+- **Load your own data.** Use the *Load Data* section to upload a `CSV`, `TSV` or tab-delimited `TXT` file. Uploaded datasets are added to the dataset list so you can build plots from your own data alongside the bundled examples. Each plot can use a different dataset if desired.
 - **Drag and resize.** Each plot lives on its own card. Hover a card to reveal a small toolbar with a drag handle (to reposition it) and a remove button, and resize it from its corner (via `shinyjqui`) — resizing adjusts the plot in both directions. The toolbar stays out of the way otherwise, so cards remain clean and chrome-free in the SVG export.
 - **A4 canvas.** The canvas is sized to an A4 page (switchable between portrait and landscape), making it easy to lay plots out for a composite figure.
 - **Swappable controls.** A single dropdown swaps the visible plot's input controls in and out, so only one control set is shown at a time while every plot keeps its own settings.
@@ -179,14 +178,13 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### `dittoViz`
 
-* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, `nls`), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26]. 
+* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, or a registered backend), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26]. 
 * `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps `dittoViz::yPlot`).
 * `dittoViz_freqPlot` - Box/jitter plots for discrete observation frequencies per sample/group (wraps `dittoViz::freqPlot`).
 
 ### `plotthis`
 
 * `plotthis_AreaPlot` - Stacked area charts (wraps `plotthis::AreaPlot`).
-* `plotthis_ViolinPlot` - Violin plots (wraps `plotthis::ViolinPlot`).
 * `plotthis_BoxPlot` - Box plots (wraps `plotthis::BoxPlot`).
 * `plotthis_BarPlot` - Bar charts (wraps `plotthis::BarPlot`).
 * `plotthis_SplitBarPlot` - Split bar charts (wraps `plotthis::SplitBarPlot`).
@@ -211,11 +209,11 @@ Via direct implementation with plotly.
 
 ## Statistical Testing
 
-The **BoxPlot**, **ViolinPlot**, **yPlot**, and **freqPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure. On **freqPlot** the tests are always run within each facet (the `stat.per.facet` control is hidden), since each facet is a different level of the frequency variable and pooling across them would compare non-comparable quantities. The underlying helpers (`compute_pairwise_stats()`, `create_stat_annotations()`, `apply_stat_annotations()`, `generate_pair_strings()`, `parse_pair_strings()`) are exported so you can add the same bracket annotations to any custom plotly figure. See [`vignette("statistical-testing", package = "VizModules")`][29].
+The **BoxPlot**, **yPlot**, and **freqPlot** modules include a **Stats** tab that adds pairwise statistical testing with bracket annotations directly on the plotly figure. On **freqPlot** the tests are always run within each facet (the `stat.per.facet` control is hidden), since each facet is a different level of the frequency variable and pooling across them would compare non-comparable quantities. The underlying helpers (`compute_pairwise_stats()`, `create_stat_annotations()`, `apply_stat_annotations()`, `generate_pair_strings()`, `parse_pair_strings()`) are exported so you can add the same bracket annotations to any custom plotly figure. See [`vignette("statistical-testing", package = "VizModules")`][29].
 
 ### Export Summary Data
 
-`collect_source_data()` collects the interactive plot as HTML, its plot data, pairwise testing statistics (if applied), and UI input values into a single list, and `create_source_download_handler()` turns that into a compact zip folder of summary data for the output plot. `create_source_download_handler()` also accepts a named list of summaries (one per plot), which is how the Figure Builder bundles every plot on the canvas into one download.
+`collect_source_data()` collects the interactive plot as HTML, its plot data, pairwise testing statistics (if applied), and UI input values into a single list, and `create_source_download_handler()` turns that into a compact zip folder of summary data for the output plot. The zip also carries an SVG and a PNG of each plot, captured in the browser so they match what is on screen — every reference line, statistical bracket, and dragged annotation included. `create_source_download_handler()` also accepts a named list of summaries (one per plot), which is how the Figure Builder bundles every plot on the canvas into one download.
 
 ### Supported Tests
 
@@ -277,7 +275,7 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 [dumbbellPlot:][5]
 
-![](man/figures/DumbellPlot.png)
+![](man/figures/DumbbellPlot.png)
 
 [plotthis_Histogram:][6]
 
@@ -303,17 +301,17 @@ To contribute a new module to the package, see the vignette for clear guidelines
 
 ![](man/figures/ScatterPlot.png)
 
+[plotthis_BarPlot:][15]
+
+[(Source Plotting Function)][23]
+
+![](man/figures/BarPlot.png)
+
 [plotthis_SplitBarPlot:][11]
 
 [(Source Plotting Function)][23]
 
 ![](man/figures/SplitBarPlot.png)
-
-[plotthis_ViolinPlot:][13]
-
-[(Source Plotting Function)][20]
-
-![](man/figures/ViolinPlot.png)
 
 [dittoViz_yPlot:][14]
 
@@ -344,12 +342,13 @@ To contribute a new module to the package, see the vignette for clear guidelines
 ![](man/figures/Figure_builder.png)
 
 ## AI Usage Statement
+
 The developers made use of AI tools (e.g. GitHub Copilot, Claude Code) for code generation, documentation writing, and test creation.
 AI assistance was used to accelerate development after the initial module scaffolding and structure was in place, but all AI-generated content was reviewed and edited by human eyeballs/hands to ensure accuracy and quality.
 Our own hands are all over this project, and we are invested in it. 
 Any inaccuracies, bugs, or issues are attributable to us, and we welcome contributions to help improve the package.
 
-Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend the use of the skills provided by the package or prefixing prompts with the below to aid LLM usage.
+Generative AI tools (GitHub Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) are **explicitly welcome** for building Shiny apps with these modules in addition to creating new modules. To do so, we recommend the use of the skills provided by the package detailed below.
 
 ### Agent Skills (GitHub Copilot, OpenAI Codex, Claude Code, and compatible tools)
 
@@ -372,39 +371,6 @@ and stats keys, which is what an agent otherwise spends its budget grepping for.
 
 In rough benchmarking, `vizmodules-app` saves ~40-60% of token usage versus just chucking an agent at the docs/repo/prompt below and generates a functional app in about half the time. The other skills show more variable and modest savings (~10-20% fewer tokens), but they tend to avoid common pitfalls and better utilize some of the more advanced features. Skills are difficult to benchmark, as the benefits are context-dependent and vary with the request.
 
-For tools that cannot read local skill files, the prompt below does the same job less
-efficiently.
-
-### LLM Instructions
-
-Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Claude, Gemini, Cursor, etc.) before asking it to build a Shiny app with **VizModules**. It points the model to the authoritative, locally-installed sources of truth so it can use the package correctly.
-
-> You are helping me build a Shiny application using the installed R package **VizModules**, which provides interactivity-first, plotly-based Shiny modules for common plot types. Before writing code, ground yourself in the package's own documentation rather than guessing at the API.
->
-> **Core concept.** Every module is a trio of functions that share an `id`: `*InputsUI(id, ...)` renders the controls, `*OutputUI(id)` renders the plotly output, and `*Server(id, data, ...)` holds the logic. `InputsUI` and `OutputUI` are separate so controls and plot can be placed anywhere in the layout. `data` is passed to the server as a `reactive()`. Use the `defaults` argument to pre-fill inputs and `hide.inputs`/`hide.tabs` to lock values while hiding their controls.
->
-> **Where to look (all available after `install.packages`/`remotes::install_github`):**
-> - `vignette("quick-start", package = "VizModules")` — start here: end-to-end walkthrough of wiring `*InputsUI()`, `*OutputUI()`, and `*Server()` into an app, using `defaults`, and the example `*App()` functions.
-> - `vignette("custom-modules", package = "VizModules")` — how to **extend existing modules** by building wrapper modules (adding custom logic/inputs while reusing a base module). Follow the namespace pattern: process namespaced inputs *inside* `moduleServer()`, then call the base `*Server()` *outside* it with the bare `id` to avoid double-namespacing.
-> - `vignette("adding-a-new-module", package = "VizModules")` — how to **author a brand-new module** from scratch (the InputsUI/OutputUI/Server contract, conventions, and helpers).
-> - `vignette("defaults-and-hiding", package = "VizModules")` — using `defaults`, `hide.inputs`, and `hide.tabs` to pre-fill or hide controls.
-> - `vignette("statistical-testing", package = "VizModules")` — the Stats tab and the exported `compute_pairwise_stats()` / `create_stat_annotations()` / `apply_stat_annotations()` helpers.
-> - `vignette("custom-model-lines", package = "VizModules")` — the pluggable model-line backend registry (`register_model_backend()`).
-> - `vignette("custom-shiny-inputs", package = "VizModules")` — the reusable `multiDynamicInput()` widget.
-> - The README — overview, install, the full list of available modules, the App Factory (`createModuleApp()`), statistical-testing features, and summary-data export.
-> - Per-function help pages via `?` — e.g. `?dittoViz_scatterPlotInputsUI`, `?plotthis_BarPlotServer`, `?createModuleApp`. Module help pages document exactly which underlying arguments are wired through and any omissions. Cross-reference the underlying plotting docs (`?dittoViz::scatterPlot`, `?plotthis::AreaPlot`, etc.) for the complete parameter set. Browse all docs with `help(package = "VizModules")` or the pkgdown site: <https://j-andrews7.github.io/VizModules/reference/>.
-> - `NEWS.md` (`news(package = "VizModules")`) — newest features and changes.
->
-> **Available modules:** `dittoViz_scatterPlot`, `dittoViz_yPlot`, `dittoViz_freqPlot`, `plotthis_AreaPlot`, `plotthis_ViolinPlot`, `plotthis_BoxPlot`, `plotthis_BarPlot`, `plotthis_SplitBarPlot`, `plotthis_DensityPlot`, `plotthis_DotPlot`, `plotthis_Histogram`, `ComplexHeatmap_Heatmap`, plus the natively-implemented `linePlot`, `piePlot`, `radarPlot`, `parallelCoordinatesPlot`, and `dumbbellPlot`. Each has a matching `*App()` function (e.g. `plotthis_BarPlotApp()`) you can run to see it in action.
->
-> **Optional building blocks** (inspect their source/help in the installed package's `R/` directory or via `?`):
-> - Data table / filtering module — `?dataFilterUI`, `?dataFilterServer`.
-> - Statistical testing helpers (pairwise + omnibus brackets on plotly figures) — see `?compute_pairwise_stats`, `?apply_stat_annotations`, and the README "Statistical Testing" section; supported by the BoxPlot, ViolinPlot, yPlot, and freqPlot modules.
-> - Summary-data export — `?collect_source_data` and `?create_source_download_handler`.
-> - App factory — `?createModuleApp` (every `*App()` is a thin wrapper around it).
->
-> **Rules:** All plots are plotly-based except `ComplexHeatmap_Heatmap`, which renders through `InteractiveComplexHeatmap` and needs its Bioconductor dependencies installed; prefer the documented module arguments over hand-rolled plotting. Verify function signatures against the installed help pages before using them, and tell me explicitly if a feature you need is not exposed by a module.
-
 
 [1]: https://j-andrews7.github.io/VizModules/reference/linePlotApp.html
 [2]: https://j-andrews7.github.io/VizModules/reference/plotthis_AreaPlotApp.html
@@ -417,7 +383,6 @@ Copy the prompt below into your LLM or save it in a file (Copilot, ChatGPT, Clau
 [9]: https://j-andrews7.github.io/VizModules/reference/radarPlotApp.html
 [10]: https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotApp.html
 [11]: https://j-andrews7.github.io/VizModules/reference/plotthis_SplitBarPlotApp.html
-[13]: https://j-andrews7.github.io/VizModules/reference/plotthis_ViolinPlotApp.html
 [14]: https://j-andrews7.github.io/VizModules/reference/dittoViz_yPlotApp.html
 [15]: https://j-andrews7.github.io/VizModules/reference/plotthis_BarPlotApp.html
 [16]: https://j-andrews7.github.io/VizModules/articles/adding-a-new-module.html

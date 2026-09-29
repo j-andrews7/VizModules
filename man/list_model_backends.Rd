@@ -11,7 +11,7 @@ A sorted character vector of backend names.
 }
 \description{
 Returns the names of all currently registered model backends. The built-in
-backends (\code{lm}, \code{glm}, \code{loess}, \code{nls}) are always present; any backends
+backends (\code{lm}, \code{glm}, \code{loess}) are always present; any backends
 added via \code{\link[=register_model_backend]{register_model_backend()}} are included as well.
 }
 \examples{

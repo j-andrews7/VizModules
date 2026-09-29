@@ -43,6 +43,11 @@ how often each level of "Frequency Of" occurs within each sample and plots \emph
 frequencies, one facet per level. Axis limits, statistics, the point annotations and the
 source download therefore all describe the summarised frequency table, not the input rows.
 
+Under a free y facet scale ("free", "free_y") the Y Axis Min/Max are not applied and each
+panel's significance brackets sit above that panel's own data. With a ridge plot among the plot
+types the values run along the x-axis, so no brackets are drawn; the test results are still
+included in the source download.
+
 Because the frequencies are per-sample, "Sample" must nest inside "Group By": each sample has
 to carry exactly one group value (and one color value, when "Color By" is set), or
 \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} errors. "Group By" and "Color By" are therefore chosen freely and
@@ -60,7 +65,6 @@ The following \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} parameters a
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
 \item \code{legend.title} - Legend title (managed by plotly interactively)
-\item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
 \item \code{split.by} - Not a parameter of \code{freqPlot()}; it always facets on the frequency
 variable's levels. Use \code{vars.use} ("Levels To Show") to choose which of those facets
 are drawn
@@ -129,6 +133,7 @@ categorical variable that is constant within each sample)
 \item \code{ridgeplot.shape} - Ridge shape (UI: "Ridge Shape", default: "smooth")
 \item \code{ridgeplot.bins} - Ridge bins (UI: "Ridge Bins", default: 30)
 \item \code{ridgeplot.binwidth} - Ridge binwidth (UI: "Ridge Binwidth", default: NA)
+\item \code{legend.show} - Show the legend (UI: "Show Legend", default: TRUE)
 }
 }
 
@@ -137,7 +142,8 @@ categorical variable that is constant within each sample)
 The following parameters implementing new functionality or controlling plotly-specific
 features are also available:
 \itemize{
-\item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on \code{color.by})
+\item \code{boxmode} - Always "overlay": the boxes carry explicit x positions matching
+ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 \item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
@@ -161,6 +167,10 @@ features are also available:
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -184,7 +194,8 @@ back to the default palette and user edits take precedence.
 default: ""). Restricted to the columns carried in the plot's hover text, which for this
 plot are the sample and color columns
 \item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to
-Highlight", default: "")
+Highlight", default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color",
@@ -204,7 +215,9 @@ Highlights", default: TRUE)
 \item \code{stats.enabled} and the other \verb{stat.*} parameters - Pairwise testing of the per-sample
 frequencies between x-axis groups. Tests always run within each facet, since frequencies
 of different levels are not comparable quantities; the "Per Facet Panel" control is
-therefore hidden and forced on
+therefore hidden and forced on. \code{stat.pairs} takes a character vector of \code{"A vs B"} strings
+naming levels of \code{group.by} (or of \code{color.by}, when it differs), e.g. \code{"Healthy vs Disease"};
+left unset, every pair is tested
 }
 }
 

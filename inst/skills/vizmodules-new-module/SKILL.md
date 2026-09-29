@@ -31,7 +31,7 @@ Four exports per module: `<name>InputsUI()`, `<name>OutputUI()`, `<name>Server()
 If you are adding a brand-new plotting function, define, document, and test **that**
 first. Only wrap it once it is stable.
 
-## The seven things that are easy to get wrong
+## The eight things that are easy to get wrong
 
 1. **Three roxygen `@section` blocks on the UI function** are mandatory: parameters not implemented, parameters and defaults, parameters implementing new functionality. See `references/roxygen-sections.md`.
 2. **Reactive defaults**: `params <- setup_reactive_defaults(defaults, input, session)` must be the *first* statement of the `moduleServer()` body, and `isolate_fn <- setup_auto_update_logic(input, params)` the first line of the generate reactive. Every read must stay in the literal `isolate_fn(input$key)` form — `isolate_fn(as.numeric(input$size))` cannot be recognised and silently loses reactive-default support. Convert outside the call.
@@ -40,6 +40,7 @@ first. Only wrap it once it is stable.
 5. **Debounce any free-text input the plot reads.** `textInput()` reports on every keystroke, so an undebounced read rebuilds the plot once per character — and for an expression input, most of those characters are a state that cannot parse. `debounce(reactive(input$key), 700)`, created once in the server body. It emits its initial value immediately, so startup is unaffected. Select/numeric/checkbox inputs report discrete choices and need nothing.
 6. **Never `eval(parse())` / `eval(str2expression())` on user input.** Use `safe_eval_filter()`, `validate_expression()`, or `safe_resolve_adj_fxn()`. A publicly deployed app otherwise executes arbitrary code.
 7. **Reuse the uniform input helpers** rather than writing your own Axes/Legend/Lines/Plotly controls. See `references/uniform-helpers.md`.
+8. **Any CSS you add lands in the host app's document.** There is no scoping, and every module pulls a colour picker in, so one bare selector against a Bootstrap/selectize/DT class restyles apps that merely embedded a plot. Anchor every rule on a class this package invented. See `references/css-containment.md`.
 
 ## Before you write anything: what shape is the plot function?
 
@@ -56,6 +57,8 @@ The single biggest source of rework. Ask first:
 - **Named palettes do not apply to dittoViz ridgeplots.** They fill by an internal composite column, so a named vector matches nothing and ggplot2 silently drops every colour to grey. Drop the names for that layer.
 - **`boxgap`/`boxgroupgap` are not in plotly 4.12.1's layout schema.** The warning is pre-existing and package-wide (`dittoViz_yPlot` and `plotthis_BoxPlot` emit it identically). Match the siblings rather than diverging one module.
 - **Freeze only what you will actually update, and never at startup.** An unconditional freeze on an input the generate reactive always reads suspends the plot forever, waiting for an echo that never comes. Use `ignoreInit = TRUE`.
+- **A vector handed to a trace by value does not follow plotly's own re-sort.** Before splitting a discrete `color` into traces, plotly `dplyr::arrange()`s its copy of the data by that column (level order for a factor, sorted order for a character). Mapped variables (`x`, `y`) travel with the sort; `error_y = list(array = df$err)` does not, so each trace takes the run of entries matching its row *positions* and most series draw other series' bars. Nothing errors and the bars look plausible. `linePlot()` sorts the frame the same way first (`.group_rows_by_trace()`). Test it on the built figure by comparing each trace's array with an independent per-group calculation, on colour columns stored as character, factor and ordered factor.
+- **A column named like a function argument shadows it inside a dplyr verb.** `summarise(err = if (length(y) == 1) ...)` reads the data's `y` column, not the argument, when the data has one (`y` and `x` are common names). Resolve everything the verb needs into locals first, and use a test data frame with columns literally named `x` and `y`.
 
 ## Verifying your work
 
@@ -81,7 +84,7 @@ unverified rather than chasing it.
 
 ## Finishing
 
-- Register the module in `inst/apps/module-gallery/app.R` (its own tab, small sample dataset).
+- Register the module in `.module_showcase()` (`R/module_showcase.R`): one entry gives it a gallery tab (`moduleGalleryApp()`), a Figure Builder entry, and the example its `*App()` opens on. Its `defaults` should switch on the module's distinctive features, not just map columns; `tests/testthat/test-showcase.R` checks them.
 - Add `tests/testthat/test-<plot>.R`; cover a new plotting function directly, and the module with `testServer` where feasible.
 - Add the exports to `_pkgdown.yml` and an entry to `NEWS.md`.
 - Run `devtools::document()`, then `devtools::test()` and `devtools::check()`.

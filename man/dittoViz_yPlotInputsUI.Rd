@@ -45,6 +45,15 @@ Stats tab is only available for the \code{"split"} aesthetic with no \code{split
 comparisons are then run separately within each variable's facet. The other layouts
 either replace the x-axis groups being compared or facet on two dimensions at once,
 neither of which the significance brackets can be placed against.
+
+The "Y Adjustment Function" is applied first and the "Y Adjustment" then rescales the
+result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} applies its
+\code{var.adj.fxn} and \code{var.adjustment} in.
+
+Statistics are computed on the values as plotted, after any Y adjustment, and the Y
+Axis Min/Max and significance brackets are in those units too. With a ridge plot
+among the plot types the values run along the x-axis, so no brackets are drawn; the
+test results are still included in the source data download.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
@@ -52,7 +61,7 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing). With several
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing). With several
 Y variables only the adjustment is shown, as the variables are named by the
 facet strips or the legend instead
 \item \code{main} - Plot title (plotly allows interactive editing)
@@ -94,13 +103,18 @@ default: "split")
 \item \code{split.by} - Faceting variable (UI: "Split by (facet)", default: "")
 \item \code{plots} - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
-\item \code{min} - Y-axis minimum (UI: "Y Axis Min", auto-calculated)
-\item \code{max} - Y-axis maximum (UI: "Y Axis Max", auto-calculated)
+\item \code{min} - Y-axis minimum, in the units plotted (after any \code{var.adjustment}/\code{var.adj.fxn});
+set with the \code{y.min} key (UI: "Y Axis Min", auto-calculated). Not applied under a free
+y facet scale, where each panel spans its own data.
+\item \code{max} - Y-axis maximum, in the units plotted; set with the \code{y.max} key (UI: "Y Axis Max",
+auto-calculated). Not applied under a free y facet scale.
 \item \code{var.adjustment} - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 \item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
 \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
-\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "fixed")
+\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "fixed"). A free y
+scale ("free", "free_y") ignores Y Axis Min/Max and stacks each panel's significance
+brackets above that panel's own data.
 \item \code{do.raster} - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 \item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
 \item \code{jitter.size} - Jitter point size (UI: "Jitter Point Size", default: 1)
@@ -125,7 +139,11 @@ default: "split")
 \item \code{hover.data} - Columns shown on hover (UI: "Hover Data", default: "";
 empty uses a sensible default set of columns)
 \item \code{hover.round.digits} - Hover value rounding (UI: "Hover Round Digits", default: 5)
-\item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
+\item \code{legend.show} - Show the legend (UI: "Show Legend", default: TRUE)
+\item \code{stats.enabled} and the other \verb{stat.*} parameters - Pairwise testing between the \code{group.by}
+groups, or between the \code{color.by} levels within each group when \code{color.by} is set (Stats tab).
+\code{stat.pairs} takes a character vector of \code{"A vs B"} strings naming those levels, e.g.
+\code{"Office vs Remote"}; left unset, every pair is tested
 }
 }
 
@@ -133,7 +151,8 @@ empty uses a sensible default set of columns)
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
-\item \code{boxmode} - Boxplot mode grouping (calculated: "group" or "overlay" based on color.by)
+\item \code{boxmode} - Always "overlay": the boxes carry explicit x positions matching
+ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
 \item \code{boxgroupgap} - Boxplot group dodge (UI: "Boxplot Group Dodge", default: 0.2)
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
@@ -157,6 +176,10 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -177,7 +200,9 @@ The following parameters implementing new functionality or controlling plotly-sp
 \code{c(A = "#FF0000", B = "blue")} (UI: "Plot colors"). Seeds the picker; unnamed groups fall
 back to the default palette and user edits take precedence.
 \item \code{annotate.by} - Column whose values identify and label jitter points (UI: "Annotate By", default: "")
-\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight",
+default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Fill color for highlighted points (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Size of highlighted points (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Border color for highlighted points (UI: "Highlight Border Color", default: "#000000")

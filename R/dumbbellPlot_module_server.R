@@ -21,7 +21,7 @@
 #' @import plotly
 #' @importFrom stats na.omit
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide click delay
+#' @importFrom shinyjs hide delay
 #'
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::dumbbellPlotInputsUI()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotApp()]
@@ -173,9 +173,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             updateColourInput(session, "line.colour",
                 value = get_default(defaults, "line.colour", "gray30")
             )
-
-            click("reset_palette")
-
+            updateNumericInput(session, "point.size",
+                value = get_default(defaults, "point.size", 12, is.numeric)
+            )
 
             # Axes
             reset_axes_inputs(session, defaults)
@@ -185,6 +185,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -192,11 +193,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
         })
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -221,7 +218,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 .default_group_colors(defaults, "palette.colours")
             )
 
-            palette_selection <- unname(palette_values)
+            # Named, so dumbbellPlot() colours each group by name rather than by
+            # where it lands once the rows are sorted and faceted.
+            palette_selection <- palette_values
             if (is.null(palette_selection) || length(palette_selection) == 0) {
                 palette_selection <- default_palette_values
             }
@@ -233,7 +232,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             y_title <- y_input
 
             x.adjustment <- NULL
-            if (!isolate_fn(input$x.adjustment) == "") {
+            if (.nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -244,7 +243,7 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             }
 
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -253,9 +252,10 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 x = x_input,
                 y = y_input,
                 line.colour = isolate_fn(input$line.colour),
+                point.size = isolate_fn(input$point.size),
                 colour.by = colour_by,
                 palette.selection = palette_selection,
-                show.legend = TRUE,
+                show.legend = !isFALSE(isolate_fn(input$legend.show)),
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 subplot.margin = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
@@ -272,6 +272,15 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 axis.tickcolor = isolate_fn(input$axis.tickcolor),
                 axis.ticklen = isolate_fn(input$axis.ticklen),
                 axis.tickwidth = isolate_fn(input$axis.tickwidth),
+                axis.title.font.size = isolate_fn(input$axis.title.font.size),
+                axis.title.font.color = isolate_fn(input$axis.title.font.color),
+                axis.title.font.family = isolate_fn(input$axis.title.font.family),
+                show.grid.x = isolate_fn(input$show.grid.x),
+                show.grid.y = isolate_fn(input$show.grid.y),
+                grid.color = isolate_fn(input$grid.color),
+                facet.title.font.size = isolate_fn(input$facet.title.font.size),
+                facet.title.font.color = isolate_fn(input$facet.title.font.color),
+                facet.title.font.family = isolate_fn(input$facet.title.font.family),
                 title.font.size = isolate_fn(input$title.font.size),
                 title.font.family = isolate_fn(input$title.font.family),
                 title.font.color = isolate_fn(input$title.font.color),
@@ -282,11 +291,6 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 flip.y = isolate_fn(input$flip.y),
                 x.adjustment = x.adjustment
             )
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
 
             # Add reference lines
             fig <- add_reference_lines(fig,
@@ -312,12 +316,8 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

@@ -100,7 +100,14 @@ only shown when \code{data} supplies a \code{column_annotations} table; default:
 \item \code{row_gap} - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
 \item \code{column_gap} - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 \item \code{row_title} - Row title (UI: "Row Title", default: "")
-\item \code{column_title} - Column title (UI: "Column Title", default: "")
+\item \code{column_title} - Column title (UI: "Column Title", default: ""). A title, when set, replaces the
+group names a split would otherwise title its slices with; a \verb{\%s} in it is filled in with each
+slice's group name. The same goes for \code{row_title}.
+\item \code{show_row_slice_titles} - Title each row slice with its group name when the rows are split and
+\code{row_title} is blank (UI: "Show Row Slice Titles", default: TRUE). Applies to every split method:
+annotation values for "Annotation", cluster numbers for "K-means" and "Hierarchical". Untick it to
+remove the titles and the space they take.
+\item \code{show_column_slice_titles} - The same for columns (UI: "Show Column Slice Titles", default: TRUE)
 \item \code{show_row_names} - Show row names (UI: "Show Row Names", default: TRUE)
 \item \code{show_column_names} - Show column names (UI: "Show Column Names", default: TRUE)
 \item \code{row_names_side} - Row names side (UI: "Row Names Side", default: "right")

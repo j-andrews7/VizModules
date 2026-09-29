@@ -18,9 +18,9 @@ collect_source_data(
 When \code{NULL} or when the reactive returns \code{NULL}, no statistics data is
 included.}
 
-\item{inputs_reactive}{Optional. A reactive expression returning a named
-list of UI input values. When \code{NULL} or when it returns \code{NULL}, no UI
-input data is included.}
+\item{inputs_reactive}{Optional. A named list of UI input values (for
+example \code{reactiveValuesToList(input)}), or a reactive expression returning
+one. When \code{NULL} or when it returns \code{NULL}, no UI input data is included.}
 }
 \value{
 A named list with elements:
@@ -70,9 +70,12 @@ server <- function(input, output) {
        plot_ly(mtcars, x = ~mpg, y = ~hp, type = "scatter", mode = "markers")
     })
 
-    data_list <- collect_source_data(plot_reactive)
     output$my_plot <- renderPlotly(plot_reactive())
-    output$download_data <- create_source_download_handler(reactive(data_list))
+    # collect_source_data() reads reactives, so it has to run inside one.
+    inputs_reactive <- reactive(reactiveValuesToList(input))
+    output$download_data <- create_source_download_handler(
+        reactive(collect_source_data(plot_reactive, inputs_reactive = inputs_reactive))
+    )
 }
 
 shinyApp(ui, server)

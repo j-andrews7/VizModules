@@ -20,7 +20,7 @@
 #' @import shiny
 #' @import plotly
 #' @importFrom colourpicker updateColourInput
-#' @importFrom shinyjs hide show click delay
+#' @importFrom shinyjs hide show delay
 #'
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::parallelCoordinatesPlotInputsUI()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotApp()]
@@ -171,7 +171,7 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 selected = get_default(defaults, "tick.font.family", "Arial")
             )
             updateNumericInput(session, "title.font.size",
-                value = get_default(defaults, "title.font.size", 16, is.numeric)
+                value = get_default(defaults, "title.font.size", 26, is.numeric)
             )
             update_viz_select(session, "title.font.family",
                 selected = get_default(defaults, "title.font.family", "Arial")
@@ -183,12 +183,11 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 value = get_default(defaults, "bgcolor", "#FFFFFF")
             )
 
-            click("reset_palette")
-
             # Group colors
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -246,7 +245,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 include.modebar.buttons = FALSE
             )
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

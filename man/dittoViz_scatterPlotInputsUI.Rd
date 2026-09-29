@@ -55,9 +55,9 @@ values will be duplicated due to them being shown in every panel.
 The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parameters are not available via UI inputs or have been superseded:
 \itemize{
 \item \code{xlab} - X-axis label (auto-generated to reflect any applied X adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing)
 \item \code{main} - Plot title (plotly allows interactive editing)
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -126,7 +126,9 @@ groups fall back to the default palette and user edits take precedence.
 \item \code{multivar.split.dir} - Multivar split direction (UI: "Multivar Split Dir", default: "col")
 \item \code{split.adjust.scales} - Facet scales (UI: "Facet Scales", default: "fixed")
 \item \code{annotate.by} - Annotate by column (UI: "Annotate By", default: "")
-\item \code{highlight.points} - Points to highlight (UI: "Points to Highlight", default: "")
+\item \code{highlight.points} - Values from the \code{annotate.by} column to highlight (UI: "Points to Highlight",
+default: ""). Values containing spaces
+(e.g. "CD4 T") must be separated by commas or new lines
 \item \code{highlight.color} - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
 \item \code{highlight.size} - Highlight size (UI: "Highlight Size", default: 7)
 \item \code{highlight.border.color} - Highlight border color (UI: "Highlight Border Color", default: "#000000")
@@ -140,6 +142,8 @@ groups fall back to the default palette and user edits take precedence.
 \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
 \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
 \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+\item \code{legend.show} - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+\item \code{legend.color.title} - Color legend title (UI: "Legend Title", default: "make")
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
@@ -192,6 +196,10 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -208,6 +216,15 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
 }
+
+Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
+result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} applies
+its \verb{*.adj.fxn} and \verb{*.adjustment} in.
+
+Fit lines (linear, best fit, and custom models) are fit to the values as plotted, after any
+X/Y adjustment, so they are drawn over the points they describe. A custom formula such as
+\code{mpg ~ hp} therefore models the adjusted values; do not repeat the adjustment inside it. No
+fit lines are drawn while an adjustment (\code{as.factor}) makes an axis categorical.
 }
 
 \examples{

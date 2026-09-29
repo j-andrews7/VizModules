@@ -1,7 +1,7 @@
 # Custom model-line backends
 
 The `dittoViz_scatterPlot` module can overlay fitted model lines. The built-in types
-(`lm`, `glm`, `loess`, `nls`) are registered at load time; `register_model_backend()`
+(`lm`, `glm`, `loess`) are registered at load time; `register_model_backend()`
 adds more. Call it **before** the app runs.
 
 ## Backend spec
@@ -46,7 +46,15 @@ register_model_backend("gam", list(
 ```
 
 Formula terms are whitelisted for safety, so a GAM using `s()` or `te()` also needs
-those added to the whitelist in `.safe_build_model()`.
+those added to the whitelist, `.formula_allowed_calls()` in `R/parse_utils.R`.
+
+## What `data` holds
+
+`fit()` receives the values **as plotted**: with an X/Y adjustment on (a z-score, `log10`,
+...), the x and y columns hold the adjusted values under their raw names, so `revenue ~
+units` fits what the points show and the line is drawn over them. A backend should not
+transform the axes itself, or they are transformed twice. `predict()` gets an x-grid in the
+same units. Other columns are left as they are.
 
 ## How extra fields flow through
 

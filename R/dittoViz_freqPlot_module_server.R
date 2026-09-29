@@ -46,10 +46,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # "Per Facet Panel" is always hidden: this plot is always faceted on the
         # frequency variable, and the frequencies of two different levels are not
         # comparable quantities, so pooling across facets would compare nonsense.
-        # The tests are forced per-facet below.
+        # The tests are forced per-facet below. For the same reason there is never a
+        # main title (see add_plot_config()), so its styling inputs are hidden too.
         observeEvent(data(), {
             delay(100, {
-                hide_input(session, c(hide.inputs, "stat.per.facet"))
+                hide_input(session, c(hide.inputs, "stat.per.facet", .main_title_input_ids))
                 for (tab.name in hide.tabs) hideTab(inputId = "freqPlotTabsetPanel", target = tab.name)
             })
         })
@@ -202,15 +203,26 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # `grouping` column, but its levels are exactly the levels of `group.by` in
         # the input, so reading them from there keeps this off the summary and the
         # user's chosen comparisons survive a change of scale or of visible facets.
+        pair_choices <- function() {
+            df <- data()
+            if (is.null(df) || !isTRUE(input$group.by %in% names(df))) {
+                return(character(0))
+            }
+            generate_pair_strings(df, input$group.by, .freq_stats_group_col(input$group.by, input$color.by))
+        }
+
         observeEvent(c(input$group.by, input$color.by), {
             df <- data()
             req(df, input$group.by, input$group.by %in% names(df))
-            color.col <- .freq_stats_group_col(input$group.by, input$color.by)
-            pair_strings <- generate_pair_strings(df, input$group.by, color.col)
-            # Pause readers until the client echoes the cleared selection, otherwise
-            # the plot renders once now and again when that echo lands.
+            pair_strings <- pair_choices()
+            # Pause readers until the client echoes the new selection, otherwise
+            # the plot renders once now and again when that echo lands. Any pairs
+            # defaults$stat.pairs names are selected; none means all are tested.
             freezeReactiveValue(input, "stat.pairs")
-            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs",
+                choices = c("", pair_strings),
+                selected = .default_stat_pairs(defaults, pair_strings)
+            )
         })
 
         # Selections are held as trace/point indices, which only describe the layout
@@ -243,7 +255,6 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         observeEvent(input$annotation.clear, {
             selected.data(NULL)
-            edit_store$annotations <- list()
         })
 
         # ---- Colour picker -------------------------------------------------------
@@ -310,6 +321,12 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (!isTRUE(input$stats.enabled)) {
                 return(NULL)
             }
+            # No brackets are drawn with the values on the x-axis (ridge plots), and
+            # a free scale gives each panel its own range, which one shared limit
+            # cannot reserve.
+            if ("ridgeplot" %in% input$plots || isTRUE(input$split.adjust %in% c("free", "free_y"))) {
+                return(NULL)
+            }
             summ <- summary_df()
             if (is.null(summ) || nrow(summ) == 0) {
                 return(NULL)
@@ -321,7 +338,8 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             .stat_bracket_headroom(
                 df = summ, x = "grouping", y = y.col,
                 group.by = .freq_stats_group_col(input$group.by, input$color.by),
-                facet.by = "label", per.facet = TRUE, input = input
+                facet.by = "label", per.facet = TRUE, input = input,
+                dodge.width = 1 - .box_num(input$boxgap, 0.3)
             )
         }
 
@@ -475,11 +493,12 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Shared tabs
             reset_axes_inputs(session, defaults)
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
             reset_annotation_inputs(session, defaults, choices)
             selected.data(NULL)
-            .reset_stats_inputs(session, defaults)
+            .reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # ---- Build the figure ----------------------------------------------------
@@ -532,6 +551,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (isolate_fn(input$split.adjust) != "free") {
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
+            # The plot is always faceted. Under a free y scale each panel spans its own
+            # data, so the Y Axis Min/Max (one limit for every panel, which dittoViz
+            # would apply with coord_cartesian()) are withheld, and each panel's
+            # brackets are measured against that panel alone.
+            free.y <- split.adjust$scales %in% c("free", "free_y")
 
             # Drop any persisted manual axis-title text when a variable feeding a
             # title changes, so the title regenerates for the new variable (its
@@ -556,6 +580,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 strip.background = element_blank()
             )
 
+            # One dodge width for the whole figure: the ggplot layers below, the box
+            # traces afterwards, and the stat brackets all have to agree on it.
+            boxgap <- .box_num(isolate_fn(input$boxgap), 0.3)
+            boxgroupgap <- .box_num(isolate_fn(input$boxgroupgap), 0.2)
+
             p <- .with_stable_seed(freqPlot(
                 data_frame = df,
                 var = var.col,
@@ -576,8 +605,8 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 # A blank numeric input reports NULL (not NA) to Shiny, but
                 # freqPlot()'s internal is.na(min)/is.na(max) checks require a
                 # scalar NA -- NULL crashes them.
-                min = y.limits$min %__% NA,
-                max = y.limits$max %__% NA,
+                min = if (free.y) NA else y.limits$min %__% NA,
+                max = if (free.y) NA else y.limits$max %__% NA,
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
@@ -586,7 +615,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 jitter.size = isolate_fn(input$jitter.size),
                 jitter.width = isolate_fn(input$jitter.width),
                 jitter.color = isolate_fn(input$jitter.color),
-                jitter.position.dodge = 1 - isolate_fn(input$boxgap),
+                jitter.position.dodge = 1 - boxgap,
                 boxplot.color = isolate_fn(input$boxplot.color),
                 # Hide outliers when jitter points are shown (to avoid
                 # double-plotting) or when the user disables them.
@@ -596,7 +625,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 boxplot.lineweight = isolate_fn(input$boxplot.lineweight),
                 vlnplot.lineweight = isolate_fn(input$vlnplot.lineweight),
                 vlnplot.scaling = isolate_fn(input$vlnplot.scaling),
-                vlnplot.width = 1 - isolate_fn(input$boxgap),
+                vlnplot.width = 1 - boxgap,
                 ridgeplot.lineweight = isolate_fn(input$ridgeplot.lineweight),
                 ridgeplot.scale = isolate_fn(input$ridgeplot.scale),
                 # Blanking the field reports NULL, which would collapse the
@@ -605,22 +634,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE,
+                legend.show = !isFALSE(isolate_fn(input$legend.show)),
                 theme = theme_style
             ))
 
-            # freqPlot() renames the grouping column to "grouping" and passes the
-            # original through under its own name, so the x-axis and the fill are
-            # always different columns even when the user picked one variable for
-            # both. Compare what the user chose, not the internal names.
-            boxmode <- if (!is.null(color.col) && !identical(color.col, group.col)) "group" else "overlay"
-
-            fig <- p |>
-                layout(
-                    boxmode = boxmode,
-                    boxgap = isolate_fn(input$boxgap),
-                    boxgroupgap = isolate_fn(input$boxgroupgap)
-                )
+            fig <- p
 
             # Always faceted, one panel per level of the frequency variable.
             fig <- apply_facet_subplot_spacing(
@@ -630,7 +648,16 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             )
             fig <- apply_title_layout(fig, input, isolate_fn,
                 title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
-            fig <- .fix_boxplot_facet_positions(fig)
+            # Put the boxes back on the coordinates ggplot dodged them to, which is
+            # where the jitter and violin traces already are. The dodge width has to
+            # be the one freqPlot() built the ggplot with: boxplot.position.dodge and
+            # jitter.position.dodge both default to vlnplot.width, passed as
+            # 1 - boxgap above.
+            fig <- .align_box_positions(
+                fig,
+                dodge.width = 1 - boxgap,
+                box.width = 1 - boxgroupgap
+            )
 
             xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
@@ -676,24 +703,39 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
                 last_stats_df(stats_df)
 
-                stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = summ,
-                    x = "grouping", y = y.col,
-                    display = isolate_fn(input$stat.display),
-                    hide.ns = isolate_fn(input$stat.hide.ns),
-                    sig.threshold = isolate_fn(input$stat.sig.threshold),
-                    line.color = isolate_fn(input$stat.line.color),
-                    line.width = isolate_fn(input$stat.line.width),
-                    bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = stats.group, facet.by = "label",
-                    step.increase = isolate_fn(input$stat.step.increase),
-                    text.bump = isolate_fn(input$stat.text.bump),
-                    bracket.inset = isolate_fn(input$stat.bracket.inset)
-                )
+                if ("ridgeplot" %in% isolate_fn(input$plots)) {
+                    # dittoViz lays the whole figure out horizontally once a ridge plot
+                    # is in it, so the values run along the x-axis and there is no room
+                    # above them for brackets. The tests still reach the source download.
+                    .note_brackets_skipped(session)
+                } else {
+                    stat_result <- create_stat_annotations(
+                        stats_df = stats_df, fig = fig, df = summ,
+                        x = "grouping", y = y.col,
+                        display = isolate_fn(input$stat.display),
+                        hide.ns = isolate_fn(input$stat.hide.ns),
+                        sig.threshold = isolate_fn(input$stat.sig.threshold),
+                        line.color = isolate_fn(input$stat.line.color),
+                        line.width = isolate_fn(input$stat.line.width),
+                        bracket.style = isolate_fn(input$stat.bracket.style),
+                        group.by = stats.group, facet.by = "label",
+                        step.increase = isolate_fn(input$stat.step.increase),
+                        text.bump = isolate_fn(input$stat.text.bump),
+                        bracket.inset = isolate_fn(input$stat.bracket.inset),
+                        # Brackets between two groups sit on the same slot centres
+                        # .align_box_positions() puts the boxes on.
+                        dodge.width = 1 - boxgap,
+                        free.y = free.y
+                    )
 
-                fig <- apply_stat_annotations(fig, stat_result,
-                    y.min = y.limits$min, y.max = y.limits$max
-                )
+                    fig <- apply_stat_annotations(fig, stat_result,
+                        y.min = y.limits$min, y.max = y.limits$max
+                    )
+                }
+            } else {
+                # Nothing was tested for this figure, so the source download must
+                # not ship the table from an earlier one.
+                last_stats_df(NULL)
             }
 
             # Highlight and label individual jitter points, which here are samples.
@@ -708,8 +750,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 highlight_points_raw <- isolate_fn(input$highlight.points)
                 highlight_vals <- character(0)
                 if (!is.null(highlight_points_raw) && highlight_points_raw != "") {
-                    highlight_vals <- .string_to_vector(highlight_points_raw)
-                    highlight_vals <- highlight_vals[highlight_vals != ""]
+                    highlight_vals <- .parse_highlight_values(highlight_points_raw, data()[[annotate.by]])
                 }
 
                 if (length(highlight_vals) > 0) {
@@ -777,10 +818,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             )
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- apply_legend_styling(fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
             # Make single-panel x/y axis titles draggable, matching faceted behaviour.
             fig <- axis_titles_as_annotations(fig)
 

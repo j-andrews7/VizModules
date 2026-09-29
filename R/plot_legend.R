@@ -13,20 +13,21 @@
 #' @noRd
 .CIRCLE_GLYPH_DIAMETER_RATIO <- 0.44
 
-#' Apply uniform legend font styling to a plotly figure
+#' Apply uniform legend styling to a plotly figure
 #'
-#' Sets the legend title and entry-label font sizes on a plotly figure so the
-#' "Legend" UI inputs behave consistently across plot types. Existing legend
-#' settings (orientation, position, font family/colour) are preserved because
-#' `plotly::layout()` merges the supplied attributes into the current
-#' layout. `NULL` or `NA` sizes are ignored, leaving the
-#' corresponding font size untouched.
+#' Shows or hides the legend and sets the font family, color and sizes of its
+#' title and entry labels, so the "Legend" UI inputs behave consistently across
+#' plot types. Existing legend settings (orientation, position, and any font
+#' property not supplied) are preserved because `plotly::layout()` merges the
+#' supplied attributes into the current layout. `NULL`, `NA` or blank values
+#' are ignored, leaving the corresponding property untouched.
 #'
 #' Numeric colour mappings (for example `fill.by`/`color.by` on a
 #' continuous variable) are rendered as a *colorbar* rather than a
-#' categorical legend. The layout-level legend font does not affect a colorbar,
-#' so the colorbar title and tick fonts are updated directly on each trace (and
-#' on any shared `coloraxis`) using the same sizes. This keeps the "Legend"
+#' categorical legend. The layout-level legend font and visibility do not affect
+#' a colorbar, so the colorbar title and tick fonts are updated directly on each
+#' trace (and on any shared `coloraxis`) using the same values, and hiding the
+#' legend turns each colorbar's `showscale` off. This keeps the "Legend"
 #' controls functional for both categorical and continuous legends.
 #'
 #' @param fig A plotly figure object.
@@ -34,43 +35,65 @@
 #'   `NULL` to leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
 #'   tick labels), or `NULL` to leave unchanged.
-#' @param position vector of an integer, an xanchor string, and a orientation argument. e.g. c(1.02, "left", "v"). Controls horizontal positioning of the legend. 
-#' @return The plotly figure with the requested legend font sizes applied.
-#'   Returns the figure unchanged when `fig` is `NULL` or no valid
-#'   sizes are supplied.
+#' @param position Optional length-2 vector `c(x, xanchor)` placing the legend
+#'   horizontally, e.g. `c(1.02, "left")`. `NULL` (the default) leaves the
+#'   position unchanged.
+#' @param font.family Character font family for the legend title and entry
+#'   labels (and colorbar title and ticks), or `NULL` to leave unchanged.
+#' @param font.color Character color for the legend title and entry labels (and
+#'   colorbar title and ticks), or `NULL` to leave unchanged.
+#' @param show Logical. `FALSE` hides the legend and every colorbar; `TRUE` or
+#'   `NULL` (the default) leave their visibility unchanged.
+#' @return The plotly figure with the requested legend styling applied.
+#'   Returns the figure unchanged when `fig` is `NULL` or nothing valid is
+#'   supplied.
 #'
 #' @author Jared Andrews
 #' @importFrom plotly layout plotly_build
+#' @importFrom utils modifyList
 #' @export
 #' @examples
 #' fig <- plotly::plot_ly(iris,
 #'     x = ~Sepal.Length, y = ~Sepal.Width,
 #'     color = ~Species, type = "scatter", mode = "markers"
 #' )
-#' apply_legend_styling(fig, title.size = 16, text.size = 10)
-apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, position = NULL) {
+#' apply_legend_styling(fig, title.size = 16, text.size = 10, font.family = "Courier New")
+#' apply_legend_styling(fig, show = FALSE)
+apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, position = NULL,
+                                 font.family = NULL, font.color = NULL, show = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
 
     valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
+    valid_string <- function(s) is.character(s) && length(s) == 1L && !is.na(s) && nzchar(s)
+    hide <- isFALSE(show)
 
-    if (!valid_size(title.size) && !valid_size(text.size)) {
+    # Family and colour style the title and the entries alike; each takes its
+    # own size.
+    shared_font <- list()
+    if (valid_string(font.family)) {
+        shared_font$family <- font.family
+    }
+    if (valid_string(font.color)) {
+        shared_font$color <- font.color
+    }
+    legend_font <- shared_font
+    if (valid_size(text.size)) {
+        legend_font$size <- text.size
+    }
+    title_font <- shared_font
+    if (valid_size(title.size)) {
+        title_font$size <- title.size
+    }
+
+    if (length(legend_font) == 0L && length(title_font) == 0L && is.null(position) && !hide) {
         return(fig)
     }
 
     # Categorical legend: title/entry fonts are layout attributes that
     # plotly::layout() merges into the current legend, preserving position,
-    # orientation, and font family/colour.
-    legend_font <- list()
-    if (valid_size(text.size)) {
-        legend_font$size <- text.size
-    }
-    title_font <- list()
-    if (valid_size(title.size)) {
-        title_font$size <- title.size
-    }
-
+    # orientation, and any font property not given here.
     legend_args <- list()
     if (length(legend_font) > 0L) {
         legend_args$font <- legend_font
@@ -78,14 +101,17 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
     }
-    
-    if (!is.null(position)){
-		legend_args$x <- position[1]
-		legend_args$xanchor <- position[2]
+
+    if (!is.null(position)) {
+        legend_args$x <- position[1]
+        legend_args$xanchor <- position[2]
     }
-    
+
     if (length(legend_args) > 0L) {
         fig <- plotly::layout(fig, legend = legend_args)
+    }
+    if (hide) {
+        fig <- plotly::layout(fig, showlegend = FALSE)
     }
 
     # Continuous legend (colorbar): styled per trace/coloraxis because the
@@ -94,42 +120,100 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
         if (is.null(cb)) {
             return(NULL)
         }
-        if (valid_size(title.size)) {
+        if (length(title_font) > 0L) {
             # Newer plotly nests the title font under title$font; older
             # versions (and ggplotly output) use the titlefont attribute.
             if (is.list(cb$title)) {
-                cb$title$font$size <- title.size
+                cb$title$font <- modifyList(cb$title$font %||% list(), title_font)
             } else {
-                cb$titlefont$size <- title.size
+                cb$titlefont <- modifyList(cb$titlefont %||% list(), title_font)
             }
         }
-        if (valid_size(text.size)) {
-            cb$tickfont$size <- text.size
+        if (length(legend_font) > 0L) {
+            cb$tickfont <- modifyList(cb$tickfont %||% list(), legend_font)
         }
         cb
     }
+
+    # Whether a trace (or its marker/line) draws a colorbar. layout.showlegend
+    # does not hide one, and ggplotly draws each on a dummy trace of its own.
+    draws_colorbar <- function(x) is.list(x) && (!is.null(x$colorbar) || isTRUE(x$showscale))
 
     fig <- plotly::plotly_build(fig)
 
     traces <- fig$x$data
     if (!is.null(traces) && length(traces) > 0L) {
         for (i in seq_along(traces)) {
-            for (key in c("marker", "line")) {
-                if (!is.null(traces[[i]][[key]]) &&
-                    !is.null(traces[[i]][[key]]$colorbar)) {
-                    fig$x$data[[i]][[key]]$colorbar <-
-                        style_colorbar(traces[[i]][[key]]$colorbar)
+            # Heatmap-type traces carry their colorbar at the top level. Read
+            # the trace as it stands, so the whole-trace pass keeps the edits
+            # made to its marker and line.
+            for (key in c("marker", "line", "")) {
+                trace <- fig$x$data[[i]]
+                part <- if (nzchar(key)) trace[[key]] else trace
+                if (!draws_colorbar(part)) {
+                    next
+                }
+                part$colorbar <- style_colorbar(part$colorbar)
+                if (hide) {
+                    part$showscale <- FALSE
+                }
+                if (nzchar(key)) {
+                    fig$x$data[[i]][[key]] <- part
+                } else {
+                    fig$x$data[[i]] <- part
                 }
             }
         }
     }
 
-    if (!is.null(fig$x$layout$coloraxis$colorbar)) {
+    if (!is.null(fig$x$layout$coloraxis)) {
         fig$x$layout$coloraxis$colorbar <-
             style_colorbar(fig$x$layout$coloraxis$colorbar)
+        if (hide) {
+            fig$x$layout$coloraxis$showscale <- FALSE
+        }
     }
-    
+
     fig
+}
+
+#' Apply the uniform Legend inputs to a plotly figure
+#'
+#' Reads the inputs created by [uniform_legend_inputs_ui()] (`legend.show`,
+#' `legend.font.family`, `legend.font.color`, `legend.title.size` and
+#' `legend.text.size`) and applies them with [apply_legend_styling()]. An input
+#' that has not reported yet (`NULL`) leaves its property unchanged, so the
+#' legend stays visible until `legend.show` is `FALSE`.
+#'
+#' @param fig A plotly figure object.
+#' @param input Shiny input object (or a list) containing the legend fields.
+#' @param isolate_fn Function to isolate reactive values. Defaults to
+#'   `shiny::isolate`.
+#'
+#' @return The plotly figure with the legend inputs applied.
+#'
+#' @author Jared Andrews
+#' @export
+#' @seealso [uniform_legend_inputs_ui()], [reset_legend_inputs()], [apply_legend_styling()]
+#' @examples
+#' fig <- plotly::plot_ly(iris,
+#'     x = ~Sepal.Length, y = ~Sepal.Width,
+#'     color = ~Species, type = "scatter", mode = "markers"
+#' )
+#' legend_input <- list(
+#'     legend.show = TRUE, legend.font.family = "Courier New", legend.font.color = "#333333",
+#'     legend.title.size = 16, legend.text.size = 12
+#' )
+#' apply_legend_inputs(fig, legend_input, isolate_fn = identity)
+apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
+    apply_legend_styling(
+        fig,
+        title.size = isolate_fn(input$legend.title.size),
+        text.size = isolate_fn(input$legend.text.size),
+        font.family = isolate_fn(input$legend.font.family),
+        font.color = isolate_fn(input$legend.font.color),
+        show = isolate_fn(input$legend.show)
+    )
 }
 
 
@@ -202,6 +286,10 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
 #'   the legend to the right of the plot area; nudge it lower to pull the whole
 #'   set inward when it would otherwise overflow a narrow plot, or higher to push
 #'   it further out. Defaults to `1.02`.
+#' @param font.family Character, or `NULL`. Font family of the title and label
+#'   annotations. When `NULL`, plotly's default is used.
+#' @param font.color Character, or `NULL`. Font color of the title and label
+#'   annotations. Defaults to `"#000000"` when `NULL`. The circles stay black.
 #'
 #' @return The plotly figure with size-legend annotations appended, or the
 #'   unmodified figure when `size_by` is `NULL`/empty or not present
@@ -212,7 +300,7 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
 #' @rdname INTERNAL_custom_legend
 .custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
                            title.size = NULL, text.size = NULL, start_y = 0.95,
-                           start_x = 1.02) {
+                           start_x = 1.02, font.family = NULL, font.color = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
         !nzchar(size_by) || !size_by %in% names(data)) {
@@ -301,11 +389,16 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
         }
     }
 
-    title_font <- list(color = "#000000")
+    valid_string <- function(s) is.character(s) && length(s) == 1L && !is.na(s) && nzchar(s)
+    text_font <- list(color = if (valid_string(font.color)) font.color else "#000000")
+    if (valid_string(font.family)) {
+        text_font$family <- font.family
+    }
+    title_font <- text_font
     if (valid_size(title.size)) {
         title_font$size <- title.size
     }
-    label_font_size <- if (valid_size(text.size)) text.size else 12
+    label_font <- c(text_font, list(size = if (valid_size(text.size)) text.size else 12))
 
     # Strip the size variable from the (categorical) color/shape legend title.
     # When point size maps to a column, ggplotly joins each aesthetic's guide
@@ -359,7 +452,7 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
             x = x_pos, y = yc, xref = "paper", yref = "paper",
             text = labels[i], showarrow = FALSE,
             xanchor = "left", yanchor = "middle", xshift = label_xshift,
-            font = list(size = label_font_size, color = "#000000")
+            font = label_font
         )
     }
 

@@ -89,6 +89,31 @@ Brackets stack above the data, so the y-limit must clear them or they draw clipp
 `setup_axis_range()` a `headroom` function and pass the resolved limits on to
 `apply_stat_annotations()` as `y.min`/`y.max`. See `uniform-helpers.md`.
 
+## Test and draw on the plotted values, never raw `data()`
+
+The stats helpers use whatever frame they are given, and the brackets are placed at its
+heights. If the plot transforms a column before drawing it (dittoViz's `var.adjustment` /
+`var.adj.fxn`, a summary like `freqPlot`'s), give the tests, `create_stat_annotations()`, the
+headroom **and** the axis-range calculation the values as drawn. Otherwise the brackets
+land in another coordinate space, far off the axis (#319). Inside the package that is
+`.as_plotted()`; `adjust_column_values()` is the exported equivalent. Both apply the
+adjustment function first and then the z-score/relative rescaling, the reverse of dittoViz,
+so hand dittoViz the combined `.adjustment_fn()` as its `*.adj.fxn` (and no `*.adjustment`)
+or the plot and the overlays disagree. Build that frame in
+one function that both the headroom and the render call (`.yplot_stat_context()` is the
+worked example), so the two cannot drift apart.
+
+- **Values along the x-axis** (a rotated plot, dittoViz with a ridge plot): brackets cannot
+  go there. Test and ship the table, but skip drawing and call `.note_brackets_skipped()`.
+- **Free y facet scales**: pass `free.y = TRUE` to `create_stat_annotations()` so each
+  panel's brackets sit on its own data, return `NULL` from the headroom, and do not pass one
+  shared `min`/`max` to a dittoViz plot, whose `coord_cartesian()` would pin every panel to it.
+- Write the range with `apply_stat_annotations()` after the axis styling or before it; it
+  survives either way. Never queue a copy of an existing axis through `plotly::layout()`,
+  which reverts later layout writes at build time.
+- Test it: `expect_brackets_within_axes()` in `tests/testthat/helper-overlays.R` builds the
+  figure and checks every bracket lies within its own axis.
+
 ## Helpers
 
 All in `R/stat_helper.R`, all exported:
@@ -106,7 +131,7 @@ All in `R/stat_helper.R`, all exported:
 first factor level at `x = 1`), which is what building the figure with `ggplot2` +
 `ggplotly()` gives you. A figure built another way will place brackets wrongly.
 
-`plotthis_BoxPlotServer`, `plotthis_ViolinPlotServer`, and `dittoViz_yPlotServer` are the
+`plotthis_BoxPlotServer`, `dittoViz_yPlotServer`, and `dittoViz_freqPlotServer` are the
 complete worked examples.
 
 ## Known limits

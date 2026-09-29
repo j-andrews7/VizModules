@@ -76,7 +76,8 @@ The following \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}} parameters c
 \itemize{
 \item \code{x} - X-axis variable (UI: "X values", default: 2nd categorical variable)
 \item \code{y} - Y-axis variable (UI: "Y values", default: 2nd numeric variable)
-\item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: 3rd categorical variable or "")
+\item \code{group_by} - Grouping variable for area fill (UI: "Group by", default: first categorical variable
+other than \code{x.data}, or "")
 \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Columns", default: NULL)
@@ -113,6 +114,11 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

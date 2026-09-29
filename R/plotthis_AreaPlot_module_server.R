@@ -130,13 +130,16 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
+            group_fallback <- c(group_facet_choices[nzchar(group_facet_choices)], "")[1]
 
             # Data
             update_viz_select(session, "x.data", selected = x_default)
             update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", char.choices[3], function(x) x %in% c("", group_facet_choices)))
+                selected = get_default(
+                    defaults, "group.by", group_fallback, function(x) x %in% c("", group_facet_choices)
+                ))
 
             # Facet
             update_viz_select(session, "facet.by",
@@ -164,6 +167,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -171,24 +175,20 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         })
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         generate_AreaPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
 
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == "") {
+            if (.nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
@@ -244,7 +244,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
             fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
-            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Apply axis styling to all subplot axes (handles faceting)
             xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
@@ -279,12 +279,8 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

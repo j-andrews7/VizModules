@@ -16,28 +16,37 @@ mini_plot_server <- function(id, data, defaults = NULL, runs) {
 }
 
 
-test_that("get_default resolves reactive entries to their current value", {
+test_that("get_default resolves reactive entries, validating the resolved value", {
+    # A reactive resolves to its current value, which is also what a module's
+    # Reset passes to update*Input().
     title <- shiny::reactiveVal("first")
-
     expect_equal(get_default(list(main = title), "main", "fallback"), "first")
-
     title("second")
     expect_equal(get_default(list(main = title), "main", "fallback"), "second")
-
     expect_equal(
         get_default(list(main = shiny::reactive("from reactive")), "main", "fallback"),
         "from reactive"
     )
-})
 
-test_that("get_default validates the resolved value, not the reactive itself", {
+    # The validator sees the resolved value, not the reactive itself.
     expect_equal(get_default(list(n = shiny::reactiveVal(10)), "n", 5, is.numeric), 10)
     expect_equal(get_default(list(n = shiny::reactiveVal("x")), "n", 5, is.numeric), 5)
-})
 
-test_that("get_default keeps plain functions as literal values", {
+    # A plain function is a literal value, not something to call.
     fn <- function() "not a reactive"
     expect_identical(get_default(list(main = fn), "main", "fallback"), fn)
+})
+
+test_that("reactive default sync reshapes color maps for the multi-color picker", {
+    expect_equal(
+        .input_sync_message(c(A = "#FF0000", B = "#00FF00")),
+        list(value = list(
+            list(name = "A", value = "#FF0000"),
+            list(name = "B", value = "#00FF00")
+        ))
+    )
+    expect_equal(.input_sync_message("a title"), list(value = "a title"))
+    expect_equal(.input_sync_message(c("#FF0000")), list(value = "#FF0000"))
 })
 
 test_that(".input_key recognises direct input accesses only", {
@@ -134,17 +143,6 @@ test_that("user edits win locally and are overwritten by the next external chang
             expect_equal(generate()$main, "S2")
         }
     )
-})
-
-test_that("reset restores the reactive default's current value", {
-    title_rv <- shiny::reactiveVal("S1")
-    defaults <- list(main = title_rv)
-
-    # Mirrors what a module's reset observer passes to update*Input().
-    expect_equal(get_default(defaults, "main", ""), "S1")
-
-    title_rv("S2")
-    expect_equal(get_default(defaults, "main", ""), "S2")
 })
 
 test_that("auto.update = FALSE still gates a reactive default behind the update button", {

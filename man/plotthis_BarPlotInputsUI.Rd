@@ -51,7 +51,8 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters are
 \item \code{position_dodge_preserve} - Preserve bar width when dodging (not yet implemented)
 \item \code{x_sep} - Separator for multiple x columns (not yet implemented)
 \item \code{group_by_sep} - Separator for multiple group_by columns (not yet implemented)
-\item \code{split_by_sep} - Separator for multiple split_by columns (not yet implemented)
+\item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
+\item \code{split_by_sep} - Only applies if \code{split_by} is used
 \item \code{fill_name} - Name of the fill legend (not yet implemented)
 \item \code{line_name} - Name of line (not yet implemented)
 \item \code{label} - Bar labels on top (not yet implemented)
@@ -81,15 +82,15 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters are
 \item \code{legend.direction} - Legend orientation (plotly allows interactive adjustment)
 \item \code{keep_empty} - Keep empty factor levels (not yet implemented)
 \item \code{keep_na} - Keep NA values (not yet implemented)
-\item \code{combine} - Combine multiple plots (not applicable for plotly)
-\item \code{nrow} - Only applies if \code{split_by} is used with combine
-\item \code{ncol} - Only applies if \code{split_by} is used with combine
-\item \code{byrow} - Only applies if \code{split_by} is used with combine
+\item \code{combine} - Only applies if \code{split_by} is used
+\item \code{nrow} - Only applies if \code{split_by} is used
+\item \code{ncol} - Only applies if \code{split_by} is used
+\item \code{byrow} - Only applies if \code{split_by} is used
 \item \code{seed} - Random seed (not applicable)
-\item \code{axes} - Only applies if \code{split_by} is used with combine
-\item \code{axis_titles} - Only applies if \code{split_by} is used with combine
-\item \code{guides} - Only applies if \code{split_by} is used with combine
-\item \code{design} - Only applies if \code{split_by} is used with combine
+\item \code{axes} - Only applies if \code{split_by} is used
+\item \code{axis_titles} - Only applies if \code{split_by} is used
+\item \code{guides} - Only applies if \code{split_by} is used
+\item \code{design} - Only applies if \code{split_by} is used
 }
 }
 
@@ -102,7 +103,6 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters can
 \item \code{group_by} - Grouping variable for bar fill (UI: "Group by", default: 2nd categorical variable)
 \item \code{fill_by} - Variable used to fill the bars (UI: "Fill by", default: "")
 \item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-\item \code{split_by} - Split variable for separate plots (UI: "Split by", default: "")
 \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
 \item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
@@ -151,6 +151,11 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

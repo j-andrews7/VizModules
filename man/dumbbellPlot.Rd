@@ -13,6 +13,7 @@ dumbbellPlot(
   show.legend = TRUE,
   facet.by = NULL,
   line.colour = "gray80",
+  point.size = 12,
   facet.scales = "fixed",
   subplot.margin = 0.05,
   axis.showline = TRUE,
@@ -28,6 +29,15 @@ dumbbellPlot(
   axis.tickcolor = "black",
   axis.ticklen = 5,
   axis.tickwidth = 1,
+  axis.title.font.size = 18,
+  axis.title.font.color = "black",
+  axis.title.font.family = "Arial",
+  show.grid.x = TRUE,
+  show.grid.y = TRUE,
+  grid.color = "#CCCCCC",
+  facet.title.font.size = 18,
+  facet.title.font.color = "black",
+  facet.title.font.family = "Arial",
   title.text = "",
   title.font.size = 26,
   title.font.family = "Arial",
@@ -52,13 +62,19 @@ If 1 value: creates single dot plot. If 2 values: creates dumbbell plot with con
 \item{colour.by}{Character, how to color the markers. Options: "X variables" (different colors for each x variable)
 or "Y variables" (different colors for each y category). Default: "X variables".}
 
-\item{palette.selection}{Character vector of hex colors for marker colors.}
+\item{palette.selection}{Character vector of hex colors for marker colors. A named vector
+is matched by name to the x variables (\code{colour.by = "X variables"}) or the y categories
+(\code{"Y variables"}); an unnamed one is assigned in order, to the x variables as given or to
+the y categories in their order of appearance in \code{data}. Either way a category keeps its
+colour in every facet.}
 
 \item{show.legend}{Logical, whether to display the legend. Default: TRUE.}
 
 \item{facet.by}{Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.}
 
 \item{line.colour}{Character, hex color for the connecting lines between dumbbell points. Default: "gray80".}
+
+\item{point.size}{Numeric, diameter of the markers in pixels. Default: 12.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}
@@ -92,6 +108,24 @@ May be a single value (applied to both directions) or a length-2 vector
 \item{axis.ticklen}{Numeric, length of tick marks in pixels. Default: 5.}
 
 \item{axis.tickwidth}{Numeric, width of tick marks in pixels. Default: 1.}
+
+\item{axis.title.font.size}{Numeric, font size for the x/y axis titles. Default: 18.}
+
+\item{axis.title.font.color}{Character, hex color for the x/y axis titles. Default: "black".}
+
+\item{axis.title.font.family}{Character, font family for the x/y axis titles. Default: "Arial".}
+
+\item{show.grid.x}{Logical, whether to show gridlines on the x-axis. Default: TRUE.}
+
+\item{show.grid.y}{Logical, whether to show gridlines on the y-axis. Default: TRUE.}
+
+\item{grid.color}{Character, hex color for gridlines. Default: "#CCCCCC".}
+
+\item{facet.title.font.size}{Numeric, font size for the facet panel titles. Default: 18.}
+
+\item{facet.title.font.color}{Character, hex color for the facet panel titles. Default: "black".}
+
+\item{facet.title.font.family}{Character, font family for the facet panel titles. Default: "Arial".}
 
 \item{title.text}{Character, main title text for the plot. Default: "".}
 

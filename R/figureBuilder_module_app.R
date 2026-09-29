@@ -8,28 +8,37 @@
 #' `.zip`).
 #'
 #' Datasets are supplied via `data_list` and seed the "Add Plot" dialog; users
-#' can also upload additional datasets (CSV, TSV, TXT, or RDS) at runtime. The
+#' can also upload additional datasets (CSV, TSV, or tab-delimited TXT) at runtime. The
 #' set of available plot modules is controlled by `module_registry`, so the app
 #' can be extended with custom wrapper modules without editing the package.
 #'
 #' This is the recommended way to launch a standalone Figure Builder. Internally
 #' it is a thin wrapper around the [figureBuilderUI()] / [figureBuilderServer()]
 #' Shiny module, so the same builder can be embedded inside a larger app (and
-#' instantiated more than once) by calling those two functions directly. The
-#' bundled app at `system.file("apps/figure-builder", package = "VizModules")` is
-#' itself a thin wrapper around this function.
+#' instantiated more than once) by calling those two functions directly. It is
+#' also the **Figure Builder** tab of [moduleGalleryApp()].
 #'
 #' @param data_list An optional named list of data frames that seed the dataset
 #'   registry. If `NULL` (the default), the bundled example datasets (plus a
-#'   `sales_by_product` summary suited to the pie plot) are used. At least one
-#'   element is required and every element must be a data frame.
+#'   `sales_by_region` summary suited to the pie plot) are used. At least one
+#'   element is required. An element is either a data frame, or a named list of
+#'   data frames for a module that needs companion tables (the `ComplexHeatmap`
+#'   module's `list(matrix = , column_annotations = )`); in the latter case only
+#'   the primary table is filtered and shown in the panel's table pane.
 #' @param module_registry An optional named list describing the plot modules to
-#'   offer. If `NULL` (the default), all bundled VizModules modules are offered.
+#'   offer. If `NULL` (the default), all bundled VizModules modules are offered,
+#'   each opening on the same example figure as in [moduleGalleryApp()].
 #'   Each entry is itself a list with components: `label` (character, shown in the
 #'   picker), `dataset` (character, the dataset name its `defaults` were written
 #'   for), `inputs_ui`, `output_ui`, and `server_fn` (the module's three
 #'   functions), and `defaults` (a named list of input defaults applied only when
-#'   `dataset` is the chosen dataset).
+#'   `dataset` is the chosen dataset). An entry may also carry `primary.table`,
+#'   naming which table of a multi-table dataset gets filtered (the first by
+#'   default); its presence is also what marks the module as able to take a
+#'   multi-table dataset at all, so modules without it are handed the primary
+#'   table alone and any dataset stays usable with any module. See
+#'   [figureBuilderServer()] for the `vector_svg` hook that lets a non-plotly
+#'   module take part in the SVG figure export.
 #' @param title A character string used as the page title and header
 #'   (default: `"VizModules Figure Builder"`).
 #' @param return_components Logical. When `FALSE` (the default) a
@@ -43,7 +52,7 @@
 #'
 #' @export
 #' @author Jared Andrews
-#' @seealso [figureBuilderUI()], [figureBuilderServer()]
+#' @seealso [figureBuilderUI()], [figureBuilderServer()], [moduleGalleryApp()]
 #' @examples
 #' library(VizModules)
 #'
@@ -85,160 +94,21 @@ figureBuilderApp <- function(data_list = NULL,
 }
 
 
-# Build the default dataset catalogue: the bundled example datasets plus a
-# derived `sales_by_product` summary that suits the pie plot.
-.figure_builder_data <- function() {
-    sales_by_product <- aggregate(revenue ~ product_line, example_sales, sum)
-    list(
-        "example_sales"           = example_sales,
-        "example_bar"             = example_bar,
-        "example_demographics"    = example_demographics,
-        "example_markers"         = example_markers,
-        "example_school_earnings" = example_school_earnings,
-        "example_skills"          = example_skills,
-        "example_rnaseq"          = example_rnaseq,
-        "example_iris"            = example_iris,
-        "example_mtcars"          = example_mtcars,
-        "example_population"      = example_population,
-        "example_composition"     = example_composition,
-        "sales_by_product"        = sales_by_product
-    )
-}
-
-# Build the default module registry. Each entry wires up one VizModules module.
-# `dataset` is the dataset that the supplied `defaults` were written for; it is
-# used as the initial selection and the defaults are only applied when that
-# dataset is chosen.
+# The Figure Builder's default module registry: the showcase registry (see
+# R/module_showcase.R) in the shape figureBuilderServer() takes. `dataset` is the
+# dataset each entry's `defaults` were written for; it is the initial selection
+# when the module is picked, and the defaults apply only when that dataset is the
+# one chosen. The heatmap swaps in its static output, since a figure panel has
+# no room for the interactive widget's chrome.
 .figure_builder_registry <- function() {
-    list(
-        area = list(
-            label = "Area Plot", dataset = "example_sales",
-            inputs_ui = plotthis_AreaPlotInputsUI,
-            output_ui = plotthis_AreaPlotOutputUI,
-            server_fn = plotthis_AreaPlotServer,
-            defaults = list(
-                "x.data" = "year", "y.data" = "revenue",
-                "group.by" = "product_line"
-            )
-        ),
-        bar = list(
-            label = "Bar Plot", dataset = "example_bar",
-            inputs_ui = plotthis_BarPlotInputsUI,
-            output_ui = plotthis_BarPlotOutputUI,
-            server_fn = plotthis_BarPlotServer,
-            defaults = list(
-                "x.data" = "Group", "y.data" = "Values",
-                "group.by" = "Type"
-            )
-        ),
-        box = list(
-            label = "Box Plot", dataset = "example_demographics",
-            inputs_ui = plotthis_BoxPlotInputsUI,
-            output_ui = plotthis_BoxPlotOutputUI,
-            server_fn = plotthis_BoxPlotServer,
-            defaults = list("x.data" = "department", "y.data" = "salary")
-        ),
-        density = list(
-            label = "Density Plot", dataset = "example_demographics",
-            inputs_ui = plotthis_DensityPlotInputsUI,
-            output_ui = plotthis_DensityPlotOutputUI,
-            server_fn = plotthis_DensityPlotServer,
-            defaults = list("x.data" = "salary", "group.by" = "department")
-        ),
-        dotplot = list(
-            label = "Dot Plot", dataset = "example_markers",
-            inputs_ui = plotthis_DotPlotInputsUI,
-            output_ui = plotthis_DotPlotOutputUI,
-            server_fn = plotthis_DotPlotServer,
-            defaults = list(
-                "x.data" = "gene", "y.data" = "cell_type",
-                "size.by" = "pct_expressed", "fill.by" = "avg_expression"
-            )
-        ),
-        dumbbell = list(
-            label = "Dumbbell Plot", dataset = "example_school_earnings",
-            inputs_ui = dumbbellPlotInputsUI,
-            output_ui = dumbbellPlotOutputUI,
-            server_fn = dumbbellPlotServer,
-            defaults = list()
-        ),
-        freq = list(
-            label = "Frequency Plot", dataset = "example_composition",
-            inputs_ui = dittoViz_freqPlotInputsUI,
-            output_ui = dittoViz_freqPlotOutputUI,
-            server_fn = dittoViz_freqPlotServer,
-            defaults = list(
-                "var" = "cell_type", "sample.by" = "sample",
-                "group.by" = "condition"
-            )
-        ),
-        histogram = list(
-            label = "Histogram", dataset = "example_demographics",
-            inputs_ui = plotthis_HistogramInputsUI,
-            output_ui = plotthis_HistogramOutputUI,
-            server_fn = plotthis_HistogramServer,
-            defaults = list("x.data" = "salary")
-        ),
-        line = list(
-            label = "Line Plot", dataset = "example_sales",
-            inputs_ui = linePlotInputsUI,
-            output_ui = linePlotOutputUI,
-            server_fn = linePlotServer,
-            defaults = list("x.value" = "product_line", "y.value" = "units")
-        ),
-        parallel = list(
-            label = "Parallel Coordinates", dataset = "example_sales",
-            inputs_ui = parallelCoordinatesPlotInputsUI,
-            output_ui = parallelCoordinatesPlotOutputUI,
-            server_fn = parallelCoordinatesPlotServer,
-            defaults = list("color.by" = "product_line")
-        ),
-        pie = list(
-            label = "Pie Plot", dataset = "sales_by_product",
-            inputs_ui = piePlotInputsUI,
-            output_ui = piePlotOutputUI,
-            server_fn = piePlotServer,
-            defaults = list("labels" = "product_line", "values" = "revenue")
-        ),
-        radar = list(
-            label = "Radar Plot", dataset = "example_skills",
-            inputs_ui = radarPlotInputsUI,
-            output_ui = radarPlotOutputUI,
-            server_fn = radarPlotServer,
-            defaults = list("theta" = "category", "r" = "value", "group" = "player")
-        ),
-        scatter = list(
-            label = "Scatter Plot", dataset = "example_sales",
-            inputs_ui = dittoViz_scatterPlotInputsUI,
-            output_ui = dittoViz_scatterPlotOutputUI,
-            server_fn = dittoViz_scatterPlotServer,
-            defaults = list(
-                "x.by" = "revenue", "y.by" = "units",
-                "color.by" = "product_line"
-            )
-        ),
-        splitbar = list(
-            label = "Split Bar Plot", dataset = "example_bar",
-            inputs_ui = plotthis_SplitBarPlotInputsUI,
-            output_ui = plotthis_SplitBarPlotOutputUI,
-            server_fn = plotthis_SplitBarPlotServer,
-            defaults = list("x.data" = "Score", "y.data" = "Group")
-        ),
-        violin = list(
-            label = "Violin Plot", dataset = "example_demographics",
-            inputs_ui = plotthis_ViolinPlotInputsUI,
-            output_ui = plotthis_ViolinPlotOutputUI,
-            server_fn = plotthis_ViolinPlotServer,
-            defaults = list("x.data" = "department", "y.data" = "salary")
-        ),
-        yplot = list(
-            label = "yPlot", dataset = "example_demographics",
-            inputs_ui = dittoViz_yPlotInputsUI,
-            output_ui = dittoViz_yPlotOutputUI,
-            server_fn = dittoViz_yPlotServer,
-            defaults = list("var" = "salary", "group.by" = "department")
-        )
-    )
+    lapply(.module_showcase(), function(entry) {
+        if (!is.null(entry$static_output_ui)) {
+            entry$output_ui <- entry$static_output_ui
+        }
+        entry$static_output_ui <- NULL
+        entry$tab_label <- NULL
+        entry
+    })
 }
 
 .figure_builder_css <- function() {
@@ -338,41 +208,43 @@ figureBuilderApp <- function(data_list = NULL,
 
 /* --- Compact sidebar -------------------------------------------------------
    Tighten vertical rhythm so more controls fit without scrolling. Scoped to
-   the sidebar well so the canvas and data-filter area keep their spacing. */
-.well {
+   this builder's own layout: `.well` on its own is Bootstrap's class, which
+   shiny::sidebarPanel() renders, so styling it bare reached every well on a
+   host page that embedded the builder. */
+.pb-app .well {
     padding: 10px 12px;
 }
-.well h4 {
+.pb-app .well h4 {
     margin-top: 8px;
     margin-bottom: 6px;
     font-size: 15px;
 }
-.well hr {
+.pb-app .well hr {
     margin-top: 8px;
     margin-bottom: 8px;
     border-top: 1px solid #ccc;
 }
-.well .help-block {
+.pb-app .well .help-block {
     margin-top: 2px;
     margin-bottom: 4px;
     font-size: 11px;
     line-height: 1.3;
 }
-.well .form-group {
+.pb-app .well .form-group {
     margin-bottom: 8px;
 }
-.well .control-label {
+.pb-app .well .control-label {
     margin-bottom: 2px;
 }
-.well .btn {
+.pb-app .well .btn {
     padding: 4px 10px;
 }
 /* Trim the gap shiny adds around fileInput's progress bar. */
-.well .form-group .progress {
+.pb-app .well .form-group .progress {
     margin-bottom: 4px;
 }
 /* Make the two primary action buttons fill their half-row columns. */
-.well .btn-block {
+.pb-app .well .btn-block {
     width: 100%;
 }
 /* Collapsible 'Load Data' disclosure: a clickable heading that hides its
@@ -506,6 +378,51 @@ document.addEventListener('change', function(e) {
 document.addEventListener('mouseup', function() {
     setTimeout(pbAssignLabelsAll, 0);
 });
+// Cards whose module renders something other than a plotly graph have no SVG
+// the browser can read out of them. The server can redraw those panels, so they
+// are collected and asked for in one round trip; see figureBuilderServer().
+var pbSvgRequests = {};
+function pbRequestPanelSvg(ns, panels) {
+    return new Promise(function(resolve) {
+        if (!panels.length || typeof Shiny === 'undefined' || !Shiny.setInputValue) {
+            resolve({});
+            return;
+        }
+        var nonce = String(Date.now()) + '-' + Math.random().toString(36).slice(2);
+        var settled = false;
+        function finish(map) {
+            if (settled) { return; }
+            settled = true;
+            delete pbSvgRequests[nonce];
+            resolve(map);
+        }
+        pbSvgRequests[nonce] = finish;
+        // A request that is never answered (a module error, a dropped socket)
+        // must not leave the download hanging forever; the figure then goes out
+        // without those panels rather than not at all.
+        setTimeout(function() { finish({}); }, 20000);
+        Shiny.setInputValue(ns + 'pb_svg_request',
+            { nonce: nonce, panels: panels }, { priority: 'event' });
+    });
+}
+function pbUnbox(x) { return Array.isArray(x) ? x[0] : x; }
+if (typeof Shiny !== 'undefined' && Shiny.addCustomMessageHandler) {
+    Shiny.addCustomMessageHandler('vizmodules-pb-svg', function(msg) {
+        var finish = msg ? pbSvgRequests[pbUnbox(msg.nonce)] : null;
+        if (!finish) { return; }
+        var map = {};
+        (msg.panels || []).forEach(function(p) {
+            map[pbUnbox(p.pid)] = pbUnbox(p.svg);
+        });
+        finish(map);
+    });
+}
+// A card's id is '<ns><pid>_card'; the server knows the panel by its bare pid.
+function pbPanelIdFromCard(card, ns) {
+    var id = card.id || '';
+    if (ns && id.indexOf(ns) === 0) { id = id.slice(ns.length); }
+    return id.replace(/_card$/, '');
+}
 function pbDownloadSVG(canvas) {
     if (!canvas) { return; }
     var cards = canvas.querySelectorAll('.viz-panel-card');
@@ -520,6 +437,7 @@ function pbDownloadSVG(canvas) {
     var canvasRect = canvas.getBoundingClientRect();
     var metas = [];
     var tasks = [];
+    var pending = [];
     cards.forEach(function(card) {
         var cardRect = card.getBoundingClientRect();
         var x = cardRect.left - canvasRect.left + canvas.scrollLeft;
@@ -538,10 +456,17 @@ function pbDownloadSVG(canvas) {
                     .catch(function() { return meta; })
             );
         } else {
+            // Not a plotly graph, so ask the server to redraw this panel.
+            meta.pid = pbPanelIdFromCard(card, ns);
+            if (meta.pid) { pending.push({ pid: meta.pid, pw: pw, ph: ph }); }
             tasks.push(Promise.resolve(meta));
         }
     });
-    Promise.all(tasks).then(function() {
+    Promise.all([pbRequestPanelSvg(ns, pending)].concat(tasks)).then(function(done) {
+        var fromServer = done[0] || {};
+        metas.forEach(function(it) {
+            if (!it.svg && it.pid && fromServer[it.pid]) { it.svg = fromServer[it.pid]; }
+        });
         // Order panels for labelling the way a reader scans a figure:
         // top-to-bottom by row, then left-to-right within a row. A row
         // tolerance groups panels whose tops are roughly aligned.
@@ -601,9 +526,21 @@ document.addEventListener('click', function(e) {
 // plot's height as well as its width. jQuery UI resizable only resizes the
 // card div, so we watch each card body and ask Plotly to relayout to fit.
 var pbCardObservers = new WeakMap();
+var pbResizeNudge = null;
+// Shiny only recomputes an output's clientData size on a window resize, and
+// jQuery UI resizing a card fires none. Debounced so dragging a handle does not
+// ask the server for a redraw on every frame.
+function pbNudgeWindowResize() {
+    if (pbResizeNudge) { clearTimeout(pbResizeNudge); }
+    pbResizeNudge = setTimeout(function() {
+        pbResizeNudge = null;
+        if (window.dispatchEvent) { window.dispatchEvent(new Event('resize')); }
+    }, 150);
+}
 function pbResizePlot(card) {
     var gd = card.querySelector('.js-plotly-plot');
-    if (gd && window.Plotly) { Plotly.Plots.resize(gd); }
+    if (gd && window.Plotly) { Plotly.Plots.resize(gd); return; }
+    if (card.querySelector('.shiny-plot-output')) { pbNudgeWindowResize(); }
 }
 function pbObserveCard(card) {
     if (pbCardObservers.has(card) || !window.ResizeObserver) { return; }
@@ -625,8 +562,9 @@ function pbFindCard(node) {
 }
 function pbContainsPlot(node) {
     if (node.nodeType !== 1) { return false; }
-    if (node.classList && node.classList.contains('js-plotly-plot')) { return true; }
-    return node.querySelector ? !!node.querySelector('.js-plotly-plot') : false;
+    var sel = '.js-plotly-plot, .shiny-plot-output';
+    if (node.matches && node.matches(sel)) { return true; }
+    return node.querySelector ? !!node.querySelector(sel) : false;
 }
 // Ask every plot on every canvas to relayout to its container. A card body is a
 // fixed-size flex box, so its ResizeObserver never fires after Plotly finishes

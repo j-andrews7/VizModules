@@ -261,10 +261,7 @@
             )
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- apply_legend_styling(fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
             # Make single-panel x/y axis titles draggable, matching faceted behaviour.
             fig <- axis_titles_as_annotations(fig)
 
@@ -296,6 +293,12 @@
             )
         })
 
+        # The archive also carries an SVG and a PNG of the plot, photographed in
+        # the browser off the live plotly graph. A module whose output is NOT a
+        # plotly graph has nothing to photograph and must draw itself instead:
+        # add `vector_svg = function(width, height, res) ...` and
+        # `raster_png = ...` to the list above, built with draw_to_svg() and
+        # draw_to_png(). See ComplexHeatmap_HeatmapServer().
         output$download.source <- create_source_download_handler(
             data_list = plot_source_reactive,
             filename_base = "<OUTPUTID>_source"

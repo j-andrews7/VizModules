@@ -123,31 +123,38 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
         })
 
-        # Update stat comparison pairs when x or group.by changes
+        # The comparisons on offer for the current x and group.by.
+        pair_choices <- function() generate_pair_strings(data(), input$x.data, input$group.by)
+
+        # Update stat comparison pairs when x or group.by changes, selecting any
+        # that defaults$stat.pairs names (all pairs are tested when none are).
         observeEvent(c(input$x.data, input$group.by), {
             req(input$x.data)
-            pair_strings <- generate_pair_strings(data(), input$x.data, input$group.by)
-            # Pause readers until the client echoes the cleared selection, otherwise
+            pair_strings <- pair_choices()
+            # Pause readers until the client echoes the new selection, otherwise
             # the plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "stat.pairs")
-            update_viz_select(session, "stat.pairs", choices = c("", pair_strings), selected = "")
+            update_viz_select(session, "stat.pairs",
+                choices = c("", pair_strings),
+                selected = .default_stat_pairs(defaults, pair_strings)
+            )
         })
 
         # Reset functionality
         observeEvent(input$reset, {
-            numeric.data <- data()[, vapply(data(), is.numeric, logical(1)), drop = FALSE]
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
+            default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
 
-            # Calculate y.max and y.min from the default selections
-            if (length(num.choices) >= 2) {
-                max.y <- max(numeric.data[[num.choices[2]]], na.rm = TRUE) * .y_axis_scale_factor
-                min.y <- min(numeric.data[[num.choices[2]]], na.rm = TRUE)
-            } else {
-                max.y <- 1
-                min.y <- 0
-            }
-            # Reset numeric inputs to defaults derived from data
+            # Limits for the column y.data is being reset to. The y.data observer
+            # only recomputes them when the selection changes, which a reset to the
+            # current column does not.
+            y.range <- .calculate_range(
+                df = data(), data_col_y = default.y,
+                axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+            )
+            max.y <- if (!is.null(y.range)) y.range$max else 1
+            min.y <- if (!is.null(y.range)) y.range$min else 0
 
             # Data
             update_viz_select(session, "group.by",
@@ -156,15 +163,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             )
-            update_viz_select(session, "y.data",
-                selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
-            )
+            update_viz_select(session, "y.data", selected = default.y)
             updateMaterialSwitch(session, "show.outliers",
                 value = get_default(defaults, "show.outliers", TRUE, is.logical)
             )
 
             # Adjustments
-            update_viz_select(session, "sort_x", selected = get_default(defaults, "sort_x", ""))
+            updateTextInput(session, "sort_x", value = get_default(defaults, "sort_x", ""))
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
             reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
             reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
@@ -183,7 +188,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateColourInput(session, "pt.color",
                 value = get_default(defaults, "pt.color", "#000000")
             )
-            updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
 
             # Annotations
             updateTextInput(session, "highlight", value = get_default(defaults, "highlight", ""))
@@ -215,6 +219,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -224,13 +229,19 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             reset_axes_inputs(session, defaults)
 
             # Stats
-            .reset_stats_inputs(session, defaults)
+            .reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # How high the significance brackets will reach, so the y-axis can reserve
         # room for them rather than have the plot drawn with them clipped.
         stat_headroom <- function() {
             if (!isTRUE(input$stats.enabled)) {
+                return(NULL)
+            }
+            # Rotated, the values run along the x-axis and no brackets are drawn;
+            # under a free scale plotthis drops the limits and each panel spans its
+            # own data, so there is no shared limit to reserve room in.
+            if (isTRUE(input$rotate) || .box_free_y(input$facet.by, input$facet.scale)) {
                 return(NULL)
             }
 
@@ -241,7 +252,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 group.by = .blank_to_null(input$group.by, data(), numeric_is_null = TRUE),
                 facet.by = .blank_to_null(input$facet.by),
                 per.facet = isTRUE(input$stat.per.facet),
-                input = input
+                input = input,
+                dodge.width = .PLOTTHIS_DODGE_WIDTH
             )
         }
 
@@ -253,9 +265,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             headroom = stat_headroom, params = params
         )
 
-        # Update y-axis range when y data column is changed
+        # Update y-axis range when y data column is changed. Limits given as
+        # y.min/y.max defaults stand until y.data first changes.
+        seeded_limits <- .seed_axis_limits(defaults, "y.min", "y.max")
         observeEvent(input$y.data, {
             y_range <- .calculate_range(df = data(), data_col_y = input$y.data, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
+            y_range <- seeded_limits(y_range, input$y.data)
             if (!is.null(y_range)) {
                 y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
@@ -277,10 +292,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         )
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            # Sorting x is not applied to a faceted plot, so clear it rather than
+            # leave a key on screen that does nothing.
+            if (.nz_value(input$facet.by)) {
+                updateTextInput(session, "sort_x", value = "")
             }
         })
 
@@ -292,18 +308,34 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Facet By Null option Upstream:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
-                update_viz_select(session, "sort_x", selected = "") # Makes sure order x is not active when facet by is active
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             group.by <- NULL
-            if (!isolate_fn(input$group.by) == "") {
+            if (.nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
+
+            # plotthis evaluates sort_x with rlang::parse_expr() inside summarise(),
+            # so the typed text is code, and it has to clear the same AST check as
+            # every other user expression before it gets anywhere near that. Sorting
+            # is not applied while faceted (see the facet.by observer above).
             sort.x <- NULL
-            if (!isolate_fn(input$sort_x) == "") {
-                sort.x <- isolate_fn(input$sort_x)
+            sort.text <- isolate_fn(input$sort_x)
+            if (is.null(facet.by) && .nz_value(sort.text) && nzchar(trimws(sort.text))) {
+                sort.x <- suppressWarnings(
+                    .validate_expression_with(sort.text, names(data()), .sort_allowed_calls())
+                )
+                if (is.null(sort.x)) {
+                    showNotification(
+                        paste0(
+                            "'Sort X By' was ignored. Use data columns with basic math and ",
+                            "summary functions only (e.g. 'mean(", isolate_fn(input$y.data), ")')."
+                        ),
+                        type = "warning"
+                    )
+                }
             }
             highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
@@ -325,12 +357,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
-            # Fill By colour grading
-            char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
-            num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            fill.by <- NULL
-            if (!is.null(group.by) && group.by %in% num.choices) {
-                fill.by <- group.by
+            # A numeric group.by is not a nesting (the UI only offers categorical
+            # columns, but a default can name one); ignore it, as the stats do.
+            if (!is.null(group.by) && is.numeric(data()[[group.by]])) {
                 group.by <- NULL
             }
             p <- BoxPlot(
@@ -348,7 +377,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 pt_alpha = isolate_fn(input$pt.alpha),
                 jitter_width = isolate_fn(input$jitter.width),
                 pt_color = isolate_fn(input$pt.color),
-                alpha = isolate_fn(input$alpha),
                 palcolor = palcolor_arg,
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
@@ -366,15 +394,15 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (isolate_fn(input$add.points) || !isolate_fn(input$show.outliers)) {
                 p <- p + geom_boxplot(outlier.shape = NA)
             }
-            fig <- ggplotly(p) |>
-                layout(
-                    boxmode = ifelse(!is.null(group.by), "group", "overlay"),
-                    boxgap = 0.1,
-                    boxgroupgap = 1 - isolate_fn(input$boxplot.width)
-                )
-            # Fix boxplot positioning across faceted subplots
+            fig <- ggplotly(p)
+            # Put the boxes back on the coordinates ggplot dodged them to, which is
+            # where the jitter points already are.
+            fig <- .align_box_positions(
+                fig,
+                dodge.width = .PLOTTHIS_DODGE_WIDTH,
+                box.width = .box_num(isolate_fn(input$boxplot.width), 0.8)
+            )
             if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- .fix_boxplot_facet_positions(fig)
                 fig <- apply_facet_subplot_spacing(
                     fig,
                     spacing = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
@@ -407,31 +435,47 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
                 last_stats_df(stats_df)
 
-                stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = data(),
-                    x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
-                    display = isolate_fn(input$stat.display),
-                    hide.ns = isolate_fn(input$stat.hide.ns),
-                    sig.threshold = isolate_fn(input$stat.sig.threshold),
-                    line.color = isolate_fn(input$stat.line.color),
-                    line.width = isolate_fn(input$stat.line.width),
-                    bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = group.by, facet.by = facet.by,
-                    step.increase = isolate_fn(input$stat.step.increase),
-                    text.bump = isolate_fn(input$stat.text.bump),
-                    bracket.inset = isolate_fn(input$stat.bracket.inset)
-                )
+                if (isTRUE(isolate_fn(input$rotate))) {
+                    # Rotated, the values run along the x-axis and there is no room
+                    # above them for brackets. The tests still reach the source download.
+                    .note_brackets_skipped(session)
+                } else {
+                    stat_result <- create_stat_annotations(
+                        stats_df = stats_df, fig = fig, df = data(),
+                        x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
+                        display = isolate_fn(input$stat.display),
+                        hide.ns = isolate_fn(input$stat.hide.ns),
+                        sig.threshold = isolate_fn(input$stat.sig.threshold),
+                        line.color = isolate_fn(input$stat.line.color),
+                        line.width = isolate_fn(input$stat.line.width),
+                        bracket.style = isolate_fn(input$stat.bracket.style),
+                        group.by = group.by, facet.by = facet.by,
+                        step.increase = isolate_fn(input$stat.step.increase),
+                        text.bump = isolate_fn(input$stat.text.bump),
+                        bracket.inset = isolate_fn(input$stat.bracket.inset),
+                        # Brackets between two groups sit on the same slot centres
+                        # .align_box_positions() puts the boxes on.
+                        dodge.width = .PLOTTHIS_DODGE_WIDTH,
+                        # plotthis drops the y limits under a free scale, so each
+                        # panel spans its own data and needs its own bracket heights.
+                        free.y = .box_free_y(facet.by, isolate_fn(input$facet.scale))
+                    )
 
-                fig <- apply_stat_annotations(
-                    fig,
-                    stat_result,
-                    y.min = y.limits$min,
-                    y.max = y.limits$max
-                )
+                    fig <- apply_stat_annotations(
+                        fig,
+                        stat_result,
+                        y.min = y.limits$min,
+                        y.max = y.limits$max
+                    )
+                }
+            } else {
+                # Nothing was tested for this figure, so the source download must
+                # not ship the table from an earlier one.
+                last_stats_df(NULL)
             }
 
 
-            # Apply axis styling to all subplot axes (handles faceting/split_by)
+            # Apply axis styling to all subplot axes (handles faceting)
             xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
             yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
 
@@ -475,12 +519,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)
@@ -520,4 +560,23 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         return(plot_source_reactive)
     })
+}
+
+
+#' Does a box plot give each facet panel its own y scale?
+#'
+#' plotthis applies `y_min`/`y_max` only when the y scale is shared; under a free
+#' one each panel spans its own data, so its brackets must be measured per panel.
+#'
+#' @param facet.by The `facet.by` input.
+#' @param facet.scale The `facet.scale` input.
+#'
+#' @return `TRUE` when the plot is faceted and `facet.scale` is `"free"` or
+#'   `"free_y"`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_box_free_y
+#' @keywords internal
+.box_free_y <- function(facet.by, facet.scale) {
+    .nz_value(facet.by) && isTRUE(facet.scale %in% c("free", "free_y"))
 }

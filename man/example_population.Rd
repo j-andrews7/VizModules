@@ -3,9 +3,7 @@
 \docType{data}
 \name{example_population}
 \alias{example_population}
-\title{Example population dataset
-A simulated population dataset with 400 rows covering 50 years and 8 age groups.
-Designed for line, area, and stacked bar plot examples.}
+\title{Example population dataset}
 \format{
 A data frame with 400 rows and 4 columns:
 \describe{
@@ -22,9 +20,11 @@ Generated in data-raw/generate_example_data.R.
 example_population
 }
 \description{
-Example population dataset
-A simulated population dataset with 400 rows covering 50 years and 8 age groups.
-Designed for line, area, and stacked bar plot examples.
+A simulated population dataset with 400 rows covering 50 years and 8 age
+groups. The youngest groups shrink over the period while those over 45 grow,
+so the population visibly ages in a stacked area plot (particularly one
+scaled to each year's total). Used as the default data for
+\code{\link[=plotthis_AreaPlotApp]{plotthis_AreaPlotApp()}}.
 }
 \author{
 Jared Andrews

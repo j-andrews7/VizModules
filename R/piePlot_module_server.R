@@ -167,6 +167,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
             .reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
         })
 
         build_textinfo <- function(selected) {
@@ -232,9 +233,8 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 slice.line.width = isolate_fn(input$slice.line.width)
             )
 
-            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
+            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = FALSE)
             fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             return(fig)
         })

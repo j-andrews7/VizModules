@@ -119,6 +119,14 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             )
         })
 
+        # When the data changes, input$table_rows_all still holds the previous
+        # table's row indices until DT redraws and reports again, and applying
+        # those to the new data hands the plot NA-padded or wrongly subset rows.
+        # Freezing it holds readers for this flush and makes the client resend.
+        observeEvent(prepared_data(), {
+            freezeReactiveValue(input, "table_rows_all")
+        }, ignoreInit = TRUE, priority = 100)
+
         # Return a reactive with only the filtered rows
         filtered_data <- reactive({
             d <- prepared_data()
@@ -126,6 +134,10 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             if (is.null(rows)) {
                 return(d)
             }
+            # The freeze above lifts when its flush ends; anything read before DT
+            # reports again must still not be padded with NA rows by indices from
+            # a larger, previous table.
+            rows <- rows[rows <= nrow(d)]
             d <- d[rows, , drop = FALSE]
             droplevels(d) # Drop un unused levels so that they dont get plotted
         })

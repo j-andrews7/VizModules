@@ -55,7 +55,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         edit_store <- setup_manual_edits(input, session, plot_source)
 
         if (is.null(defaults)) defaults <- list()
-        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 70
+        if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
         # Reset functionality
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
@@ -97,9 +97,6 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
             updateMaterialSwitch(session, "facet.by.row",
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical)
-            )
-            update_viz_select(session, "split.by",
-                selected = get_default(defaults, "split.by", "", function(x) x == "" || x %in% char.choices)
             )
 
             # Aesthetics
@@ -147,24 +144,21 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Plotly
             reset_plotly_inputs(session, defaults)
+            .reset_manual_edits(edit_store)
 
             # Lines
             reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {
-            if (!input$facet.by == "") {
-                show_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            } else {
-                hide_input(session, c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family"))
-            }
+            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # The color-scale trimming controls only affect the continuous fill gradient,
         # so only expose them when a fill column is selected.
         observeEvent(input$fill.by, {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
-            if (nzchar(input$fill.by)) {
+            if (.nz_value(input$fill.by)) {
                 show_input(session, fill.scale.inputs)
             } else {
                 hide_input(session, fill.scale.inputs)
@@ -176,17 +170,17 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Null Values:
             facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
+            if (.nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             size.by <- NULL
-            if (nzchar(isolate_fn(input$size.by))) {
+            if (.nz_value(isolate_fn(input$size.by))) {
                 size.by <- isolate_fn(input$size.by)
             }
 
             fill.by <- NULL
-            if (nzchar(isolate_fn(input$fill.by))) {
+            if (.nz_value(isolate_fn(input$fill.by))) {
                 fill.by <- isolate_fn(input$fill.by)
             }
 
@@ -283,23 +277,22 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Custom Legend:
             # Generates a custom dot plot circle legend based on the number of values in size_values.
+            # Hiding the legend hides this one too.
             fig <- .custom_legend(
                 fig,
                 data = data(),
-                size_by = size.by,
+                size_by = if (isFALSE(isolate_fn(input$legend.show))) NULL else size.by,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
                 start_y = isolate_fn(input$size.legend.y),
-                start_x = isolate_fn(input$size.legend.x)
+                start_x = isolate_fn(input$size.legend.x),
+                font.family = isolate_fn(input$legend.font.family),
+                font.color = isolate_fn(input$legend.font.color)
             )
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

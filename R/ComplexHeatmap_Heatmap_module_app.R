@@ -89,22 +89,20 @@ ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defa
         )
     }
 
-    # matrix.cols defaults to *every* numeric column, which would sweep
-    # example_heatmap_matrix's mean_expression row-annotation column into the
-    # heatmap body itself. Point the bundled example at just the sample
-    # columns so mean_expression stays available as a row annotation; a
-    # caller-supplied data_list/defaults is left alone.
-    example_defaults <- function(matrix_df) {
+    # The bundled matrix opens on the module gallery's showcase settings (see
+    # R/module_showcase.R): just the sample columns as the heatmap body, rows
+    # scaled, and the pathway/condition annotations and splits. Those name
+    # columns of the bundled tables, so a caller-supplied matrix gets none of
+    # them, and the column-side ones need the bundled metadata alongside.
+    example_defaults <- function(matrix_df, column_data) {
         if (!identical(matrix_df, example_heatmap_matrix)) {
             return(list())
         }
-        list(
-            matrix.cols = setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression")),
-            rowname.col = "gene",
-            # Only meaningful alongside example_heatmap_column_data, which is
-            # seeded below on the same "no caller data at all" condition.
-            column_key = "sample"
-        )
+        showcase <- .module_example("heatmap")$defaults
+        if (!identical(column_data, example_heatmap_column_data)) {
+            showcase[c("column_key", "column_annotations", "column_split_by", "column_split_cols")] <- NULL
+        }
+        showcase
     }
 
     # With no data supplied at all, open on the bundled pair rather than the
@@ -122,7 +120,7 @@ ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defa
     }
 
     matrix_df <- .app_entry_parts(data_list[[1]])$primary
-    defaults <- utils::modifyList(example_defaults(matrix_df), defaults %||% list())
+    defaults <- utils::modifyList(example_defaults(matrix_df, column_data), defaults %||% list())
 
     # A column-annotation table rides along beside the matrix; createModuleApp()
     # filters only the primary table and passes the rest through, so this module

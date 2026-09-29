@@ -54,7 +54,8 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{aspect.ratio} - Aspect ratio control (handled by plotly layout)
 \item \code{legend.position} - Legend positioning (plotly allows interactive repositioning)
 \item \code{y_sep} - Separator for y columns (not applicable in UI context)
-\item \code{split_by_sep} - Separator for split columns (not applicable in UI context)
+\item \code{split_by} - Split variable (returns a patchwork object, not supported in plotly), use \code{facet_by} instead
+\item \code{split_by_sep} - Only applies if \code{split_by} is used
 \item \code{order_y} - Y-axis ordering rules (handled by default logic)
 \item \code{lineheight} - Text line height (not applicable in plotly)
 \item \code{max_charwidth} - Maximum character width (not applicable in plotly)
@@ -94,11 +95,10 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{alpha_name} - Alpha legend name (UI: "Alpha name", default: "")
 \item \code{bar_height} - Height of bars (UI: "Bar height", default: 0.9)
 \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
-\item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "free_y")
+\item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
 \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)
-\item \code{split_by} - Split variable (UI: "Split by", default: "")
 \item \code{x_min} - Minimum X-axis value (UI: "X-axis min", default: calculated from data)
 \item \code{x_max} - Maximum X-axis value (UI: "X-axis max", default: calculated from data)
 \item \code{palcolor} - Custom color values (UI: palette picker, derived from palette)
@@ -120,8 +120,9 @@ The following parameters implementing new functionality or controlling plotly-sp
 \itemize{
 \item \code{label.on.y.axis} - Show category labels on the Y axis instead of on the plot (UI: "Labels on Y axis", default: FALSE).
 When enabled, the text position slider is hidden and labels appear as Y-axis tick labels.
-\item \code{text.position} - Position of category labels along the X axis (UI: "Position of category labels", default: 0).
-Only visible when \code{label.on.y.axis} is FALSE.
+\item \code{text.position} - Offset of the category labels along the value axis (UI: "Category Label Position", default: 0).
+At 0 each label sits beside the base of its bar; positive values move it over the bar, negative values
+further out on the other side. Only visible when \code{label.on.y.axis} is FALSE.
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")
@@ -143,6 +144,11 @@ Only visible when \code{label.on.y.axis} is FALSE.
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick mark color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick mark length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick mark width", default: 1)
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

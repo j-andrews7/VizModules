@@ -24,9 +24,9 @@
 #' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:
 #'
 #' - `xlab` - X-axis label (auto-generated to reflect any applied X adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing)
 #' - `main` - Plot title (plotly allows interactive editing)
 #' - `sub` - Plot subtitle (not supported in plotly)
 #' - `theme` - ggplot2 theme (not applicable to plotly)
@@ -92,7 +92,9 @@
 #' - `multivar.split.dir` - Multivar split direction (UI: "Multivar Split Dir", default: "col")
 #' - `split.adjust.scales` - Facet scales (UI: "Facet Scales", default: "fixed")
 #' - `annotate.by` - Annotate by column (UI: "Annotate By", default: "")
-#' - `highlight.points` - Points to highlight (UI: "Points to Highlight", default: "")
+#' - `highlight.points` - Values from the `annotate.by` column to highlight (UI: "Points to Highlight",
+#'   default: ""). Values containing spaces
+#'   (e.g. "CD4 T") must be separated by commas or new lines
 #' - `highlight.color` - Highlight fill (UI: "Highlight Fill", default: "#00FFF7")
 #' - `highlight.size` - Highlight size (UI: "Highlight Size", default: 7)
 #' - `highlight.border.color` - Highlight border color (UI: "Highlight Border Color", default: "#000000")
@@ -106,6 +108,8 @@
 #' - `annotation.arrowcolor` - Arrow color (UI: "Arrow Color", default: "black")
 #' - `annotation.arrowhead` - Arrowhead style (UI: "Arrowhead Style", default: 2)
 #' - `annotation.arrowwidth` - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+#' - `legend.show` - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+#' - `legend.color.title` - Color legend title (UI: "Legend Title", default: "make")
 #' - `legend.color.breaks` - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 #' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
 #'   default: 1.02); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
@@ -155,6 +159,10 @@
 #' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 #' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 #' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -170,6 +178,15 @@
 #' - `line.best.smoothness` - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 #' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 #' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
+#'
+#' Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
+#' result (e.g. log10, then z-score), the reverse of the order [dittoViz::scatterPlot()] applies
+#' its `*.adj.fxn` and `*.adjustment` in.
+#'
+#' Fit lines (linear, best fit, and custom models) are fit to the values as plotted, after any
+#' X/Y adjustment, so they are drawn over the points they describe. A custom formula such as
+#' `mpg ~ hp` therefore models the adjusted values; do not repeat the adjustment inside it. No
+#' fit lines are drawn while an adjustment (`as.factor`) makes an axis categorical.
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
@@ -207,8 +224,8 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Various other choice vectors
-    adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adjustment_choices)
+    adj.fxn.choices <- c("", .adj_fxn_choices)
 
     selected <- list(
         c("x.by", "y.by"), "color.by", "shape.by", "split.by",
@@ -220,7 +237,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         c("split.nrow", "split.ncol"), "multivar.split.dir",
         "do.ellipse", "do.contour",
         "hover.data", "hover.round.digits",
-        "legend.show", c("legend.color.title", "legend.shape.title"),
+        c("legend.color.title", "legend.shape.title"),
         "legend.color.breaks",
         c("min.value", "max.value"),
         "trajectory.group.by", "add.trajectory.by.groups",
@@ -231,6 +248,13 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         package_name = "dittoViz::scatterPlot", type = "param",
         selected = selected, cap = TRUE
     )
+    # The module applies these in the opposite order to dittoViz.
+    for (side in c("x", "y", "color")) {
+        label <- paste(c(x = "X", y = "Y", color = "Color")[[side]], "Adjustment")
+        for (key in paste0(side, c(".adjustment", ".adj.fxn"))) {
+            documentParameters[[key]] <- trimws(paste(documentParameters[[key]], .adjustment_order_note(label)))
+        }
+    }
 
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")
@@ -411,9 +435,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices),
         "Legend" = tagList(
-            tipify(checkboxInput(ns("legend.show"), "Show Legend",
-                value = get_default(defaults, "legend.show", TRUE, is.logical)
-            ), documentParameters$legend.show, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("legend.color.title"), "Legend Title",
                 value = get_default(defaults, "legend.color.title", "make")
             ), documentParameters$legend.color.title, placement = "top", options = list(container = "body")),

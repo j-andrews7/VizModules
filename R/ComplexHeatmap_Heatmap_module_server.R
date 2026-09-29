@@ -39,6 +39,7 @@
 #'
 #' @import shiny
 #' @importFrom shinyjs delay
+#' @importFrom utils getFromNamespace
 #'
 #' @seealso [ComplexHeatmap::Heatmap()], [VizModules::ComplexHeatmap_HeatmapInputsUI()],
 #' [VizModules::ComplexHeatmap_HeatmapOutputUI()], [VizModules::ComplexHeatmap_HeatmapApp()]
@@ -110,19 +111,26 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
         # The frame a Column Filter expression is evaluated against: one row per
         # selected matrix column, carrying the column name plus any per-sample
         # metadata. See .heatmap_column_meta().
+        #
+        # The inputs read by these reactives go through isolate_fn, as every
+        # build input does, so "Auto Update" off holds the heatmap until Update.
         column_meta <- reactive({
-            .heatmap_column_meta(column_data(), input$column_key, input$matrix.cols)
+            isolate_fn <- setup_auto_update_logic(input, params)
+            .heatmap_column_meta(
+                column_data(), isolate_fn(input$column_key), isolate_fn(input$matrix.cols)
+            )
         })
 
         # Matrix columns surviving the Column Filter, in matrix order.
         filtered_cols <- reactive({
-            cols <- input$matrix.cols
+            isolate_fn <- setup_auto_update_logic(input, params)
+            cols <- isolate_fn(input$matrix.cols)
             validate(need(
                 !is.null(cols) && length(cols) >= 1,
                 "Select at least one numeric column for the matrix."
             ))
 
-            res <- .heatmap_apply_filter(column_filter_text(), column_meta(), length(cols))
+            res <- .heatmap_apply_filter(isolate_fn(column_filter_text()), column_meta(), length(cols))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(
@@ -144,7 +152,8 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             df <- matrix_data()
             req(df)
 
-            res <- .heatmap_apply_filter(row_filter_text(), df, nrow(df))
+            isolate_fn <- setup_auto_update_logic(input, params)
+            res <- .heatmap_apply_filter(isolate_fn(row_filter_text()), df, nrow(df))
             validate(need(
                 !identical(res$status, "invalid"),
                 paste(
@@ -176,7 +185,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 "The selected matrix columns must all be numeric."
             ))
 
-            rn.col <- input$rowname.col
+            rn.col <- setup_auto_update_logic(input, params)(input$rowname.col)
             if (!is.null(rn.col) && nzchar(rn.col) && rn.col %in% names(df)) {
                 rownames(mat) <- make.unique(as.character(df[[rn.col]]))
             }
@@ -470,8 +479,15 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 column_split = column_res$split,
                 row_gap = grid::unit(isolate_fn(input$row_gap) %||% get_default(defaults, "row_gap", 1), "mm"),
                 column_gap = grid::unit(isolate_fn(input$column_gap) %||% get_default(defaults, "column_gap", 1), "mm"),
-                row_title = isolate_fn(input$row_title) %||% get_default(defaults, "row_title", ""),
-                column_title = isolate_fn(input$column_title) %||% get_default(defaults, "column_title", ""),
+                row_title = .heatmap_resolve_title(
+                    isolate_fn(input$row_title) %||% get_default(defaults, "row_title", ""),
+                    isolate_fn(input$show_row_slice_titles) %||% get_default(defaults, "show_row_slice_titles", TRUE)
+                ),
+                column_title = .heatmap_resolve_title(
+                    isolate_fn(input$column_title) %||% get_default(defaults, "column_title", ""),
+                    isolate_fn(input$show_column_slice_titles) %||%
+                        get_default(defaults, "show_column_slice_titles", TRUE)
+                ),
                 show_row_names = isolate_fn(input$show_row_names) %||% get_default(defaults, "show_row_names", TRUE),
                 show_column_names = isolate_fn(input$show_column_names) %||% get_default(defaults, "show_column_names", TRUE),
                 row_names_side = isolate_fn(input$row_names_side) %||% get_default(defaults, "row_names_side", "right"),
@@ -491,6 +507,16 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             grDevices::pdf(NULL)
             on.exit(grDevices::dev.off(), add = TRUE)
             ComplexHeatmap::draw(ht)
+        })
+
+        # Static counterpart to the InteractiveComplexHeatmap widget, backing
+        # ComplexHeatmap_HeatmapStaticOutputUI(). This one is a plain module
+        # output, so ns("HeatmapStatic") lines up without any of the root-scope
+        # handling makeInteractiveComplexHeatmap() needs below. Only one of the
+        # two output forms is ever in the UI for a given id, and the unused
+        # renderer simply never runs.
+        output$HeatmapStatic <- renderPlot({
+            ComplexHeatmap::draw(build_heatmap())
         })
 
         # makeInteractiveComplexHeatmap() uses `heatmap_id` verbatim as the
@@ -573,6 +599,10 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
 
             updateTextInput(session, "row_title", value = get_default(defaults, "row_title", ""))
             updateTextInput(session, "column_title", value = get_default(defaults, "column_title", ""))
+            updateCheckboxInput(session, "show_row_slice_titles",
+                value = get_default(defaults, "show_row_slice_titles", TRUE, is.logical))
+            updateCheckboxInput(session, "show_column_slice_titles",
+                value = get_default(defaults, "show_column_slice_titles", TRUE, is.logical))
             updateCheckboxInput(session, "show_row_names", value = get_default(defaults, "show_row_names", TRUE, is.logical))
             updateCheckboxInput(session, "show_column_names", value = get_default(defaults, "show_column_names", TRUE, is.logical))
             update_viz_select(session, "row_names_side", selected = get_default(defaults, "row_names_side", "right"))
@@ -609,13 +639,45 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
         # Capture all UI inputs for the source download.
         AllInputs <- reactive(reactiveValuesToList(input))
 
+        # This module's output is not a plotly graph, so neither the Figure
+        # Builder's canvas export nor the source download can photograph it in
+        # the browser. Both ask the module to draw itself instead, at whatever
+        # size the panel is on screen. The ids are namespaced per widget so two
+        # heatmap panels in one figure cannot claim each other's clip paths.
+        # `res` matches what renderPlot() drew the panel at, so the legends and
+        # labels -- which ComplexHeatmap sizes in absolute points -- keep the
+        # same share of the canvas they have on screen instead of crowding the
+        # cells out. See draw_to_svg().
+        heatmap_svg <- function(width, height, res = 72) {
+            ht <- build_heatmap()
+            if (is.null(ht)) {
+                return(NULL)
+            }
+            draw_to_svg(
+                function() ComplexHeatmap::draw(ht),
+                width = width, height = height, res = res,
+                id_prefix = .heatmap_widget_id(ns("Heatmap"))
+            )
+        }
+
+        heatmap_png <- function(width, height, res = 72) {
+            ht <- build_heatmap()
+            if (is.null(ht)) {
+                return(NULL)
+            }
+            draw_to_png(
+                function() ComplexHeatmap::draw(ht),
+                width = width, height = height, res = res
+            )
+        }
+
         # Heatmap-specific source collector. The shared create_source_download_handler()
         # writes object$plot via htmlwidgets::saveWidget(), which only accepts an
         # htmlwidget; a drawn Heatmap is not one, so `plot` is left NULL and we
         # export the underlying matrix and the UI input values instead.
         plot_source_reactive <- reactive({
             mat <- heatmap_matrix()
-            inputs <- isolate(AllInputs())
+            inputs <- .source_input_snapshot(isolate(AllInputs()))
             input_df <- data.frame(
                 names = names(inputs),
                 values = vapply(inputs, function(v) {
@@ -627,7 +689,12 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 plot = NULL,
                 plot_data = as.data.frame(mat),
                 stats = NULL,
-                inputs = input_df
+                inputs = input_df,
+                # On the summary rather than only on the reactive, so the
+                # archive picks them up regardless of the order this server
+                # wires things together in.
+                vector_svg = heatmap_svg,
+                raster_png = heatmap_png
             )
         })
 
@@ -635,6 +702,11 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             data_list = plot_source_reactive,
             filename_base = "ComplexHeatmap_source"
         )
+
+        # Vector export hook for the Figure Builder's canvas export, which reads
+        # the attribute rather than the summary (see figureBuilderServer()).
+        attr(plot_source_reactive, "vector_svg") <- heatmap_svg
+        attr(plot_source_reactive, "raster_png") <- heatmap_png
 
         return(plot_source_reactive)
     })

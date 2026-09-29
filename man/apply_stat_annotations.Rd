@@ -12,8 +12,8 @@ apply_stat_annotations(fig, stat_result, y.min = NULL, y.max = NULL)
 \item{stat_result}{List with \code{annotations}, \code{shapes}, and \code{y.max} as returned
 by \code{\link[=create_stat_annotations]{create_stat_annotations()}}.}
 
-\item{y.min}{Numeric or NULL; minimum y-axis value. If NULL, the existing
-y-axis range is preserved.}
+\item{y.min}{Numeric or NULL; minimum y-axis value. If NULL (or not finite),
+the existing y-axis bottom is kept, falling back to the data minimum.}
 
 \item{y.max}{Numeric or NULL; the maximum the caller asked for. The drawn top
 is the larger of this and the height the brackets need. If NULL, the
@@ -32,6 +32,15 @@ The axis is only ever raised, never lowered: a top asked for through \code{y.max
 (or already on the figure) is kept when it is above the brackets, so turning
 statistics on cannot silently undo a y-axis maximum the user chose. Reserve
 the room up front with \code{\link[=stat_bracket_y_max]{stat_bracket_y_max()}} and this becomes a no-op.
+
+When \code{stat_result} came from \code{create_stat_annotations(free.y = TRUE)}, each
+panel's y-axis is raised to fit its own brackets and keeps its own bottom, and
+\code{y.min}/\code{y.max} are ignored: a single limit shared by every panel would undo
+the free scale.
+
+The range is written straight into the figure's layout. Anything later queued
+with \code{\link[plotly:layout]{plotly::layout()}} that sets the axis range will still override it when
+the figure is built.
 }
 \examples{
 stats_df <- compute_pairwise_stats(

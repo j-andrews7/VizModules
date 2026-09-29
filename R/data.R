@@ -1,12 +1,15 @@
 #' Bar dataset for bar and split bar plot examples
 #'
-#' A small dataset with five groups, two categorical variables, and three
-#' numeric variables. Used as the default data for [plotthis_BarPlotApp()]
-#' and [plotthis_SplitBarPlotApp()].
+#' A small dataset with one row for each of six groups crossed with three
+#' types, so bars stack by `Type` and each `Type` facet of a split bar plot has
+#' one bar per `Group`. `Values` is positive and shrinks from Alpha to Gamma;
+#' `Numbers` and `Score` are signed, leaning positive for Alpha and negative for
+#' Gamma. Used as the default data for [plotthis_BarPlotApp()] and
+#' [plotthis_SplitBarPlotApp()].
 #'
-#' @format A data frame with 5 rows and 5 columns:
+#' @format A data frame with 18 rows and 5 columns:
 #' \describe{
-#'   \item{Group}{Group label (A through E)}
+#'   \item{Group}{Group label (A through F)}
 #'   \item{Type}{Category type (Alpha, Beta, or Gamma)}
 #'   \item{Values}{Primary numeric values (positive)}
 #'   \item{Numbers}{Secondary numeric values (can be negative)}
@@ -40,12 +43,13 @@
 
 #' Example multi-player skills dataset for radar plots
 #'
-#' A dataset of skill ratings across five categories for three players,
-#' suitable for radar/spider chart examples.
+#' A dataset of skill ratings across six categories for three players with
+#' distinct profiles (a runner, a defender, and a playmaker), suitable for
+#' radar/spider chart examples.
 #'
-#' @format A data frame with 15 rows and 3 columns:
+#' @format A data frame with 18 rows and 3 columns:
 #' \describe{
-#'   \item{category}{Skill category (Speed, Strength, Defense, Stamina, Agility)}
+#'   \item{category}{Skill category (Speed, Strength, Defense, Stamina, Agility, Vision)}
 #'   \item{value}{Skill rating (1-10)}
 #'   \item{player}{Player identifier (Player A, B, or C)}
 #' }
@@ -59,19 +63,27 @@
 
 #' Example sales dataset
 #'
-#' A simulated product-sales dataset (720 rows total).
-#' Designed to showcase bar, box, violin,
-#' area, line, scatter, split-bar, density, and histogram plot modules.
+#' A simulated product-sales dataset: one sale for each month of 2015-2024 in
+#' each of six regions (720 rows), with each year's sales split evenly across
+#' three product lines. Units sold follow a trend per product line (Gadgets
+#' growing, Widgets flat, Doohickeys declining), peak in November and December,
+#' and scale by region. Revenue is units times a per-product unit price, so
+#' revenue against units falls on one line per product line. Two sales are
+#' planted outliers: `Sale_352`, a promotion that shifted far more units than
+#' usual, and `Sale_540`, a clearance sale at well under half price. Designed
+#' to showcase the scatter, line, parallel coordinates and pie plot modules.
 #'
-#' @format A data frame with 720 rows and 7 columns:
+#' @format A data frame with 720 rows and 8 columns:
 #' \describe{
 #'   \item{region}{Region of the sale (factor: North, South, East, West, Central, International)}
-#'   \item{revenue}{Revenue for month}
-#'   \item{year}{The year}
-#'   \item{month}{The month}
-#'   \item{units}{Units sold}
+#'   \item{revenue}{Revenue of the sale (thousands of USD)}
+#'   \item{year}{The year (factor: 2015-2024)}
+#'   \item{month}{The month (factor: Jan-Dec)}
+#'   \item{units}{Units sold (integer)}
 #'   \item{sale_id}{Unique sale identifier}
 #'   \item{product_line}{Product line (factor: Gadgets, Widgets, Doohickeys)}
+#'   \item{profit}{Profit on the sale after a fixed overhead (thousands of USD; negative
+#'     for a few low-volume Doohickey sales)}
 #' }
 #'
 #' @source Generated in data-raw/generate_example_data.R.
@@ -83,20 +95,27 @@
 #' Example demographics dataset
 #'
 #' A simulated employee survey dataset with 500 rows spanning six departments
-#' and four job levels. Designed to showcase violin, box, yPlot, density, and
-#' histogram plot modules with realistic numeric distributions.
+#' and four job levels. Salary rises steeply with job level and varies by
+#' department; age and tenure rise with level; remote workers report higher
+#' satisfaction than office workers in every department, and long hours lower
+#' it. Gender has no effect on anything. Two employees are planted against the
+#' trend for highlighting: `E042`, a very unhappy remote engineer, and `E137`,
+#' a very happy office-based salesperson. Designed to showcase the box, yPlot,
+#' density, and histogram plot modules, including their statistical comparisons.
 #'
-#' @format A data frame with 500 rows and 9 columns:
+#' @format A data frame with 500 rows and 11 columns:
 #' \describe{
-#'   \item{department}{Employee department (factor: Engineering, Marketing, Sales, HR, Finance, Operations)}
-#'   \item{job_level}{Job seniority level (factor: Junior, Mid, Senior, Lead)}
-#'   \item{gender}{Employee gender (factor: Male, Female)}
-#'   \item{age}{Employee age in years}
+#'   \item{department}{Employee department (factor: Engineering, Finance, Sales, Marketing, Operations, HR)}
+#'   \item{job_level}{Job seniority level (factor: Entry, Mid, Senior, Lead)}
+#'   \item{gender}{Employee gender (factor: Female, Male)}
+#'   \item{age}{Employee age in years (21-67)}
 #'   \item{salary}{Annual salary in USD}
-#'   \item{satisfaction}{Job satisfaction score (1–10)}
-#'   \item{performance}{Performance rating (1–10)}
+#'   \item{satisfaction}{Job satisfaction score (1-10)}
+#'   \item{performance}{Performance rating (1-10)}
 #'   \item{tenure_years}{Years with the company}
-#'   \item{weekly_hours}{Average weekly hours worked (35–65)}
+#'   \item{weekly_hours}{Average weekly hours worked}
+#'   \item{work_mode}{Where the employee works (factor: Office, Remote)}
+#'   \item{employee_id}{Unique employee identifier (`E001`-`E500`)}
 #' }
 #'
 #' @source Simulated in data-raw/generate_example_data.R.
@@ -127,7 +146,8 @@
 
 #' Example mtcars dataset with factors
 #'
-#' The classic mtcars dataset with key numeric columns converted to factors for categorical plotting examples.
+#' The classic mtcars dataset with the `cyl`, `vs`, and `gear` columns converted to factors for
+#' categorical plotting examples.
 #'
 #' @format A data frame with 32 rows and 11 columns:
 #' \describe{
@@ -139,9 +159,9 @@
 #'   \item{wt}{Weight (1000 lbs)}
 #'   \item{qsec}{1/4 mile time}
 #'   \item{vs}{Engine (0 = V-shaped, 1 = straight) (factor)}
-#'   \item{am}{Transmission (0 = automatic, 1 = manual) (factor)}
+#'   \item{am}{Transmission (0 = automatic, 1 = manual)}
 #'   \item{gear}{Number of forward gears (factor)}
-#'   \item{carb}{Number of carburetors (factor)}
+#'   \item{carb}{Number of carburetors}
 #' }
 #' @source Generated from the classic mtcars dataset.
 #'
@@ -150,9 +170,13 @@
 "example_mtcars"
 
 #' Example population dataset
-#' A simulated population dataset with 400 rows covering 50 years and 8 age groups.
-#' Designed for line, area, and stacked bar plot examples.
-#' 
+#'
+#' A simulated population dataset with 400 rows covering 50 years and 8 age
+#' groups. The youngest groups shrink over the period while those over 45 grow,
+#' so the population visibly ages in a stacked area plot (particularly one
+#' scaled to each year's total). Used as the default data for
+#' [plotthis_AreaPlotApp()].
+#'
 #' @format A data frame with 400 rows and 4 columns:
 #' \describe{
 #'   \item{year}{Year of the population record (factor: 1975–2024)}
@@ -160,9 +184,9 @@
 #'   \item{count}{Population count for the given year and age group}
 #'   \item{record_id}{Unique identifier for each population record}
 #' }
-#' 
+#'
 #' @source Generated in data-raw/generate_example_data.R.
-#' 
+#'
 #' @author Jared Andrews
 #' @keywords datasets
 "example_population"
@@ -191,7 +215,7 @@
 #' @keywords datasets
 "example_markers"
 
-#' Example RNA-seq dataset for the RNA-seq showcase app
+#' Example pseudo-bulk RNA-seq dataset
 #'
 #' A simulated pseudo-bulk RNA-seq dataset with 288 rows covering six immune
 #' cell types, eight canonical marker genes, two conditions (Healthy / Disease),
@@ -202,7 +226,7 @@
 #'
 #' The dataset is designed to simultaneously support three VizModules plot types:
 #'
-#' - DotPlot — summarised `avg_expression` and `pct_expressed`
+#' - DotPlot — summarised `avg_expression` and `neg_log10_pval`
 #'   columns per cell type \eqn{\times} gene \eqn{\times} condition combination.
 #' - yPlot — per-replicate `log2_cpm` values grouped by
 #'   `cell_type` and coloured by `condition`.
@@ -223,6 +247,7 @@
 #' @source Simulated in data-raw/generate_example_data.R.
 #'
 #' @author Jacob Martin
+#' @keywords datasets
 "example_rnaseq"
 
 #' Example gene-expression-style matrix for the ComplexHeatmap module

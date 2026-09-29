@@ -77,9 +77,7 @@ key against `references/../module-inventory.md` or the module's own
 > Known trap: `main` (plot title) is **not** exposed by any module — every server passes
 > `main = NULL` and none reads `input$main`, so `defaults = list(main = ...)` is a silent
 > no-op. To drive a title, act on the plotly figure directly (e.g. `plotlyProxy()` against
-> the base module's output id, or `layout(title = ...)` in a hand-built figure). Older
-> installs' vignettes used `main` as their reactive-defaults worked example; that was
-> corrected to `color.by`, but the example is still wrong wherever it survives.
+> the base module's output id, or `layout(title = ...)` in a hand-built figure).
 
 ## Updating your *own* inputs from the server
 
@@ -104,18 +102,16 @@ observeEvent(input$stat.x, {
 
 - **Manual layout edits** on a hand-rolled plotly output — two calls, `setup_manual_edits()` and `finalize_manual_edits()`. Inherited for free if you delegate to a base module. See `references/manual-edits.md`.
 - **Model-line backends** — `register_model_backend(name, backend)` adds a fitting engine to the scatter module's Model Type dropdown. See `references/model-backends.md`.
-- **Widgets** — `multiColorPicker()` and `multiDynamicInput()` are exported and usable in any Shiny app. See `references/custom-inputs.md`.
-- **Runtime show/hide** — `hide_input(session, ids)` / `show_input(session, ids)`, not `shinyjs::hide()`; the VizModules helpers reflow the grid.
+- **Widgets** — `multiColorPicker()` and `multiDynamicInput()` are exported and usable in any Shiny app. See `references/custom-inputs.md`, which also covers styling a widget of your own: a stylesheet goes into the *host* document unscoped, so every selector must be anchored on a class you invented.
+- **Runtime show/hide** — `hide_input(session, ids)` / `show_input(session, ids)`, not `shinyjs::hide()`; the VizModules helpers reflow the grid. If your server takes `hide.inputs`, show only `setdiff(ids, hide.inputs)`, or the toggle un-hides what the app hid (`linePlotServer()` does this for its error bar controls).
 - **User-typed expressions** — `safe_eval_filter()`, `validate_expression()`, `safe_resolve_adj_fxn()`. Never `eval(parse())` on user input.
 
-## Where the vignettes will mislead you
+## Forwarding `hide.*` from a wrapper
 
-`vignette("custom-modules")` is right about the namespace rule and wrong about two
-things next to it. Both were corrected in the package after agents hit them, but older
-installs still carry them:
-
-- **`hide.inputs`/`hide.tabs` are `*Server()` arguments, not `*InputsUI()` arguments.** Every `*InputsUI()` has the signature `(id, data, defaults = NULL, title = NULL, columns = 2)` and none takes `...`, so passing `hide.inputs` to the UI is an unused-argument **error**, not a no-op.
-- **`main` is not exposed by any module**, so a `defaults = list(main = ...)` example cannot work. See the trap note above.
+`hide.inputs` and `hide.tabs` are `*Server()` arguments, not `*InputsUI()` arguments. Every
+`*InputsUI()` has the signature `(id, data, defaults = NULL, title = NULL, columns = 2)` and
+none takes `...`, so passing `hide.inputs` to the UI is an unused-argument **error**, not a
+no-op.
 
 When wrapping, forward `hide.tabs` rather than replacing it, so a caller can hide more
 without un-hiding what you enforce:
@@ -153,3 +149,4 @@ client, such as a `plotlyProxy()` interaction.
 3. Pass data in as a `reactive()`, and return one where it is useful.
 4. Base module servers return their source-data reactive — capture it if your wrapper needs to expose downloads.
 5. If inputs seem to have no effect, it is the namespace rule. It is almost always the namespace rule.
+6. If an *unrelated* control in your app starts rendering oddly once a module is on the page, suspect CSS rather than data — the package's stylesheets load into your document. See the styling section of `references/custom-inputs.md`.

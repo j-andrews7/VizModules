@@ -60,8 +60,12 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 \item \code{plot.mode} - Plot type (UI: "Plot type", default: "lines")
 \item \code{line.type} - Line type (UI: "Line type", default: "solid")
 \item \code{error.bar} - Show error bars (UI: "Error Bars", default: TRUE; requires a categorical X and a single Y)
-\item \code{error.colour} - Error bar color (UI: "Error Bar Colour", default: "#000000")
-\item \code{error.width} - Error bar cap width (UI: "Error Bar Width", default: 1)
+\item \code{error.type} - What the error bars show: "sd", "sem" or "ci95" (UI: "Error Bar Type", defaults key:
+\code{error.bar.type}, default: "sd")
+\item \code{error.ci.method} - How a "ci95" interval is computed: "normal" or "t" (UI: "Confidence Interval Method",
+defaults key: \code{error.bar.ci.method}, default: "normal"; only shown while the error bar type is "ci95")
+\item \code{error.colour} - Error bar color (UI: "Error Bar Colour", defaults key: \code{error.bar.colour}, default: "#000000")
+\item \code{error.width} - Error bar cap width (UI: "Error Bar Width", defaults key: \code{error.bar.width}, default: 1)
 \item \code{palette.selection} - Color palette (UI: palette picker, derived from palette)
 \item \code{axis.showline} - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
 \item \code{axis.mirror} - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
@@ -93,6 +97,11 @@ The following \code{\link[=linePlot]{linePlot()}} parameters can be accessed via
 
 The following parameters implementing plotly-specific features are also available:
 \itemize{
+\item \code{legend.show} - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

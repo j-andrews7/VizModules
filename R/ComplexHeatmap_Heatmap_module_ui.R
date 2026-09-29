@@ -64,7 +64,14 @@
 #' - `row_gap` - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
 #' - `column_gap` - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 #' - `row_title` - Row title (UI: "Row Title", default: "")
-#' - `column_title` - Column title (UI: "Column Title", default: "")
+#' - `column_title` - Column title (UI: "Column Title", default: ""). A title, when set, replaces the
+#'   group names a split would otherwise title its slices with; a `%s` in it is filled in with each
+#'   slice's group name. The same goes for `row_title`.
+#' - `show_row_slice_titles` - Title each row slice with its group name when the rows are split and
+#'   `row_title` is blank (UI: "Show Row Slice Titles", default: TRUE). Applies to every split method:
+#'   annotation values for "Annotation", cluster numbers for "K-means" and "Hierarchical". Untick it to
+#'   remove the titles and the space they take.
+#' - `show_column_slice_titles` - The same for columns (UI: "Show Column Slice Titles", default: TRUE)
 #' - `show_row_names` - Show row names (UI: "Show Row Names", default: TRUE)
 #' - `show_column_names` - Show column names (UI: "Show Column Names", default: TRUE)
 #' - `row_names_side` - Row names side (UI: "Row Names Side", default: "right")
@@ -411,6 +418,18 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(textInput(ns("column_title"), "Column Title",
                 value = get_default(defaults, "column_title", "")
             ), "Title placed alongside the columns", placement = "top", options = tip_opts),
+            tipify(checkboxInput(ns("show_row_slice_titles"), "Show Row Slice Titles",
+                value = get_default(defaults, "show_row_slice_titles", TRUE, is.logical)
+            ), paste(
+                "Title each row slice with its group name when the rows are split.",
+                "Ignored if Row Title is set, which replaces the group names (use %s in it for each group's name)."
+            ), placement = "top", options = tip_opts),
+            tipify(checkboxInput(ns("show_column_slice_titles"), "Show Column Slice Titles",
+                value = get_default(defaults, "show_column_slice_titles", TRUE, is.logical)
+            ), paste(
+                "Title each column slice with its group name when the columns are split.",
+                "Ignored if Column Title is set, which replaces the group names (use %s in it for each group's name)."
+            ), placement = "top", options = tip_opts),
             tipify(checkboxInput(ns("show_row_names"), "Show Row Names",
                 value = get_default(defaults, "show_row_names", TRUE, is.logical)
             ), "Show row names", placement = "top", options = tip_opts),
@@ -595,14 +614,16 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
 #' @examples
 #' library(VizModules)
-#' # Default combined widget:
-#' ComplexHeatmap_HeatmapOutputUI("heatmap")
-#' # Same widget, main heatmap on its own row above sub-heatmap + info:
-#' ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
-#' # Compact: no sub-heatmap panel, click/brush info floats near the cursor
-#' ComplexHeatmap_HeatmapOutputUI("heatmap", compact = TRUE)
-#' # Fixed pixel widths, ignoring the container:
-#' ComplexHeatmap_HeatmapOutputUI("heatmap", fit.width = FALSE)
+#' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
+#'     # Default combined widget:
+#'     ComplexHeatmap_HeatmapOutputUI("heatmap")
+#'     # Same widget, main heatmap on its own row above sub-heatmap + info:
+#'     ComplexHeatmap_HeatmapOutputUI("heatmap", layout = "1|(2-3)")
+#'     # Compact: no sub-heatmap panel, click/brush info floats near the cursor
+#'     ComplexHeatmap_HeatmapOutputUI("heatmap", compact = TRUE)
+#'     # Fixed pixel widths, ignoring the container:
+#'     ComplexHeatmap_HeatmapOutputUI("heatmap", fit.width = FALSE)
+#' }
 ComplexHeatmap_HeatmapOutputUI <- function(id, resizable = TRUE, fit.width = TRUE, ...) {
     ns <- NS(id)
     if (!requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
@@ -663,7 +684,9 @@ ComplexHeatmap_HeatmapOutputUI <- function(id, resizable = TRUE, fit.width = TRU
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
 #' @examples
 #' library(VizModules)
-#' ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
+#' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
+#'     ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
+#' }
 ComplexHeatmap_HeatmapMainOutputUI <- function(id, title = NULL, width = 450, height = 350,
                                                fit.width = TRUE, ...) {
     ns <- NS(id)
@@ -717,7 +740,9 @@ ComplexHeatmap_HeatmapMainOutputUI <- function(id, title = NULL, width = 450, he
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
 #' @examples
 #' library(VizModules)
-#' ComplexHeatmap_HeatmapSubOutputUI("heatmap", title = "Selected region")
+#' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
+#'     ComplexHeatmap_HeatmapSubOutputUI("heatmap", title = "Selected region")
+#' }
 ComplexHeatmap_HeatmapSubOutputUI <- function(id, title = NULL, width = 400, height = 350,
                                               fit.width = TRUE, ...) {
     ns <- NS(id)
@@ -768,7 +793,9 @@ ComplexHeatmap_HeatmapSubOutputUI <- function(id, title = NULL, width = 400, hei
 #' [ComplexHeatmap_HeatmapSubOutputUI()]
 #' @examples
 #' library(VizModules)
-#' ComplexHeatmap_HeatmapInfoOutputUI("heatmap", title = "Details")
+#' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
+#'     ComplexHeatmap_HeatmapInfoOutputUI("heatmap", title = "Details")
+#' }
 ComplexHeatmap_HeatmapInfoOutputUI <- function(id, title = NULL, width = 400, ...) {
     ns <- NS(id)
     if (!requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
@@ -787,6 +814,73 @@ ComplexHeatmap_HeatmapInfoOutputUI <- function(id, title = NULL, width = 400, ..
         ns("Heatmap"),
         enable = isTRUE(dots$output_ui_float)
     )
+}
+
+
+#' Static (non-interactive) heatmap output UI component for the ComplexHeatmap module
+#'
+#' Renders the heatmap as a plain [shiny::plotOutput()] instead of an
+#' \pkg{InteractiveComplexHeatmap} widget. The same [ComplexHeatmap_HeatmapServer()]
+#' call backs both, so switching between them needs no server-side change --
+#' use this function *or* the interactive output functions for a given module
+#' `id`, not both.
+#'
+#' What is given up is the widget's interactivity: cell hover/click, the
+#' sub-heatmap zoom, and the brush info panel. What is gained is a panel with no
+#' chrome of its own. \pkg{InteractiveComplexHeatmap} draws a grey border around
+#' the heatmap panel, a control tab strip beneath it, and sizes itself in fixed
+#' pixels; none of that can be switched off through an argument, since the
+#' border is set by an id selector in that package's own stylesheet. A
+#' `plotOutput` has none of it and fills its container at whatever `width` and
+#' `height` say, which is what a figure panel wants -- it is how the
+#' `ComplexHeatmap` module appears in the Figure Builder (see
+#' [figureBuilderServer()]).
+#'
+#' Unlike the interactive output, this needs only \pkg{ComplexHeatmap} itself,
+#' not \pkg{InteractiveComplexHeatmap}.
+#'
+#' @param id The ID for the Shiny module. Must match the `id` used for
+#'   [ComplexHeatmap_HeatmapServer()].
+#' @param resizable Logical; whether to wrap the plot in a resizable container.
+#'   Unlike [ComplexHeatmap_HeatmapOutputUI()], this is honoured, since a
+#'   `plotOutput` has no resize handle of its own.
+#' @param width,height Passed to [shiny::plotOutput()]. The defaults fill the
+#'   containing element, so the heatmap follows its container's size.
+#'
+#' @return A Shiny UI object for the static heatmap.
+#'
+#' @import shiny
+#' @importFrom shinyjqui jqui_resizable
+#'
+#' @export
+#' @author Jared Andrews
+#' @seealso [ComplexHeatmap_HeatmapOutputUI()] for the interactive widget,
+#' [ComplexHeatmap_HeatmapServer()]
+#' @examples
+#' library(VizModules)
+#' if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
+#'     ComplexHeatmap_HeatmapStaticOutputUI("heatmap")
+#'     # Fixed size, no resize handle:
+#'     ComplexHeatmap_HeatmapStaticOutputUI("heatmap",
+#'         resizable = FALSE, width = "600px", height = "400px"
+#'     )
+#' }
+ComplexHeatmap_HeatmapStaticOutputUI <- function(id, resizable = TRUE,
+                                                 width = "100%", height = "100%") {
+    ns <- NS(id)
+    if (!requireNamespace("ComplexHeatmap", quietly = TRUE)) {
+        stop(
+            "The 'ComplexHeatmap' package is required for the ",
+            "ComplexHeatmap module. Install it with ",
+            "BiocManager::install('ComplexHeatmap')."
+        )
+    }
+
+    plot_output <- plotOutput(ns("HeatmapStatic"), width = width, height = height)
+    if (isTRUE(resizable)) {
+        plot_output <- jqui_resizable(plot_output)
+    }
+    plot_output
 }
 
 

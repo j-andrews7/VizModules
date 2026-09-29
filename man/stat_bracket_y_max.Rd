@@ -19,13 +19,16 @@ stat_bracket_y_max(
   sig.threshold = 0.05,
   test = "wilcox.test",
   p.adjust.method = "holm",
-  paired = FALSE
+  paired = FALSE,
+  dodge.width = 1
 )
 }
 \arguments{
-\item{df}{Data frame the statistics are computed on. For a module that
-reshapes its data for testing (e.g. a multi-variable Y selection), pass the
-reshaped frame, not the raw one.}
+\item{df}{Data frame the statistics are computed on, holding the values as
+they are plotted. For a module that reshapes its data for testing (e.g. a
+multi-variable Y selection), pass the reshaped frame, not the raw one; for
+one that transforms a column before plotting it (e.g. a dittoViz
+\code{var.adjustment}), pass the transformed values (see \code{\link[=adjust_column_values]{adjust_column_values()}}).}
 
 \item{x}{Character; x-axis column name.}
 
@@ -59,6 +62,10 @@ are counted. Default \code{FALSE}.}
 \item{test, p.adjust.method, paired}{Passed to \code{\link[=compute_pairwise_stats]{compute_pairwise_stats()}}, and
 used only when \code{hide.ns} is \code{TRUE}. Match them to the render's settings, or
 the wrong comparisons are counted.}
+
+\item{dodge.width}{Numeric; width the \code{group.by} levels at one x category are
+dodged across. Match the plot's, or the brackets will not line up with the
+boxes. Default 1.}
 }
 \value{
 A single number giving the y-axis maximum the brackets need, or

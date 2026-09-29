@@ -15,9 +15,9 @@ A data frame with 32 rows and 11 columns:
 \item{wt}{Weight (1000 lbs)}
 \item{qsec}{1/4 mile time}
 \item{vs}{Engine (0 = V-shaped, 1 = straight) (factor)}
-\item{am}{Transmission (0 = automatic, 1 = manual) (factor)}
+\item{am}{Transmission (0 = automatic, 1 = manual)}
 \item{gear}{Number of forward gears (factor)}
-\item{carb}{Number of carburetors (factor)}
+\item{carb}{Number of carburetors}
 }
 }
 \source{
@@ -27,7 +27,8 @@ Generated from the classic mtcars dataset.
 example_mtcars
 }
 \description{
-The classic mtcars dataset with key numeric columns converted to factors for categorical plotting examples.
+The classic mtcars dataset with the \code{cyl}, \code{vs}, and \code{gear} columns converted to factors for
+categorical plotting examples.
 }
 \author{
 Jared Andrews

@@ -89,6 +89,11 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick mark color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick mark length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick mark width", default: 1)
+#' - `legend.show` - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -139,9 +144,6 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
-    numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
-    max.y <- max(numeric.data, na.rm = TRUE)
-    min.y <- min(numeric.data, na.rm = TRUE)
 
     selected <- list(
         "x", "group_by", "position", "alpha",
