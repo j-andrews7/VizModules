@@ -61,7 +61,7 @@
 #' - `alpha_name` - Alpha legend name (UI: "Alpha name", default: "")
 #' - `bar_height` - Height of bars (UI: "Bar height", default: 0.9)
 #' - `facet_by` - Faceting variable (UI: "Facet by", default: "")
-#' - `facet_scales` - Facet scale behavior (UI: "Facet scale", default: "free_y")
+#' - `facet_scales` - Facet scale behavior (UI: "Facet Scale", default: "fixed")
 #' - `facet_ncol` - Number of facet columns (UI: "Facet number of columns", default: NULL)
 #' - `facet_nrow` - Number of facet rows (UI: "Facet number of rows", default: NULL)
 #' - `facet_byrow` - Facet ordering direction (UI: "Facet by row", default: TRUE)
@@ -83,8 +83,9 @@
 #'
 #' - `label.on.y.axis` - Show category labels on the Y axis instead of on the plot (UI: "Labels on Y axis", default: FALSE).
 #'   When enabled, the text position slider is hidden and labels appear as Y-axis tick labels.
-#' - `text.position` - Position of category labels along the X axis (UI: "Position of category labels", default: 0).
-#'   Only visible when `label.on.y.axis` is FALSE.
+#' - `text.position` - Offset of the category labels along the value axis (UI: "Category Label Position", default: 0).
+#'   At 0 each label sits beside the base of its bar; positive values move it over the bar, negative values
+#'   further out on the other side. Only visible when `label.on.y.axis` is FALSE.
 #' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
 #' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
 #' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
@@ -106,6 +107,11 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick mark color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick mark length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick mark width", default: 1)
+#' - `legend.show` - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -207,7 +213,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
-                    defaults, "facet.scale", "free_y",
+                    defaults, "facet.scale", "fixed",
                     function(x) x %in% c("fixed", "free", "free_x", "free_y")
                 ),
                 choices = c("fixed", "free", "free_x", "free_y")
@@ -280,10 +286,15 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
                 placement = "top", options = list(container = "body")
             ),
             tipify(
+                # The server resizes the range to the data once the columns are known.
                 sliderInput(ns("text.position"), "Category Label Position",
-                    value = get_default(defaults, "text.position", 0, is.numeric), min = 0, max = 100
+                    value = get_default(defaults, "text.position", 0, is.numeric), min = -100, max = 100
                 ),
-                "Adjust the horizontal position of category labels along the X axis when labels are shown on the plot",
+                paste(
+                    "Offset of the category labels along the value axis when they are shown on the plot.",
+                    "At 0 each label sits beside the base of its bar; positive values move it over the bar,",
+                    "negative values further out on the other side"
+                ),
                 placement = "top", options = list(container = "body")
             ),
             tipify(

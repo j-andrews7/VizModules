@@ -139,7 +139,7 @@ brackets above that panel's own data.
 \item \code{hover.data} - Columns shown on hover (UI: "Hover Data", default: "";
 empty uses a sensible default set of columns)
 \item \code{hover.round.digits} - Hover value rounding (UI: "Hover Round Digits", default: 5)
-\item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
+\item \code{legend.show} - Show the legend (UI: "Show Legend", default: TRUE)
 \item \code{stats.enabled} and the other \verb{stat.*} parameters - Pairwise testing between the \code{group.by}
 groups, or between the \code{color.by} levels within each group when \code{color.by} is set (Stats tab).
 \code{stat.pairs} takes a character vector of \code{"A vs B"} strings naming those levels, e.g.
@@ -176,6 +176,10 @@ ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

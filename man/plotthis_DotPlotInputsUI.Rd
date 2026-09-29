@@ -116,6 +116,11 @@ default: "<"); combined with \code{fill_cutoff} into a \code{plotthis} expressio
 default: 1.04); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
 default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
+\item \code{legend.show} - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 }
 }
 

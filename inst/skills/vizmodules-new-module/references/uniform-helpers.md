@@ -7,7 +7,7 @@ automatically. Each takes `ns` and a `defaults` list.
 | UI helper | Provides | Reset counterpart |
 |---|---|---|
 | `uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = FALSE)` | Font, axis border, gridline, tick, facet styling | `reset_axes_inputs(session, defaults)` |
-| `uniform_legend_inputs_ui(ns, defaults)` | Legend title and entry label font sizes | `reset_legend_inputs(session, defaults)` |
+| `uniform_legend_inputs_ui(ns, defaults)` | Legend visibility, font family and colour, title and entry label font sizes (apply with `apply_legend_inputs(fig, input, isolate_fn)`) | `reset_legend_inputs(session, defaults)` |
 | `uniform_lines_inputs_ui(ns, defaults, include.fit.lines = FALSE)` | Horizontal, vertical, diagonal reference lines | `reset_lines_inputs(session, include.fit.lines, defaults)` |
 | `uniform_plotly_inputs_ui(ns, defaults)` | Download buttons, margins, subplot spacing, draw-shape styling | `reset_plotly_inputs(session, defaults)` |
 | `uniform_annotation_inputs_ui(ns, defaults, choices, annotate.note)` | Highlighting and labelling individual data points | `reset_annotation_inputs(session, defaults, choices)` |
@@ -84,7 +84,7 @@ the axis onto the brackets.
 - `viz_select_input()` / `update_viz_select()` — virtualised searchable dropdowns. Always these, never `selectInput()`.
 - `get_default(defaults, key, fallback, validator)` — every default read.
 - `resolve_palette(groups, selected_colors, default_palette, manual_colors)`, `default_palettes()`.
-- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
+- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
 - `collect_source_data()` / `create_source_download_handler()` — the Source Download button's backing.
 - `hide_input()` / `show_input()` — reflow-aware show/hide.
 - `empty_plot()` — placeholder when there is nothing to draw.

@@ -651,6 +651,89 @@ test_that("apply_legend_styling styles continuous colorbar legends", {
     expect_equal(cb$tickfont$size, 8)
 })
 
+# A ggplotly figure with a continuous colour scale, whose colorbar sits on a
+# dummy trace of its own that layout.showlegend does not hide.
+.ggplotly_colorbar_fig <- function() {
+    suppressWarnings(plotly::ggplotly(
+        ggplot2::ggplot(mtcars, ggplot2::aes(wt, mpg, colour = hp)) + ggplot2::geom_point()
+    ))
+}
+
+# Every colorbar-carrying part (marker, line, or the trace itself) of a built figure.
+.colorbar_parts <- function(built) {
+    parts <- list()
+    for (tr in built$x$data) {
+        for (part in list(tr$marker, tr$line, tr)) {
+            if (is.list(part) && !is.null(part$colorbar)) parts[[length(parts) + 1L]] <- part
+        }
+    }
+    parts
+}
+
+test_that("apply_legend_styling sets the legend font family and colour (#360)", {
+    fig <- plotly::plot_ly(iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species,
+        type = "scatter", mode = "markers")
+    built <- VizModules::apply_legend_styling(fig,
+        title.size = 20, text.size = 9, font.family = "Courier New", font.color = "#FF0000"
+    )
+    expect_equal(built$x$layout$legend$font, list(family = "Courier New", color = "#FF0000", size = 9))
+    expect_equal(built$x$layout$legend$title$font, list(family = "Courier New", color = "#FF0000", size = 20))
+
+    # Blank values leave the font alone.
+    expect_identical(VizModules::apply_legend_styling(fig, font.family = "", font.color = NA), fig)
+
+    # A colorbar gets the same fonts.
+    cbs <- .colorbar_parts(VizModules::apply_legend_styling(.ggplotly_colorbar_fig(),
+        title.size = 18, font.family = "Courier New", font.color = "#0000FF"
+    ))
+    expect_length(cbs, 1)
+    cb <- cbs[[1]]$colorbar
+    title_font <- if (is.list(cb$title)) cb$title$font else cb$titlefont
+    expect_equal(title_font$family, "Courier New")
+    expect_equal(title_font$color, "#0000FF")
+    expect_equal(title_font$size, 18)
+    expect_equal(cb$tickfont$family, "Courier New")
+    expect_equal(cb$tickfont$color, "#0000FF")
+})
+
+test_that("apply_legend_styling(show = FALSE) hides the legend and every colorbar (#362)", {
+    fig <- plotly::plot_ly(iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species,
+        type = "scatter", mode = "markers")
+    expect_false(VizModules::apply_legend_styling(fig, show = FALSE)$x$layout$showlegend)
+    # TRUE or NULL leave the visibility to the figure.
+    expect_false(isFALSE(VizModules::apply_legend_styling(fig, show = TRUE)$x$layout$showlegend))
+    expect_identical(VizModules::apply_legend_styling(fig, show = NULL), fig)
+
+    shown <- .colorbar_parts(plotly::plotly_build(.ggplotly_colorbar_fig()))
+    expect_true(length(shown) > 0)
+    hidden <- VizModules::apply_legend_styling(.ggplotly_colorbar_fig(), show = FALSE)
+    expect_false(hidden$x$layout$showlegend)
+    parts <- .colorbar_parts(hidden)
+    expect_length(parts, length(shown))
+    for (p in parts) expect_false(p$showscale)
+
+    # A shared coloraxis colorbar is hidden too.
+    ca <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers",
+        marker = list(color = 1:3, coloraxis = "coloraxis")) |>
+        plotly::layout(coloraxis = list(colorbar = list(title = "v")))
+    expect_false(VizModules::apply_legend_styling(ca, show = FALSE)$x$layout$coloraxis$showscale)
+})
+
+test_that("apply_legend_inputs applies the uniform Legend inputs", {
+    fig <- plotly::plot_ly(iris, x = ~Sepal.Length, y = ~Sepal.Width, color = ~Species,
+        type = "scatter", mode = "markers")
+    built <- VizModules::apply_legend_inputs(fig, list(
+        legend.show = FALSE, legend.font.family = "Courier New", legend.font.color = "#333333",
+        legend.title.size = 16, legend.text.size = 11
+    ), isolate_fn = identity)
+    expect_false(built$x$layout$showlegend)
+    expect_equal(built$x$layout$legend$font, list(family = "Courier New", color = "#333333", size = 11))
+    expect_equal(built$x$layout$legend$title$font$size, 16)
+
+    # Inputs that have not reported yet change nothing.
+    expect_identical(VizModules::apply_legend_inputs(fig, list(), isolate_fn = identity), fig)
+})
+
 
 # ─── apply_facet_subplot_spacing ────────────────────────────────────────────
 
@@ -1108,6 +1191,25 @@ test_that("create_ggplot_axis_style draws a full border, axis lines only, or nei
         size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), ...
     ))
 }
+
+test_that(".custom_legend styles its title and labels with the legend font", {
+    # The title and the break labels, not the circle glyphs.
+    text_anns <- function(...) {
+        anns <- .size_legend(.size_legend_fixture(), ...)$x$layout$annotations
+        Filter(function(a) !grepl("font-size", a$text), anns)
+    }
+    styled <- text_anns(font.family = "Courier New", font.color = "#FF0000")
+    expect_length(styled, 6)
+    for (a in styled) {
+        expect_equal(a$font$family, "Courier New", info = a$text)
+        expect_equal(a$font$color, "#FF0000", info = a$text)
+    }
+    # Without them the text stays black in plotly's default font.
+    for (a in text_anns()) {
+        expect_equal(a$font$color, "#000000")
+        expect_null(a$font$family)
+    }
+})
 
 test_that(".custom_legend returns the figure unchanged for a missing or non-numeric size_by", {
     fig <- make_plotly()

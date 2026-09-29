@@ -15,14 +15,28 @@ uniform_legend_inputs_ui(ns, defaults = NULL)
 A \code{tagList} containing the legend input UI elements.
 }
 \description{
-Creates a standardized tagList of legend styling inputs used across plot
-modules. Currently exposes the legend title and entry label font sizes so
-they can be adjusted consistently regardless of plot type.
+Creates a standardized tagList of legend inputs used across plot modules, so
+the legend can be shown/hidden and styled consistently regardless of plot type:
+}
+\details{
+\itemize{
+\item \code{legend.show} - Show the legend, colorbars and any size legend (UI: "Show Legend", default: TRUE)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color",
+default: "#000000")
+\item \code{legend.title.size} - Font size of the legend title (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Font size of the legend entry labels (UI: "Legend Text Size", default: 12)
+}
+
+Apply them to a figure with \code{\link[=apply_legend_inputs]{apply_legend_inputs()}} and restore them with \code{\link[=reset_legend_inputs]{reset_legend_inputs()}}.
 }
 \examples{
 ns <- shiny::NS("plot1")
 uniform_legend_inputs_ui(ns)
-uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
+uniform_legend_inputs_ui(ns, defaults = list(
+    legend.show = FALSE, legend.font.family = "Courier New",
+    legend.title.size = 16, legend.text.size = 12
+))
 }
 \author{
 Jared Andrews

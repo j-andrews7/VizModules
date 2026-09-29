@@ -340,7 +340,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 line.type = isolate_fn(input$line.type),
                 colour.group.by = group.by,
                 palette.selection = palette_selection,
-                show.legend = show_legend,
+                show.legend = show_legend && !isFALSE(isolate_fn(input$legend.show)),
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 facet.nrow = facet.nrow.val,
@@ -407,12 +407,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             fig <- do.call(plotly::config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

@@ -90,7 +90,7 @@ the same keys in every module. Full lists are on their help pages —
 `?uniform_plotly_inputs_ui`. The ones you will reach for most:
 
 - Axes: `axis.title.font.size` (18), `title.font.size` (26), `axis.showline` (TRUE), `show.grid.x` / `show.grid.y` (TRUE), `axis.tickfont.size` (12), `axis.tickangle.x` (0)
-- Legend: `legend.title.size`, `legend.text.size`
+- Legend: `legend.show` (TRUE), `legend.font.family` ("Arial"), `legend.font.color` ("#000000"), `legend.title.size` (14), `legend.text.size` (12)
 - Lines: `hline.intercepts`, `vline.intercepts`, `abline.slopes` — comma-separated strings, with matching `*.colors` / `*.widths` / `*.linetypes` / `*.opacities`
 - Plotly: `download.format`, `subplot.margin.x`, `subplot.margin.y`
 

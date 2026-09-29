@@ -13,6 +13,7 @@ dumbbellPlot(
   show.legend = TRUE,
   facet.by = NULL,
   line.colour = "gray80",
+  point.size = 6,
   facet.scales = "fixed",
   subplot.margin = 0.05,
   axis.showline = TRUE,
@@ -72,6 +73,8 @@ colour in every facet.}
 \item{facet.by}{Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.}
 
 \item{line.colour}{Character, hex color for the connecting lines between dumbbell points. Default: "gray80".}
+
+\item{point.size}{Numeric, diameter of the markers in pixels. Default: 6.}
 
 \item{facet.scales}{Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".}

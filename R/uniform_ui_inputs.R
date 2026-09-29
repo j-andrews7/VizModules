@@ -256,6 +256,15 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 }
 
 
+# Font families offered by every font picker in the module UIs.
+.font_family_choices <- c(
+    "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
+    "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
+    "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
+    "Verdana", "sans-serif", "serif", "monospace"
+)
+
+
 #' Generate uniform Axes input UI
 #'
 #' Creates a standardized tagList of axis-related inputs for use across plot modules.
@@ -281,12 +290,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #' uniform_axes_inputs_ui(ns)
 #' uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
-    font_choices <- c(
-        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-        "Verdana", "sans-serif", "serif", "monospace"
-    )
+    font_choices <- .font_family_choices
 
     rotate_input <- if (include.rotate) {
         materialSwitch(ns("rotate"), "Rotate (swap X/Y)",
@@ -801,9 +805,17 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 
 #' Generate uniform Legend input UI
 #'
-#' Creates a standardized tagList of legend styling inputs used across plot
-#' modules. Currently exposes the legend title and entry label font sizes so
-#' they can be adjusted consistently regardless of plot type.
+#' Creates a standardized tagList of legend inputs used across plot modules, so
+#' the legend can be shown/hidden and styled consistently regardless of plot type:
+#'
+#' - `legend.show` - Show the legend, colorbars and any size legend (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color",
+#'   default: "#000000")
+#' - `legend.title.size` - Font size of the legend title (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Font size of the legend entry labels (UI: "Legend Text Size", default: 12)
+#'
+#' Apply them to a figure with [apply_legend_inputs()] and restore them with [reset_legend_inputs()].
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -812,16 +824,47 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 #'
 #' @importFrom shiny numericInput tagList
 #' @importFrom shinyBS tipify
+#' @importFrom shinyWidgets materialSwitch
+#' @importFrom colourpicker colourInput
 #'
 #' @author Jared Andrews
 #' @export
 #' @examples
 #' ns <- shiny::NS("plot1")
 #' uniform_legend_inputs_ui(ns)
-#' uniform_legend_inputs_ui(ns, defaults = list(legend.title.size = 16, legend.text.size = 12))
+#' uniform_legend_inputs_ui(ns, defaults = list(
+#'     legend.show = FALSE, legend.font.family = "Courier New",
+#'     legend.title.size = 16, legend.text.size = 12
+#' ))
 uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
+        tipify(
+            materialSwitch(ns("legend.show"), "Show Legend",
+                value = get_default(defaults, "legend.show", TRUE, is.logical),
+                status = "success"
+            ),
+            "Show the legend. Turning it off also hides colorbars and any point size legend.",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            viz_select_input(ns("legend.font.family"), "Legend Font",
+                choices = .font_family_choices,
+                selected = get_default(
+                    defaults, "legend.font.family", "Arial",
+                    function(x) x %in% .font_family_choices
+                )
+            ),
+            "Font family of the legend title and entry labels.",
+            placement = "top", options = tip_opts
+        ),
+        tipify(
+            colourInput(ns("legend.font.color"), "Legend Font Color",
+                value = get_default(defaults, "legend.font.color", "#000000")
+            ),
+            "Font color of the legend title and entry labels.",
+            placement = "top", options = tip_opts
+        ),
         tipify(
             numericInput(ns("legend.title.size"), "Legend Title Size",
                 value = get_default(defaults, "legend.title.size", 14, is.numeric),

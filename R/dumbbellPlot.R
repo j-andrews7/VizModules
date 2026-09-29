@@ -17,6 +17,7 @@
 #' @param show.legend Logical, whether to display the legend. Default: TRUE.
 #' @param facet.by Optional character, column name to facet plots by. Creates subplots for each unique value. Default: NULL.
 #' @param line.colour Character, hex color for the connecting lines between dumbbell points. Default: "gray80".
+#' @param point.size Numeric, diameter of the markers in pixels. Default: 12.
 #' @param facet.scales Character, controls axis scaling across facets. Options: "fixed" (same for all), "free" (independent),
 #'   "free_x" (independent x-axis), "free_y" (independent y-axis). Default: "fixed".
 #' @param subplot.margin Numeric, spacing between facet panels as a fraction of the plot area.
@@ -92,7 +93,7 @@
 #'     line.colour = "gray80"
 #' )
 dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selection, show.legend = TRUE, 
-                        facet.by = NULL, line.colour = "gray80",
+                        facet.by = NULL, line.colour = "gray80", point.size = 12,
                         facet.scales = "fixed",
                         subplot.margin = 0.05,
                         axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "black", axis.linewidth = 0.5, 
@@ -114,6 +115,11 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         x <- x[1:2]
     }
 
+    # A blank numeric input reports NA; fall back to the default marker size.
+    if (!is.numeric(point.size) || length(point.size) != 1L || is.na(point.size)) {
+        point.size <- 12
+    }
+
     # subplot.margin may be a single value (applied to all sides) or a length-2
     # vector c(horizontal, vertical). plotly::subplot() expects a single value or
     # c(left, right, top, bottom), so expand a length-2 vector accordingly.
@@ -125,14 +131,15 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 
     axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
 
-    # Unique x axis styling for dumbbellPlot:
+    # Unique x axis styling for dumbbellPlot. plotly's default zero line is turned
+    # off: it cannot be removed from the UI, and a reference line adds one on request.
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen,
         tickwidth = axis.tickwidth,
         title = .axis_title_spec(x.title, axis_title_font), autorange = TRUE,
-        showgrid = show.grid.x, gridcolor = grid.color
+        showgrid = show.grid.x, gridcolor = grid.color, zeroline = FALSE
     )
 
     # Y axis styling by editing unique aspects of the x axis styling
@@ -209,7 +216,8 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
             plots[[length(plots) + 1]] <- .create_dumbbell_plot(
                 facet_data, x, y, colour.by, palette.selection,
                 line.colour,
-                show.legend = first
+                show.legend = show.legend && first,
+                point.size = point.size
             )
             first <- FALSE
         }
@@ -242,7 +250,10 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
         }
     } else {
         # WITHOUT FACETING
-        fig <- .create_dumbbell_plot(plot_data, x, y, colour.by, palette.selection, line.colour, show.legend)
+        fig <- .create_dumbbell_plot(
+            plot_data, x, y, colour.by, palette.selection, line.colour, show.legend,
+            point.size = point.size
+        )
     }
 
     fig <- fig |> layout(
@@ -277,6 +288,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 #' @param palette.selection Character vector of hex colors used for marker coloring.
 #' @param line.colour Character, hex color for the connecting line between dumbbell points.
 #' @param show.legend Logical, whether to display the legend for this subplot.
+#' @param point.size Numeric, diameter of the markers in pixels.
 #'
 #' @return A plotly object representing the dumbbell (or single dot) plot for the supplied data.
 #' 
@@ -285,7 +297,8 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
 #' @author Jacob Martin
 #' @rdname INTERNAL_create_dumbbell_plot
 #' @keywords internal
-.create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.colour, show.legend) {
+.create_dumbbell_plot <- function(data, x, y, colour.by, palette.selection, line.colour, show.legend,
+                                  point.size = 12) {
     if (is.null(x) || length(x) == 0) {
         return(plot_ly())
     }
@@ -337,7 +350,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                     x = y_data[[x[j]]],
                     y = y_data[[y]],
                     name = y_val,
-                    marker = list(color = col),
+                    marker = list(color = col, size = point.size),
                     # The first marker of each category carries its legend entry.
                     showlegend = show.legend && j == 1L,
                     legendgroup = y_val
@@ -362,7 +375,7 @@ dumbbellPlot <- function(data, x, y, colour.by = "X variables", palette.selectio
                 x = data[[x[j]]],
                 y = data[[y]],
                 name = x[j],
-                marker = list(color = colour_of(x[j], j)),
+                marker = list(color = colour_of(x[j], j), size = point.size),
                 showlegend = show.legend,
                 legendgroup = x[j]
             )

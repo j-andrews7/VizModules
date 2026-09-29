@@ -634,7 +634,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 ridgeplot.shape = isolate_fn(input$ridgeplot.shape),
                 ridgeplot.bins = isolate_fn(input$ridgeplot.bins),
                 ridgeplot.binwidth = ridgeplot.binwidth,
-                legend.show = TRUE,
+                legend.show = !isFALSE(isolate_fn(input$legend.show)),
                 theme = theme_style
             ))
 
@@ -818,10 +818,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             )
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- apply_legend_styling(fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
             # Make single-panel x/y axis titles draggable, matching faceted behaviour.
             fig <- axis_titles_as_annotations(fig)
 

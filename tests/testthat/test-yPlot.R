@@ -640,3 +640,22 @@ test_that("no brackets are drawn once a ridge plot puts the values on the x-axis
         }
     )
 })
+
+test_that("the Legend tab hides the legend and sets its font (#360, #362)", {
+    # One session each, as above.
+    for (show in c(TRUE, FALSE)) {
+        shiny::testServer(
+            dittoViz_yPlotServer,
+            args = list(id = "yplot", data = shiny::reactive(example_demographics)),
+            {
+                .yplot_settle(session, .yplot_inputs(
+                    legend.show = show, legend.font.family = "Courier New", legend.font.color = "#FF0000"
+                ))
+                lay <- suppressWarnings(generate_yPlot())$x$layout
+                expect_equal(isFALSE(lay$showlegend), !show, info = show)
+                expect_equal(lay$legend$font$family, "Courier New", info = show)
+                expect_equal(lay$legend$font$color, "#FF0000", info = show)
+            }
+        )
+    }
+})

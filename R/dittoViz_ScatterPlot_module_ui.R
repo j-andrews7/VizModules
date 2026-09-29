@@ -108,6 +108,8 @@
 #' - `annotation.arrowcolor` - Arrow color (UI: "Arrow Color", default: "black")
 #' - `annotation.arrowhead` - Arrowhead style (UI: "Arrowhead Style", default: 2)
 #' - `annotation.arrowwidth` - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+#' - `legend.show` - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+#' - `legend.color.title` - Color legend title (UI: "Legend Title", default: "make")
 #' - `legend.color.breaks` - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 #' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
 #'   default: 1.02); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
@@ -157,6 +159,10 @@
 #' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 #' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 #' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")
@@ -231,7 +237,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         c("split.nrow", "split.ncol"), "multivar.split.dir",
         "do.ellipse", "do.contour",
         "hover.data", "hover.round.digits",
-        "legend.show", c("legend.color.title", "legend.shape.title"),
+        c("legend.color.title", "legend.shape.title"),
         "legend.color.breaks",
         c("min.value", "max.value"),
         "trajectory.group.by", "add.trajectory.by.groups",
@@ -429,9 +435,6 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices),
         "Legend" = tagList(
-            tipify(checkboxInput(ns("legend.show"), "Show Legend",
-                value = get_default(defaults, "legend.show", TRUE, is.logical)
-            ), documentParameters$legend.show, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("legend.color.title"), "Legend Title",
                 value = get_default(defaults, "legend.color.title", "make")
             ), documentParameters$legend.color.title, placement = "top", options = list(container = "body")),

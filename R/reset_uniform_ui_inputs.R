@@ -196,8 +196,9 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
 
 #' Reset uniform Legend inputs to defaults
 #'
-#' Resets the legend styling inputs (legend title and entry label font sizes)
-#' created by [uniform_legend_inputs_ui()] back to their default values.
+#' Resets the legend inputs (visibility, font family and color, and the legend
+#' title and entry label font sizes) created by [uniform_legend_inputs_ui()]
+#' back to their default values.
 #'
 #' @param session The Shiny session object.
 #' @param defaults A named list of default values. When provided, inputs reset
@@ -207,6 +208,8 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
 #' @importFrom shiny updateNumericInput
+#' @importFrom shinyWidgets updateMaterialSwitch
+#' @importFrom colourpicker updateColourInput
 #'
 #' @author Jared Andrews
 #' @export
@@ -216,6 +219,12 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
 #' reset_legend_inputs(session, defaults)
 #' }
 reset_legend_inputs <- function(session, defaults = NULL) {
+    updateMaterialSwitch(session, "legend.show",
+        value = get_default(defaults, "legend.show", TRUE, is.logical))
+    update_viz_select(session, "legend.font.family",
+        selected = get_default(defaults, "legend.font.family", "Arial"))
+    updateColourInput(session, "legend.font.color",
+        value = get_default(defaults, "legend.font.color", "#000000"))
     updateNumericInput(session, "legend.title.size",
         value = get_default(defaults, "legend.title.size", 14, is.numeric))
     updateNumericInput(session, "legend.text.size",

@@ -72,12 +72,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
     all.choices <- names(data)
     all.with.empty <- c("", names(data))
 
-    font.choices <- c(
-        "Arial", "Balto", "Courier New", "Droid Sans", "Droid Serif",
-        "Droid Sans Mono", "Gravitas One", "Old Standard TT", "Open Sans",
-        "Overpass", "PT Sans Narrow", "Raleway", "Times New Roman",
-        "Verdana", "sans-serif", "serif", "monospace"
-    )
+    font.choices <- .font_family_choices
 
     colorscale.choices <- c(
         "Blackbody", "Bluered", "Blues", "Cividis", "Earth",

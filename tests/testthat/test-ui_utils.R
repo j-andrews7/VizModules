@@ -257,6 +257,23 @@ test_that("subplot spacing starts and resets to the same values, honouring subpl
     expect_equal(.subplot_spacing_defaults(list(subplot.margin = 0.05)), list(x = 0.05, y = 0.05))
 })
 
+test_that("reset_legend_inputs() restores the values uniform_legend_inputs_ui() starts at", {
+    ids <- c("legend.show", "legend.title.size", "legend.text.size")
+    for (defaults in list(NULL, list(legend.show = FALSE, legend.title.size = 20))) {
+        start <- .ui_start_values(uniform_legend_inputs_ui(identity, defaults), ids)
+        sent <- .reset_sent_values(reset_legend_inputs, defaults)
+        for (id in ids) {
+            expect_equal(sent[[id]], start[[id]], info = paste(id, format(defaults)))
+        }
+    }
+    # The font picker and colour input are not plain <input>s; check what reset sends.
+    sent <- .reset_sent_values(reset_legend_inputs)
+    expect_equal(sent[["legend.font.family"]], "Arial")
+    expect_equal(sent[["legend.font.color"]], "#000000")
+    sent <- .reset_sent_values(reset_legend_inputs, list(legend.font.family = "Courier New"))
+    expect_equal(sent[["legend.font.family"]], "Courier New")
+})
+
 test_that(".reset_stats_inputs() restores the values the Stats tab starts at", {
     ids <- c("stats.enabled", "stat.hide.ns", "stat.paired", "stat.per.facet", "stat.sig.threshold",
         "stat.line.width", "stat.step.increase", "stat.text.bump", "stat.bracket.inset")

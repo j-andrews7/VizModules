@@ -52,6 +52,32 @@ test_that("show.legend = FALSE hides the legend", {
     }
 })
 
+test_that("linePlot and dumbbellPlot draw no zero line on any panel (#363)", {
+    facet_df <- data.frame(
+        School = c("MIT", "Stanford", "Harvard", "Yale"),
+        Women = c(-94, 96, 112, 88), Men = c(152, -151, 165, 140),
+        Grp = c("STEM", "STEM", "LA", "LA")
+    )
+    figs <- list(
+        dumbbell = .build(.plot_functions$dumbbell),
+        line = .build(.plot_functions$line),
+        dumbbell_facet = .build(function(...) dumbbellPlot(
+            data = facet_df, x = c("Women", "Men"), y = "School",
+            palette.selection = c("pink", "blue"), facet.by = "Grp", ...
+        )),
+        line_facet = .build(.plot_functions$line, facet.by = "am"),
+        line_multi = .build(function(...) linePlot(
+            data = mtcars, x = "wt", y = c("mpg", "qsec"), palette.selection = "Set2", ...
+        ))
+    )
+    for (nm in names(figs)) {
+        lay <- figs[[nm]]$x$layout
+        axes <- grep("^[xy]axis[0-9]*$", names(lay), value = TRUE)
+        expect_true(length(axes) >= 2, info = nm)
+        for (a in axes) expect_false(lay[[a]]$zeroline, info = paste(nm, a))
+    }
+})
+
 test_that("bgcolor sets the paper background", {
     for (nm in c("radar", "parallel")) {
         expect_equal(.build(.plot_functions[[nm]], bgcolor = "#F5F5F5")$x$layout$paper_bgcolor, "#F5F5F5", info = nm)

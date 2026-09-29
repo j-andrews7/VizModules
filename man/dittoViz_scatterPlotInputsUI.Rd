@@ -142,6 +142,8 @@ default: ""). Values containing spaces
 \item \code{annotation.arrowcolor} - Arrow color (UI: "Arrow Color", default: "black")
 \item \code{annotation.arrowhead} - Arrowhead style (UI: "Arrowhead Style", default: 2)
 \item \code{annotation.arrowwidth} - Arrow linewidth (UI: "Arrow Linewidth", default: 1.5)
+\item \code{legend.show} - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+\item \code{legend.color.title} - Color legend title (UI: "Legend Title", default: "make")
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
 default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
@@ -194,6 +196,10 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

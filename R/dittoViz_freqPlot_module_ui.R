@@ -226,7 +226,6 @@
 #' - `sub` - Plot subtitle (not supported in plotly)
 #' - `theme` - ggplot2 theme (not applicable to plotly)
 #' - `legend.title` - Legend title (managed by plotly interactively)
-#' - `legend.show` - Show legend (always `TRUE`; not directly settable)
 #' - `split.by` - Not a parameter of `freqPlot()`; it always facets on the frequency
 #'   variable's levels. Use `vars.use` ("Levels To Show") to choose which of those facets
 #'   are drawn
@@ -292,6 +291,7 @@
 #' - `ridgeplot.shape` - Ridge shape (UI: "Ridge Shape", default: "smooth")
 #' - `ridgeplot.bins` - Ridge bins (UI: "Ridge Bins", default: 30)
 #' - `ridgeplot.binwidth` - Ridge binwidth (UI: "Ridge Binwidth", default: NA)
+#' - `legend.show` - Show the legend (UI: "Show Legend", default: TRUE)
 #'
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific
@@ -322,6 +322,10 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")

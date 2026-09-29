@@ -261,10 +261,7 @@
             )
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- apply_legend_styling(fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
             # Make single-panel x/y axis titles draggable, matching faceted behaviour.
             fig <- axis_titles_as_annotations(fig)
 

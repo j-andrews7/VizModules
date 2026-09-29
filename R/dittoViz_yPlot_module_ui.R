@@ -111,7 +111,7 @@
 #' - `hover.data` - Columns shown on hover (UI: "Hover Data", default: "";
 #'   empty uses a sensible default set of columns)
 #' - `hover.round.digits` - Hover value rounding (UI: "Hover Round Digits", default: 5)
-#' - `legend.show` - Show legend (always `TRUE`; not directly settable)
+#' - `legend.show` - Show the legend (UI: "Show Legend", default: TRUE)
 #' - `stats.enabled` and the other `stat.*` parameters - Pairwise testing between the `group.by`
 #'   groups, or between the `color.by` levels within each group when `color.by` is set (Stats tab).
 #'   `stat.pairs` takes a character vector of `"A vs B"` strings naming those levels, e.g.
@@ -145,6 +145,10 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #' - `hline.intercepts` - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 #' - `hline.colors` - Colors for horizontal lines (UI: "Colors", default: "#000000")
 #' - `hline.widths` - Widths for horizontal lines (UI: "Widths", default: "1")

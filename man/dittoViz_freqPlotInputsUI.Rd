@@ -65,7 +65,6 @@ The following \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} parameters a
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
 \item \code{legend.title} - Legend title (managed by plotly interactively)
-\item \code{legend.show} - Show legend (always \code{TRUE}; not directly settable)
 \item \code{split.by} - Not a parameter of \code{freqPlot()}; it always facets on the frequency
 variable's levels. Use \code{vars.use} ("Levels To Show") to choose which of those facets
 are drawn
@@ -134,6 +133,7 @@ categorical variable that is constant within each sample)
 \item \code{ridgeplot.shape} - Ridge shape (UI: "Ridge Shape", default: "smooth")
 \item \code{ridgeplot.bins} - Ridge bins (UI: "Ridge Bins", default: 30)
 \item \code{ridgeplot.binwidth} - Ridge binwidth (UI: "Ridge Binwidth", default: NA)
+\item \code{legend.show} - Show the legend (UI: "Show Legend", default: TRUE)
 }
 }
 
@@ -167,6 +167,10 @@ ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+\item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+\item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)
+\item \code{legend.text.size} - Legend entry label font size (UI: "Legend Text Size", default: 12)
 \item \code{hline.intercepts} - Y-coordinates for horizontal reference lines (UI: "Y-intercepts", default: "")
 \item \code{hline.colors} - Colors for horizontal lines (UI: "Colors", default: "#000000")
 \item \code{hline.widths} - Widths for horizontal lines (UI: "Widths", default: "1")

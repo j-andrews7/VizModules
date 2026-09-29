@@ -88,6 +88,11 @@
 #'   default: 1.04); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
 #' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
 #'   default: 0.35); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
+#' - `legend.show` - Show the legend, colorbar and size legend (UI: "Show Legend", default: TRUE)
+#' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
+#' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
+#' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
+#' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.

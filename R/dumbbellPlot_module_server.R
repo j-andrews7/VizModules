@@ -173,6 +173,9 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             updateColourInput(session, "line.colour",
                 value = get_default(defaults, "line.colour", "gray30")
             )
+            updateNumericInput(session, "point.size",
+                value = get_default(defaults, "point.size", 12, is.numeric)
+            )
 
             # Axes
             reset_axes_inputs(session, defaults)
@@ -249,9 +252,10 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
                 x = x_input,
                 y = y_input,
                 line.colour = isolate_fn(input$line.colour),
+                point.size = isolate_fn(input$point.size),
                 colour.by = colour_by,
                 palette.selection = palette_selection,
-                show.legend = TRUE,
+                show.legend = !isFALSE(isolate_fn(input$legend.show)),
                 facet.by = facet.by,
                 facet.scales = isolate_fn(input$facet.scales),
                 subplot.margin = c(isolate_fn(input$subplot.margin.x), isolate_fn(input$subplot.margin.y)),
@@ -312,12 +316,8 @@ dumbbellPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, d
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

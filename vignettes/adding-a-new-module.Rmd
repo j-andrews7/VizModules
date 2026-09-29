@@ -566,7 +566,7 @@ Before writing custom inputs, check whether a uniform helper already covers your
 | `uniform_axes_inputs_ui()` | Font, axis border, gridline, tick, and facet styling |
 | `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
 | `uniform_plotly_inputs_ui()` | Download buttons, margins, subplot spacing, and draw-shape styling |
-| `uniform_legend_inputs_ui()` | Legend title and entry label font sizes |
+| `uniform_legend_inputs_ui()` | Legend visibility, font family and colour, and title and entry label font sizes |
 | `uniform_annotation_inputs_ui()` | Highlighting and labelling of individual data points |
 
 Each UI helper has a matching `reset_*_inputs()` function to call from the module's

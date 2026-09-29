@@ -225,7 +225,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             if (!is.null(x_range)) {
-                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
+                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
         })
 
@@ -265,7 +265,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
             )
             update_viz_select(session, "facet.scale",
-                selected = get_default(defaults, "facet.scale", "free_y")
+                selected = get_default(defaults, "facet.scale", "fixed")
             )
             updateNumericInput(session, "facet.ncol", value = get_default(defaults, "facet.ncol", NA, is.numeric))
             updateNumericInput(session, "facet.nrow", value = get_default(defaults, "facet.nrow", NA, is.numeric))
@@ -336,7 +336,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!is.null(limits)) {
                 updateNumericInput(session, "x.max", value = limits$max)
                 updateNumericInput(session, "x.min", value = limits$min)
-                updateSliderInput(session, "text.position", min = 0, max = x_range$max)
+                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
         })
 
@@ -571,12 +571,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             fig <- do.call(config, c(list(p = fig), config_list))
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

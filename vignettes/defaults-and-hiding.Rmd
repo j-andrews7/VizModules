@@ -203,7 +203,7 @@ Tab names are module-specific. Inspect the `inputs` list inside the relevant `*I
 |-----|----------|
 | `"Data"` | Column selectors (x, y, color, split, etc.) |
 | `"Axes"` | Title font, gridlines, tick styling |
-| `"Legend"` | Legend title and text sizes |
+| `"Legend"` | Legend visibility, font family and colour, title and text sizes |
 | `"Lines"` | Reference lines (h/v/ablines) |
 | `"Plotly"` | Download format, margins, drawn shape styling |
 | `"Facet"` | Facet rows/columns, scales, subplot spacing |

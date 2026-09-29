@@ -277,23 +277,22 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Custom Legend:
             # Generates a custom dot plot circle legend based on the number of values in size_values.
+            # Hiding the legend hides this one too.
             fig <- .custom_legend(
                 fig,
                 data = data(),
-                size_by = size.by,
+                size_by = if (isFALSE(isolate_fn(input$legend.show))) NULL else size.by,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
                 start_y = isolate_fn(input$size.legend.y),
-                start_x = isolate_fn(input$size.legend.x)
+                start_x = isolate_fn(input$size.legend.x),
+                font.family = isolate_fn(input$legend.font.family),
+                font.color = isolate_fn(input$legend.font.color)
             )
 
-            # Apply uniform legend title/label font sizes
-            fig <- apply_legend_styling(
-                fig,
-                title.size = isolate_fn(input$legend.title.size),
-                text.size = isolate_fn(input$legend.text.size)
-            )
+            # Apply the uniform legend visibility and font inputs
+            fig <- apply_legend_inputs(fig, input, isolate_fn)
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)

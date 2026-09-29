@@ -119,13 +119,14 @@ linePlot <- function(data, x, y, palette.selection,
         size = facet.title.font.size, color = facet.title.font.color, family = facet.title.font.family
     )
 
-    # Unique x axis styling for linePlot:
+    # Unique x axis styling for linePlot. plotly's default zero line is turned off:
+    # it cannot be removed from the UI, and a reference line adds one on request.
     xaxis_style <- list(
         showline = axis.showline, mirror = axis.mirror, linecolor = axis.linecolor, linewidth = axis.linewidth,
         tickfont = list(size = axis.tickfont.size, color = axis.tickfont.color, family = axis.tickfont.family),
         tickangle = axis.tickangle.x, ticks = axis.ticks, tickcolor = axis.tickcolor, ticklen = axis.ticklen, tickwidth = axis.tickwidth,
         title = .axis_title_spec(x.title, axis_title_font), autorange = TRUE,
-        showgrid = show.grid.x, gridcolor = grid.color
+        showgrid = show.grid.x, gridcolor = grid.color, zeroline = FALSE
     )
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)

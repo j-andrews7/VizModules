@@ -34,6 +34,9 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * In the `yPlot` and scatter modules, the **Adjustment Function** is now applied before the z-score/relative-to-max **Adjustment** (e.g. log10, then z-score), and axis titles read accordingly (`z-score(log10(salary))`). dittoViz applies them the other way round, which made every below-average value the log of a negative number, so those points vanished. The rescaling is also computed over finite values only, so a `log(0)` drops that one point instead of turning the whole column into `NaN`.
 * `adjust_column_values()` gained `x.adjustment`, `y.adjustment` and `color.adjustment` (`"z-score"`, `"relative.to.max"`), reproducing exactly what the modules plot for their adjustment inputs. Use it to compute anything drawn over such a plot.
 * `create_stat_annotations()` gained `free.y`, stacking each facet panel's brackets above that panel's own data, and `apply_stat_annotations()` then raises each panel's axis separately.
+* The **Legend** tab shared by the plot modules gained **Show Legend**, **Legend Font** and **Legend Font Color** (#360, #362), so the legend can now be hidden in `yPlot`, `freqPlot`, `linePlot`, `dumbbellPlot` and the `plotthis` modules too. Hiding it also hides colorbars and the scatter/`DotPlot` size legend.
+  * `apply_legend_styling()` gained `show`, `font.family` and `font.color`, and the new `apply_legend_inputs()` applies the whole tab from a module's inputs.
+* The `dumbbellPlot` module gained a **Point Size** input (`point.size` in `dumbbellPlot()`) (#361).
 
 ## Deprecations and Removals
 
@@ -53,6 +56,8 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
   * Discards manually dragged legends, annotations, axis titles and colorbars, which it previously never managed to clear in any module.
   * Returns every control to the value it started at. Several fallbacks disagreed with the UI (`stat.hide.ns`, the top and right margins, subplot spacing, and a few module-specific ones), and linePlot's tighter subplot spacing only ever reached the reset.
 * The `SplitBarPlot` axis no longer clips a long negative bar beside short positive ones, or inverts when every value is negative.
+* The `SplitBarPlot` **Category Label Position** can be negative again, moving the labels further out from their bars (#367).
+* `linePlot()` and `dumbbellPlot()` no longer draw plotly's default zero line, which could not be turned off. Add one from the **Lines** tab instead (#363).
 * Values containing spaces (e.g. `"CD4 T"`) can now be highlighted in the scatter, `yPlot` and `freqPlot` modules, when separated by commas or new lines. They were split on the space and so never matched.
 * The `AreaPlot` module's **Group By** and **Facet By** no longer leave out the dataset's first categorical column when it is not the X column, which silently dropped a `group.by`/`facet.by` default naming it.
 * Axis limits given in `defaults` (`y.min`/`y.max` in the `BoxPlot`, `BarPlot` and `yPlot` modules, `x.min`/`x.max` in `SplitBarPlot`) are no longer replaced by the data's range as the module starts up. They now stand until the plotted columns change. The `yPlot` module's keys are now `y.min`/`y.max` too, matching its inputs and Reset (its UI read `min`/`max`).

@@ -249,6 +249,34 @@ test_that("a Y category keeps its colour in every facet", {
     expect_equal(sum(m$legend), 3)
 })
 
+test_that("dumbbellPlot sizes its markers with point.size (#361)", {
+    df <- data.frame(
+        school = c("A", "B", "C", "A", "B", "C"),
+        women = c(30, 10, 20, 5, 50, 25),
+        men = c(40, 15, 25, 10, 60, 30),
+        grp = rep(c("g1", "g2"), each = 3)
+    )
+    marker_sizes <- function(...) {
+        built <- suppressWarnings(plotly::plotly_build(dumbbellPlot(
+            df, x = c("women", "men"), y = "school", palette.selection = c("#FF0000", "#0000FF"), ...
+        )))
+        markers <- Filter(function(t) identical(t$mode, "markers") && !is.null(t$name), built$x$data)
+        vapply(markers, function(t) t$marker$size, numeric(1))
+    }
+
+    for (colour.by in c("X variables", "Y variables")) {
+        for (facet.by in list(NULL, "grp")) {
+            info <- paste(colour.by, toString(facet.by))
+            sizes <- marker_sizes(colour.by = colour.by, facet.by = facet.by, point.size = 14)
+            expect_true(length(sizes) >= 2, info = info)
+            expect_true(all(sizes == 14), info = info)
+        }
+    }
+    # The default, for an unset or blank size.
+    expect_true(all(marker_sizes() == 12))
+    expect_true(all(marker_sizes(point.size = NA) == 12))
+})
+
 test_that("a named X palette is matched to the x variables by name", {
     df <- data.frame(school = c("A", "B"), women = c(30, 10), men = c(40, 15))
     m <- .dumbbell_marker_colours(dumbbellPlot(
