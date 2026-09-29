@@ -125,7 +125,7 @@ dumbbellPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, column
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
 
-    adj.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adj_fxn_choices)
 
     selected <- list(
         "x", "y", "x.adjustment", "colour.by",

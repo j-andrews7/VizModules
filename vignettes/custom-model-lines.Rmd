@@ -42,6 +42,8 @@ A formula validation (AST whitelist) runs before any model is fitted, blocking a
 4. Select a model type, enter a formula using your data's column names (e.g. `revenue ~ poly(units, 2)`), pick line colour and width. Write it as `<y column> ~ <x column>`: the line is the formula's prediction across the X axis's range, drawn against the Y axis, and any other column in the formula is held at its median (or first level).
 5. The fitted line appears on the plot.
 
+The model is fit to the values as plotted. With an X or Y adjustment on the **Adjustments** tab (a z-score, `log10`, ...), `revenue ~ units` models the adjusted revenue against the adjusted units, so the line runs through the points you see. Don't repeat the adjustment inside the formula: `log10(revenue) ~ units` on a `log10` Y axis would take the log twice. No model lines are drawn while `as.factor` makes an axis categorical. The same goes for the **Linear model line** and **Line of best fit** toggles.
+
 You can add multiple rows — each draws its own line with independent settings.
 
 ## Setting Defaults

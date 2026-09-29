@@ -24,9 +24,9 @@
 #' The following [dittoViz::scatterPlot()] parameters are not available via UI inputs or have been superseded:
 #'
 #' - `xlab` - X-axis label (auto-generated to reflect any applied X adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing)
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing)
 #' - `main` - Plot title (plotly allows interactive editing)
 #' - `sub` - Plot subtitle (not supported in plotly)
 #' - `theme` - ggplot2 theme (not applicable to plotly)
@@ -173,6 +173,15 @@
 #' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 #' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
 #'
+#' Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
+#' result (e.g. log10, then z-score), the reverse of the order [dittoViz::scatterPlot()] applies
+#' its `*.adj.fxn` and `*.adjustment` in.
+#'
+#' Fit lines (linear, best fit, and custom models) are fit to the values as plotted, after any
+#' X/Y adjustment, so they are drawn over the points they describe. A custom formula such as
+#' `mpg ~ hp` therefore models the adjusted values; do not repeat the adjustment inside it. No
+#' fit lines are drawn while an adjustment (`as.factor`) makes an axis categorical.
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs. An entry may also be a
@@ -209,8 +218,8 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Various other choice vectors
-    adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adjustment_choices)
+    adj.fxn.choices <- c("", .adj_fxn_choices)
 
     selected <- list(
         c("x.by", "y.by"), "color.by", "shape.by", "split.by",
@@ -233,6 +242,13 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         package_name = "dittoViz::scatterPlot", type = "param",
         selected = selected, cap = TRUE
     )
+    # The module applies these in the opposite order to dittoViz.
+    for (side in c("x", "y", "color")) {
+        label <- paste(c(x = "X", y = "Y", color = "Color")[[side]], "Adjustment")
+        for (key in paste0(side, c(".adjustment", ".adj.fxn"))) {
+            documentParameters[[key]] <- trimws(paste(documentParameters[[key]], .adjustment_order_note(label)))
+        }
+    }
 
     # Create list of Shiny inputs for most scatterPlot parameters
     # Broken up by sensible categories (e.g. "Data", "Point Styling")

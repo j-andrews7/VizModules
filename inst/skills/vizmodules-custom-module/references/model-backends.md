@@ -48,6 +48,14 @@ register_model_backend("gam", list(
 Formula terms are whitelisted for safety, so a GAM using `s()` or `te()` also needs
 those added to the whitelist, `.formula_allowed_calls()` in `R/parse_utils.R`.
 
+## What `data` holds
+
+`fit()` receives the values **as plotted**: with an X/Y adjustment on (a z-score, `log10`,
+...), the x and y columns hold the adjusted values under their raw names, so `revenue ~
+units` fits what the points show and the line is drawn over them. A backend should not
+transform the axes itself, or they are transformed twice. `predict()` gets an x-grid in the
+same units. Other columns are left as they are.
+
 ## How extra fields flow through
 
 Any field in the row that is not one of the four standard keys (`model_type`, `formula`,

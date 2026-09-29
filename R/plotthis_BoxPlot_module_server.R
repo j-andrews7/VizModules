@@ -238,6 +238,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (!isTRUE(input$stats.enabled)) {
                 return(NULL)
             }
+            # Rotated, the values run along the x-axis and no brackets are drawn;
+            # under a free scale plotthis drops the limits and each panel spans its
+            # own data, so there is no shared limit to reserve room in.
+            if (isTRUE(input$rotate) || .box_free_y(input$facet.by, input$facet.scale)) {
+                return(NULL)
+            }
 
             .stat_bracket_headroom(
                 df = data(), x = input$x.data, y = input$y.data,
@@ -429,30 +435,39 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
                 last_stats_df(stats_df)
 
-                stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = data(),
-                    x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
-                    display = isolate_fn(input$stat.display),
-                    hide.ns = isolate_fn(input$stat.hide.ns),
-                    sig.threshold = isolate_fn(input$stat.sig.threshold),
-                    line.color = isolate_fn(input$stat.line.color),
-                    line.width = isolate_fn(input$stat.line.width),
-                    bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = group.by, facet.by = facet.by,
-                    step.increase = isolate_fn(input$stat.step.increase),
-                    text.bump = isolate_fn(input$stat.text.bump),
-                    bracket.inset = isolate_fn(input$stat.bracket.inset),
-                    # Brackets between two groups sit on the same slot centres
-                    # .align_box_positions() puts the boxes on.
-                    dodge.width = .PLOTTHIS_DODGE_WIDTH
-                )
+                if (isTRUE(isolate_fn(input$rotate))) {
+                    # Rotated, the values run along the x-axis and there is no room
+                    # above them for brackets. The tests still reach the source download.
+                    .note_brackets_skipped(session)
+                } else {
+                    stat_result <- create_stat_annotations(
+                        stats_df = stats_df, fig = fig, df = data(),
+                        x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
+                        display = isolate_fn(input$stat.display),
+                        hide.ns = isolate_fn(input$stat.hide.ns),
+                        sig.threshold = isolate_fn(input$stat.sig.threshold),
+                        line.color = isolate_fn(input$stat.line.color),
+                        line.width = isolate_fn(input$stat.line.width),
+                        bracket.style = isolate_fn(input$stat.bracket.style),
+                        group.by = group.by, facet.by = facet.by,
+                        step.increase = isolate_fn(input$stat.step.increase),
+                        text.bump = isolate_fn(input$stat.text.bump),
+                        bracket.inset = isolate_fn(input$stat.bracket.inset),
+                        # Brackets between two groups sit on the same slot centres
+                        # .align_box_positions() puts the boxes on.
+                        dodge.width = .PLOTTHIS_DODGE_WIDTH,
+                        # plotthis drops the y limits under a free scale, so each
+                        # panel spans its own data and needs its own bracket heights.
+                        free.y = .box_free_y(facet.by, isolate_fn(input$facet.scale))
+                    )
 
-                fig <- apply_stat_annotations(
-                    fig,
-                    stat_result,
-                    y.min = y.limits$min,
-                    y.max = y.limits$max
-                )
+                    fig <- apply_stat_annotations(
+                        fig,
+                        stat_result,
+                        y.min = y.limits$min,
+                        y.max = y.limits$max
+                    )
+                }
             } else {
                 # Nothing was tested for this figure, so the source download must
                 # not ship the table from an earlier one.
@@ -549,4 +564,23 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         return(plot_source_reactive)
     })
+}
+
+
+#' Does a box plot give each facet panel its own y scale?
+#'
+#' plotthis applies `y_min`/`y_max` only when the y scale is shared; under a free
+#' one each panel spans its own data, so its brackets must be measured per panel.
+#'
+#' @param facet.by The `facet.by` input.
+#' @param facet.scale The `facet.scale` input.
+#'
+#' @return `TRUE` when the plot is faceted and `facet.scale` is `"free"` or
+#'   `"free_y"`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_box_free_y
+#' @keywords internal
+.box_free_y <- function(facet.by, facet.scale) {
+    .nz_value(facet.by) && isTRUE(facet.scale %in% c("free", "free_y"))
 }

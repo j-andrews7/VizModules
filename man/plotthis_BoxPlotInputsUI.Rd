@@ -168,6 +168,11 @@ pairs). As a default, a character vector of \code{"A vs B"} strings naming level
 \item \code{stat.bracket.inset} - Horizontal inset of the brackets (UI: "Bracket Inset")
 \item \code{stat.per.facet} - Compute statistics independently per facet panel (UI: "Per Facet Panel")
 }
+
+Brackets are stacked above the data, so none are drawn while the plot is rotated (the values
+then run along the x-axis); the test results are still included in the source data download.
+Under a free y facet scale ("free", "free_y") each panel's brackets sit above that panel's own
+data, and the Y axis min/max are not applied.
 }
 
 \section{Parameters controlling additional functionality}{

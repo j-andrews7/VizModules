@@ -451,6 +451,9 @@ test_that("enabled statistics add brackets drawn from the frequency table", {
 
             fig <- generate_freqPlot()
             expect_s3_class(fig, "plotly")
+            # Added after the axis styling, the brackets must still be inside the
+            # built axes (the styling used to put back the pre-bracket range).
+            expect_brackets_within_axes(fig, min.count = 3)
 
             # One comparison per facet, never pooled: the tests are forced
             # per-facet because frequencies of different levels are not
@@ -476,6 +479,50 @@ test_that("enabled statistics add brackets drawn from the frequency table", {
             session$setInputs(stats.enabled = FALSE)
             session$flushReact()
             expect_null(session$returned()$stats)
+        }
+    )
+})
+
+test_that("under a free y scale each frequency panel's brackets sit on its own data", {
+    df <- .freq_fixture()
+
+    shiny::testServer(
+        dittoViz_freqPlotServer,
+        args = list(id = "freq", data = shiny::reactive(df)),
+        {
+            do.call(session$setInputs, .freq_inputs(stats.enabled = TRUE, split.adjust = "free_y"))
+            session$flushReact()
+            session$setInputs(stat.pairs = "Healthy vs Disease")
+            session$flushReact()
+
+            built <- expect_brackets_within_axes(generate_freqPlot(), min.count = 3)
+            # Each panel keeps its own range rather than one pinned by the limits.
+            y_axes <- grep("^yaxis[0-9]*$", names(built$x$layout), value = TRUE)
+            ranges <- lapply(y_axes, function(a) unlist(built$x$layout[[a]]$range))
+            expect_gt(length(unique(lapply(ranges, round, 3))), 1)
+        }
+    )
+})
+
+test_that("a frequency plot with a ridge plot tests but draws no brackets", {
+    df <- .freq_fixture()
+
+    shiny::testServer(
+        dittoViz_freqPlotServer,
+        args = list(id = "freq", data = shiny::reactive(df)),
+        {
+            # Named palettes miss dittoViz's ridge fill column, which warns; not under test.
+            suppressWarnings({
+                do.call(session$setInputs, .freq_inputs(stats.enabled = TRUE, plots = c("boxplot", "ridgeplot")))
+                session$flushReact()
+                session$setInputs(stat.pairs = "Healthy vs Disease")
+                session$flushReact()
+            })
+
+            built <- plotly::plotly_build(suppressWarnings(generate_freqPlot()))
+            brackets <- Filter(function(s) identical(s$type, "line") && .data_ref(s$yref), built$x$layout$shapes)
+            expect_length(brackets, 0)
+            expect_equal(nrow(last_stats_df()), 3)
         }
     )
 })

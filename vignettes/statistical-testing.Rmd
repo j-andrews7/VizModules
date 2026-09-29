@@ -66,6 +66,14 @@ The Stats tab exposes these controls:
 
 When **Paired Test** is enabled, each group must have the same number of observations, sorted so paired samples align row-by-row within each group.
 
+### Adjusted, faceted and rotated axes
+
+Tests run on the values as plotted. In the `yPlot` module a **Y Adjustment** (z-score, log10, ...) is applied before testing, so a t-test on log-scaled data tests the log values, and the brackets and **Y Axis Min/Max** are in those units too. The **Y Adjustment Function** is applied first and the **Y Adjustment** then rescales the result, so log10 with z-score gives z-scored log values. Rank-based tests (Wilcoxon, Kruskal-Wallis) give the same p-values either way for an order-preserving adjustment.
+
+Under a free y facet scale (`"free"` or `"free_y"`) each panel keeps its own range, so the **Y Axis Min/Max** are not applied and each panel's brackets sit just above that panel's data.
+
+Brackets are stacked above the data on the y-axis, so none are drawn while the values run along the x-axis: a rotated `BoxPlot`, or a `yPlot`/`freqPlot` that includes a ridge plot. The tests still run, and their results are in the source data download.
+
 ### Downloading statistics
 
 The **Download Summary** button (Source Data, at the bottom of the controls panel) includes a statistics CSV with a metadata header (correction method, threshold, symbol legend) alongside the plot HTML and source data.
@@ -150,7 +158,22 @@ compute_pairwise_stats(
 )
 ```
 
-Pass the same `facet.by`/`group.by` values to `create_stat_annotations()` so brackets land on the correct subplot axes.
+Pass the same `facet.by`/`group.by` values to `create_stat_annotations()` so brackets land on the correct subplot axes. If the panels have free y scales, also pass `free.y = TRUE`, so each panel's brackets are measured against that panel's data rather than the tallest one's.
+
+### Test and draw on the plotted values
+
+`compute_pairwise_stats()`, `create_stat_annotations()` and `stat_bracket_y_max()` use whatever values they are given. If the plot transforms a column before drawing it (dittoViz's `var.adjustment`/`var.adj.fxn`, say), give them the transformed values, or the brackets land in a different coordinate space from the data. `adjust_column_values()` reproduces dittoViz's transforms:
+
+```{r plotted-values}
+plotted <- adjust_column_values(example_iris, y.col = "Sepal.Length", y.adj.fun = "log10")
+
+stats_df <- compute_pairwise_stats(plotted, x = "Species", y = "Sepal.Length.adj")
+fig <- dittoViz::yPlot(example_iris, "Sepal.Length", "Species",
+    var.adj.fxn = log10, plots = "boxplot", do.hover = TRUE)
+stat_result <- create_stat_annotations(stats_df, fig = fig, df = plotted,
+    x = "Species", y = "Sepal.Length.adj")
+apply_stat_annotations(fig, stat_result)
+```
 
 ### `compute_pairwise_stats()` return value
 

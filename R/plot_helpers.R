@@ -2,13 +2,144 @@
 # Using a named constant avoids magic numbers scattered across modules.
 .y_axis_scale_factor <- 1.11
 
+# Rescalings the module UIs offer after an adjustment function (dittoViz's
+# `*.adjustment` values).
+.adjustment_choices <- c("z-score", "relative.to.max")
+
+#' Transform values the way the modules plot them
+#'
+#' The adjustment function (`adj.fxn`, e.g. `log10`) is applied first, then the
+#' `adjustment` rescales the result (`"z-score"` or `"relative.to.max"`). That is
+#' the order a transform and a standardisation are normally combined in: log
+#' first, then z-score. dittoViz applies them the other way round when given both,
+#' which turns every below-average value into `log()` of a negative number, so the
+#' modules hand dittoViz this whole transform as its function instead (see
+#' [.adjustment_fn()]).
+#'
+#' The rescaling is computed over the finite values only, so a value the function
+#' makes non-finite (`log(0)`) is dropped from the plot rather than turning the
+#' whole column into `NaN`.
+#'
+#' Anything drawn over an adjusted plot (significance brackets, fit lines, axis
+#' limits) has to be computed from these values, not the raw column, or it lands
+#' in a different coordinate space from the data.
+#'
+#' @param values Vector of values, normally one column of the plotted data.
+#' @param adjustment `NULL`, `""`, or one of `.adjustment_choices`.
+#' @param adj.fxn `NULL`, `""`, a name accepted by [safe_resolve_adj_fxn()], or a
+#'   function.
+#'
+#' @return The transformed values, unnamed.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_adjusted_values
+#' @keywords internal
+.adjusted_values <- function(values, adjustment = NULL, adj.fxn = NULL) {
+    values <- unname(values)
+
+    if (is.character(adj.fxn)) {
+        adj.fxn <- safe_resolve_adj_fxn(adj.fxn)
+    }
+    if (is.function(adj.fxn)) {
+        values <- adj.fxn(values)
+    }
+
+    if (is.numeric(values) && .nz_value(adjustment)) {
+        ok <- is.finite(values)
+        if (identical(adjustment, "z-score")) {
+            values[ok] <- (values[ok] - mean(values[ok])) / stats::sd(values[ok])
+        }
+        if (identical(adjustment, "relative.to.max")) {
+            values[ok] <- values[ok] / max(values[ok])
+        }
+    }
+    values
+}
+
+#' Tooltip note on the order the adjustment inputs are applied in
+#'
+#' @param adjustment.label The UI label of the rescaling input (e.g. "Y Adjustment").
+#'
+#' @return A character scalar.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_adjustment_order_note
+#' @keywords internal
+.adjustment_order_note <- function(adjustment.label) {
+    paste0(
+        "The Adjustment Function is applied first, and the ", adjustment.label,
+        " then rescales the result (e.g. log10, then z-score)."
+    )
+}
+
+#' The whole plotted transform as one function, for dittoViz
+#'
+#' dittoViz applies its `*.adjustment` before its `*.adj.fxn`. Passing it this
+#' function as `*.adj.fxn`, with no `*.adjustment`, has it plot
+#' [.adjusted_values()] instead, while it still builds its adjusted columns, hover
+#' text and multi-variable reshape as usual.
+#'
+#' @param adjustment,adj.fxn Passed to [.adjusted_values()].
+#'
+#' @return A function of one vector, or `NULL` when neither is set.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_adjustment_fn
+#' @keywords internal
+.adjustment_fn <- function(adjustment = NULL, adj.fxn = NULL) {
+    fxn <- if (.nz_value(adj.fxn)) safe_resolve_adj_fxn(adj.fxn) else NULL
+    if (!.nz_value(adjustment) && is.null(fxn)) {
+        return(NULL)
+    }
+    force(adjustment)
+    function(values) .adjusted_values(values, adjustment, fxn)
+}
+
+#' Replace data columns with the values the modules plot for them
+#'
+#' Applies [.adjusted_values()] to each of `cols` in place, keeping the column
+#' names. Each column is transformed on its own over the whole frame, as dittoViz
+#' does before any row subsetting or multi-variable reshape, so the result can be
+#' passed wherever the raw frame was (statistics, model formulas that name the
+#' raw columns, axis-range calculations).
+#'
+#' @param df Data frame.
+#' @param cols Character vector of column names to transform. Names not in `df`
+#'   are ignored.
+#' @param adjustment,adj.fxn Passed to [.adjusted_values()].
+#'
+#' @return `df` with `cols` transformed; unchanged when neither argument is set.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_as_plotted
+#' @keywords internal
+.as_plotted <- function(df, cols, adjustment = NULL, adj.fxn = NULL) {
+    fxn.set <- is.function(adj.fxn) || .nz_value(adj.fxn)
+    if (is.null(df) || (!.nz_value(adjustment) && !fxn.set)) {
+        return(df)
+    }
+    for (col in intersect(cols, names(df))) {
+        df[[col]] <- .adjusted_values(df[[col]], adjustment, adj.fxn)
+    }
+    df
+}
+
 #' Adjust numeric column values in a data frame using mathematical transformations
 #'
-#' Applies a named mathematical transformation to a specified numeric column in a data frame,
-#' adding the transformed values as a new column (original column name + ".adj").
-#' The transformation name must be one of the allowed functions listed in `safe_resolve_adj_fxn`
-#' (e.g., "log2", "log10", "sqrt", "abs", "as.factor"). The original data frame is returned unchanged
-#' if no transformation is specified or if the supplied name is invalid.
+#' Transforms the named numeric columns of a data frame the way the plot modules
+#' do for their adjustment inputs, adding the transformed values as a new column
+#' (original column name + ".adj"). The function is applied first, then an
+#' adjustment (`"z-score"` or `"relative.to.max"`) rescales the result, computed
+#' over its finite values. The function name must be one of the allowed functions
+#' listed in [safe_resolve_adj_fxn()] (e.g., "log2", "log10", "sqrt", "abs",
+#' "as.factor"). The original data frame is returned unchanged if no
+#' transformation is specified or if the supplied function name is invalid.
+#'
+#' Use this to compute anything drawn over an adjusted plot (axis limits, bracket
+#' headroom, fit lines) from the values the plot actually shows, rather than the
+#' raw column. Note that dittoViz, given both an `*.adjustment` and an
+#' `*.adj.fxn`, applies them in the opposite order; the modules pass it the whole
+#' transform as its function instead.
 #'
 #' @param df A data frame containing the column to be transformed.
 #' @param x.col Character scalar. Name of the column for x‑axis values (optional).
@@ -21,6 +152,9 @@
 #'   as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty string, y‑axis values are left unchanged.
 #' @param color.adj.fun Character scalar. Name of a transformation function to apply to color values,
 #'   as accepted by `safe_resolve_adj_fxn`. If `NULL` or an empty string, color values are left unchanged.
+#' @param x.adjustment,y.adjustment,color.adjustment Character scalar. `"z-score"` or
+#'   `"relative.to.max"` to rescale that column after its function is applied. If `NULL` or
+#'   an empty string, no rescaling is done.
 #'
 #' @return A data frame identical to input `df` but with transformed columns added
 #'   (e.g., `mpg.adj`) when valid transformations are specified.
@@ -30,31 +164,39 @@
 #' mtcars_mod <- adjust_column_values(mtcars, x.col = "mpg", x.adj.fun = "log2")
 #' head(mtcars_mod$mpg.adj)
 #'
+#' # log10 first, then z-scored: the values the scatter module draws for that pair
+#' mtcars_z <- adjust_column_values(mtcars,
+#'     x.col = "hp", x.adj.fun = "log10", x.adjustment = "z-score"
+#' )
+#' range(mtcars_z$hp.adj)
+#'
 #' @author Jacob Martin, Jared Andrews
 #' @export
 adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NULL,
-                                  x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL) {
+                                  x.adj.fun = NULL, y.adj.fun = NULL, color.adj.fun = NULL,
+                                  x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL) {
 
-  apply_trans <- function(d, cols, adj_name) {
+  apply_trans <- function(d, cols, adj_name, adjustment) {
     out <- d
 
+    adj_fun <- NULL
     if (!is.null(adj_name) && nzchar(as.character(adj_name))) {
       adj_fun <- safe_resolve_adj_fxn(adj_name) #Safety check for string input
+    }
 
-      if (!is.null(adj_fun)) {
-        for (col in cols) {
-          if (col %in% names(out) && is.numeric(out[[col]])) {
-            out[[paste(col, "adj", sep = ".")]] <- adj_fun(out[[col]])
-          }
+    if (!is.null(adj_fun) || .nz_value(adjustment)) {
+      for (col in cols) {
+        if (col %in% names(out) && is.numeric(out[[col]])) {
+          out[[paste(col, "adj", sep = ".")]] <- .adjusted_values(out[[col]], adjustment, adj_fun)
         }
       }
     }
     return(out)
   }
 
-  df <- apply_trans(df, x.col,       x.adj.fun)
-  df <- apply_trans(df, y.col,       y.adj.fun)
-  df <- apply_trans(df, color.col,   color.adj.fun)
+  df <- apply_trans(df, x.col,       x.adj.fun,     x.adjustment)
+  df <- apply_trans(df, y.col,       y.adj.fun,     y.adjustment)
+  df <- apply_trans(df, color.col,   color.adj.fun, color.adjustment)
 
   return(df)
 }
@@ -707,8 +849,12 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 #' Behaviour depends on whether bars are stacked:
 #'
 #' - **Non-stacked** (`grouping = FALSE`, categorical or absent
-#'   `stack_by`): the Y range is computed directly from the raw column
+#'   `stack_by`): the Y range is computed directly from the finite column
 #'   values using `min()` and `max()`.
+#'
+#' The maximum is padded by `axis_scale_factor - 1` of its magnitude, which is
+#' `max * axis_scale_factor` for a positive maximum and still raises a negative
+#' one (e.g. log-transformed values below 1).
 #' - **Stacked** (`grouping = TRUE` or `stack_by` is
 #'   numeric): Y values are summed within each unique X category using
 #'   `tapply()`, and the maximum of those sums is used. The minimum is
@@ -743,6 +889,11 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
     # NAs zeroed) when only one is selected, so stacked heights are unchanged.
     stacked_values <- function() rowSums(df[, data_col, drop = FALSE], na.rm = TRUE)
 
+    # Headroom above the top value. Scaling by the magnitude rather than the value
+    # keeps a negative maximum (log of values below 1, neg_log10) from being
+    # pulled down into the data; for a positive maximum it is max * factor.
+    pad_max <- function(v) v + abs(v) * (axis_scale_factor - 1)
+
     if (!grouping) {
         # --- Non-stacked: bars are NOT stacked, just find the max single value ---
         # If stack_by is provided and numeric, bars ARE stacked → sum per x group
@@ -752,13 +903,16 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
                 return(NULL)
             }
             x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
-            max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+            max_val <- pad_max(max(x_sums, na.rm = TRUE))
             min_val <- 0
         } else {
-            # Categorical or no stack_by: bars dodged/ungrouped, max of raw values
+            # Categorical or no stack_by: bars dodged/ungrouped, max of raw values.
+            # Values ggplot drops as non-finite (log of 0, say) are not plotted,
+            # so they must not set the limits either.
             raw_values <- unlist(df[, data_col, drop = FALSE], use.names = FALSE)
-            max_val <- max(raw_values, na.rm = TRUE) * axis_scale_factor
-            min_val <- min(raw_values, na.rm = TRUE)
+            raw_values <- raw_values[is.finite(raw_values)]
+            max_val <- suppressWarnings(pad_max(max(raw_values)))
+            min_val <- suppressWarnings(min(raw_values))
         }
 
         if (!is.finite(min_val)) min_val <- 0
@@ -771,7 +925,7 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
             return(NULL)
         }
         x_sums <- tapply(stacked_values(), df[[data_col_x]], function(v) sum(v, na.rm = TRUE))
-        max_val <- max(x_sums, na.rm = TRUE) * axis_scale_factor
+        max_val <- pad_max(max(x_sums, na.rm = TRUE))
         min_val <- 0
 
         if (!is.finite(max_val)) max_val <- 1
@@ -795,9 +949,9 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 #' @return A data frame with `length(vars)` times as many rows as `df`, plus the
 #'   `var.multi` (values) and `var.which` (source column name) columns.
 #'
-#' @details No data adjustment is applied here; the raw column values are
-#'   carried over, matching how the module computes statistics from the
-#'   unadjusted data.
+#' @details No data adjustment is applied here; the column values are carried
+#'   over as given. dittoViz adjusts each variable before stacking, so pass a
+#'   frame already run through [.as_plotted()] to get the values it plots.
 #'
 #' @author Jared Andrews
 #' @keywords internal

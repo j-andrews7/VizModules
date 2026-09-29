@@ -20,13 +20,19 @@
 #' @keywords internal
 .compute_linear_fit <- function(df, x.col, y.col, group.col = NULL, n.points = 100) {
     compute_for_subset <- function(subset_df) {
-        # Remove NA values
-        subset_df <- subset_df[!is.na(subset_df[[x.col]]) & !is.na(subset_df[[y.col]]), ]
+        # Only finite values are plotted (a log of 0 is dropped), so only they are fit
+        subset_df <- subset_df[is.finite(subset_df[[x.col]]) & is.finite(subset_df[[y.col]]), ]
         if (nrow(subset_df) < 2) {
             return(NULL)
         }
 
-        model <- lm(subset_df[[y.col]] ~ subset_df[[x.col]])
+        model <- tryCatch(
+            lm(subset_df[[y.col]] ~ subset_df[[x.col]]),
+            error = function(e) NULL
+        )
+        if (is.null(model) || anyNA(coef(model))) {
+            return(NULL)
+        }
 
         x_min <- min(subset_df[[x.col]], na.rm = TRUE)
         x_max <- max(subset_df[[x.col]], na.rm = TRUE)
@@ -73,8 +79,8 @@
 #' @keywords internal
 .compute_loess_fit <- function(df, x.col, y.col, group.col = NULL, span = 0.75, n.points = 100) {
     compute_for_subset <- function(subset_df) {
-        # Remove NA values
-        subset_df <- subset_df[!is.na(subset_df[[x.col]]) & !is.na(subset_df[[y.col]]), ]
+        # Only finite values are plotted (a log of 0 is dropped), so only they are fit
+        subset_df <- subset_df[is.finite(subset_df[[x.col]]) & is.finite(subset_df[[y.col]]), ]
         # LOESS needs at least 4 observations
         if (nrow(subset_df) < 4) {
             return(NULL)
@@ -115,6 +121,164 @@
 }
 
 
+#' Pair each facet panel of a figure with the rows of data drawn in it
+#'
+#' Fit lines are computed per panel from the rows that panel shows, then drawn
+#' on its axes. Neither the order rows appear in nor the axis numbers can pair a
+#' facet level with its panel: ggplot orders facets by factor level (or
+#' alphabetically for any other column), and ggplotly numbers axes per panel
+#' column and row rather than per panel. The strip labels can, since each sits
+#' over (or beside) the panel it names; this is the match the significance
+#' brackets use too (`.build_facet_axis_map()`). When the strips cannot all be
+#' matched, panels are taken in ggplot's row-major order instead.
+#'
+#' @param fig A plotly figure from `ggplotly()` (e.g. a dittoViz plot).
+#' @param df Data frame holding the plotted values.
+#' @param split.by Character vector or `NULL`; one faceting column
+#'   (`facet_wrap()`), or two (`facet_grid()`, rows then columns).
+#'
+#' @return A list of panels, each `list(pair = list(x = , y = ), df = )`. An
+#'   unfaceted figure gives one panel per axis pair, holding all of `df`. Panels
+#'   with no rows are dropped.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_fit_panels
+#' @keywords internal
+.fit_panels <- function(fig, df, split.by = NULL) {
+    pairs <- .panel_axis_pairs(fig)
+    split.by <- split.by[!is.na(split.by) & nzchar(split.by)]
+    if (length(split.by) == 0 || !all(split.by %in% names(df))) {
+        return(lapply(pairs, function(pair) list(pair = pair, df = df)))
+    }
+
+    # The order ggplot lays facets out in
+    facet_levels <- function(col) {
+        v <- df[[col]]
+        if (is.factor(v)) levels(droplevels(v)) else sort(unique(as.character(v[!is.na(v)])))
+    }
+
+    if (length(split.by) == 1) {
+        key <- as.character(df[[split.by]])
+        lvls <- facet_levels(split.by)
+        strip_map <- .build_facet_axis_map(fig, split.by)
+        panel_pairs <- if (all(lvls %in% names(strip_map))) {
+            strip_map[lvls]
+        } else {
+            n <- min(length(lvls), length(pairs))
+            setNames(pairs[seq_len(n)], lvls[seq_len(n)])
+        }
+    } else {
+        rows <- facet_levels(split.by[1])
+        cols <- facet_levels(split.by[2])
+        key <- paste(df[[split.by[1]]], df[[split.by[2]]], sep = "\r")
+        grid <- .grid_strip_axes(fig, rows, cols)
+        panel_pairs <- list()
+        for (r in rows) {
+            for (cc in cols) {
+                if (is.null(grid$x[[cc]]) || is.null(grid$y[[r]])) next
+                panel_pairs[[paste(r, cc, sep = "\r")]] <- list(x = grid$x[[cc]], y = grid$y[[r]])
+            }
+        }
+    }
+
+    panels <- lapply(names(panel_pairs), function(lev) {
+        list(pair = panel_pairs[[lev]], df = df[!is.na(key) & key == lev, , drop = FALSE])
+    })
+    Filter(function(p) nrow(p$df) > 0, panels)
+}
+
+#' Axis pairs a figure's traces are drawn on, in row-major panel order
+#'
+#' @return A list of `list(x = , y = )` axis references, top row first and left
+#'   to right within a row, read off the axes' domains. `list(list(x = "x",
+#'   y = "y"))` for a figure with no traces.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_panel_axis_pairs
+#' @keywords internal
+.panel_axis_pairs <- function(fig) {
+    seen <- character(0)
+    pairs <- list()
+    for (tr in fig$x$data) {
+        pair <- list(x = tr$xaxis %||% "x", y = tr$yaxis %||% "y")
+        key <- paste(pair$x, pair$y)
+        if (!key %in% seen) {
+            seen <- c(seen, key)
+            pairs <- c(pairs, list(pair))
+        }
+    }
+    if (length(pairs) == 0) {
+        return(list(list(x = "x", y = "y")))
+    }
+
+    domain_of <- function(ref, side) {
+        d <- fig$x$layout[[sub(paste0("^", side), paste0(side, "axis"), ref)]]$domain
+        if (length(d) == 2) as.numeric(unlist(d)) else c(0, 1)
+    }
+    top <- vapply(pairs, function(p) domain_of(p$y, "y")[2], numeric(1))
+    left <- vapply(pairs, function(p) domain_of(p$x, "x")[1], numeric(1))
+    pairs[order(-top, left)]
+}
+
+#' Axis references for the rows and columns of a `facet_grid()` figure
+#'
+#' ggplotly gives a grid one x-axis per column and one y-axis per row. Column
+#' strips sit above their column and row strips (rotated) beside their row, so
+#' each strip names the axis nearest to it. Levels whose strip cannot be found
+#' fall back to position: columns left to right, rows top to bottom.
+#'
+#' @param fig A plotly figure from `ggplotly()`.
+#' @param rows,cols Character vectors; the row and column facet levels, in
+#'   ggplot's order.
+#'
+#' @return `list(x = , y = )`: named lists mapping each column level to an x-axis
+#'   reference and each row level to a y-axis reference.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_grid_strip_axes
+#' @keywords internal
+.grid_strip_axes <- function(fig, rows, cols) {
+    layout <- fig$x$layout
+    mids <- function(side) {
+        out <- numeric(0)
+        for (nm in grep(paste0("^", side, "axis[0-9]*$"), names(layout), value = TRUE)) {
+            d <- layout[[nm]]$domain
+            if (length(d) == 2) out[[sub("axis", "", nm)]] <- mean(as.numeric(unlist(d)))
+        }
+        out
+    }
+    x_mid <- mids("x")
+    y_mid <- mids("y")
+    nearest <- function(mid, pos) names(mid)[which.min(abs(mid - pos))]
+
+    col_ref <- list()
+    row_ref <- list()
+    for (a in layout$annotations) {
+        if (!identical(a$xref, "paper") || is.null(a$text) || is.null(a$x) || is.null(a$y)) next
+        # Axis titles sit at the paper's edge; strips do not.
+        if (isTRUE(a$x == 0) || isTRUE(a$y == 0)) next
+        rotated <- isTRUE(abs(a$textangle %||% 0) == 90)
+        if (rotated && a$text %in% rows && length(y_mid) > 0) {
+            row_ref[[a$text]] <- nearest(y_mid, a$y)
+        } else if (!rotated && a$text %in% cols && length(x_mid) > 0) {
+            col_ref[[a$text]] <- nearest(x_mid, a$x)
+        }
+    }
+
+    by_position <- function(levels, refs) {
+        n <- min(length(levels), length(refs))
+        setNames(as.list(refs[seq_len(n)]), levels[seq_len(n)])
+    }
+    if (!all(cols %in% names(col_ref))) {
+        col_ref <- by_position(cols, if (length(x_mid)) names(sort(x_mid)) else "x")
+    }
+    if (!all(rows %in% names(row_ref))) {
+        row_ref <- by_position(rows, if (length(y_mid)) names(sort(y_mid, decreasing = TRUE)) else "y")
+    }
+    list(x = col_ref, y = row_ref)
+}
+
+
 #' Add fit line traces to all subplot panels
 #'
 #' Adds linear or LOESS fit line traces to a plotly figure, handling subplot panels
@@ -144,81 +308,13 @@
                                        line_width = 3) {
     fit_type <- match.arg(fit_type)
 
-    # Determine facet levels if split.by is provided
-    if (!is.null(split.by) && length(split.by) > 0 && all(split.by %in% names(df))) {
-        if (length(split.by) == 1) {
-            # Preserve factor level order if it's a factor
-            if (is.factor(df[[split.by]])) {
-                facet_levels <- levels(df[[split.by]])
-            } else {
-                facet_levels <- unique(as.character(df[[split.by]]))
-            }
-            df$`.facet_combined` <- as.character(df[[split.by]])
-        } else {
-            df$`.facet_combined` <- apply(df[, split.by, drop = FALSE], 1, paste, collapse = "_")
-            facet_levels <- unique(df$`.facet_combined`)
-        }
-    } else {
-        facet_levels <- NULL
-        df$`.facet_combined` <- "all"
-    }
-
-    # Extract axis pairs in order by sorting by axis number
-    # This ensures x_y comes before x2_y2, etc.
-    axis_pairs_raw <- lapply(fig$x$data, function(tr) {
-        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
-        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
-        list(x = xaxis, y = yaxis)
-    })
-
-    # Get unique pairs while preserving first occurrence order
-    seen_keys <- character(0)
-    axis_pairs <- list()
-    for (pair in axis_pairs_raw) {
-        key <- paste0(pair$x, "_", pair$y)
-        if (!key %in% seen_keys) {
-            seen_keys <- c(seen_keys, key)
-            axis_pairs <- c(axis_pairs, list(pair))
-        }
-    }
-
-    # Sort axis pairs by axis number to match facet order
-    # x/y -> 1, x2/y2 -> 2, etc.
-    get_axis_num <- function(pair) {
-        x_num <- as.numeric(sub("^x", "", pair$x))
-        if (is.na(x_num)) x_num <- 1
-        x_num
-    }
-    axis_order <- order(vapply(axis_pairs, get_axis_num, numeric(1)))
-    axis_pairs <- axis_pairs[axis_order]
-
-    # If no traces found, default to main axes
-    if (length(axis_pairs) == 0) {
-        axis_pairs <- list(list(x = "x", y = "y"))
-    }
-
     # Track which trace names we've added to avoid duplicate legend entries
     added_names <- character(0)
 
-    # Process each subplot panel
-    for (idx in seq_along(axis_pairs)) {
-        pair <- axis_pairs[[idx]]
-
-        # Determine which facet level this panel corresponds to
-        if (!is.null(facet_levels) && idx <= length(facet_levels)) {
-            facet_val <- facet_levels[idx]
-            subset_df <- df[df$`.facet_combined` == facet_val, , drop = FALSE]
-        } else if (is.null(facet_levels)) {
-            subset_df <- df
-        } else {
-            # More panels than facet levels - skip
-            next
-        }
-
-        # Skip if no data in this panel
-        if (nrow(subset_df) == 0) {
-            next
-        }
+    # Process each subplot panel, fitting only the rows drawn in it
+    for (panel in .fit_panels(fig, df, split.by)) {
+        pair <- panel$pair
+        subset_df <- panel$df
 
         # Compute fit data for this panel
         if (fit_type == "linear") {
@@ -415,42 +511,8 @@
         warning("custom.models must be a named list; unnamed entries will be skipped.")
     }
 
-    # Extract axis pairs from existing traces (mirrors .add_fit_lines_to_subplots)
-    axis_pairs_raw <- lapply(fig$x$data, function(tr) {
-        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
-        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
-        list(x = xaxis, y = yaxis)
-    })
-    seen_keys <- character(0)
-    axis_pairs <- list()
-    for (pair in axis_pairs_raw) {
-        key <- paste0(pair$x, "_", pair$y)
-        if (!key %in% seen_keys) {
-            seen_keys <- c(seen_keys, key)
-            axis_pairs <- c(axis_pairs, list(pair))
-        }
-    }
-    get_axis_num <- function(pair) {
-        x_num <- suppressWarnings(as.numeric(sub("^x", "", pair$x)))
-        if (is.na(x_num)) x_num <- 1
-        x_num
-    }
-    axis_pairs <- axis_pairs[order(vapply(axis_pairs, get_axis_num, numeric(1)))]
-    if (length(axis_pairs) == 0) axis_pairs <- list(list(x = "x", y = "y"))
-
     # Facet subsets so predictions are scoped to each panel's x range
-    if (!is.null(split.by) && length(split.by) > 0 && all(split.by %in% names(df))) {
-        if (length(split.by) == 1) {
-            facet_levels <- if (is.factor(df[[split.by]])) levels(df[[split.by]]) else unique(as.character(df[[split.by]]))
-            df$`.facet_combined` <- as.character(df[[split.by]])
-        } else {
-            df$`.facet_combined` <- apply(df[, split.by, drop = FALSE], 1, paste, collapse = "_")
-            facet_levels <- unique(df$`.facet_combined`)
-        }
-    } else {
-        facet_levels <- NULL
-        df$`.facet_combined` <- "all"
-    }
+    panels <- .fit_panels(fig, df, split.by)
 
     added_names <- character(0)
 
@@ -463,16 +525,9 @@
         m_color <- line_color
         m_width <- line_width
 
-        for (idx in seq_along(axis_pairs)) {
-            pair <- axis_pairs[[idx]]
-
-            subset_df <- if (!is.null(facet_levels) && idx <= length(facet_levels)) {
-                df[df$`.facet_combined` == facet_levels[idx], , drop = FALSE]
-            } else {
-                df
-            }
-
-            if (nrow(subset_df) == 0) next
+        for (panel in panels) {
+            pair <- panel$pair
+            subset_df <- panel$df
 
             fit_data <- .compute_custom_model_fit(model, subset_df, x.col, backend = backend)
             if (is.null(fit_data)) next

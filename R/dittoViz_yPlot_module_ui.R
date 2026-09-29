@@ -22,12 +22,21 @@
 #' either replace the x-axis groups being compared or facet on two dimensions at once,
 #' neither of which the significance brackets can be placed against.
 #'
+#' The "Y Adjustment Function" is applied first and the "Y Adjustment" then rescales the
+#' result (e.g. log10, then z-score), the reverse of the order [dittoViz::yPlot()] applies its
+#' `var.adj.fxn` and `var.adjustment` in.
+#'
+#' Statistics are computed on the values as plotted, after any Y adjustment, and the Y
+#' Axis Min/Max and significance brackets are in those units too. With a ridge plot
+#' among the plot types the values run along the x-axis, so no brackets are drawn; the
+#' test results are still included in the source data download.
+#'
 #' @section Plot parameters not implemented or with altered functionality:
 #' The following [dittoViz::yPlot()] parameters are not available via UI inputs:
 #'
 #' - `xlab` - X-axis label (plotly allows interactive editing)
 #' - `ylab` - Y-axis label (auto-generated to reflect any applied Y adjustment,
-#'   e.g. `"log2(z-score(units))"`; plotly allows interactive editing). With several
+#'   e.g. `"z-score(log2(units))"`; plotly allows interactive editing). With several
 #'   Y variables only the adjustment is shown, as the variables are named by the
 #'   facet strips or the legend instead
 #' - `main` - Plot title (plotly allows interactive editing)
@@ -66,13 +75,18 @@
 #' - `split.by` - Faceting variable (UI: "Split by (facet)", default: "")
 #' - `plots` - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 #' - `color.panel` - Custom color values (UI: palette picker, derived from palette)
-#' - `min` - Y-axis minimum; set with the `y.min` key (UI: "Y Axis Min", auto-calculated)
-#' - `max` - Y-axis maximum; set with the `y.max` key (UI: "Y Axis Max", auto-calculated)
+#' - `min` - Y-axis minimum, in the units plotted (after any `var.adjustment`/`var.adj.fxn`);
+#'   set with the `y.min` key (UI: "Y Axis Min", auto-calculated). Not applied under a free
+#'   y facet scale, where each panel spans its own data.
+#' - `max` - Y-axis maximum, in the units plotted; set with the `y.max` key (UI: "Y Axis Max",
+#'   auto-calculated). Not applied under a free y facet scale.
 #' - `var.adjustment` - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 #' - `var.adj.fxn` - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 #' - `split.nrow` - Number of facet rows (UI: "Rows", default: 4)
 #' - `split.ncol` - Number of facet columns (UI: "Columns", default: 4)
-#' - `split.adjust` - Facet scale behavior (UI: "Facet Scaling", default: "fixed")
+#' - `split.adjust` - Facet scale behavior (UI: "Facet Scaling", default: "fixed"). A free y
+#'   scale ("free", "free_y") ignores Y Axis Min/Max and stacks each panel's significance
+#'   brackets above that panel's own data.
 #' - `do.raster` - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 #' - `raster.dpi` - DPI for rasterization (UI: "Raster DPI", default: 600)
 #' - `jitter.size` - Jitter point size (UI: "Jitter Point Size", default: 1)
@@ -202,13 +216,19 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Recognized data adjustments for the (numeric) continuous variable.
-    adj.choices <- c("", "z-score", "relative.to.max")
-    adj.fxn.choices <- c("", "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+    adj.choices <- c("", .adjustment_choices)
+    adj.fxn.choices <- c("", .adj_fxn_choices)
 
     # `var` may hold several columns, in which case the limits span all of them.
+    # The limits are in the units plotted, so any default adjustment applies.
     default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
     y.range <- .calculate_range(
-        df = data, data_col_y = default.var,
+        df = .as_plotted(
+            data, default.var,
+            get_default(defaults, "var.adjustment", "", function(x) x %in% adj.choices),
+            get_default(defaults, "var.adj.fxn", "", function(x) x %in% adj.fxn.choices)
+        ),
+        data_col_y = default.var,
         axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
     )
     max.y <- if (!is.null(y.range)) y.range$max else 1
@@ -233,6 +253,13 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     documentParameters <- get_documentation(
         package_name = "dittoViz::yPlot", type = "param",
         selected = selected, cap = TRUE
+    )
+    # The module applies these in the opposite order to dittoViz.
+    documentParameters$var.adj.fxn <- paste(
+        documentParameters$var.adj.fxn, .adjustment_order_note("Y Adjustment")
+    )
+    documentParameters$var.adjustment <- paste(
+        documentParameters$var.adjustment, .adjustment_order_note("Y Adjustment")
     )
 
     inputs <- list(

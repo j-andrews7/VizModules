@@ -79,10 +79,15 @@ that tab is opened, so the render can be deferred well past startup.
 y_range_store <- setup_axis_range(input, session, min_key = "y.min", max_key = "y.max",
                                   headroom = NULL, params = params)
 
-observeEvent(input$y.data, {
-    y_range <- .calculate_range(df = data(), data_col_y = input$y.data, ...)
-    if (!is.null(y_range)) {
-        y_range_store(list(min = y_range$min, max = y_range$max))
+observeEvent(c(input$y.data, input$y.adj.fxn), {
+    # The limits are in the units plotted: if the plot transforms the column, so must this.
+    plotted <- adjust_column_values(data(), y.col = input$y.data, y.adj.fun = input$y.adj.fxn)
+    y.col <- if (paste0(input$y.data, ".adj") %in% names(plotted)) paste0(input$y.data, ".adj") else input$y.data
+    values <- plotted[[y.col]]
+    values <- values[is.finite(values)]
+    if (length(values) > 0) {
+        y_range <- list(min = min(values), max = max(values) + abs(max(values)) * 0.1)
+        y_range_store(y_range)
         updateNumericInput(session, "y.min", value = y_range$min)
         updateNumericInput(session, "y.max", value = y_range$max)
     }
@@ -96,7 +101,7 @@ Reset button both.
 
 If the plot draws significance brackets, pass `headroom` too. Brackets stack above the
 data, so the limit must clear them or they draw clipped. `stat_bracket_y_max()` works out
-how high they reach; the store raises the maximum to meet it and updates the control to
+how high they reach (give it the plotted values, as above); the store raises the maximum to meet it and updates the control to
 match. It only ever raises, so a larger limit the user chose is left alone. Pass the
 resolved limits on to `apply_stat_annotations()` as `y.min`/`y.max` — it has the last word
 on the drawn range, and knowing what you asked for is what stops it shrinking the axis

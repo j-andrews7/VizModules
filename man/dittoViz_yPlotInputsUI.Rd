@@ -45,6 +45,15 @@ Stats tab is only available for the \code{"split"} aesthetic with no \code{split
 comparisons are then run separately within each variable's facet. The other layouts
 either replace the x-axis groups being compared or facet on two dimensions at once,
 neither of which the significance brackets can be placed against.
+
+The "Y Adjustment Function" is applied first and the "Y Adjustment" then rescales the
+result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} applies its
+\code{var.adj.fxn} and \code{var.adjustment} in.
+
+Statistics are computed on the values as plotted, after any Y adjustment, and the Y
+Axis Min/Max and significance brackets are in those units too. With a ridge plot
+among the plot types the values run along the x-axis, so no brackets are drawn; the
+test results are still included in the source data download.
 }
 \section{Plot parameters not implemented or with altered functionality}{
 
@@ -52,7 +61,7 @@ The following \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}} parameters are not
 \itemize{
 \item \code{xlab} - X-axis label (plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing). With several
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing). With several
 Y variables only the adjustment is shown, as the variables are named by the
 facet strips or the legend instead
 \item \code{main} - Plot title (plotly allows interactive editing)
@@ -94,13 +103,18 @@ default: "split")
 \item \code{split.by} - Faceting variable (UI: "Split by (facet)", default: "")
 \item \code{plots} - Plot types to show (UI: "Plots to show", default: c("boxplot", "jitter"))
 \item \code{color.panel} - Custom color values (UI: palette picker, derived from palette)
-\item \code{min} - Y-axis minimum; set with the \code{y.min} key (UI: "Y Axis Min", auto-calculated)
-\item \code{max} - Y-axis maximum; set with the \code{y.max} key (UI: "Y Axis Max", auto-calculated)
+\item \code{min} - Y-axis minimum, in the units plotted (after any \code{var.adjustment}/\code{var.adj.fxn});
+set with the \code{y.min} key (UI: "Y Axis Min", auto-calculated). Not applied under a free
+y facet scale, where each panel spans its own data.
+\item \code{max} - Y-axis maximum, in the units plotted; set with the \code{y.max} key (UI: "Y Axis Max",
+auto-calculated). Not applied under a free y facet scale.
 \item \code{var.adjustment} - Y-axis data adjustment (UI: "Y Adjustment", default: "")
 \item \code{var.adj.fxn} - Y-axis adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{split.nrow} - Number of facet rows (UI: "Rows", default: 4)
 \item \code{split.ncol} - Number of facet columns (UI: "Columns", default: 4)
-\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "fixed")
+\item \code{split.adjust} - Facet scale behavior (UI: "Facet Scaling", default: "fixed"). A free y
+scale ("free", "free_y") ignores Y Axis Min/Max and stacks each panel's significance
+brackets above that panel's own data.
 \item \code{do.raster} - Rasterize jitter points (UI: "Rasterize Jitter", default: FALSE)
 \item \code{raster.dpi} - DPI for rasterization (UI: "Raster DPI", default: 600)
 \item \code{jitter.size} - Jitter point size (UI: "Jitter Point Size", default: 1)

@@ -1020,6 +1020,12 @@ safe_eval_filter <- function(expr_text, data) {
     )
 }
 
+# Adjustment functions a user may pick by name. This is the allowlist
+# safe_resolve_adj_fxn() enforces, and the module UIs offer exactly these, so a
+# name added here is at once allowed, offered, and covered by the tests that
+# check each one against dittoViz.
+.adj_fxn_choices <- c("log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
+
 #' Safely resolve an adjustment function name to an actual function
 #'
 #' Validates that the provided function name is in the allowed list before
@@ -1047,8 +1053,7 @@ safe_resolve_adj_fxn <- function(fn_name) {
         return(NULL)
     }
 
-    allowed <- c("log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt")
-    if (!fn_name %in% allowed) {
+    if (!fn_name %in% .adj_fxn_choices) {
         warning("Unrecognized adjustment function: ", fn_name)
         return(NULL)
     }

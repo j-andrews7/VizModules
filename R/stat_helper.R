@@ -297,7 +297,11 @@ compute_pairwise_stats <- function(df, x, y,
 #' @param stats_df Data frame from [compute_pairwise_stats()].
 #' @param fig A plotly figure object. Used to detect subplot axis pairs for
 #'   faceted plots.
-#' @param df The original data frame.
+#' @param df The data frame the plot was drawn from, holding the values as they
+#'   are plotted: if the plot transformed a column (e.g. dittoViz's
+#'   `var.adjustment`/`var.adj.fxn`), pass the transformed values (see
+#'   [adjust_column_values()]), or the brackets are placed in a different
+#'   coordinate space from the data. Non-finite values are ignored.
 #' @param x Character; x-axis column name.
 #' @param y Character; y-axis column name.
 #' @param display Character; what to display: `"p.adj"`, `"p.value"`, or
@@ -325,12 +329,27 @@ compute_pairwise_stats <- function(df, x, y,
 #'   dodged across, matching the dodge the plot was built with. Brackets between
 #'   two `group.by` levels are placed on the same slot centres the boxes sit on,
 #'   so this has to be the plot's dodge or they will not line up. Default 1.
+#' @param free.y Logical; whether each facet panel has its own y scale (e.g.
+#'   `scales = "free_y"`). Each panel's brackets are then stacked above that
+#'   panel's own data rather than above the tallest panel's, and comparisons
+#'   pooled across facets are drawn on every panel at that panel's height.
+#'   Ignored when the figure has no facet panels. Default `FALSE`.
+#'
+#' @details
+#' The values in `y` are expected to be the values drawn on the y-axis, so the
+#' plot must show them running up the y-axis. A plot whose values run along the
+#' x-axis (a rotated box plot or a ridge plot, say) has no room for vertical
+#' brackets; test it with [compute_pairwise_stats()] but do not draw brackets.
 #'
 #' @return A list with components:
 #'   \describe{
 #'     \item{annotations}{List of plotly annotation objects.}
 #'     \item{shapes}{List of plotly shape objects.}
 #'     \item{y.max}{Numeric; maximum y value needed to accommodate all annotations.}
+#'     \item{y.min}{Numeric; the smallest finite value of `y`.}
+#'     \item{y.range.by.axis}{Under `free.y`, a named list of `c(min, max)` ranges
+#'       keyed by y-axis reference (`"y"`, `"y2"`, ...): the panel's data minimum
+#'       and the top its brackets need. `NULL` otherwise.}
 #'   }
 #'
 #' @importFrom utils combn
@@ -374,7 +393,8 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
                                      step.increase = 0.06,
                                      text.bump = 0.04,
                                      bracket.inset = 0.025,
-                                     dodge.width = 1) {
+                                     dodge.width = 1,
+                                     free.y = FALSE) {
     empty_result <- list(annotations = list(), shapes = list(), y.max = NULL)
 
     if (is.null(stats_df) || nrow(stats_df) == 0) {
@@ -413,23 +433,59 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
         x.order <- if (is.factor(col_data)) levels(col_data) else unique(as.character(col_data))
     }
 
-    # Y-axis range from data
-    v_max <- max(df[[y]], na.rm = TRUE)
-    v_range <- v_max - min(df[[y]], na.rm = TRUE)
-    v_unit <- v_range * step.increase
-    bump <- v_range * text.bump
-    tick_height <- v_range * 0.02
+    # Bracket geometry is measured against the values drawn. ggplot drops
+    # non-finite values (e.g. log of 0), so they must not set the heights either.
+    geometry <- function(values) {
+        values <- values[is.finite(values)]
+        if (length(values) == 0) {
+            return(NULL)
+        }
+        v_range <- max(values) - min(values)
+        list(
+            v_min = min(values), v_max = max(values),
+            v_unit = v_range * step.increase, bump = v_range * text.bump,
+            tick_height = v_range * 0.02
+        )
+    }
+    global_geom <- geometry(df[[y]])
+    if (is.null(global_geom)) {
+        return(list(annotations = all_annotations, shapes = all_shapes, y.max = NULL))
+    }
 
     # Build facet axis map
     facet_axis_map <- .build_facet_axis_map(fig, facet.by)
+    # Each panel of a free y scale spans only its own data, so brackets are
+    # measured against that panel alone. Without facet panels there is nothing
+    # to be free across.
+    free.y <- isTRUE(free.y) && length(facet_axis_map) > 0
+
+    all_annotations <- list()
+    all_shapes <- list()
+    global_y_max <- global_geom$v_max
+    axis_ranges <- list()
+
+    # Draw one set of brackets on one panel, measured against `geom`.
+    draw <- function(rows, geom, xref, yref) {
+        bracket_result <- .create_bracket_shapes(
+            rows, geom$v_max, geom$v_unit, geom$bump, geom$tick_height,
+            display, bracket.style, line.color, line.width,
+            font.size, xref, yref
+        )
+        all_shapes <<- c(all_shapes, bracket_result$shapes)
+        all_annotations <<- c(all_annotations, bracket_result$annotations)
+        global_y_max <<- max(global_y_max, bracket_result$y_max)
+        top <- bracket_result$y_max + geom$v_unit
+        prev <- axis_ranges[[yref]]
+        axis_ranges[[yref]] <<- if (is.null(prev)) {
+            c(geom$v_min, top)
+        } else {
+            c(min(prev[1], geom$v_min), max(prev[2], top))
+        }
+    }
 
     # Process brackets per facet level
     facet_levels <- unique(pairwise_df$facet_level)
     if (all(is.na(facet_levels))) facet_levels <- NA_character_
-
-    all_annotations <- list()
-    all_shapes <- list()
-    global_y_max <- v_max
 
     for (flev in facet_levels) {
         if (is.na(flev)) {
@@ -457,23 +513,28 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
             x = x, dodge.width = dodge.width
         )
 
-        # Generate bracket shapes and annotations
-        bracket_result <- .create_bracket_shapes(
-            facet_rows, v_max, v_unit, bump, tick_height,
-            display, bracket.style, line.color, line.width,
-            font.size, xref, yref
-        )
-        all_shapes <- c(all_shapes, bracket_result$shapes)
-        all_annotations <- c(all_annotations, bracket_result$annotations)
-        if (bracket_result$y_max > global_y_max) {
-            global_y_max <- bracket_result$y_max
+        if (!free.y) {
+            draw(facet_rows, global_geom, xref, yref)
+        } else if (!is.na(flev)) {
+            draw(facet_rows, geometry(.facet_subset(df, facet.by, flev)[[y]]) %||% global_geom, xref, yref)
+        } else {
+            # Comparisons pooled across facets are drawn on every panel; under a
+            # free scale each copy has to sit on its own panel's data.
+            panel_levels <- intersect(names(facet_axis_map), unique(as.character(df[[facet.by]])))
+            for (plev in panel_levels) {
+                draw(
+                    facet_rows, geometry(.facet_subset(df, facet.by, plev)[[y]]) %||% global_geom,
+                    facet_axis_map[[plev]]$x, facet_axis_map[[plev]]$y
+                )
+            }
         }
     }
 
-    global_y_max <- global_y_max + v_unit
+    global_y_max <- global_y_max + global_geom$v_unit
 
-    # Replicate annotations to extra facet panels when per-facet is disabled
-    if (length(facet_axis_map) > 0 && all(is.na(unique(pairwise_df$facet_level)))) {
+    # Replicate annotations to extra facet panels when per-facet is disabled.
+    # Under a free scale they were drawn per panel above.
+    if (!free.y && length(facet_axis_map) > 0 && all(is.na(unique(pairwise_df$facet_level)))) {
         replicated <- .replicate_to_facet_panels(
             all_annotations, all_shapes, facet_axis_map
         )
@@ -489,7 +550,11 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
         all_annotations <- c(omnibus_annots, all_annotations)
     }
 
-    list(annotations = all_annotations, shapes = all_shapes, y.max = global_y_max)
+    list(
+        annotations = all_annotations, shapes = all_shapes,
+        y.max = global_y_max, y.min = global_geom$v_min,
+        y.range.by.axis = if (free.y) axis_ranges else NULL
+    )
 }
 
 
@@ -618,6 +683,11 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
         return(facet_axis_map)
     }
 
+    # The y-axes each x-axis is actually drawn with. Panels in one row share a
+    # y domain, so under a free y scale (one y-axis per panel) the domain alone
+    # cannot tell their y-axes apart; the traces can.
+    trace_pairs <- lapply(fig$x$data, function(tr) c(tr$xaxis %||% "x", tr$yaxis %||% "y"))
+
     for (a in annots) {
         if (is.null(a$xref) || a$xref != "paper") next
         if (is.null(a$text) || !nzchar(a$text)) next
@@ -633,9 +703,13 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
             }
         }
 
+        paired_y <- unique(unlist(lapply(trace_pairs, function(p) if (identical(p[1], best_x)) p[2])))
+        candidate_y <- intersect(names(y_axes), paired_y)
+        if (length(candidate_y) == 0) candidate_y <- names(y_axes)
+
         best_y <- NULL
         best_y_dist <- Inf
-        for (yref in names(y_axes)) {
+        for (yref in candidate_y) {
             dist <- abs(y_axes[[yref]] - a$y)
             if (dist < best_y_dist) {
                 best_y_dist <- dist
@@ -864,9 +938,11 @@ create_stat_annotations <- function(stats_df, fig, df, x, y,
 #' [apply_stat_annotations()] still has the last word on the drawn range, so a
 #' bracket is never clipped even where this over- or under-estimates.
 #'
-#' @param df Data frame the statistics are computed on. For a module that
-#'   reshapes its data for testing (e.g. a multi-variable Y selection), pass the
-#'   reshaped frame, not the raw one.
+#' @param df Data frame the statistics are computed on, holding the values as
+#'   they are plotted. For a module that reshapes its data for testing (e.g. a
+#'   multi-variable Y selection), pass the reshaped frame, not the raw one; for
+#'   one that transforms a column before plotting it (e.g. a dittoViz
+#'   `var.adjustment`), pass the transformed values (see [adjust_column_values()]).
 #' @param x Character; x-axis column name.
 #' @param y Character; y-axis column name(s). Several may be given, in which
 #'   case the data range spans all of them.
@@ -1083,6 +1159,38 @@ stat_bracket_y_max <- function(df, x, y, pairs = NULL, group.by = NULL,
 }
 
 
+#' Tell the user why significance brackets are missing from the plot
+#'
+#' Brackets are stacked above the data on the y-axis, so they cannot be drawn
+#' when the plotted values run along the x-axis (a rotated box plot, or a
+#' dittoViz plot containing a ridge plot). The tests are still run and shipped in
+#' the source-data download; this says so. The notification has a fixed id, so
+#' rebuilding the plot replaces it rather than stacking copies.
+#'
+#' @param session The Shiny session, from inside `moduleServer()`.
+#'
+#' @return Called for its side effect; `NULL`, invisibly.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_note_brackets_skipped
+#' @keywords internal
+.note_brackets_skipped <- function(session = shiny::getDefaultReactiveDomain()) {
+    if (is.null(session)) {
+        return(invisible(NULL))
+    }
+    showNotification(
+        paste(
+            "Significance brackets are not drawn while the values run along the x-axis",
+            "(rotated or ridge plots). The test results are still in the source data download."
+        ),
+        id = session$ns("stat-brackets-skipped"),
+        type = "message",
+        session = session
+    )
+    invisible(NULL)
+}
+
+
 #' Apply statistical annotation shapes and annotations to a plotly figure
 #'
 #' Appends the shapes and annotations from [create_stat_annotations()] to
@@ -1095,11 +1203,20 @@ stat_bracket_y_max <- function(df, x, y, pairs = NULL, group.by = NULL,
 #' statistics on cannot silently undo a y-axis maximum the user chose. Reserve
 #' the room up front with [stat_bracket_y_max()] and this becomes a no-op.
 #'
+#' When `stat_result` came from `create_stat_annotations(free.y = TRUE)`, each
+#' panel's y-axis is raised to fit its own brackets and keeps its own bottom, and
+#' `y.min`/`y.max` are ignored: a single limit shared by every panel would undo
+#' the free scale.
+#'
+#' The range is written straight into the figure's layout. Anything later queued
+#' with [plotly::layout()] that sets the axis range will still override it when
+#' the figure is built.
+#'
 #' @param fig A plotly figure object.
 #' @param stat_result List with `annotations`, `shapes`, and `y.max` as returned
 #'   by [create_stat_annotations()].
-#' @param y.min Numeric or NULL; minimum y-axis value. If NULL, the existing
-#'   y-axis range is preserved.
+#' @param y.min Numeric or NULL; minimum y-axis value. If NULL (or not finite),
+#'   the existing y-axis bottom is kept, falling back to the data minimum.
 #' @param y.max Numeric or NULL; the maximum the caller asked for. The drawn top
 #'   is the larger of this and the height the brackets need. If NULL, the
 #'   figure's existing top is used for that comparison.
@@ -1143,6 +1260,27 @@ apply_stat_annotations <- function(fig, stat_result, y.min = NULL, y.max = NULL)
     if (is.null(existing_annots)) existing_annots <- list()
     fig$x$layout$annotations <- c(existing_annots, stat_result$annotations)
 
+    # Under a free y scale every panel has its own range, so each axis is raised
+    # to its own brackets and keeps its own bottom; one shared limit would undo
+    # the free scale.
+    if (!is.null(stat_result$y.range.by.axis)) {
+        for (yref in names(stat_result$y.range.by.axis)) {
+            needed <- stat_result$y.range.by.axis[[yref]]
+            yax_name <- sub("^y", "yaxis", yref)
+            existing_yaxis <- fig$x$layout[[yax_name]]
+            if (is.null(existing_yaxis)) existing_yaxis <- list()
+
+            current <- existing_yaxis$range
+            if (length(current) == 2 && all(is.finite(unlist(current)))) {
+                existing_yaxis$range <- c(current[[1]], max(current[[2]], needed[2]))
+            } else {
+                existing_yaxis$range <- c(needed[1] - (needed[2] - needed[1]) * 0.02, needed[2])
+            }
+            fig$x$layout[[yax_name]] <- existing_yaxis
+        }
+        return(fig)
+    }
+
     # Adjust y-axis range to accommodate brackets on ALL y-axes
     if (!is.null(stat_result$y.max)) {
         y_axis_names <- grep("^yaxis", names(fig$x$layout), value = TRUE)
@@ -1152,19 +1290,24 @@ apply_stat_annotations <- function(fig, stat_result, y.min = NULL, y.max = NULL)
             existing_yaxis <- fig$x$layout[[yax_name]]
             if (is.null(existing_yaxis)) existing_yaxis <- list()
 
-            y_lo <- y.min
-            if (is.null(y_lo) && !is.null(existing_yaxis$range)) {
-                y_lo <- existing_yaxis$range[1]
+            y_lo <- if (length(y.min) == 1 && is.finite(y.min)) y.min else NULL
+            if (is.null(y_lo) && length(existing_yaxis$range) == 2) {
+                y_lo <- existing_yaxis$range[[1]]
+            }
+            # A range needs both ends; with neither a requested nor an existing
+            # bottom, start from the data.
+            if (is.null(y_lo) || !is.finite(y_lo)) {
+                y_lo <- stat_result$y.min
             }
 
             # Raise the top to fit the brackets, but never pull it back down: a
             # maximum the caller asked for is theirs to keep when it already
             # clears them.
             y_hi <- y.max
-            if (is.null(y_hi) && !is.null(existing_yaxis$range)) {
-                y_hi <- existing_yaxis$range[2]
+            if ((length(y_hi) != 1 || !is.finite(y_hi)) && length(existing_yaxis$range) == 2) {
+                y_hi <- existing_yaxis$range[[2]]
             }
-            y_hi <- if (is.null(y_hi) || !is.finite(y_hi)) {
+            y_hi <- if (length(y_hi) != 1 || !is.finite(y_hi)) {
                 stat_result$y.max
             } else {
                 max(y_hi, stat_result$y.max)

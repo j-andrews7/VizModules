@@ -274,6 +274,108 @@ test_that("apply_stat_annotations never lowers a requested y-axis maximum", {
     expect_equal(from_fig$x$layout$yaxis$range[2], 20)
 })
 
+test_that("apply_stat_annotations gives a two-ended range with no requested or existing bottom", {
+    fig <- list(x = list(layout = list()))
+    class(fig) <- "plotly"
+    stat_result <- list(annotations = list(), shapes = list(list(type = "line")), y.max = 12, y.min = 2)
+
+    for (y.min in list(NULL, NA)) {
+        result <- apply_stat_annotations(fig, stat_result, y.min = y.min, y.max = NA)
+        expect_length(result$x$layout$yaxis$range, 2)
+        expect_equal(result$x$layout$yaxis$range[2], 12)
+        expect_lt(result$x$layout$yaxis$range[1], 2)
+    }
+})
+
+test_that("brackets added after the axis styling survive the build (#319)", {
+    # The styling used to queue a copy of the whole axis, which at build time put
+    # back the range from before the brackets raised it, leaving them off the plot.
+    fig <- dittoViz::yPlot(example_iris, "Sepal.Length", "Species", plots = "boxplot", do.hover = TRUE)
+    fig <- apply_subplot_axis_styling(fig, list(showgrid = FALSE), list(showgrid = FALSE))
+
+    stats_df <- compute_pairwise_stats(example_iris, x = "Species", y = "Sepal.Length")
+    stat_result <- create_stat_annotations(
+        stats_df, fig = fig, df = example_iris, x = "Species", y = "Sepal.Length"
+    )
+    fig <- apply_stat_annotations(fig, stat_result)
+
+    built <- expect_brackets_within_axes(fig, min.count = 3)
+    expect_gte(built$x$layout$yaxis$range[2], stat_result$y.max)
+})
+
+test_that("create_stat_annotations measures brackets against finite values only", {
+    # log10(0) is -Inf, which ggplot drops; it must not make the brackets'
+    # spacing infinite.
+    df <- test_df
+    df$value[1] <- -Inf
+    stats_df <- compute_pairwise_stats(df[is.finite(df$value), ], x = "group", y = "value")
+    fig <- plotly::plotly_build(plotly::plot_ly(df, x = ~group, y = ~value, type = "box"))
+
+    result <- create_stat_annotations(stats_df, fig = fig, df = df, x = "group", y = "value")
+    ys <- unlist(lapply(result$shapes, function(s) c(s$y0, s$y1)))
+    expect_true(all(is.finite(ys)))
+    expect_equal(result$y.min, min(df$value[is.finite(df$value)]))
+    expect_true(is.finite(result$y.max))
+
+    all_bad <- data.frame(group = c("A", "A", "B", "B"), value = c(-Inf, NaN, -Inf, NA))
+    expect_null(create_stat_annotations(.one_pair(), fig = fig, df = all_bad, x = "group", y = "value")$y.max)
+})
+
+# Two facets on very different scales, drawn with a free y scale.
+.free_scale_fixture <- function() {
+    set.seed(7)
+    data.frame(
+        grp = rep(rep(c("A", "B"), each = 10), 2),
+        panel = rep(c("small", "large"), each = 20),
+        value = c(rnorm(10, 5), rnorm(10, 7), rnorm(10, 500, 20), rnorm(10, 700, 20)),
+        stringsAsFactors = FALSE
+    )
+}
+
+test_that("under a free y scale each panel's brackets sit on that panel's own data", {
+    df <- .free_scale_fixture()
+    fig <- dittoViz::yPlot(
+        df, "value", "grp", split.by = "panel", plots = "boxplot",
+        split.adjust = list(scales = "free_y"), do.hover = TRUE
+    )
+
+    for (per.facet in c(TRUE, FALSE)) {
+        stats_df <- compute_pairwise_stats(
+            df, x = "grp", y = "value", facet.by = "panel", per.facet = per.facet
+        )
+        stat_result <- create_stat_annotations(
+            stats_df, fig = fig, df = df, x = "grp", y = "value",
+            facet.by = "panel", free.y = TRUE
+        )
+
+        # One range per panel, each measured against that panel's values.
+        ranges <- stat_result$y.range.by.axis
+        expect_length(ranges, 2)
+        tops <- vapply(ranges, `[`, numeric(1), 2)
+        expect_lt(min(tops), 50)
+        expect_gt(max(tops), 700)
+
+        # A bracket on the small panel sits just above its data rather than at the
+        # large panel's height, and every bracket is inside its own panel's axis.
+        styled <- apply_stat_annotations(fig, stat_result, y.min = 0, y.max = 1000)
+        built <- expect_brackets_within_axes(styled, min.count = 2)
+        axis_tops <- vapply(c("yaxis", "yaxis2"), function(a) max(unlist(built$x$layout[[a]]$range)), numeric(1))
+        expect_lt(min(axis_tops), 50)
+    }
+})
+
+test_that("without free.y, faceted brackets share the tallest panel's height", {
+    df <- .free_scale_fixture()
+    fig <- dittoViz::yPlot(df, "value", "grp", split.by = "panel", plots = "boxplot", do.hover = TRUE)
+    stats_df <- compute_pairwise_stats(df, x = "grp", y = "value", facet.by = "panel")
+    stat_result <- create_stat_annotations(stats_df, fig = fig, df = df, x = "grp", y = "value", facet.by = "panel")
+
+    expect_null(stat_result$y.range.by.axis)
+    heights <- unique(round(vapply(stat_result$annotations, function(a) a$y, numeric(1)), 6))
+    expect_length(heights, 1)
+    expect_gt(heights, max(df$value))
+})
+
 test_that("stat_bracket_y_max reserves exactly the room the brackets are drawn in", {
     df <- example_iris
     x <- "Species"

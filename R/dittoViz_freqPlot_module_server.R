@@ -321,6 +321,12 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (!isTRUE(input$stats.enabled)) {
                 return(NULL)
             }
+            # No brackets are drawn with the values on the x-axis (ridge plots), and
+            # a free scale gives each panel its own range, which one shared limit
+            # cannot reserve.
+            if ("ridgeplot" %in% input$plots || isTRUE(input$split.adjust %in% c("free", "free_y"))) {
+                return(NULL)
+            }
             summ <- summary_df()
             if (is.null(summ) || nrow(summ) == 0) {
                 return(NULL)
@@ -545,6 +551,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (isolate_fn(input$split.adjust) != "free") {
                 split.adjust$scales <- isolate_fn(input$split.adjust)
             }
+            # The plot is always faceted. Under a free y scale each panel spans its own
+            # data, so the Y Axis Min/Max (one limit for every panel, which dittoViz
+            # would apply with coord_cartesian()) are withheld, and each panel's
+            # brackets are measured against that panel alone.
+            free.y <- split.adjust$scales %in% c("free", "free_y")
 
             # Drop any persisted manual axis-title text when a variable feeding a
             # title changes, so the title regenerates for the new variable (its
@@ -594,8 +605,8 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 # A blank numeric input reports NULL (not NA) to Shiny, but
                 # freqPlot()'s internal is.na(min)/is.na(max) checks require a
                 # scalar NA -- NULL crashes them.
-                min = y.limits$min %__% NA,
-                max = y.limits$max %__% NA,
+                min = if (free.y) NA else y.limits$min %__% NA,
+                max = if (free.y) NA else y.limits$max %__% NA,
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
@@ -692,27 +703,35 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
                 last_stats_df(stats_df)
 
-                stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = summ,
-                    x = "grouping", y = y.col,
-                    display = isolate_fn(input$stat.display),
-                    hide.ns = isolate_fn(input$stat.hide.ns),
-                    sig.threshold = isolate_fn(input$stat.sig.threshold),
-                    line.color = isolate_fn(input$stat.line.color),
-                    line.width = isolate_fn(input$stat.line.width),
-                    bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = stats.group, facet.by = "label",
-                    step.increase = isolate_fn(input$stat.step.increase),
-                    text.bump = isolate_fn(input$stat.text.bump),
-                    bracket.inset = isolate_fn(input$stat.bracket.inset),
-                    # Brackets between two groups sit on the same slot centres
-                    # .align_box_positions() puts the boxes on.
-                    dodge.width = 1 - boxgap
-                )
+                if ("ridgeplot" %in% isolate_fn(input$plots)) {
+                    # dittoViz lays the whole figure out horizontally once a ridge plot
+                    # is in it, so the values run along the x-axis and there is no room
+                    # above them for brackets. The tests still reach the source download.
+                    .note_brackets_skipped(session)
+                } else {
+                    stat_result <- create_stat_annotations(
+                        stats_df = stats_df, fig = fig, df = summ,
+                        x = "grouping", y = y.col,
+                        display = isolate_fn(input$stat.display),
+                        hide.ns = isolate_fn(input$stat.hide.ns),
+                        sig.threshold = isolate_fn(input$stat.sig.threshold),
+                        line.color = isolate_fn(input$stat.line.color),
+                        line.width = isolate_fn(input$stat.line.width),
+                        bracket.style = isolate_fn(input$stat.bracket.style),
+                        group.by = stats.group, facet.by = "label",
+                        step.increase = isolate_fn(input$stat.step.increase),
+                        text.bump = isolate_fn(input$stat.text.bump),
+                        bracket.inset = isolate_fn(input$stat.bracket.inset),
+                        # Brackets between two groups sit on the same slot centres
+                        # .align_box_positions() puts the boxes on.
+                        dodge.width = 1 - boxgap,
+                        free.y = free.y
+                    )
 
-                fig <- apply_stat_annotations(fig, stat_result,
-                    y.min = y.limits$min, y.max = y.limits$max
-                )
+                    fig <- apply_stat_annotations(fig, stat_result,
+                        y.min = y.limits$min, y.max = y.limits$max
+                    )
+                }
             } else {
                 # Nothing was tested for this figure, so the source download must
                 # not ship the table from an earlier one.

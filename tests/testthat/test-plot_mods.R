@@ -387,6 +387,19 @@ test_that("adjust_column_values returns df unchanged for no, invalid or non-nume
     )
     chr <- data.frame(x = letters[1:3], stringsAsFactors = FALSE)
     expect_false("x.adj" %in% names(VizModules::adjust_column_values(chr, x.col = "x", x.adj.fun = "log2")))
+    expect_false("x.adj" %in% names(VizModules::adjust_column_values(chr, x.col = "x", x.adjustment = "z-score")))
+})
+
+test_that("adjust_column_values applies the function, then rescales, as the modules do", {
+    df <- data.frame(x = c(2, 4, 8), y = c(1, 2, 3))
+    z <- VizModules::adjust_column_values(df, x.col = "x", x.adjustment = "z-score")
+    expect_equal(z$x.adj, as.numeric(scale(df$x)))
+
+    rel <- VizModules::adjust_column_values(df, y.col = "y", y.adjustment = "relative.to.max", y.adj.fun = "log2")
+    expect_equal(rel$y.adj, log2(df$y) / log2(3))
+
+    # Blank adjustments leave the frame alone.
+    expect_identical(VizModules::adjust_column_values(df, x.col = "x", x.adjustment = ""), df)
 })
 
 # ─── add_plot_config ────────────────────────────────────────────────────────
@@ -448,15 +461,57 @@ test_that("apply_subplot_axis_styling styles every subplot axis, keeping their p
         yaxis_style = list(linecolor = "blue")
     )
 
-    # plotly::layout() stores updates in layoutAttrs
+    # plotly::layout() stores updates in layoutAttrs; only the styling is queued
     layout_update <- result$x$layoutAttrs[[1]]
     expect_equal(layout_update$xaxis$linecolor, "red")
     expect_equal(layout_update$xaxis2$linecolor, "red")
     expect_false(layout_update$xaxis2$showgrid)
     expect_equal(layout_update$yaxis$linecolor, "blue")
     expect_equal(layout_update$yaxis2$linecolor, "blue")
-    # Existing properties preserved
-    expect_equal(layout_update$xaxis$title, "X1")
+    expect_null(layout_update$xaxis$title)
+
+    # Existing properties are preserved once the figure is built
+    real <- plotly::plotly_build(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers") |>
+            plotly::layout(xaxis = list(title = "X1"), yaxis = list(title = "Y1"))
+    )
+    built <- plotly::plotly_build(
+        VizModules::apply_subplot_axis_styling(real, list(linecolor = "red"), list(linecolor = "blue"))
+    )
+    expect_equal(built$x$layout$xaxis$title, "X1")
+    expect_equal(built$x$layout$yaxis$title, "Y1")
+    expect_equal(built$x$layout$xaxis$linecolor, "red")
+    expect_equal(built$x$layout$yaxis$linecolor, "blue")
+})
+
+test_that("apply_subplot_axis_styling does not revert layout written after it", {
+    # The styling used to queue a copy of each whole axis, which at build time
+    # overwrote any range written since -- e.g. the raise that makes room for
+    # significance brackets (#319).
+    fig <- plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers") |>
+        plotly::layout(yaxis = list(range = c(0, 4)))
+    fig <- plotly::plotly_build(fig)
+
+    styled <- VizModules::apply_subplot_axis_styling(fig, list(showgrid = FALSE), list(showgrid = FALSE))
+    styled$x$layout$yaxis$range <- c(0, 10)
+    built <- plotly::plotly_build(styled)
+
+    expect_equal(built$x$layout$yaxis$range, c(0, 10))
+    expect_false(built$x$layout$yaxis$showgrid)
+})
+
+test_that("apply_subplot_axis_styling leaves a property alone when its style is NULL", {
+    fig <- plotly::plotly_build(
+        plotly::plot_ly(x = 1:3, y = 1:3, type = "scatter", mode = "markers") |>
+            plotly::layout(yaxis = list(title = list(text = "Y", font = list(size = 14))))
+    )
+    styled <- VizModules::apply_subplot_axis_styling(
+        fig, list(), list(title = list(font = list(size = NULL, color = "red")))
+    )
+    built <- plotly::plotly_build(styled)
+    expect_equal(built$x$layout$yaxis$title$font$size, 14)
+    expect_equal(built$x$layout$yaxis$title$font$color, "red")
+    expect_equal(built$x$layout$yaxis$title$text, "Y")
 })
 
 # ─── axis_titles_as_annotations ─────────────────────────────────────────────
@@ -671,6 +726,18 @@ test_that(".compute_linear_fit fits globally over complete rows, needing at leas
     expect_null(VizModules:::.compute_linear_fit(data.frame(x = 1, y = 1), "x", "y"))
 })
 
+test_that(".compute_linear_fit ignores non-finite values rather than failing on them", {
+    # log10(0) is -Inf; ggplot does not draw it, so the fit must not use it.
+    df <- data.frame(x = c(-Inf, 1:10), y = c(0, 2 * (1:10) + 1))
+    result <- VizModules:::.compute_linear_fit(df, "x", "y")
+    expect_equal(range(result$x), c(1, 10))
+    expect_equal(result$y[1], 3, tolerance = 1e-8)
+
+    expect_null(VizModules:::.compute_linear_fit(data.frame(x = c(-Inf, Inf), y = 1:2), "x", "y"))
+    # A constant x has no slope to fit.
+    expect_null(VizModules:::.compute_linear_fit(data.frame(x = rep(1, 5), y = 1:5), "x", "y"))
+})
+
 test_that(".compute_linear_fit returns named list for grouped fit", {
     df <- data.frame(
         x = rep(1:10, 2),
@@ -883,6 +950,20 @@ test_that(".calculate_range spans every column of a multi-column selection", {
     # Both columns share one axis, so the limits must fit the widest of them.
     expect_equal(result$min, -3)
     expect_equal(result$max, 10 * 1.1)
+})
+
+test_that(".calculate_range pads a negative maximum upward and ignores non-finite values", {
+    # log10 of values below 1 (or neg_log10 of values above it) is all negative;
+    # scaling the maximum by the factor would pull it down into the data.
+    result <- VizModules:::.calculate_range(data.frame(v = c(-5, -4)), data_col_y = "v", axis_scale_factor = 1.1)
+    expect_equal(result$min, -5)
+    expect_equal(result$max, -4 + 0.4)
+    expect_gt(result$max, -4)
+
+    # log10(0) is -Inf, which is not plotted and must not set the limits.
+    result <- VizModules:::.calculate_range(data.frame(v = c(-Inf, 1, 2)), data_col_y = "v", axis_scale_factor = 1)
+    expect_equal(result$min, 1)
+    expect_equal(result$max, 2)
 })
 
 # ─── .multivar_long_df ───────────────────────────────────────────────────────
@@ -1132,7 +1213,7 @@ test_that(".extract_marker_sizes collects numeric marker sizes", {
 
 # ─── adjusted_axis_label ────────────────────────────────────────────────────
 
-test_that("adjusted_axis_label wraps the label in the data adjustment, then the function", {
+test_that("adjusted_axis_label wraps the label in the function, then the data adjustment", {
     cases <- list(
         list(adj = NULL, fun = NULL, out = "units"),
         list(adj = "", fun = "", out = "units"),
@@ -1140,7 +1221,7 @@ test_that("adjusted_axis_label wraps the label in the data adjustment, then the 
         list(adj = "z-score", fun = NULL, out = "z-score(units)"),
         list(adj = "relative.to.max", fun = NULL, out = "relative.to.max(units)"),
         list(adj = NULL, fun = "log2", out = "log2(units)"),
-        list(adj = "z-score", fun = "log2", out = "log2(z-score(units))")
+        list(adj = "z-score", fun = "log2", out = "z-score(log2(units))")
     )
     for (case in cases) {
         expect_equal(VizModules::adjusted_axis_label("units", case$adj, case$fun), case$out, info = case$out)

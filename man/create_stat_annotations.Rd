@@ -23,7 +23,8 @@ create_stat_annotations(
   step.increase = 0.06,
   text.bump = 0.04,
   bracket.inset = 0.025,
-  dodge.width = 1
+  dodge.width = 1,
+  free.y = FALSE
 )
 }
 \arguments{
@@ -32,7 +33,11 @@ create_stat_annotations(
 \item{fig}{A plotly figure object. Used to detect subplot axis pairs for
 faceted plots.}
 
-\item{df}{The original data frame.}
+\item{df}{The data frame the plot was drawn from, holding the values as they
+are plotted: if the plot transformed a column (e.g. dittoViz's
+\code{var.adjustment}/\code{var.adj.fxn}), pass the transformed values (see
+\code{\link[=adjust_column_values]{adjust_column_values()}}), or the brackets are placed in a different
+coordinate space from the data. Non-finite values are ignored.}
 
 \item{x}{Character; x-axis column name.}
 
@@ -76,6 +81,12 @@ adjacent brackets at the same y-level. Default 0.025.}
 dodged across, matching the dodge the plot was built with. Brackets between
 two \code{group.by} levels are placed on the same slot centres the boxes sit on,
 so this has to be the plot's dodge or they will not line up. Default 1.}
+
+\item{free.y}{Logical; whether each facet panel has its own y scale (e.g.
+\code{scales = "free_y"}). Each panel's brackets are then stacked above that
+panel's own data rather than above the tallest panel's, and comparisons
+pooled across facets are drawn on every panel at that panel's height.
+Ignored when the figure has no facet panels. Default \code{FALSE}.}
 }
 \value{
 A list with components:
@@ -83,12 +94,22 @@ A list with components:
 \item{annotations}{List of plotly annotation objects.}
 \item{shapes}{List of plotly shape objects.}
 \item{y.max}{Numeric; maximum y value needed to accommodate all annotations.}
+\item{y.min}{Numeric; the smallest finite value of \code{y}.}
+\item{y.range.by.axis}{Under \code{free.y}, a named list of \code{c(min, max)} ranges
+keyed by y-axis reference (\code{"y"}, \code{"y2"}, ...): the panel's data minimum
+and the top its brackets need. \code{NULL} otherwise.}
 }
 }
 \description{
 Converts results from \code{\link[=compute_pairwise_stats]{compute_pairwise_stats()}} into plotly-compatible
 shapes (brackets) and annotations (text labels). Sorts comparisons so that
 small-gap brackets are closest to the data and large-gap brackets are higher.
+}
+\details{
+The values in \code{y} are expected to be the values drawn on the y-axis, so the
+plot must show them running up the y-axis. A plot whose values run along the
+x-axis (a rotated box plot or a ridge plot, say) has no room for vertical
+brackets; test it with \code{\link[=compute_pairwise_stats]{compute_pairwise_stats()}} but do not draw brackets.
 }
 \examples{
 stats_df <- compute_pairwise_stats(

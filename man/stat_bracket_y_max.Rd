@@ -24,9 +24,11 @@ stat_bracket_y_max(
 )
 }
 \arguments{
-\item{df}{Data frame the statistics are computed on. For a module that
-reshapes its data for testing (e.g. a multi-variable Y selection), pass the
-reshaped frame, not the raw one.}
+\item{df}{Data frame the statistics are computed on, holding the values as
+they are plotted. For a module that reshapes its data for testing (e.g. a
+multi-variable Y selection), pass the reshaped frame, not the raw one; for
+one that transforms a column before plotting it (e.g. a dittoViz
+\code{var.adjustment}), pass the transformed values (see \code{\link[=adjust_column_values]{adjust_column_values()}}).}
 
 \item{x}{Character; x-axis column name.}
 

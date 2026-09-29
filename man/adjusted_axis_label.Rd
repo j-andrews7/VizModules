@@ -21,9 +21,9 @@ A character scalar containing the (possibly wrapped) axis label.
 \description{
 Wraps a base column name with the names of any data adjustments that are
 applied to it before plotting, so that an axis title accurately describes the
-values displayed. The wrapping order mirrors how the adjustments are applied
-in dittoViz (the recognized \code{adjustment} is applied first, then the
-\code{adj.fxn}), producing labels such as \code{"log2(z-score(units))"}.
+values displayed. The wrapping order mirrors how the modules apply the
+adjustments (the \code{adj.fxn} first, then the recognized \code{adjustment} rescales
+the result), producing labels such as \code{"z-score(log2(units))"}.
 }
 \details{
 Empty strings, \code{NA}, and \code{NULL} adjustments are ignored, so when no

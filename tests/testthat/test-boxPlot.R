@@ -93,6 +93,61 @@ test_that("turning statistics off drops them from the source download", {
     )
 })
 
+# Start the module on `inputs` with statistics on, supplying the stat.pairs echo
+# the mock session never sends back.
+.box_stats_figure <- function(df, inputs) {
+    fig <- NULL
+    stats <- NULL
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(df)),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, inputs)
+                session$flushReact()
+                session$setInputs(stat.pairs = "")
+                session$flushReact()
+            })
+            fig <<- suppressWarnings(generate_BoxPlot())
+            stats <<- last_stats_df()
+        }
+    )
+    list(fig = fig, stats = stats)
+}
+
+test_that("significance brackets stay within the axis they are drawn on", {
+    out <- .box_stats_figure(example_demographics, .box_inputs(stats.enabled = TRUE))
+    expect_brackets_within_axes(out$fig, min.count = 3)
+})
+
+test_that("a rotated box plot tests but draws no brackets over its values", {
+    out <- .box_stats_figure(example_demographics, .box_inputs(stats.enabled = TRUE, rotate = TRUE))
+    built <- plotly::plotly_build(out$fig)
+    brackets <- Filter(function(s) identical(s$type, "line") && .data_ref(s$yref), built$x$layout$shapes)
+    expect_length(brackets, 0)
+    expect_s3_class(out$stats, "data.frame")
+    expect_gt(nrow(out$stats), 0)
+})
+
+test_that("under a free y facet scale each panel's brackets sit on its own data", {
+    set.seed(7)
+    df <- data.frame(
+        grp = rep(rep(c("A", "B"), each = 10), 2),
+        panel = rep(c("small", "large"), each = 20),
+        value = c(rnorm(10, 5), rnorm(10, 7), rnorm(10, 500, 20), rnorm(10, 700, 20)),
+        stringsAsFactors = FALSE
+    )
+    out <- .box_stats_figure(df, .box_inputs(
+        x.data = "grp", y.data = "value", facet.by = "panel", facet.scale = "free_y",
+        stats.enabled = TRUE, y.min = NA
+    ))
+    built <- expect_brackets_within_axes(out$fig, min.count = 2)
+    y_axes <- grep("^yaxis[0-9]*$", names(built$x$layout), value = TRUE)
+    tops <- vapply(y_axes, function(a) max(unlist(built$x$layout[[a]]$range)), numeric(1))
+    expect_lt(min(tops), 50)
+    expect_gt(max(tops), 700)
+})
+
 # The y-limit tests run the same scenario on the BoxPlot and the BarPlot: the
 # module, its data, the inputs that start it, and the range its data gives a
 # y column. The BarPlot sums bars per x, and pads by its server's own factor.

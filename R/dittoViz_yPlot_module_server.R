@@ -267,10 +267,14 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
             # `var` may hold several columns; the reset limits must span all of them.
             default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
+            default.adjustment <- get_default(defaults, "var.adjustment", "")
+            default.adj.fxn <- get_default(defaults, "var.adj.fxn", "")
 
-            # Calculate y.max and y.min from the default selections
+            # Calculate y.max and y.min from the default selections, in the units
+            # the default adjustment plots them in
             y.range <- .calculate_range(
-                df = data(), data_col_y = default.var,
+                df = .as_plotted(data(), default.var, default.adjustment, default.adj.fxn),
+                data_col_y = default.var,
                 axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
             )
             max.y <- if (!is.null(y.range)) y.range$max else 1
@@ -293,10 +297,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 selected = get_default(defaults, "plots", c("boxplot", "jitter")))
 
             # Adjustments
-            update_viz_select(session, "var.adjustment",
-                selected = get_default(defaults, "var.adjustment", ""))
-            update_viz_select(session, "var.adj.fxn",
-                selected = get_default(defaults, "var.adj.fxn", ""))
+            update_viz_select(session, "var.adjustment", selected = default.adjustment)
+            update_viz_select(session, "var.adj.fxn", selected = default.adj.fxn)
             reset.y.min <- get_default(defaults, "y.min", min.y, is.numeric)
             reset.y.max <- get_default(defaults, "y.max", max.y, is.numeric)
             y_range_store(list(min = reset.y.min, max = reset.y.max))
@@ -389,43 +391,39 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         })
 
         # How high the significance brackets will reach, so the y-axis can reserve
-        # room for them rather than have the plot drawn with them clipped. Mirrors the
-        # render's stats context: group.by is the x-axis, color.by the nested grouping,
-        # and several Y variables are tested against dittoViz's reshaped frame.
+        # room for them rather than have the plot drawn with them clipped. Measured
+        # on the same frame the render tests and draws on (.yplot_stat_context()):
+        # group.by is the x-axis, color.by the nested grouping.
         stat_headroom <- function() {
             if (!isTRUE(input$stats.enabled)) {
                 return(NULL)
             }
-
-            y.vars <- input$var
-            if (is.null(y.vars) || length(y.vars) == 0) {
+            # No brackets are drawn with the values on the x-axis, and a free scale
+            # gives each panel its own range, which one shared limit cannot reserve.
+            if ("ridgeplot" %in% input$plots ||
+                .yplot_free_y(input$split.by, input$var, input$multivar.aes, input$split.adjust)) {
                 return(NULL)
             }
+
             xvar <- .blank_to_null(input$group.by)
             if (is.null(xvar)) {
+                return(NULL)
+            }
+            ctx <- .yplot_stat_context(
+                data(), input$var, input$var.adjustment, input$var.adj.fxn,
+                split.by = input$split.by, per.facet = input$stat.per.facet
+            )
+            if (is.null(ctx)) {
                 return(NULL)
             }
 
             color.by <- .blank_to_null(input$color.by)
             grp_var <- if (!is.null(color.by) && !identical(color.by, xvar)) color.by else NULL
 
-            multivar <- length(y.vars) > 1
-            if (multivar) {
-                stats.data <- .multivar_long_df(data(), y.vars)
-                yvar <- "var.multi"
-                facet.var <- "var.which"
-                per.facet <- TRUE
-            } else {
-                stats.data <- data()
-                yvar <- y.vars
-                facet.var <- .blank_to_null(input$split.by)
-                per.facet <- isTRUE(input$stat.per.facet)
-            }
-
             .stat_bracket_headroom(
-                df = stats.data, x = xvar, y = yvar,
-                group.by = grp_var, facet.by = facet.var,
-                per.facet = per.facet, input = input,
+                df = ctx$df, x = xvar, y = ctx$y,
+                group.by = grp_var, facet.by = ctx$facet.by,
+                per.facet = ctx$per.facet, input = input,
                 dodge.width = 1 - .box_num(input$boxgap, 0.3)
             )
         }
@@ -438,12 +436,18 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             headroom = stat_headroom, params = params
         )
 
-        # Update y-axis range when var (y data) column is changed. Limits given as
-        # y.min/y.max defaults stand until var first changes.
+        # Update y-axis range when var (y data) column or its adjustment is changed:
+        # the limits are in the units plotted. Limits given as y.min/y.max defaults
+        # stand until one of those first changes.
         seeded_limits <- .seed_axis_limits(defaults, "y.min", "y.max")
-        observeEvent(input$var, {
-            y_range <- .calculate_range(df = data(), data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE)
-            y_range <- seeded_limits(y_range, input$var)
+        observeEvent(c(input$var, input$var.adjustment, input$var.adj.fxn), {
+            y_range <- .calculate_range(
+                df = .as_plotted(data(), input$var, input$var.adjustment, input$var.adj.fxn),
+                data_col_y = input$var, axis_scale_factor = .y_axis_scale_factor, grouping = FALSE
+            )
+            y_range <- seeded_limits(y_range, list(
+                input$var, .blank_to_null(input$var.adjustment), .blank_to_null(input$var.adj.fxn)
+            ))
             if (!is.null(y_range)) {
                 y_range_store(list(min = y_range$min, max = y_range$max))
                 updateNumericInput(session, "y.max", value = y_range$max)
@@ -525,14 +529,16 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 if (multivar && multivar.aes == "split") "var.which"
             )
             faceted <- length(facet.cols) > 0
+            # Each panel of a free y scale spans its own data, so the Y Axis Min/Max
+            # (one limit for every panel) are not applied, and each panel's brackets
+            # are measured against that panel alone.
+            free.y <- .yplot_free_y(split.by, y.vars, multivar.aes, split.adjust$scales)
 
             # Reflect any applied Y-axis data adjustment in the continuous-axis title so it
-            # accurately describes the values displayed (e.g. "log2(z-score(units))").
+            # accurately describes the values displayed (e.g. "z-score(log2(units))").
             var.adjustment <- .na_to_null(isolate_fn(input$var.adjustment))
             var.adj.fxn.name <- isolate_fn(input$var.adj.fxn)
 
-            # The Y Axis Min/Max inputs are derived from the raw data range, so let the
-            # continuous axis auto-scale whenever an adjustment rescales the values.
             adjustment.active <- !is.null(var.adjustment) ||
                 (!is.null(var.adj.fxn.name) && nzchar(var.adj.fxn.name))
 
@@ -542,10 +548,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 # only the adjustment description, if any.
                 if (!adjustment.active) {
                     NULL
-                } else if (!is.null(var.adjustment)) {
-                    adjusted_axis_label(var.adjustment, adj.fxn = var.adj.fxn.name)
+                } else if (.nz_value(var.adj.fxn.name)) {
+                    # e.g. "z-score(log2)": the function is applied first
+                    adjusted_axis_label(var.adj.fxn.name, var.adjustment)
                 } else {
-                    var.adj.fxn.name
+                    var.adjustment
                 }
             } else {
                 adjusted_axis_label(y.vars, var.adjustment, var.adj.fxn.name)
@@ -605,8 +612,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 var = y.vars,
                 multivar.aes = multivar.aes,
                 multivar.split.dir = isolate_fn(input$multivar.split.dir),
-                var.adjustment = var.adjustment,
-                var.adj.fxn = safe_resolve_adj_fxn(var.adj.fxn.name),
+                # dittoViz would rescale before applying the function; handing it the
+                # whole transform as one function applies the function first (log,
+                # then z-score), which is what .adjusted_values() and so the stats,
+                # brackets and axis limits assume.
+                var.adjustment = NULL,
+                var.adj.fxn = .adjustment_fn(var.adjustment, var.adj.fxn.name),
                 # Blank main title by default; dittoViz's "make" would otherwise
                 # auto-generate one (the var name) and re-render it every rebuild.
                 main = NULL,
@@ -624,8 +635,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 # dittoViz::yPlot()'s internal is.na(min)/is.na(max) checks
                 # require a scalar NA -- NULL crashes them ("missing value
                 # where TRUE/FALSE needed" from `is.na(NULL) || is.na(NULL)`).
-                min = if (adjustment.active) NA else y.limits$min %__% NA,
-                max = if (adjustment.active) NA else y.limits$max %__% NA,
+                # The limits are in the adjusted units. dittoViz applies them with
+                # coord_cartesian(), which pins every panel to one range, so they are
+                # withheld under a free scale.
+                min = if (free.y) NA else y.limits$min %__% NA,
+                max = if (free.y) NA else y.limits$max %__% NA,
                 split.nrow = split.nrow,
                 split.ncol = split.ncol,
                 split.adjust = split.adjust,
@@ -723,62 +737,67 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Stats tab is hidden for the other multi-variable layouts.
             stats.supported <- !multivar || identical(facet.cols, "var.which")
 
-            if (isolate_fn(input$stats.enabled) && stats.supported) {
+            # The values as plotted, which is what is tested and what the brackets
+            # are measured against (NULL when the adjustment leaves them non-numeric).
+            stats.ctx <- if (isTRUE(isolate_fn(input$stats.enabled)) && stats.supported) {
+                .yplot_stat_context(
+                    data(), y.vars, var.adjustment, var.adj.fxn.name,
+                    split.by = split.by, per.facet = isolate_fn(input$stat.per.facet)
+                )
+            }
+
+            if (!is.null(stats.ctx)) {
                 # yPlot uses group.by as the x-axis, color.by for nested grouping
                 xvar <- isolate_fn(input$group.by)
                 grp_var <- if (!is.null(color.by) && color.by != xvar) color.by else NULL
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
 
-                # Mirror dittoViz's multi-variable reshape so each variable's facet is
-                # tested on its own values; a single variable keeps the raw data.
-                stats.data <- if (multivar) .multivar_long_df(data(), y.vars) else data()
-                yvar <- if (multivar) "var.multi" else y.vars
-                facet.var <- if (multivar) "var.which" else split.by
-                # Variables in separate facets are never pooled, whatever the Stats tab
-                # asks for, since their values are not comparable.
-                per.facet <- if (multivar) TRUE else isolate_fn(input$stat.per.facet)
-
                 stats_df <- compute_pairwise_stats(
-                    df = stats.data, x = xvar,
-                    y = yvar, pairs = stat_pairs,
+                    df = stats.ctx$df, x = xvar,
+                    y = stats.ctx$y, pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
                     p.adjust.method = isolate_fn(input$stat.p.adjust),
                     paired = isolate_fn(input$stat.paired),
-                    group.by = grp_var, facet.by = facet.var,
-                    per.facet = per.facet,
+                    group.by = grp_var, facet.by = stats.ctx$facet.by,
+                    per.facet = stats.ctx$per.facet,
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
 
                 last_stats_df(stats_df)
+            } else {
+                # Nothing was tested for this figure, so the source download must
+                # not ship the table from an earlier one.
+                last_stats_df(NULL)
+            }
 
+            # dittoViz lays the whole figure out horizontally once a ridge plot is in
+            # it, so the values run along the x-axis and there is no room above them
+            # for brackets. The tests above still reach the source download.
+            if (!is.null(stats.ctx) && "ridgeplot" %in% isolate_fn(input$plots)) {
+                .note_brackets_skipped(session)
+            } else if (!is.null(stats.ctx)) {
                 stat_result <- create_stat_annotations(
-                    stats_df = stats_df, fig = fig, df = stats.data,
-                    x = xvar, y = yvar,
+                    stats_df = stats_df, fig = fig, df = stats.ctx$df,
+                    x = xvar, y = stats.ctx$y,
                     display = isolate_fn(input$stat.display),
                     hide.ns = isolate_fn(input$stat.hide.ns),
                     sig.threshold = isolate_fn(input$stat.sig.threshold),
                     line.color = isolate_fn(input$stat.line.color),
                     line.width = isolate_fn(input$stat.line.width),
                     bracket.style = isolate_fn(input$stat.bracket.style),
-                    group.by = grp_var, facet.by = facet.var,
+                    group.by = grp_var, facet.by = stats.ctx$facet.by,
                     step.increase = isolate_fn(input$stat.step.increase),
                     text.bump = isolate_fn(input$stat.text.bump),
                     bracket.inset = isolate_fn(input$stat.bracket.inset),
                     # Brackets between two groups sit on the same slot centres
                     # .align_box_positions() puts the boxes on.
-                    dodge.width = 1 - boxgap
+                    dodge.width = 1 - boxgap,
+                    free.y = free.y
                 )
 
-                # An active adjustment lets the axis auto-scale, so there are no
-                # limits of ours for the brackets to be measured against.
                 fig <- apply_stat_annotations(fig, stat_result,
-                    y.min = if (adjustment.active) NULL else y.limits$min,
-                    y.max = if (adjustment.active) NULL else y.limits$max
+                    y.min = y.limits$min, y.max = y.limits$max
                 )
-            } else {
-                # Nothing was tested for this figure, so the source download must
-                # not ship the table from an earlier one.
-                last_stats_df(NULL)
             }
 
             # Highlight and label individual jitter points. Rasterized jitter is drawn
@@ -923,4 +942,79 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 #' @keywords internal
 .yplot_default_hover <- function(var, group.by, color.by = NULL, shape.by = NULL, split.by = NULL) {
     unique(c(var, paste0(var, ".adj"), "var.multi", "var.which", group.by, color.by, shape.by, split.by))
+}
+
+
+#' The frame yPlot's statistics are run on, holding the values as plotted
+#'
+#' dittoViz transforms the Y values (`var.adjustment`, then `var.adj.fxn`) before
+#' plotting them, and reshapes several Y variables into one long column. Tests are
+#' run on those values and the brackets are measured against them, so both the
+#' bracket headroom and the render build their stats frame here and cannot drift
+#' apart.
+#'
+#' @param df The module's data.
+#' @param y.vars Character vector of the plotted Y columns.
+#' @param var.adjustment,var.adj.fxn The Y adjustment inputs.
+#' @param split.by The `split.by` input.
+#' @param per.facet The `stat.per.facet` input. Several Y variables are always
+#'   tested per variable, since their values are not comparable.
+#'
+#' @return `list(df, y, facet.by, per.facet)`, or `NULL` when there is nothing
+#'   numeric to test (e.g. `var.adj.fxn = "as.factor"`). Rows whose plotted value
+#'   is not finite (the log of 0, say) are dropped, as ggplot drops them.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_yplot_stat_context
+#' @keywords internal
+.yplot_stat_context <- function(df, y.vars, var.adjustment = NULL, var.adj.fxn = NULL,
+                                split.by = NULL, per.facet = FALSE) {
+    y.vars <- y.vars[!is.na(y.vars) & nzchar(y.vars)]
+    if (is.null(df) || length(y.vars) == 0 || !all(y.vars %in% names(df))) {
+        return(NULL)
+    }
+
+    # dittoViz adjusts each variable on its own, then stacks them.
+    plotted <- .as_plotted(df, y.vars, var.adjustment, var.adj.fxn)
+    if (length(y.vars) > 1) {
+        plotted <- .multivar_long_df(plotted, y.vars)
+        y <- "var.multi"
+        facet.by <- "var.which"
+        per.facet <- TRUE
+    } else {
+        y <- y.vars
+        facet.by <- .blank_to_null(split.by)
+        per.facet <- isTRUE(per.facet)
+    }
+
+    if (!is.numeric(plotted[[y]])) {
+        return(NULL)
+    }
+    plotted <- plotted[is.finite(plotted[[y]]), , drop = FALSE]
+    if (nrow(plotted) == 0) {
+        return(NULL)
+    }
+
+    list(df = plotted, y = y, facet.by = facet.by, per.facet = per.facet)
+}
+
+#' Does a yPlot give each facet panel its own y scale?
+#'
+#' Mirrors the render's faceting: `split.by` facets the plot, and so do several Y
+#' variables shown with the `"split"` aesthetic.
+#'
+#' @param split.by,vars,multivar.aes The module's inputs of the same names.
+#' @param scales The facet scale setting (`split.adjust`).
+#'
+#' @return `TRUE` when the plot is faceted and its y scale is `"free"` or
+#'   `"free_y"`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_yplot_free_y
+#' @keywords internal
+.yplot_free_y <- function(split.by, vars, multivar.aes, scales) {
+    split.set <- !is.null(split.by) && any(nzchar(split.by))
+    multivar.split <- length(vars) > 1 &&
+        (!.nz_value(multivar.aes) || identical(multivar.aes, "split"))
+    (split.set || multivar.split) && isTRUE(scales %in% c("free", "free_y"))
 }

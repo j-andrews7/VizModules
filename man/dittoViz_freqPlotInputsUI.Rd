@@ -43,6 +43,11 @@ how often each level of "Frequency Of" occurs within each sample and plots \emph
 frequencies, one facet per level. Axis limits, statistics, the point annotations and the
 source download therefore all describe the summarised frequency table, not the input rows.
 
+Under a free y facet scale ("free", "free_y") the Y Axis Min/Max are not applied and each
+panel's significance brackets sit above that panel's own data. With a ridge plot among the plot
+types the values run along the x-axis, so no brackets are drawn; the test results are still
+included in the source download.
+
 Because the frequencies are per-sample, "Sample" must nest inside "Group By": each sample has
 to carry exactly one group value (and one color value, when "Color By" is set), or
 \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}} errors. "Group By" and "Color By" are therefore chosen freely and

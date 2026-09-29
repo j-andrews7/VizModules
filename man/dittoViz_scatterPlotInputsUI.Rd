@@ -55,9 +55,9 @@ values will be duplicated due to them being shown in every panel.
 The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parameters are not available via UI inputs or have been superseded:
 \itemize{
 \item \code{xlab} - X-axis label (auto-generated to reflect any applied X adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing)
 \item \code{ylab} - Y-axis label (auto-generated to reflect any applied Y adjustment,
-e.g. \code{"log2(z-score(units))"}; plotly allows interactive editing)
+e.g. \code{"z-score(log2(units))"}; plotly allows interactive editing)
 \item \code{main} - Plot title (plotly allows interactive editing)
 \item \code{sub} - Plot subtitle (not supported in plotly)
 \item \code{theme} - ggplot2 theme (not applicable to plotly)
@@ -210,6 +210,15 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
 }
+
+Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
+result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} applies
+its \verb{*.adj.fxn} and \verb{*.adjustment} in.
+
+Fit lines (linear, best fit, and custom models) are fit to the values as plotted, after any
+X/Y adjustment, so they are drawn over the points they describe. A custom formula such as
+\code{mpg ~ hp} therefore models the adjusted values; do not repeat the adjustment inside it. No
+fit lines are drawn while an adjustment (\code{as.factor}) makes an axis categorical.
 }
 
 \examples{
