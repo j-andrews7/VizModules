@@ -303,3 +303,5 @@ myModuleServer <- function(id, data_reactive) {
     dittoViz_scatterPlotServer(id, data_reactive)
 }
 ```
+
+If your server also takes `hide.inputs`, show only the ids the app did not list there (`show_input(session, setdiff("size", hide.inputs))`). Otherwise the next toggle un-hides an input the app meant to keep hidden. The built-in modules that toggle their own controls, such as `linePlot` with its error bar inputs, do this.

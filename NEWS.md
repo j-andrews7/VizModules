@@ -192,6 +192,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * Added the `ComplexHeatmap_Heatmap` and `dittoViz_freqPlot` modules to the README, and refreshed the skills for the 0.4.0 changes they had missed (#348).
 * The `quick-start`, `custom-modules` and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material, and at `use_vizmodules_skills()` (#347). The skills were previously documented only in the README.
 * Fixed out of date vignette examples.
+* The bundled skills and the `defaults-and-hiding` and `adding-a-new-module` vignettes now cover the `linePlot` error bar `defaults` keys, the heatmap slice title toggles, `hide.inputs` outranking a module's own show/hide, and two plotting traps behind the #368 fixes (plotly re-sorting by the colour column, and dplyr masking an argument).
 
 # VizModules 0.4.0
 

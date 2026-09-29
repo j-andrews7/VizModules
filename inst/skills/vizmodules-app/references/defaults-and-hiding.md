@@ -51,9 +51,8 @@ plotthis_BoxPlotServer("b", data = reactive(example_rnaseq),
 - Like any other entry, the mapping may be a `reactive()`, so a parent app can drive the
   palette from its own state.
 
-`dittoViz_scatterPlotServer()` used to take a `manual.colors` argument for this. It was
-**removed** — it hard-overrode the picker, so the colours it supplied could not be edited.
-Use `defaults = list(color.panel = ...)` instead.
+There is no `manual.colors` argument — a fixed colour list would hard-override the picker,
+so the colours could not be edited. Use `defaults = list(color.panel = ...)` instead.
 
 ## Reactive defaults — the parent-to-child channel
 
@@ -112,6 +111,10 @@ plotthis_BoxPlotServer("b", data = reactive(example_rnaseq),
 
 Hidden inputs reflow (no empty gap) because `organize_inputs()` lays the controls out in
 a flexbox grid.
+
+A module that shows and hides controls itself as other inputs change (`linePlot`'s error
+bar controls, the facet title inputs) leaves alone any you listed in `hide.inputs`: they
+stay hidden however the other inputs move.
 
 A hidden control whose default is a `reactive()` still drives the plot — the value
 resolves server-side rather than being read back from the invisible input. That is the

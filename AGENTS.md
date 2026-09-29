@@ -139,6 +139,5 @@ Anything in Suggests must be reached through `requireNamespace(..., quietly = TR
 - The modules apply an adjustment function *before* the z-score/relative-to-max rescaling (log, then z-score); dittoViz does the reverse when given both. So never pass dittoViz both `*.adjustment` and `*.adj.fxn`: pass `*.adj.fxn = .adjustment_fn(adjustment, fxn)` and no `*.adjustment`, which keeps its `.adj` columns and hover text while plotting `.adjusted_values()`.
 - Never queue a copy of an existing layout element (a whole axis, say) through `plotly::layout()`. Queued updates are merged in at build time, after anything written straight into `fig$x$layout`, so the copy silently reverts those writes. Queue only the properties being changed.
 - Map facet levels to panels by their strip labels (`.build_facet_axis_map()`, `.fit_panels()`), never by the order rows or axes appear in: ggplot orders facets alphabetically, and ggplotly shares axes across a row or column of panels.
-- Use the r-lsp plugin if available rather than grep and such where possible.
 
 These instructions are a starting point, not an authority — verify against the code before relying on any specific claim here, and correct this file when you find it stale.

@@ -175,6 +175,8 @@ myPlotApp <- function(data_list = NULL, defaults = NULL, hide.inputs = NULL, hid
 - [ ] Document any assumptions about input shape (e.g., pre-summarized table for pies).
 - [ ] Add `testthat` coverage for the plotting function (happy paths + invalid inputs).
 - [ ] Only after the plotting function is stable, build the module UI/server/app wrappers around it.
+- [ ] If you pass an array to a trace by value (such as `error_y = list(array = ...)`) on a plot coloured by a discrete column, sort the data by that column first. plotly re-sorts its own copy by the colour column before splitting it into traces, but not your array, so otherwise each series is drawn with other series' values. `linePlot()` does this with `.group_rows_by_trace()`; test it on the built figure, with colour columns stored as character, factor and ordered factor.
+- [ ] Inside `summarise()`/`mutate()`, a data column named like one of your arguments (`y`, say) masks it. Resolve what the verb needs into local variables before calling it, and test with a data frame whose columns are literally named `x` and `y`.
 
 ## Supporting Reactive Defaults
 

@@ -56,11 +56,31 @@ the values of `row_split_cols`/`column_split_cols` rather than by a derived clus
 Several columns give nested slices. This is also the cheap path: with `cluster_rows = FALSE`
 it groups without computing a distance matrix at all.
 
+Any split titles each slice with its group name (the annotation value, or a cluster number
+for K-means and Hierarchical). A blank `row_title`/`column_title` does **not** remove them —
+`Heatmap()` reads blank as "use the group names", so `defaults = list(column_title = "")`
+changes nothing. Set `show_row_slice_titles = FALSE` / `show_column_slice_titles = FALSE`
+(both default `TRUE`) to drop the titles and the space they take. A non-blank title
+replaces them: one string spans every slice, and a `%s` in it is filled in with each
+slice's name.
+
 `dittoViz_freqPlot` is the other odd one out: it does **not** plot columns of the incoming
 data. It tabulates how often each level of `var` occurs within each `sample.by` value and
 plots those per-sample frequencies, one facet per level. So `y.min`/`y.max`, the statistics,
 the point annotations (points are *samples*), and the source download all describe that
 summarised frequency table, not the input rows. `scale` picks percent vs count.
+
+`linePlot` draws error bars only for a single categorical X and a single Y, and its
+`defaults` keys are **not** the `linePlot()` argument names: `error.bar` (TRUE),
+`error.bar.type` (`"sd"` by default, or `"sem"`, `"ci95"`; `error.type` in the function),
+`error.bar.ci.method` (`"normal"` by default, or `"t"`; `error.ci.method` in the function),
+`error.bar.colour` and `error.bar.width`. Each bar is the group mean plus or minus the
+chosen amount, worked out from that group's y-values as plotted (after any Y adjustment),
+where a group is an x category within each `group.by`/`facet.by` level; a group with fewer
+than two values gets no bar. `"ci95"` uses 1.96 unless the method is `"t"`, which is wider
+for small groups. The method input only shows while the type is `"ci95"`. To fix the
+statistic for users: `defaults = list(error.bar.type = "sem")` with
+`hide.inputs = c("error.bar.type", "error.bar.ci.method")`.
 
 The colour key takes a **named character vector** mapping group level to colour, e.g.
 `defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red"))`. Unnamed

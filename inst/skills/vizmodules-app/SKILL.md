@@ -122,11 +122,11 @@ Every one of these was hit by an agent building an app against this package. Non
 them errors loudly; each looks like the module misbehaving.
 
 - **A hand-built app needs `shinyjs::useShinyjs()` in its UI.** `hide.inputs`/`hide.tabs` go through `runjs()`. Without it the app renders fine and the hiding silently does nothing. `createModuleApp()` includes it for you; your own `fluidPage()` does not.
-- **`create_source_download_handler()` wants pandoc for the HTML.** It calls `saveWidget(selfcontained = TRUE)`; with no pandoc on `PATH` the `_plot.html` is skipped with a warning and the rest of the archive — the CSVs, the SVG and the PNG, none of which need pandoc — still downloads. RStudio bundles pandoc; a bare server does not. (Before 0.5.0.9000 this failed the whole download with HTTP 500.)
+- **`create_source_download_handler()` wants pandoc for the HTML.** It calls `saveWidget(selfcontained = TRUE)`; with no pandoc on `PATH` the `_plot.html` is skipped with a warning and the rest of the archive — the CSVs, the SVG and the PNG, none of which need pandoc — still downloads. RStudio bundles pandoc; a bare server does not.
 - **`stats.enabled = TRUE` can still draw nothing.** `stat.hide.ns` defaults to `TRUE`, so if every comparison is non-significant the tests run and no brackets appear. That looks broken. Set `stat.hide.ns = FALSE` while checking your wiring.
 - **`main` is not a real key.** No module exposes a plot title. `defaults = list(main = ...)` is silently ignored — see `references/defaults-and-hiding.md`.
 - **An unknown `defaults` key never errors.** `get_default()` falls back. If a default "doesn't work", suspect the key name first.
-- **`manual.colors` no longer exists.** `dittoViz_scatterPlotServer()`'s `manual.colors` argument was removed — it hard-overrode the colour picker, so the colours could not be edited. Seed a palette with a *named* vector under the module's colour key instead (`defaults = list(color.panel = c(setosa = "red"))`); see `references/defaults-and-hiding.md`.
+- **There is no `manual.colors` argument.** A fixed colour list would hard-override the colour picker, so the colours could not be edited. Seed a palette with a *named* vector under the module's colour key instead (`defaults = list(color.panel = c(setosa = "red"))`); see `references/defaults-and-hiding.md`.
 
 ## Verifying your work
 
