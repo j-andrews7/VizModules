@@ -95,7 +95,7 @@ The following \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}} para
 \item \code{alpha_name} - Alpha legend name (UI: "Alpha name", default: "")
 \item \code{bar_height} - Height of bars (UI: "Bar height", default: 0.9)
 \item \code{facet_by} - Faceting variable (UI: "Facet by", default: "")
-\item \code{facet_scales} - Facet scale behavior (UI: "Facet scale", default: "free_y")
+\item \code{facet_scales} - Facet scale behavior (UI: "Facet Scale", default: "fixed")
 \item \code{facet_ncol} - Number of facet columns (UI: "Facet number of columns", default: NULL)
 \item \code{facet_nrow} - Number of facet rows (UI: "Facet number of rows", default: NULL)
 \item \code{facet_byrow} - Facet ordering direction (UI: "Facet by row", default: TRUE)

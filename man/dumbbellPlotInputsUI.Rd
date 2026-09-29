@@ -54,7 +54,7 @@ The following \code{\link[=dumbbellPlot]{dumbbellPlot()}} parameters can be acce
 \item \code{facet.by} - Faceting variable (UI: "Facet By", default: "")
 \item \code{facet.scales} - Facet scale behavior (UI: "Facet Scales", default: "fixed")
 \item \code{line.colour} - Color of connecting lines (UI: "Colour of Connectors", default: "gray30")
-\item \code{point.size} - Marker diameter in pixels (UI: "Point Size", default: 6)
+\item \code{point.size} - Marker diameter in pixels (UI: "Point Size", default: 12)
 \item \code{palette.selection} - Color palette (UI: palette picker)
 }
 }

@@ -88,7 +88,16 @@ In UI: Use `NS(id)` for wrapper's inputs, pass bare `id` to base module UI funct
 - Document missing/broken plotly functionality explicitly
 - Add self-contained, clear examples for functions wherever possible
 - Update vignettes when adding new modules, features, or changing existing functionality
-- Update `NEWS.md` with new features, bug fixes, etc. Be succinct, most entries should only be a line or two. Minute details need not be added, only key info/rationale. New features, modules, or changes to a development version (i.e. any ending in .9000) should just be kept up to date rather than appended to given they've not yet been released and changes to them are expected.
+- Update `NEWS.md` with new features, bug fixes, etc. Be succinct, most entries should only be a line or two. Minute details need not be added, only key info/rationale. New features, modules, or changes to a development version (i.e. any ending in .9000) should just be kept up to date rather than appended to given they've not yet been released and changes to them are expected. Organize it as below.
+
+### NEWS.md Layout
+From 0.5.0 on, each release is organized by module so a reader can find what changed in the one they use. Leave earlier releases as they are.
+- Sections, in order, omitting any that are empty: `## New Modules`, `## Improved/New Functionality`, `## Deprecations and Removals`, `## Bug Fixes`, `## Documentation`.
+- Within each section except Documentation, group entries under `###` headings, in this order: `All modules`, `Module gallery and Figure Builder`, then one heading per module in case-insensitive alphabetical order, then `Helpers and exported functions` last. Omit empty headings.
+- Name modules by their short, backticked name (`` `yPlot` ``, `` `BoxPlot` ``, `` `ComplexHeatmap` ``, `` `scatterPlot` ``, ...), as the entries do.
+- An entry touching one module goes under that module. One touching a few modules goes under a combined heading naming them in alphabetical order (`` ### `BoxPlot`, `freqPlot` and `yPlot` ``), filed by its first name; reuse an existing combined heading rather than repeating the entry under each module. One touching every module goes under `All modules`. Non-module functions (exported helpers, `safe_eval_filter()`, ...) go under `Helpers and exported functions`.
+- Each entry leads with what a user sees, then why, and ends with its issue numbers, e.g. `(#361)`. Use sub-bullets only for details worth knowing on their own. Mark security fixes `**Security:**` and put them first under their heading.
+- When adding to a development version, fold the change into the existing entry for that feature (or move the entry to the right heading) rather than appending a new one.
 
 ### Code Style
 4-space indent, 120 char max line, tidyverse style guide, roxygen markdown enabled.
