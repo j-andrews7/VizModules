@@ -479,8 +479,15 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 column_split = column_res$split,
                 row_gap = grid::unit(isolate_fn(input$row_gap) %||% get_default(defaults, "row_gap", 1), "mm"),
                 column_gap = grid::unit(isolate_fn(input$column_gap) %||% get_default(defaults, "column_gap", 1), "mm"),
-                row_title = isolate_fn(input$row_title) %||% get_default(defaults, "row_title", ""),
-                column_title = isolate_fn(input$column_title) %||% get_default(defaults, "column_title", ""),
+                row_title = .heatmap_resolve_title(
+                    isolate_fn(input$row_title) %||% get_default(defaults, "row_title", ""),
+                    isolate_fn(input$show_row_slice_titles) %||% get_default(defaults, "show_row_slice_titles", TRUE)
+                ),
+                column_title = .heatmap_resolve_title(
+                    isolate_fn(input$column_title) %||% get_default(defaults, "column_title", ""),
+                    isolate_fn(input$show_column_slice_titles) %||%
+                        get_default(defaults, "show_column_slice_titles", TRUE)
+                ),
                 show_row_names = isolate_fn(input$show_row_names) %||% get_default(defaults, "show_row_names", TRUE),
                 show_column_names = isolate_fn(input$show_column_names) %||% get_default(defaults, "show_column_names", TRUE),
                 row_names_side = isolate_fn(input$row_names_side) %||% get_default(defaults, "row_names_side", "right"),
@@ -592,6 +599,10 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
 
             updateTextInput(session, "row_title", value = get_default(defaults, "row_title", ""))
             updateTextInput(session, "column_title", value = get_default(defaults, "column_title", ""))
+            updateCheckboxInput(session, "show_row_slice_titles",
+                value = get_default(defaults, "show_row_slice_titles", TRUE, is.logical))
+            updateCheckboxInput(session, "show_column_slice_titles",
+                value = get_default(defaults, "show_column_slice_titles", TRUE, is.logical))
             updateCheckboxInput(session, "show_row_names", value = get_default(defaults, "show_row_names", TRUE, is.logical))
             updateCheckboxInput(session, "show_column_names", value = get_default(defaults, "show_column_names", TRUE, is.logical))
             update_viz_select(session, "row_names_side", selected = get_default(defaults, "row_names_side", "right"))

@@ -74,9 +74,16 @@
 #' @param error.width numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable
 #' @param error.colour hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable
 #' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
-#'   and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
-#'   group's y-values, where a group is a single x category, split further by `colour.group.by` and `facet.by` when
-#'   those are set. A group holding a single observation has no standard deviation and is drawn without a bar.
+#'   and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus the amount `error.type` selects,
+#'   computed from that group's y-values, where a group is a single x category, split further by `colour.group.by` and
+#'   `facet.by` when those are set. A group with fewer than two observations has no spread and is drawn without a bar.
+#' @param error.type What the error bars show, one of `"sd"` (one standard deviation, the default), `"sem"` (one
+#'   standard error of the mean, `sd / sqrt(n)`) or `"ci95"` (a 95% confidence interval for the mean). Missing values
+#'   are ignored when counting `n`.
+#' @param error.ci.method How `error.type = "ci95"` is computed, one of `"normal"` (the default; the standard error
+#'   times the 97.5th percentile of the normal distribution, 1.96) or `"t"` (the standard error times the 97.5th
+#'   percentile of the t distribution with `n - 1` degrees of freedom). The t interval is wider for small groups and
+#'   converges on the normal one as `n` grows. Ignored for the other error types.
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
@@ -113,7 +120,11 @@ linePlot <- function(data, x, y, palette.selection,
                      facet.title.font.size = 18, facet.title.font.color = "black", facet.title.font.family = "Arial",
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
-                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE) {
+                     x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE,
+                     error.type = c("sd", "sem", "ci95"), error.ci.method = c("normal", "t")) {
+    error.type <- match.arg(error.type)
+    error.ci.method <- match.arg(error.ci.method)
+
     axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
     facet_title_font <- list(
         size = facet.title.font.size, color = facet.title.font.color, family = facet.title.font.family
@@ -184,7 +195,14 @@ linePlot <- function(data, x, y, palette.selection,
             y.title <- paste0("mean(", y_label, ")")
         }
 
-        # Compute per-group mean and SD for error bars
+        # Compute the per-group mean and error bar half-width. What `summarise()` sees is
+        # data-masked, so a column named like one of this function's arguments (`y`,
+        # say) would shadow it and silently drop the bars. Everything it needs from
+        # here is resolved first, and only the closure is named inside it.
+        single_y <- length(y) == 1
+        y_col <- y[1]
+        error_fn <- function(values) .error_bar_halfwidth(values, error.type, error.ci.method)
+
         group_vars <- x
         if (!is.null(facet.by) && nzchar(facet.by)) {
             group_vars <- c(facet.by, group_vars)
@@ -197,7 +215,8 @@ linePlot <- function(data, x, y, palette.selection,
         ex <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
             dplyr::summarise(
-                sd_y = if (length(y) == 1) stats::sd(.data[[y[1]]], na.rm = TRUE) else NA_real_,
+                # Before the means below, which overwrite the y column in place.
+                err_y = if (single_y) error_fn(.data[[y_col]]) else NA_real_,
                 dplyr::across(
                     dplyr::all_of(y),
                     list(mean = ~ mean(.x, na.rm = TRUE)),
@@ -208,7 +227,7 @@ linePlot <- function(data, x, y, palette.selection,
         data <- ex
     } else {
         data <- data |>
-            dplyr::mutate(sd_y = NA)
+            dplyr::mutate(err_y = NA)
     }
 
     # Y axis styling by editing unique aspects of the x axis styling
@@ -239,6 +258,14 @@ linePlot <- function(data, x, y, palette.selection,
     plot_data <- data
     if (!is.null(order.cols) && length(order.cols) > 0 && order.cols[1] %in% names(data)) {
         plot_data <- data[order(data[[order.cols[1]]]), ]
+    }
+
+    # plotly re-sorts the data by the colour column before splitting it into traces, but
+    # not an error bar array passed by value, so ordering by x alone (which interleaves the
+    # groups) put bars on other groups' points. Only drawn bars care, so nothing else moves.
+    if (isTRUE(error.bar) && !is.null(colour.group.by) && nzchar(colour.group.by) &&
+        "err_y" %in% names(plot_data) && any(!is.na(plot_data$err_y))) {
+        plot_data <- .group_rows_by_trace(plot_data, colour.group.by)
     }
 
     multi_axis <- xor(length(x) > 1, length(y) > 1)
@@ -272,9 +299,9 @@ linePlot <- function(data, x, y, palette.selection,
             if (!is.null(color)) {
                 plot_params$legendgroup <- color
             }
-            # Only add error_y if sd_y exists and has non-NA values
-            if ("sd_y" %in% names(facet_data) && any(!is.na(facet_data$sd_y)) && error.bar) {
-                plot_params$error_y <- list(array = facet_data$sd_y, color = error.colour, thickness = error.width)
+            # Only add error_y if err_y exists and has non-NA values
+            if ("err_y" %in% names(facet_data) && any(!is.na(facet_data$err_y)) && error.bar) {
+                plot_params$error_y <- list(array = facet_data$err_y, color = error.colour, thickness = error.width)
             }
             # Only add line parameter if mode is "lines" or "lines+markers"
             if (plot.mode %in% c("lines", "lines+markers")) {
@@ -390,9 +417,9 @@ linePlot <- function(data, x, y, palette.selection,
             showlegend = show.legend
         )
 
-        # Only add error_y if sd_y exists and has non-NA values
-        if ("sd_y" %in% names(plot_data) && any(!is.na(plot_data$sd_y)) && error.bar) {
-            plot_params$error_y <- list(array = plot_data$sd_y, color = error.colour, thickness = error.width)
+        # Only add error_y if err_y exists and has non-NA values
+        if ("err_y" %in% names(plot_data) && any(!is.na(plot_data$err_y)) && error.bar) {
+            plot_params$error_y <- list(array = plot_data$err_y, color = error.colour, thickness = error.width)
         }
         # Only add line parameter if mode is "lines" or "lines+markers"
         if (plot.mode %in% c("lines", "lines+markers")) {
@@ -425,4 +452,86 @@ linePlot <- function(data, x, y, palette.selection,
     fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
 
     return(fig)
+}
+
+
+# What the error bars can show, and how a confidence interval can be worked out.
+# The values are the `error.type` / `error.ci.method` choices linePlot() accepts; the
+# names are what the module's selects display.
+.error_bar_type_choices <- c(
+    "Standard deviation (SD)" = "sd",
+    "Standard error of the mean (SEM)" = "sem",
+    "95% confidence interval" = "ci95"
+)
+.error_bar_ci_method_choices <- c("Normal approximation" = "normal", "t distribution" = "t")
+
+
+#' Sort rows the way plotly sorts them before splitting a discrete colour into traces
+#'
+#' Before it splits a discrete `color` into one trace per group, plotly
+#' [dplyr::arrange()]s its own copy of the data by that column (level order for a factor,
+#' sorted order for characters). Mapped variables such as `x` and `y` travel with that sort,
+#' but an array handed to a trace attribute by value, such as `error_y$array`, does not, and
+#' the trace that takes rows 1-4 of the sorted data would take entries 1-4 of the unsorted
+#' array: every group but one gets other groups' error bars. Sorting the data here first
+#' leaves plotly's sort with nothing to move, so the two stay in step. The sort is stable,
+#' so each trace is drawn exactly as before.
+#'
+#' @param df The data frame [linePlot()] is about to plot.
+#' @param col Name of the column mapped to `color`. Only a factor, character or logical
+#'   column is split into traces (a numeric one becomes a colour scale), so `df` is
+#'   returned as it is for anything else.
+#'
+#' @return `df`, sorted by `col`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_group_rows_by_trace
+#' @keywords internal
+.group_rows_by_trace <- function(df, col) {
+    vals <- df[[col]]
+    if (!(is.factor(vals) || is.character(vals) || is.logical(vals))) {
+        return(df)
+    }
+
+    dplyr::arrange(df, .data[[col]])
+}
+
+
+#' Half-width of a group's error bar
+#'
+#' What [linePlot()] draws either side of a group's mean. Missing values are dropped
+#' before `n` is counted, so the bar describes the values that went into the mean.
+#'
+#' @param x Numeric vector of one group's y-values.
+#' @param type One of `"sd"` (standard deviation), `"sem"` (standard error of the mean,
+#'   `sd / sqrt(n)`) or `"ci95"` (95% confidence interval for the mean).
+#' @param ci.method For `type = "ci95"`, `"normal"` scales the standard error by the
+#'   97.5th percentile of the normal distribution (1.96) and `"t"` by that of the t
+#'   distribution on `n - 1` degrees of freedom. Ignored for the other types.
+#'
+#' @return A single number, or `NA_real_` for fewer than two non-missing values, which
+#'   have no spread to draw.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_error_bar_halfwidth
+#' @keywords internal
+.error_bar_halfwidth <- function(x, type = c("sd", "sem", "ci95"), ci.method = c("normal", "t")) {
+    type <- match.arg(type)
+    ci.method <- match.arg(ci.method)
+
+    x <- x[!is.na(x)]
+    n <- length(x)
+    if (n < 2L) {
+        return(NA_real_)
+    }
+
+    spread <- stats::sd(x)
+    switch(type,
+        sd = spread,
+        sem = spread / sqrt(n),
+        ci95 = {
+            crit <- if (ci.method == "t") stats::qt(0.975, df = n - 1L) else stats::qnorm(0.975)
+            crit * spread / sqrt(n)
+        }
+    )
 }

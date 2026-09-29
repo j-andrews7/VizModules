@@ -31,6 +31,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * Row and column splits gained an **"Annotation"** method (#349), slicing by one or more annotation columns (several give nested slices). With clustering off it is also the fast path, since no distance matrix is needed.
 * New **Filter** tab with expression-based row and column filters (#346), so a subset can be plotted without the `dataFilter` module. Row filters see the matrix data frame; column filters see a `column` field plus any per-sample metadata joined via `column_key`. Filtering runs first, so scaling, annotations, splits and the source download all describe the filtered matrix.
   * Both filters are debounced by 700ms, so typing doesn't redraw the heatmap on every keystroke. The "Adding a New Module" and "Building Custom Modules" vignettes document the pattern for free-text inputs.
+* New **Show Row Slice Titles** and **Show Column Slice Titles** checkboxes (#366). Clearing the title box never removed the group names a split titles its slices with (annotation values, or cluster numbers for k-means and hierarchical splits), because `Heatmap()` reads a blank title as "use the group names". Unticking one drops the titles and the space they take. A typed title still replaces them, and a `%s` in it is filled in with each group's name.
 * Each annotation track gained **Label Side**, **Label Size** and **Show Legend** controls. Set the last from `defaults` with a `show_legend` field on a `row_annotations`/`column_annotations` row.
 * The output UI functions gained `fit.width` (default `TRUE`), fitting the widget's panels to their container on load (#350) instead of `InteractiveComplexHeatmap`'s fixed pixel widths. `heatmap_fit_width()` does the same for apps calling `InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()` directly.
 * `ComplexHeatmap_HeatmapApp()`'s default data now exercises the column annotation, split and filter features.
@@ -41,7 +42,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 ### `linePlot`
 
-* The **Error Bars** tooltip now says what the bars show: the plotted group mean plus or minus one standard deviation.
+* **Error Bars** can now show the standard deviation (still the default), the standard error of the mean, or a 95% confidence interval (#368), through the new **Error Bar Type** input (`error.type` in `linePlot()`). A confidence interval uses the normal approximation unless the **Confidence Interval Method** input (`error.ci.method`, shown only while a CI is selected) switches it to the t distribution, which is wider for small groups. A group with fewer than two observations is drawn without a bar. The tooltips say what the bars show (the plotted group mean plus or minus that amount).
 
 ### `parallelCoordinatesPlot`, `piePlot` and `radarPlot`
 
@@ -87,7 +88,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 ### All modules
 
-* **Reset** now discards manually dragged legends, annotations, axis titles and colorbars, which it never managed to before. It also returns every control to the value it started at; several fallbacks disagreed with the UI (`stat.hide.ns`, the top and right margins, subplot spacing, and a few module-specific ones).
+* **Reset** now discards manually dragged legends, annotations, axis titles and colorbars. It also returns every control to the value it started at; several fallbacks disagreed with the UI (`stat.hide.ns`, the top and right margins, subplot spacing, and a few module-specific ones).
 * Stopped the package's stylesheets leaking into host apps (#355). CSS still sucks.
   * `multiColorPicker`'s dropdown, which is parented to `<body>`, was styled through selectize's generic class names. That restyled every `selectInput()` and DT column filter on the page, most visibly rendering long dropdowns as an empty panel. Every plot module has a colour picker, so this affected any app using any module. The rules are now scoped to the picker's own `.mc-palette-dropdown`.
   * The Figure Builder styled `.well`, so embedding it respaced every `sidebarPanel()` on the page. Its rules are now scoped to `.pb-app`.
@@ -161,6 +162,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 * A faceted plot no longer repeats every series in the legend once per facet, and one legend click now toggles that series in every panel (#357).
 * Multi-axis plots no longer draw an empty placeholder trace that took up a nameless legend entry in every facet, and `show.legend = FALSE` now hides the legend box instead of leaving an empty one.
 * Logical and Date columns no longer break the plot; `is_pure_type()` errored on them.
+* **Error Bars** sat on the wrong points whenever **Group By** was set, so each series drew other series' bars (the gallery's default line plot included). plotly re-sorts the data by the colour column but not an error bar array handed to it, so `linePlot()` now sorts the same way first. Bars also silently vanished when the data had a column named `y`, which shadowed the argument inside `summarise()`.
 
 ### `parallelCoordinatesPlot`
 
@@ -189,7 +191,7 @@ The one where we make the heatmap module not suck and stop accidentally butcheri
 
 * Added the `ComplexHeatmap_Heatmap` and `dittoViz_freqPlot` modules to the README, and refreshed the skills for the 0.4.0 changes they had missed (#348).
 * The `quick-start`, `custom-modules` and `adding-a-new-module` vignettes now point at the bundled agent skill that covers their material, and at `use_vizmodules_skills()` (#347). The skills were previously documented only in the README.
-* Fixed vignette examples that could never have worked: `x.by`/`y.by` passed to the `BoxPlot` (its keys are `x.data`/`y.data`), a hidden `rows.use` input that doesn't exist, columns missing from the example data, `input` read outside a `moduleServer()`, a model formula at odds with its plot's axes, and a `linked-filter` example app that never shipped.
+* Fixed out of date vignette examples.
 
 # VizModules 0.4.0
 

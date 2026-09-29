@@ -35,8 +35,12 @@
 #' - `plot.mode` - Plot type (UI: "Plot type", default: "lines")
 #' - `line.type` - Line type (UI: "Line type", default: "solid")
 #' - `error.bar` - Show error bars (UI: "Error Bars", default: TRUE; requires a categorical X and a single Y)
-#' - `error.colour` - Error bar color (UI: "Error Bar Colour", default: "#000000")
-#' - `error.width` - Error bar cap width (UI: "Error Bar Width", default: 1)
+#' - `error.type` - What the error bars show: "sd", "sem" or "ci95" (UI: "Error Bar Type", defaults key:
+#'   `error.bar.type`, default: "sd")
+#' - `error.ci.method` - How a "ci95" interval is computed: "normal" or "t" (UI: "Confidence Interval Method",
+#'   defaults key: `error.bar.ci.method`, default: "normal"; only shown while the error bar type is "ci95")
+#' - `error.colour` - Error bar color (UI: "Error Bar Colour", defaults key: `error.bar.colour`, default: "#000000")
+#' - `error.width` - Error bar cap width (UI: "Error Bar Width", defaults key: `error.bar.width`, default: 1)
 #' - `palette.selection` - Color palette (UI: palette picker, derived from palette)
 #' - `axis.showline` - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
 #' - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
@@ -133,7 +137,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     selected <- list(
         "x", "y", "colour.group.by", "error.bar", "order.by",
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
-        "plot.mode", "line.type", "error.colour", "error.width"
+        "plot.mode", "line.type", "error.colour", "error.width", "error.type", "error.ci.method"
     )
 
     documentParameters <- get_documentation(
@@ -169,6 +173,21 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                 documentParameters$error.bar,
                 placement = "top", options = list(container = "body")
             ),
+            tipify(viz_select_input(ns("error.bar.type"), "Error Bar Type",
+                choices = .error_bar_type_choices,
+                selected = get_default(
+                    defaults, "error.bar.type", "sd",
+                    function(x) x %in% .error_bar_type_choices
+                )
+            ), documentParameters$error.type, placement = "top", options = list(container = "body")),
+            # Shown only while the type is a confidence interval; see the x.value observer in the server.
+            tipify(viz_select_input(ns("error.bar.ci.method"), "Confidence Interval Method",
+                choices = .error_bar_ci_method_choices,
+                selected = get_default(
+                    defaults, "error.bar.ci.method", "normal",
+                    function(x) x %in% .error_bar_ci_method_choices
+                )
+            ), documentParameters$error.ci.method, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("order.by"), "Order by Y",
                 value = get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"

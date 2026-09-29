@@ -55,7 +55,9 @@ linePlot(
   order.by = NULL,
   error.colour = NULL,
   error.width = NULL,
-  error.bar = FALSE
+  error.bar = FALSE,
+  error.type = c("sd", "sem", "ci95"),
+  error.ci.method = c("normal", "t")
 )
 }
 \arguments{
@@ -181,9 +183,18 @@ Same options as x.adjustment and y.adjustment. Default: NULL.}
 \item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
 
 \item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
-and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus one standard deviation of that
-group's y-values, where a group is a single x category, split further by \code{colour.group.by} and \code{facet.by} when
-those are set. A group holding a single observation has no standard deviation and is drawn without a bar.}
+and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus the amount \code{error.type} selects,
+computed from that group's y-values, where a group is a single x category, split further by \code{colour.group.by} and
+\code{facet.by} when those are set. A group with fewer than two observations has no spread and is drawn without a bar.}
+
+\item{error.type}{What the error bars show, one of \code{"sd"} (one standard deviation, the default), \code{"sem"} (one
+standard error of the mean, \code{sd / sqrt(n)}) or \code{"ci95"} (a 95\% confidence interval for the mean). Missing values
+are ignored when counting \code{n}.}
+
+\item{error.ci.method}{How \code{error.type = "ci95"} is computed, one of \code{"normal"} (the default; the standard error
+times the 97.5th percentile of the normal distribution, 1.96) or \code{"t"} (the standard error times the 97.5th
+percentile of the t distribution with \code{n - 1} degrees of freedom). The t interval is wider for small groups and
+converges on the normal one as \code{n} grows. Ignored for the other error types.}
 }
 \value{
 A plotly object representing the interactive line plot.

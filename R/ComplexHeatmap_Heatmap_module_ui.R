@@ -64,7 +64,14 @@
 #' - `row_gap` - Gap between row slices, mm (UI: "Row Gap (mm)", default: 1)
 #' - `column_gap` - Gap between column slices, mm (UI: "Column Gap (mm)", default: 1)
 #' - `row_title` - Row title (UI: "Row Title", default: "")
-#' - `column_title` - Column title (UI: "Column Title", default: "")
+#' - `column_title` - Column title (UI: "Column Title", default: ""). A title, when set, replaces the
+#'   group names a split would otherwise title its slices with; a `%s` in it is filled in with each
+#'   slice's group name. The same goes for `row_title`.
+#' - `show_row_slice_titles` - Title each row slice with its group name when the rows are split and
+#'   `row_title` is blank (UI: "Show Row Slice Titles", default: TRUE). Applies to every split method:
+#'   annotation values for "Annotation", cluster numbers for "K-means" and "Hierarchical". Untick it to
+#'   remove the titles and the space they take.
+#' - `show_column_slice_titles` - The same for columns (UI: "Show Column Slice Titles", default: TRUE)
 #' - `show_row_names` - Show row names (UI: "Show Row Names", default: TRUE)
 #' - `show_column_names` - Show column names (UI: "Show Column Names", default: TRUE)
 #' - `row_names_side` - Row names side (UI: "Row Names Side", default: "right")
@@ -411,6 +418,18 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
             tipify(textInput(ns("column_title"), "Column Title",
                 value = get_default(defaults, "column_title", "")
             ), "Title placed alongside the columns", placement = "top", options = tip_opts),
+            tipify(checkboxInput(ns("show_row_slice_titles"), "Show Row Slice Titles",
+                value = get_default(defaults, "show_row_slice_titles", TRUE, is.logical)
+            ), paste(
+                "Title each row slice with its group name when the rows are split.",
+                "Ignored if Row Title is set, which replaces the group names (use %s in it for each group's name)."
+            ), placement = "top", options = tip_opts),
+            tipify(checkboxInput(ns("show_column_slice_titles"), "Show Column Slice Titles",
+                value = get_default(defaults, "show_column_slice_titles", TRUE, is.logical)
+            ), paste(
+                "Title each column slice with its group name when the columns are split.",
+                "Ignored if Column Title is set, which replaces the group names (use %s in it for each group's name)."
+            ), placement = "top", options = tip_opts),
             tipify(checkboxInput(ns("show_row_names"), "Show Row Names",
                 value = get_default(defaults, "show_row_names", TRUE, is.logical)
             ), "Show row names", placement = "top", options = tip_opts),

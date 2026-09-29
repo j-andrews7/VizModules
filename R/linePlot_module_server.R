@@ -56,13 +56,19 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # manual title text for that axis so it regenerates for the new variable.
         last_axis_val <- reactiveVal(NULL)
 
-        observeEvent(input$x.value, {
+        # Error bars need a single categorical X, and only a confidence interval has a
+        # method to choose. What the app hid via hide.inputs is never shown again here.
+        observeEvent(list(input$x.value, input$error.bar.type), {
             req(input$x.value)
-            if (length(input$x.value) > 1 || is.numeric(data()[[input$x.value]])) {
-                hide_input(session, c("error.bar.width", "error.bar.colour", "error.bar"))
-            } else {
-                show_input(session, c("error.bar", "error.bar.width", "error.bar.colour"))
+            bars_apply <- length(input$x.value) == 1 && !is.numeric(data()[[input$x.value]])
+            ci_applies <- bars_apply && identical(input$error.bar.type, "ci95")
+
+            toggle_cells <- function(ids, show) {
+                ids <- setdiff(ids, hide.inputs)
+                if (show) show_input(session, ids) else hide_input(session, ids)
             }
+            toggle_cells(c("error.bar", "error.bar.type", "error.bar.width", "error.bar.colour"), bars_apply)
+            toggle_cells("error.bar.ci.method", ci_applies)
         })
 
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -189,6 +195,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             update_viz_select(session, "y.adjustment", selected = get_default(defaults, "y.adjustment", ""))
             updateMaterialSwitch(session, "error.bar",
                 value = get_default(defaults, "error.bar", TRUE, is.logical))
+            update_viz_select(session, "error.bar.type",
+                selected = get_default(defaults, "error.bar.type", "sd"))
+            update_viz_select(session, "error.bar.ci.method",
+                selected = get_default(defaults, "error.bar.ci.method", "normal"))
             updateNumericInput(session, "error.bar.width",
                 value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
@@ -381,7 +391,9 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 y.adjustment = y.adjustment,
                 error.colour = isolate_fn(input$error.bar.colour),
                 error.width = isolate_fn(input$error.bar.width),
-                error.bar = isolate_fn(input$error.bar)
+                error.bar = isolate_fn(input$error.bar),
+                error.type = isolate_fn(input$error.bar.type),
+                error.ci.method = isolate_fn(input$error.bar.ci.method)
             )
             # Add reference lines
             fig <- add_reference_lines(fig,

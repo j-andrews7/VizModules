@@ -33,6 +33,114 @@ test_that(".heatmap_resolve_split clamps k-means below the dimension and hierarc
     expect_equal(.heatmap_resolve_split("Hierarchical", 999, 32)$split, 32L)
 })
 
+# ---- .heatmap_resolve_title() (#366) ---------------------------------------------------------
+
+test_that(".heatmap_resolve_title returns typed text as is, whatever the slice-title toggle says", {
+    expect_identical(.heatmap_resolve_title("Samples", TRUE), "Samples")
+    expect_identical(.heatmap_resolve_title("Samples", FALSE), "Samples")
+    expect_identical(.heatmap_resolve_title("Group: %s", FALSE), "Group: %s")
+    # A lone space is text too: the workaround people used before the toggle existed.
+    expect_identical(.heatmap_resolve_title(" ", FALSE), " ")
+})
+
+test_that(".heatmap_resolve_title asks for the group names on a blank title, and for nothing when off", {
+    for (blank in list("", NULL, NA_character_)) {
+        expect_identical(.heatmap_resolve_title(blank, TRUE), character(0))
+        expect_null(.heatmap_resolve_title(blank, FALSE))
+    }
+    # Anything but a plain TRUE counts as off, so an unreported input can't leave titles on.
+    expect_identical(.heatmap_resolve_title("", NULL), NULL)
+    expect_identical(.heatmap_resolve_title("", NA), NULL)
+    # The toggle defaults to on, matching Heatmap()'s own behaviour.
+    expect_identical(.heatmap_resolve_title(""), character(0))
+})
+
+# Height, in mm, of the titles above a split heatmap's columns / left of its rows once drawn.
+.heatmap_title_extent <- function(ht, side = c("column", "row")) {
+    side <- match.arg(side)
+    grDevices::pdf(NULL)
+    on.exit(grDevices::dev.off())
+    layout_size <- ComplexHeatmap::draw(ht)@ht_list[[1]]@layout$layout_size
+    size <- if (side == "column") layout_size$column_title_top_height else layout_size$row_title_left_width
+    as.numeric(grid::convertUnit(size, "mm"))
+}
+
+test_that(".heatmap_resolve_title drives Heatmap() to show, or drop, the slice titles", {
+    skip_if_not_installed("ComplexHeatmap")
+    set.seed(1)
+    mat <- matrix(rnorm(60), 6, 10, dimnames = list(letters[1:6], LETTERS[1:10]))
+    groups <- data.frame(g = rep(c("Healthy", "Disease"), each = 5))
+    build <- function(text, show) {
+        ComplexHeatmap::Heatmap(
+            mat,
+            cluster_columns = FALSE, cluster_rows = FALSE,
+            column_split = groups, row_split = rep(c("x", "y"), each = 3),
+            column_title = .heatmap_resolve_title(text, show),
+            row_title = .heatmap_resolve_title(text, show)
+        )
+    }
+
+    for (side in c("column", "row")) {
+        shown <- .heatmap_title_extent(build("", TRUE), side)
+        expect_gt(shown, 0)
+        # A blank box no longer brings the group names back once they are switched off.
+        expect_equal(.heatmap_title_extent(build("", FALSE), side), 0)
+        # Typed text still gets its own title, whether or not slice titles are on.
+        expect_gt(.heatmap_title_extent(build("Samples", FALSE), side), 0)
+        expect_gt(.heatmap_title_extent(build("Samples", TRUE), side), 0)
+    }
+})
+
+test_that("the heatmap module drops the slice titles when Show Row/Column Slice Titles are off (#366)", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+    skip_if_not_installed("svglite")
+
+    sample_cols <- setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression"))
+    data <- shiny::reactive(list(
+        matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data
+    ))
+    n_in <- function(svg, word) lengths(regmatches(svg, gregexpr(word, svg, fixed = TRUE)))
+
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = data), {
+        session$setInputs(
+            matrix.cols = sample_cols, rowname.col = "gene", column_key = "sample",
+            row_filter = "", column_filter = "", auto.update = TRUE,
+            row_split_by = "Annotation", row_split_cols = "pathway",
+            column_split_by = "Annotation", column_split_cols = "condition",
+            row_annotations = NULL, column_annotations = NULL
+        )
+        draw <- function(show) {
+            session$setInputs(show_row_slice_titles = show, show_column_slice_titles = show)
+            session$getReturned()()$vector_svg(600, 500)
+        }
+        on <- draw(TRUE)
+        off <- draw(FALSE)
+
+        # Pathway names appear nowhere else on the heatmap (there are no tracks), so
+        # they are exactly the row slice titles.
+        for (pathway in c("Immune", "Metabolic")) {
+            expect_equal(n_in(on, pathway), 1L)
+            expect_equal(n_in(off, pathway), 0L)
+        }
+        # Sample names (Healthy_1, ...) also contain the group name, so compare counts:
+        # the column slice title is the one extra occurrence.
+        for (group in c("Healthy", "Disease")) {
+            expect_equal(n_in(on, group) - n_in(off, group), 1L)
+        }
+
+        # Typed titles still show with the slice titles off.
+        session$setInputs(
+            show_row_slice_titles = FALSE, show_column_slice_titles = FALSE,
+            row_title = "Pathways", column_title = "Samples"
+        )
+        typed <- session$getReturned()()$vector_svg(600, 500)
+        expect_equal(n_in(typed, "Pathways"), 1L)
+        expect_equal(n_in(typed, "Samples"), 1L)
+    })
+})
+
 # ---- .heatmap_scale_matrix() ------------------------------------------------------------------
 
 test_that(".heatmap_scale_matrix leaves 'none' alone and z-scores rows/columns correctly", {
