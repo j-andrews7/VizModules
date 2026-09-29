@@ -81,22 +81,22 @@ if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #>      </script>
 #>   <div id="heatmap_Heatmap_sub_heatmap_control" style="display:none;">
 #>     <div class="tabbable">
-#>       <ul class="nav nav-tabs" data-tabsetid="7287">
+#>       <ul class="nav nav-tabs" data-tabsetid="9001">
 #>         <li class="active">
-#>           <a href="#tab-7287-1" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-tasks&#39;&gt;&lt;/i&gt;"><i class='fa fa-tasks'></i></a>
+#>           <a href="#tab-9001-1" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-tasks&#39;&gt;&lt;/i&gt;"><i class='fa fa-tasks'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-7287-2" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-table&#39;&gt;&lt;/i&gt;"><i class='fa fa-table'></i></a>
+#>           <a href="#tab-9001-2" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-table&#39;&gt;&lt;/i&gt;"><i class='fa fa-table'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-7287-3" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;"><i class='fa fa-images'></i></a>
+#>           <a href="#tab-9001-3" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;"><i class='fa fa-images'></i></a>
 #>         </li>
 #>         <li>
-#>           <a href="#tab-7287-4" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;"><i class='fa fa-expand-arrows-alt'></i></a>
+#>           <a href="#tab-9001-4" data-toggle="tab" data-bs-toggle="tab" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;"><i class='fa fa-expand-arrows-alt'></i></a>
 #>         </li>
 #>       </ul>
-#>       <div class="tab-content" data-tabsetid="7287">
-#>         <div class="tab-pane active" data-value="&lt;i class=&#39;fa fa-tasks&#39;&gt;&lt;/i&gt;" id="tab-7287-1">
+#>       <div class="tab-content" data-tabsetid="9001">
+#>         <div class="tab-pane active" data-value="&lt;i class=&#39;fa fa-tasks&#39;&gt;&lt;/i&gt;" id="tab-9001-1">
 #>           <div id="heatmap_Heatmap_sub_tabs-setting">
 #>             <div>
 #>               <div style="float:left;width:150px">
@@ -185,13 +185,13 @@ if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #>             <button id="heatmap_Heatmap_open_modal" type="button" class="btn btn-default action-button"><span class="action-label">Interactivate sub-heatmap</span></button>
 #>           </div>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-table&#39;&gt;&lt;/i&gt;" id="tab-7287-2">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-table&#39;&gt;&lt;/i&gt;" id="tab-9001-2">
 #>           <div id="heatmap_Heatmap_sub_tabs-table">
 #>             <p>Export values in sub-heatmaps as a text table.</p>
 #>             <button id="heatmap_Heatmap_open_table" type="button" class="btn btn-default action-button"><span class="action-label">Open table</span></button>
 #>           </div>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;" id="tab-7287-3">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-images&#39;&gt;&lt;/i&gt;" id="tab-9001-3">
 #>           <div id="heatmap_Heatmap_sub_tabs-save-image">
 #>             <div id="heatmap_Heatmap_sub_heatmap_download_format" class="form-group shiny-input-radiogroup shiny-input-container shiny-input-container-inline" role="radiogroup" aria-labelledby="heatmap_Heatmap_sub_heatmap_download_format-label">
 #>               <label class="control-label" id="heatmap_Heatmap_sub_heatmap_download_format-label" for="heatmap_Heatmap_sub_heatmap_download_format">Which format?</label>
@@ -224,7 +224,7 @@ if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #>             </a>
 #>           </div>
 #>         </div>
-#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;" id="tab-7287-4">
+#>         <div class="tab-pane" data-value="&lt;i class=&#39;fa fa-expand-arrows-alt&#39;&gt;&lt;/i&gt;" id="tab-9001-4">
 #>           <div id="heatmap_Heatmap_sub_tabs-resize">
 #>             <div class="form-group shiny-input-container">
 #>               <label class="control-label" id="heatmap_Heatmap_sub_heatmap_input_width-label" for="heatmap_Heatmap_sub_heatmap_input_width">Box width</label>
