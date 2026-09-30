@@ -1,6 +1,8 @@
 # Changelog
 
-## VizModules 0.5.0.9000
+## VizModules 0.5.0
+
+CRAN release: 2026-09-29
 
 The one where we make the heatmap module not suck and stop accidentally
 butchering app CSS.
