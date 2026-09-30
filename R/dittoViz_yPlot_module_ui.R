@@ -227,7 +227,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     # The limits are in the units plotted, so any default adjustment applies.
     default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
     y.range <- .calculate_range(
-        df = .as_plotted(
+        df = as_plotted(
             data, default.var,
             get_default(defaults, "var.adjustment", "", function(x) x %in% adj.choices),
             get_default(defaults, "var.adj.fxn", "", function(x) x %in% adj.fxn.choices)
@@ -565,11 +565,11 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             )
         ),
-        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
+        "Stats" = uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
             tipify(
                 viz_select_input(ns("split.by"), "Split by (facet)",
-                    choices = c("", .facet_check(data)),
+                    choices = c("", facet_check(data)),
                     selected = get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices
@@ -619,7 +619,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$multivar.split.dir,
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices,
             annotate.note = paste(

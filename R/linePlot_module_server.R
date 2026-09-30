@@ -30,7 +30,7 @@
 #' @author Jacob Martin
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
     data_reactive <- data
 
     # linePlot-specific default for subplot spacing (tighter than the global 0.1),
@@ -85,7 +85,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         }
 
         default_palette_name <- "dittoColors"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -145,7 +145,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$palette.colours, default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
 
             # The picker is seeded with this, so it is also what the plot should be
@@ -208,10 +208,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Plotly
             # Group colors
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -220,8 +220,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(
-                session, .nz_value(input$facet.by),
+            toggle_facet_title_inputs(
+                session, nz_value(input$facet.by),
                 extra = c("facet.nrow", "facet.ncol"), hidden = hide.inputs
             )
         })
@@ -240,7 +240,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 isolate_fn(palette_groups()),
                 isolate_fn(palette_store()),
                 default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             )
 
             palette_selection <- palette_values
@@ -290,12 +290,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             y.adjustment <- NULL
-            if (.nz_value(isolate_fn(input$y.adjustment))) {
+            if (nz_value(isolate_fn(input$y.adjustment))) {
                 y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (.nz_value(isolate_fn(input$x.adjustment))) {
+            if (nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -336,7 +336,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
@@ -459,7 +459,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             } else if (dual_multiAxis) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
-            } else if (multi_axis && .nz_value(input$group.by)) {
+            } else if (multi_axis && nz_value(input$group.by)) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }

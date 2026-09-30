@@ -48,7 +48,7 @@
 #' @author Jacob Martin, Jared Andrews
 ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    # Not .require_data_frame(data) -- that helper coerces its input straight to
+    # Not require_data_frame(data) -- that helper coerces its input straight to
     # one data frame via as.data.frame(), which would mangle the two-table
     # list(matrix=, column_annotations=) shape (see .heatmap_resolve_data()).
 
@@ -252,7 +252,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             if (length(spec) == 0) {
                 return(NULL)
             }
-            ditto_palette <- .flatten_palette_options(default_palettes()[["choices"]])[["dittoColors"]]
+            ditto_palette <- flatten_palette_options(default_palettes()[["choices"]])[["dittoColors"]]
             tagList(lapply(names(spec), function(row_name) {
                 s <- spec[[row_name]]
                 widget_id <- .heatmap_annotation_widget_id(prefix, row_name)
@@ -274,9 +274,9 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                     )
                 } else {
                     prev_colors <- isolate(input[[widget_id]])
-                    default_colors <- .default_group_colors(defaults, widget_id) %||%
-                        .default_group_colors(defaults, row_name) %||%
-                        .default_group_colors(defaults, s$column)
+                    default_colors <- default_group_colors(defaults, widget_id) %||%
+                        default_group_colors(defaults, row_name) %||%
+                        default_group_colors(defaults, s$column)
                     seeded <- resolve_palette(s$levels, prev_colors, ditto_palette, default_colors)
                     multiColorPicker(ns(widget_id), label = paste0(s$column, ":"),
                         groups = s$levels, palette_options = default_palettes()[["choices"]],
@@ -388,7 +388,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             # Reads a row's dynamically-rendered color widget(s) (see
             # annotation_colors_ui() above) -- built once per axis and reused
             # for both the Left/Right (or Top/Bottom) split below.
-            ditto_palette <- .flatten_palette_options(default_palettes()[["choices"]])[["dittoColors"]]
+            ditto_palette <- flatten_palette_options(default_palettes()[["choices"]])[["dittoColors"]]
 
             make_color_lookup <- function(prefix) {
                 function(row_name, col, values) {
@@ -411,9 +411,9 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                     } else {
                         client_colors <- isolate_fn(input[[widget_id]])
                         levels <- sort(unique(as.character(values[!is.na(values)])))
-                        default_colors <- .default_group_colors(defaults, widget_id) %||%
-                            .default_group_colors(defaults, row_name) %||%
-                            .default_group_colors(defaults, col)
+                        default_colors <- default_group_colors(defaults, widget_id) %||%
+                            default_group_colors(defaults, row_name) %||%
+                            default_group_colors(defaults, col)
                         discrete_cols <- resolve_palette(levels, client_colors, ditto_palette, default_colors)
                         .heatmap_annotation_col(values, discrete_colors = discrete_cols)
                     }

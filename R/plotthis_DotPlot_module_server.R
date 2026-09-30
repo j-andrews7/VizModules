@@ -29,7 +29,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
 
     moduleServer(id, function(input, output, session) {
@@ -60,7 +60,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         observeEvent(input$reset, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
-            palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+            palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
 
             # Data
             update_viz_select(session, "x.data",
@@ -144,21 +144,21 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Plotly
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
 
             # Lines
             reset_lines_inputs(session, defaults = defaults)
         })
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # The color-scale trimming controls only affect the continuous fill gradient,
         # so only expose them when a fill column is selected.
         observeEvent(input$fill.by, {
             fill.scale.inputs <- c("lower.quantile", "upper.quantile", "lower.cutoff", "upper.cutoff")
-            if (.nz_value(input$fill.by)) {
+            if (nz_value(input$fill.by)) {
                 show_input(session, fill.scale.inputs)
             } else {
                 hide_input(session, fill.scale.inputs)
@@ -170,17 +170,17 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Null Values:
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             size.by <- NULL
-            if (.nz_value(isolate_fn(input$size.by))) {
+            if (nz_value(isolate_fn(input$size.by))) {
                 size.by <- isolate_fn(input$size.by)
             }
 
             fill.by <- NULL
-            if (.nz_value(isolate_fn(input$fill.by))) {
+            if (nz_value(isolate_fn(input$fill.by))) {
                 fill.by <- isolate_fn(input$fill.by)
             }
 
@@ -193,8 +193,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 
             palette_arg <- isolate_fn(input$palette.name)
             if (is.null(palette_arg) || !nzchar(palette_arg)) palette_arg <- "Spectral"
@@ -225,8 +225,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 border_size = isolate_fn(input$border.size),
                 lower_quantile = isolate_fn(input$lower.quantile),
                 upper_quantile = isolate_fn(input$upper.quantile),
-                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
-                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
+                lower_cutoff = na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = na_to_null(isolate_fn(input$upper.cutoff))
             )
             fig <- ggplotly(p)
 

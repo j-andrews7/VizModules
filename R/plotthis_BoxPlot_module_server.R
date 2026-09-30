@@ -30,7 +30,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
         params <- setup_reactive_defaults(defaults, input, session)
@@ -61,7 +61,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Store last computed stats table for download
         last_stats_df <- reactiveVal(NULL)
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -103,7 +103,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$palette.colours, default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
 
             # The picker is seeded with this, so it is also what the plot should be
@@ -136,7 +136,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             freezeReactiveValue(input, "stat.pairs")
             update_viz_select(session, "stat.pairs",
                 choices = c("", pair_strings),
-                selected = .default_stat_pairs(defaults, pair_strings)
+                selected = default_stat_pairs(defaults, pair_strings)
             )
         })
 
@@ -216,10 +216,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Action Button
             # Group colors
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -229,7 +229,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             reset_axes_inputs(session, defaults)
 
             # Stats
-            .reset_stats_inputs(session, defaults, pair_choices())
+            reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # How high the significance brackets will reach, so the y-axis can reserve
@@ -245,12 +245,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 return(NULL)
             }
 
-            .stat_bracket_headroom(
+            stat_bracket_headroom(
                 df = data(), x = input$x.data, y = input$y.data,
                 # A numeric group.by is a fill gradient, not a nested grouping,
                 # exactly as the render treats it.
-                group.by = .blank_to_null(input$group.by, data(), numeric_is_null = TRUE),
-                facet.by = .blank_to_null(input$facet.by),
+                group.by = blank_to_null(input$group.by, data(), numeric_is_null = TRUE),
+                facet.by = blank_to_null(input$facet.by),
                 per.facet = isTRUE(input$stat.per.facet),
                 input = input,
                 dodge.width = .PLOTTHIS_DODGE_WIDTH
@@ -292,10 +292,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         )
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
             # Sorting x is not applied to a faceted plot, so clear it rather than
             # leave a key on screen that does nothing.
-            if (.nz_value(input$facet.by)) {
+            if (nz_value(input$facet.by)) {
                 updateTextInput(session, "sort_x", value = "")
             }
         })
@@ -308,12 +308,12 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Facet By Null option Upstream:
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             group.by <- NULL
-            if (.nz_value(isolate_fn(input$group.by))) {
+            if (nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
 
@@ -323,7 +323,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # is not applied while faceted (see the facet.by observer above).
             sort.x <- NULL
             sort.text <- isolate_fn(input$sort_x)
-            if (is.null(facet.by) && .nz_value(sort.text) && nzchar(trimws(sort.text))) {
+            if (is.null(facet.by) && nz_value(sort.text) && nzchar(trimws(sort.text))) {
                 sort.x <- suppressWarnings(
                     .validate_expression_with(sort.text, names(data()), .sort_allowed_calls())
                 )
@@ -340,14 +340,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(palette_store()),
                 default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             )
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {
@@ -438,7 +438,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 if (isTRUE(isolate_fn(input$rotate))) {
                     # Rotated, the values run along the x-axis and there is no room
                     # above them for brackets. The tests still reach the source download.
-                    .note_brackets_skipped(session)
+                    note_brackets_skipped(session)
                 } else {
                     stat_result <- create_stat_annotations(
                         stats_df = stats_df, fig = fig, df = data(),
@@ -578,5 +578,5 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 #' @rdname INTERNAL_box_free_y
 #' @keywords internal
 .box_free_y <- function(facet.by, facet.scale) {
-    .nz_value(facet.by) && isTRUE(facet.scale %in% c("free", "free_y"))
+    nz_value(facet.by) && isTRUE(facet.scale %in% c("free", "free_y"))
 }

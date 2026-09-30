@@ -43,6 +43,8 @@ being added, removed, or reordered between rebuilds — which happens whenever s
 brackets or reference labels appear.
 
 Both helpers are exported, so the pattern works from a custom module in your own package.
+On Reset, call `reset_manual_edits(edit_store)` to discard every captured edit (it clears
+the store in place, so pass the store `setup_manual_edits()` returned, not a copy).
 The internals (`.capture_manual_edits()`, `.reapply_manual_edits()`,
 `.add_colorbar_listener()`) are not exported and should not be needed directly.
 

@@ -132,15 +132,15 @@ test_that("scatterPlot uses the default single point color when nothing is group
 test_that("highlight values may contain spaces when separated by commas", {
     available <- c("CD4 T", "CD8 T", "B", "P01", "P07")
 
-    expect_equal(.parse_highlight_values("CD4 T, B", available), c("CD4 T", "B"))
-    expect_equal(.parse_highlight_values("CD4 T\nCD8 T", available), c("CD4 T", "CD8 T"))
+    expect_equal(parse_highlight_values("CD4 T, B", available), c("CD4 T", "B"))
+    expect_equal(parse_highlight_values("CD4 T\nCD8 T", available), c("CD4 T", "CD8 T"))
     # Space-separated lists of values without spaces still split as before.
-    expect_equal(.parse_highlight_values("P01 P07", available), c("P01", "P07"))
-    expect_equal(.parse_highlight_values("P01, P07 B", available), c("P01", "P07", "B"))
+    expect_equal(parse_highlight_values("P01 P07", available), c("P01", "P07"))
+    expect_equal(parse_highlight_values("P01, P07 B", available), c("P01", "P07", "B"))
     # With nothing to match against, every entry splits on whitespace.
-    expect_equal(.parse_highlight_values("a b,c"), c("a", "b", "c"))
-    expect_equal(.parse_highlight_values(""), character(0))
-    expect_equal(.parse_highlight_values(NULL), character(0))
+    expect_equal(parse_highlight_values("a b,c"), c("a", "b", "c"))
+    expect_equal(parse_highlight_values(""), character(0))
+    expect_equal(parse_highlight_values(NULL), character(0))
 })
 
 # --- Driving the module's own build ------------------------------------------
@@ -228,8 +228,8 @@ test_that("fit and model lines are fit to the plotted values under every axis ad
         lines <- expect_fit_lines_on_points(linear, c("Linear Fit", "Custom"), min.count = 2, full.span = TRUE)
 
         # ...and is the least-squares line through them.
-        px <- VizModules:::.adjusted_values(df$units, adj$x.adjustment, adj$x.adj.fxn)
-        py <- VizModules:::.adjusted_values(df$revenue, adj$y.adjustment, adj$y.adj.fxn)
+        px <- VizModules:::adjusted_values(df$units, adj$x.adjustment, adj$x.adj.fxn)
+        py <- VizModules:::adjusted_values(df$revenue, adj$y.adjustment, adj$y.adj.fxn)
         expected <- stats::coef(stats::lm(py ~ px))
         for (ln in lines) {
             lx <- unlist(ln$x)

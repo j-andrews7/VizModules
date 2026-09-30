@@ -34,7 +34,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
         params <- setup_reactive_defaults(defaults, input, session)
@@ -94,7 +94,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
         default_palette_name <- "dittoColors"
         default_gradient_palette <- "Spectral"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -164,7 +164,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
                 initial_colors <- isolate(resolve_palette(
                     groups, input$palette.colours, default_palette_values,
-                    .default_group_colors(defaults, "palette.colours")
+                    default_group_colors(defaults, "palette.colours")
                 ))
 
                 # The picker is seeded with this, so it is also what the plot should be
@@ -317,10 +317,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             update_viz_select(session, "gradient.palette",
                 selected = get_default(defaults, "gradient.palette", default_gradient_palette, is.character)
             )
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
         })
@@ -342,7 +342,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # The color-scale trimming controls only affect a continuous fill gradient,
@@ -361,18 +361,18 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Null Values:
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
 
             fill.by <- NULL
-            if (.nz_value(isolate_fn(input$fill.by))) {
+            if (nz_value(isolate_fn(input$fill.by))) {
                 fill.by <- isolate_fn(input$fill.by)
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 
             # Determine palette/palcolor based on fill_by type
             palcolor_arg <- NULL
@@ -392,7 +392,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     isolate_fn(palette_groups()),
                     isolate_fn(palette_store()),
                     default_palette_values,
-                    .default_group_colors(defaults, "palette.colours")
+                    default_group_colors(defaults, "palette.colours")
                 )
                 if (!is.null(palette_values) && length(palette_values) > 0) {
                     palcolor_arg <- as.list(palette_values)
@@ -400,7 +400,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
 
             alpha.by <- NULL
-            if (.nz_value(isolate_fn(input$alpha.by))) {
+            if (nz_value(isolate_fn(input$alpha.by))) {
                 alpha.by <- isolate_fn(input$alpha.by)
             }
 
@@ -434,8 +434,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 bar_height = isolate_fn(input$bar.height),
                 lower_quantile = isolate_fn(input$lower.quantile),
                 upper_quantile = isolate_fn(input$upper.quantile),
-                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
-                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
+                lower_cutoff = na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = na_to_null(isolate_fn(input$upper.cutoff))
             )
 
             y <- isolate_fn(input$y.data)
@@ -635,7 +635,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 #' @rdname INTERNAL_split_bar_range
 #' @keywords internal
 .split_bar_range <- function(df, value_col, category_col, scale_factor = 1) {
-    if (is.null(df) || !.nz_value(value_col) || !.nz_value(category_col) ||
+    if (is.null(df) || !nz_value(value_col) || !nz_value(category_col) ||
         !all(c(value_col, category_col) %in% names(df)) || !is.numeric(df[[value_col]])) {
         return(NULL)
     }

@@ -224,7 +224,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     "Facet" = tagList(
         tipify(viz_select_input(ns("facet.by"), "Facet By",
         selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-        choices = c("", .facet_check(data))
+        choices = c("", facet_check(data))
         ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
         tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
         selected = get_default(
@@ -242,7 +242,7 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(materialSwitch(ns("facet.by.row"), "Facet by Row",
         value = get_default(defaults, "facet.by.row", TRUE, is.logical), status = "success"),
             documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-        .uniform_subplot_spacing_inputs_ui(ns, defaults)
+        uniform_subplot_spacing_inputs_ui(ns, defaults)
     ),
 
     "Aesthetics" = tagList(

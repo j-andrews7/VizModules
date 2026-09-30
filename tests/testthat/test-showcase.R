@@ -158,7 +158,7 @@ test_that("the showcased highlights name points that exist", {
     for (id in c("scatter", "yplot", "freq")) {
         defaults <- showcase[[id]]$defaults
         column <- datasets[[showcase[[id]]$dataset]][[defaults$annotate.by]]
-        values <- .parse_highlight_values(defaults$highlight.points, column)
+        values <- parse_highlight_values(defaults$highlight.points, column)
         expect_gt(length(values), 0)
         expect_true(all(values %in% as.character(column)), info = id)
     }

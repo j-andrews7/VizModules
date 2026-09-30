@@ -113,7 +113,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 
 #' Reset uniform stats inputs to defaults
 #'
-#' Resets all inputs created by [.uniform_stats_inputs_ui()] to their default
+#' Resets all inputs created by [uniform_stats_inputs_ui()] to their default
 #' values. Call inside an `observeEvent(input$reset, ...)` block.
 #'
 #' @param session The Shiny session object (from `moduleServer`).
@@ -121,7 +121,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #'   hardcoded fallbacks. Typically the same list passed to the UI function.
 #' @param pair_strings Character vector of the comparisons currently on offer
 #'   in the Comparisons selector. Those named by `defaults$stat.pairs` are
-#'   reselected (see [.default_stat_pairs()]); `NULL` clears the selection.
+#'   reselected (see [default_stat_pairs()]); `NULL` clears the selection.
 #'
 #' @return Called for side effects; returns `invisible(NULL)`.
 #'
@@ -129,10 +129,16 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
 #' @importFrom shinyWidgets updateMaterialSwitch
 #' @importFrom colourpicker updateColourInput
 #'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_stats_inputs
-#' @keywords internal
-.reset_stats_inputs <- function(session, defaults = NULL, pair_strings = NULL) {
+#' @examples
+#' \dontrun{
+#' # Inside a module server:
+#' observeEvent(input$reset, {
+#'     reset_stats_inputs(session, defaults, pair_strings = pair_choices())
+#' })
+#' }
+reset_stats_inputs <- function(session, defaults = NULL, pair_strings = NULL) {
     updateMaterialSwitch(session, "stats.enabled", value = get_default(defaults, "stats.enabled", FALSE, is.logical))
     update_viz_select(session, "stat.test", selected = get_default(defaults, "stat.test", "wilcox.test"))
     update_viz_select(session, "stat.p.adjust", selected = get_default(defaults, "stat.p.adjust", "holm"))
@@ -140,7 +146,7 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
     updateNumericInput(session, "stat.sig.threshold", value = get_default(defaults, "stat.sig.threshold", 0.05, is.numeric))
     updateMaterialSwitch(session, "stat.hide.ns", value = get_default(defaults, "stat.hide.ns", TRUE, is.logical))
     updateMaterialSwitch(session, "stat.paired", value = get_default(defaults, "stat.paired", FALSE, is.logical))
-    update_viz_select(session, "stat.pairs", selected = .default_stat_pairs(defaults, pair_strings))
+    update_viz_select(session, "stat.pairs", selected = default_stat_pairs(defaults, pair_strings))
     updateColourInput(session, "stat.line.color", value = get_default(defaults, "stat.line.color", "#000000"))
     updateNumericInput(session, "stat.line.width", value = get_default(defaults, "stat.line.width", 1, is.numeric))
     update_viz_select(session, "stat.bracket.style", selected = get_default(defaults, "stat.bracket.style", "capped"))
@@ -182,7 +188,7 @@ reset_plotly_inputs <- function(session, defaults = NULL) {
     updateNumericInput(session, "margin.b", value = get_default(defaults, "margin.b", 70, is.numeric))
     updateNumericInput(session, "margin.l", value = get_default(defaults, "margin.l", 70, is.numeric))
     updateNumericInput(session, "margin.r", value = get_default(defaults, "margin.r", 90, is.numeric))
-    spacing <- .subplot_spacing_defaults(defaults)
+    spacing <- subplot_spacing_defaults(defaults)
     updateNumericInput(session, "subplot.margin.x", value = spacing$x)
     updateNumericInput(session, "subplot.margin.y", value = spacing$y)
     updateColourInput(session, "shape.fill", value = get_default(defaults, "shape.fill", "rgba(0, 0, 0, 0)"))

@@ -14,7 +14,7 @@
 #' first, then z-score. dittoViz applies them the other way round when given both,
 #' which turns every below-average value into `log()` of a negative number, so the
 #' modules hand dittoViz this whole transform as its function instead (see
-#' [.adjustment_fn()]).
+#' [adjustment_fn()]).
 #'
 #' The rescaling is computed over the finite values only, so a value the function
 #' makes non-finite (`log(0)`) is dropped from the plot rather than turning the
@@ -25,16 +25,20 @@
 #' in a different coordinate space from the data.
 #'
 #' @param values Vector of values, normally one column of the plotted data.
-#' @param adjustment `NULL`, `""`, or one of `.adjustment_choices`.
+#' @param adjustment `NULL`, `""`, `"z-score"` or `"relative.to.max"`.
 #' @param adj.fxn `NULL`, `""`, a name accepted by [safe_resolve_adj_fxn()], or a
 #'   function.
 #'
 #' @return The transformed values, unnamed.
 #'
+#' @seealso [adjustment_fn()], [as_plotted()], [adjust_column_values()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_adjusted_values
-#' @keywords internal
-.adjusted_values <- function(values, adjustment = NULL, adj.fxn = NULL) {
+#' @examples
+#' adjusted_values(c(1, 10, 100), adjustment = "z-score", adj.fxn = "log10")
+#' adjusted_values(c(1, 2, 4), adjustment = "relative.to.max")
+adjusted_values <- function(values, adjustment = NULL, adj.fxn = NULL) {
     values <- unname(values)
 
     if (is.character(adj.fxn)) {
@@ -44,7 +48,7 @@
         values <- adj.fxn(values)
     }
 
-    if (is.numeric(values) && .nz_value(adjustment)) {
+    if (is.numeric(values) && nz_value(adjustment)) {
         ok <- is.finite(values)
         if (identical(adjustment, "z-score")) {
             values[ok] <- (values[ok] - mean(values[ok])) / stats::sd(values[ok])
@@ -76,28 +80,33 @@
 #'
 #' dittoViz applies its `*.adjustment` before its `*.adj.fxn`. Passing it this
 #' function as `*.adj.fxn`, with no `*.adjustment`, has it plot
-#' [.adjusted_values()] instead, while it still builds its adjusted columns, hover
+#' [adjusted_values()] instead, while it still builds its adjusted columns, hover
 #' text and multi-variable reshape as usual.
 #'
-#' @param adjustment,adj.fxn Passed to [.adjusted_values()].
+#' @param adjustment,adj.fxn Passed to [adjusted_values()].
 #'
 #' @return A function of one vector, or `NULL` when neither is set.
 #'
+#' @seealso [adjusted_values()], [as_plotted()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_adjustment_fn
-#' @keywords internal
-.adjustment_fn <- function(adjustment = NULL, adj.fxn = NULL) {
-    fxn <- if (.nz_value(adj.fxn)) safe_resolve_adj_fxn(adj.fxn) else NULL
-    if (!.nz_value(adjustment) && is.null(fxn)) {
+#' @examples
+#' fn <- adjustment_fn(adjustment = "z-score", adj.fxn = "log10")
+#' fn(c(1, 10, 100))
+#' adjustment_fn()
+adjustment_fn <- function(adjustment = NULL, adj.fxn = NULL) {
+    fxn <- if (nz_value(adj.fxn)) safe_resolve_adj_fxn(adj.fxn) else NULL
+    if (!nz_value(adjustment) && is.null(fxn)) {
         return(NULL)
     }
     force(adjustment)
-    function(values) .adjusted_values(values, adjustment, fxn)
+    function(values) adjusted_values(values, adjustment, fxn)
 }
 
 #' Replace data columns with the values the modules plot for them
 #'
-#' Applies [.adjusted_values()] to each of `cols` in place, keeping the column
+#' Applies [adjusted_values()] to each of `cols` in place, keeping the column
 #' names. Each column is transformed on its own over the whole frame, as dittoViz
 #' does before any row subsetting or multi-variable reshape, so the result can be
 #' passed wherever the raw frame was (statistics, model formulas that name the
@@ -106,20 +115,23 @@
 #' @param df Data frame.
 #' @param cols Character vector of column names to transform. Names not in `df`
 #'   are ignored.
-#' @param adjustment,adj.fxn Passed to [.adjusted_values()].
+#' @param adjustment,adj.fxn Passed to [adjusted_values()].
 #'
 #' @return `df` with `cols` transformed; unchanged when neither argument is set.
 #'
+#' @seealso [adjusted_values()], [adjust_column_values()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_as_plotted
-#' @keywords internal
-.as_plotted <- function(df, cols, adjustment = NULL, adj.fxn = NULL) {
-    fxn.set <- is.function(adj.fxn) || .nz_value(adj.fxn)
-    if (is.null(df) || (!.nz_value(adjustment) && !fxn.set)) {
+#' @examples
+#' as_plotted(data.frame(y = c(1, 10, 100)), "y", adjustment = "z-score", adj.fxn = "log10")
+as_plotted <- function(df, cols, adjustment = NULL, adj.fxn = NULL) {
+    fxn.set <- is.function(adj.fxn) || nz_value(adj.fxn)
+    if (is.null(df) || (!nz_value(adjustment) && !fxn.set)) {
         return(df)
     }
     for (col in intersect(cols, names(df))) {
-        df[[col]] <- .adjusted_values(df[[col]], adjustment, adj.fxn)
+        df[[col]] <- adjusted_values(df[[col]], adjustment, adj.fxn)
     }
     df
 }
@@ -184,10 +196,10 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
       adj_fun <- safe_resolve_adj_fxn(adj_name) #Safety check for string input
     }
 
-    if (!is.null(adj_fun) || .nz_value(adjustment)) {
+    if (!is.null(adj_fun) || nz_value(adjustment)) {
       for (col in cols) {
         if (col %in% names(out) && is.numeric(out[[col]])) {
-          out[[paste(col, "adj", sep = ".")]] <- .adjusted_values(out[[col]], adjustment, adj_fun)
+          out[[paste(col, "adj", sep = ".")]] <- adjusted_values(out[[col]], adjustment, adj_fun)
         }
       }
     }
@@ -215,10 +227,12 @@ adjust_column_values <- function(df, x.col = NULL, y.col = NULL, color.col = NUL
 #'
 #' @return The value of `expr`.
 #'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_with_stable_seed
-#' @keywords internal
-.with_stable_seed <- function(expr, seed = 42L) {
+#' @examples
+#' with_stable_seed(runif(2))
+#' with_stable_seed(runif(2))
+with_stable_seed <- function(expr, seed = 42L) {
     if (exists(".Random.seed", envir = globalenv(), inherits = FALSE)) {
         old_seed <- get(".Random.seed", envir = globalenv(), inherits = FALSE)
         on.exit(assign(".Random.seed", old_seed, envir = globalenv()), add = TRUE)
@@ -743,10 +757,17 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 #'
 #' @return Invisibly `NULL`; called for its side effect.
 #'
+#' @seealso [setup_manual_edits()], [finalize_manual_edits()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_manual_edits
-#' @keywords internal
-.reset_manual_edits <- function(store) {
+#' @examples
+#' \dontrun{
+#' # Inside a module's observeEvent(input$reset, ...):
+#' manual_edits <- setup_manual_edits(input, session, plot_source)
+#' reset_manual_edits(manual_edits)
+#' }
+reset_manual_edits <- function(store) {
     edits <- store$edits
     edits$legend <- NULL
     edits$annotations <- list()
@@ -951,7 +972,7 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 #'
 #' @details No data adjustment is applied here; the column values are carried
 #'   over as given. dittoViz adjusts each variable before stacking, so pass a
-#'   frame already run through [.as_plotted()] to get the values it plots.
+#'   frame already run through [as_plotted()] to get the values it plots.
 #'
 #' @author Jared Andrews
 #' @keywords internal
