@@ -1,4 +1,5 @@
 library(VizModules)
+library(InteractiveComplexHeatmap)
 
 # The gallery's app logic lives in VizModules::moduleGalleryApp() so it can be
 # launched directly with moduleGalleryApp(). This file stays as a thin wrapper
