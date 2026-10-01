@@ -213,7 +213,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     defaults, "facet.by", "",
                     function(x) x == "" || x %in% cat.choices
                 ),
-                choices = c("", .facet_check(data))
+                choices = c("", facet_check(data))
             ), documentParameters$facet.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scales"), "Facet Scales",
                 choices = c("fixed", "free", "free_x", "free_y"),
@@ -234,7 +234,7 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     "Leave blank to auto-compute; only one of rows/columns needs to be set."),
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             tipify(viz_select_input(ns("plot.mode"), "Plot Type",

@@ -296,7 +296,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 )
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("split.by"), "Split By",
-                choices = c("", .facet_check(data)),
+                choices = c("", facet_check(data)),
                 selected = get_default(
                     defaults, "split.by", "",
                     function(x) all(x %in% cat.choices)
@@ -431,7 +431,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ), "Control whether facet panels share the same axis scales or allow them to vary independently",
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices),
         "Legend" = tagList(

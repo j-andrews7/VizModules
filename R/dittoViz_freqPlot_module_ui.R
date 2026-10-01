@@ -26,7 +26,7 @@
 #' level of each supplied grouping column.
 #'
 #' Unlike the facet and grouping selectors this deliberately does not go through
-#' [.facet_check()]: samples are the unit of observation rather than a facet, so a
+#' [facet_check()]: samples are the unit of observation rather than a facet, so a
 #' study with more than fifty of them is perfectly reasonable. Columns with a level
 #' for (nearly) every row are excluded instead, since a row identifier would give
 #' one observation per "sample" and so a frequency of 0 or 1 everywhere.
@@ -64,7 +64,7 @@
 
 #' Normalize the multi-select `vars.use` input
 #'
-#' [.blank_to_null()] returns `NULL` for anything that is not length one, so a
+#' [blank_to_null()] returns `NULL` for anything that is not length one, so a
 #' multi-value selection would read as "no selection" and silently draw every
 #' facet. Empty entries are dropped and an empty result becomes `NULL`, which is
 #' [dittoViz::freqPlot()]'s "use them all".
@@ -99,8 +99,8 @@
 #' @rdname INTERNAL_freq_stats_group_col
 #' @keywords internal
 .freq_stats_group_col <- function(group.by, color.by) {
-    color.by <- .blank_to_null(color.by)
-    group.by <- .blank_to_null(group.by)
+    color.by <- blank_to_null(color.by)
+    group.by <- blank_to_null(group.by)
     if (is.null(color.by) || identical(color.by, group.by)) NULL else color.by
 }
 
@@ -403,7 +403,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
 
     # Frequencies are tabulated over levels, so only low-cardinality categorical
     # columns are meaningful for any of the structural selectors.
-    cat.choices <- .facet_check(data)
+    cat.choices <- facet_check(data)
 
     var.default <- get_default(
         defaults, "var",
@@ -736,7 +736,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 placement = "top", options = list(container = "body")
             )
         ),
-        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
+        "Stats" = uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
             helpText("Faceted on the frequency variable; use \"Levels To Show\" to pick facets."),
             tipify(
@@ -758,7 +758,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 step = 1, min = 0,
                 value = get_default(defaults, "split.nrow", NA, is.numeric)
             ), documentParameters$split.nrow, placement = "top", options = list(container = "body")),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices,
             annotate.note = paste(

@@ -274,7 +274,7 @@ figureBuilderServer <- function(id, data_list = NULL, module_registry = NULL) {
 
             nm <- trimws(input$pb_data_name)
 
-            if (!.nz_value(nm)) {
+            if (!nz_value(nm)) {
                 nm <- tools::file_path_sans_ext(basename(file$name))
             }
 

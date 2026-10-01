@@ -30,7 +30,7 @@
 #' @author Jacob Martin, Jared Andrews
 plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
 
     moduleServer(id, function(input, output, session) {
@@ -60,7 +60,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         edit_store <- setup_manual_edits(input, session, plot_source)
 
         default_palette_name <- "dittoColors"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -121,7 +121,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
-                palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+                palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
                 viz_select_input(
                     ns("palette.name"),
                     "Color Palette",
@@ -136,7 +136,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
                 initial_colors <- isolate(resolve_palette(
                     groups, input$palette.colours, default_palette_values,
-                    .default_group_colors(defaults, "palette.colours")
+                    default_group_colors(defaults, "palette.colours")
                 ))
 
                 # The picker is seeded with this, so it is also what the plot should be
@@ -233,10 +233,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             update_viz_select(session, "palette.name",
                 selected = get_default(defaults, "palette.name", "viridis", is.character)
             )
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -276,7 +276,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(session, .nz_value(input$facet.by), hidden = hide.inputs)
+            toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
         })
 
         # The color-scale trimming controls only affect a continuous fill gradient,
@@ -305,11 +305,11 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # Null Values:
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             expand <- waiver()
-            expand.input <- .na_to_null(isolate_fn(input$expand))
+            expand.input <- na_to_null(isolate_fn(input$expand))
             if (!is.null(expand.input)) {
                 expand <- as.numeric(strsplit(expand.input, ",\\s*")[[1]])
             }
@@ -319,13 +319,13 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 width <- waiver()
             }
             group.by <- NULL
-            if (.nz_value(isolate_fn(input$group.by))) {
+            if (nz_value(isolate_fn(input$group.by))) {
                 group.by <- isolate_fn(input$group.by)
             }
 
 
             fill_by_input <- isolate_fn(input$fill.by)
-            if (.nz_value(fill_by_input)) {
+            if (nz_value(fill_by_input)) {
                 fill.by <- fill_by_input
                 group.by <- NULL
             } else {
@@ -344,14 +344,14 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     isolate_fn(palette_groups()),
                     isolate_fn(palette_store()),
                     default_palette_values,
-                    .default_group_colors(defaults, "palette.colours")
+                    default_group_colors(defaults, "palette.colours")
                 )
                 palcolor_arg <- as.list(palette_values)
             }
 
             # Convert NA to NULL for facet.ncol and facet.nrow
-            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 
             theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
@@ -379,8 +379,8 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fill_by = fill.by,
                 lower_quantile = isolate_fn(input$lower.quantile),
                 upper_quantile = isolate_fn(input$upper.quantile),
-                lower_cutoff = .na_to_null(isolate_fn(input$lower.cutoff)),
-                upper_cutoff = .na_to_null(isolate_fn(input$upper.cutoff))
+                lower_cutoff = na_to_null(isolate_fn(input$lower.cutoff)),
+                upper_cutoff = na_to_null(isolate_fn(input$upper.cutoff))
             )
 
             fig <- ggplotly(p)
@@ -449,7 +449,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # group.by is not req()'d above, so it can still be NULL here; a
             # bare == against it yields logical(0) and errors the render.
-            if (.nz_value(input$group.by) && input$y.data == input$group.by) {
+            if (nz_value(input$group.by) && input$y.data == input$group.by) {
                 return_empty <- TRUE
                 txt <- c(txt, "Cannot have the y input and group.by be equal. Please change either inputs.")
             }

@@ -206,17 +206,25 @@
 #' @param annotate.by Character. Name of the field to use for annotation text.
 #' @param annotation_params List of annotation styling parameters (ax, ay, showarrow, etc.).
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
-#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
-#'   matching to marker traces.
+#' @param require.markers Logical. When `TRUE`, only traces drawing point markers are matched
+#'   (use it when other scatter traces, such as box outlines, come from the same data).
 #'
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
+#' @seealso [uniform_annotation_inputs_ui()], [create_highlight_annotations()], [merge_annotation_sets()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_create_selected_annotations
-#' @keywords internal
-.create_selected_annotations <- function(selected_data, fig, annotate.by,
-                                         annotation_params, show.others = TRUE,
-                                         require.markers = FALSE) {
+#' @examples
+#' \dontrun{
+#' # Inside a module's renderPlotly(), with the selection from event_data():
+#' selected <- event_data("plotly_selected", source = plot_source)
+#' annos <- create_selected_annotations(selected, fig, annotate.by = "name", 
+#'                                      annotation_params = params)
+#' }
+create_selected_annotations <- function(selected_data, fig, annotate.by,
+                                        annotation_params, show.others = TRUE,
+                                        require.markers = FALSE) {
     if (is.null(selected_data) || nrow(selected_data) == 0) {
         return(NULL)
     }
@@ -345,17 +353,32 @@
 #' @param y_col Character. Name of the y-axis column.
 #' @param annotation_params List of annotation styling parameters.
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
-#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
-#'   matching to marker traces.
+#' @param require.markers Logical. When `TRUE`, only traces drawing point markers are matched
+#'   (use it when other scatter traces, such as box outlines, come from the same data).
 #'
 #' @return List of plotly annotation objects, or NULL if no valid annotations.
 #'
+#' @seealso [uniform_annotation_inputs_ui()], [parse_highlight_values()], [create_selected_annotations()],
+#'   [merge_annotation_sets()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_create_highlight_annotations
-#' @keywords internal
-.create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
-                                          x_col, y_col, annotation_params, show.others = TRUE,
-                                          require.markers = FALSE) {
+#' @examples
+#' \dontrun{
+#' # Inside a module's renderPlotly(), after building the plot:
+#' annos <- create_highlight_annotations(
+#'     plot_data,
+#'     fig,
+#'     annotate.by = "name",
+#'     highlight_vals = parse_highlight_values(input$highlight.values),
+#'     x_col = "wt",
+#'     y_col = "mpg",
+#'     annotation_params = params
+#' )
+#' }
+create_highlight_annotations <- function(plot_data, fig, annotate.by, highlight_vals,
+                                         x_col, y_col, annotation_params, show.others = TRUE,
+                                         require.markers = FALSE) {
     if (is.null(plot_data) || is.null(highlight_vals) || length(highlight_vals) == 0) {
         return(NULL)
     }
@@ -457,17 +480,25 @@
 #' @param default.size Numeric, or `NULL`. Marker size to fall back on for traces
 #'   that carry no explicit size.
 #' @param show.others Logical. Whether "show.others" was enabled in the plot.
-#' @param require.markers Logical. Passed to [.should_include_trace()] to restrict
-#'   restyling to marker traces.
+#' @param require.markers Logical. When `TRUE`, only traces drawing point markers are restyled
+#'   (use it when other scatter traces, such as box outlines, come from the same data).
 #'
 #' @return The plotly figure with highlight styling applied.
 #'
+#' @seealso [uniform_annotation_inputs_ui()], [parse_highlight_values()], [create_highlight_annotations()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_apply_highlight_styling
-#' @keywords internal
-.apply_highlight_styling <- function(fig, annotate.by, highlight_vals, style,
-                                     default.size = NULL, show.others = TRUE,
-                                     require.markers = FALSE) {
+#' @examples
+#' \dontrun{
+#' fig <- apply_highlight_styling(
+#'     fig, annotate.by = "name", highlight_vals = c("Mazda RX4", "Fiat 128"),
+#'     style = list(color = "#FF0000", size = 14, border.color = "#000000", border.width = 2)
+#' )
+#' }
+apply_highlight_styling <- function(fig, annotate.by, highlight_vals, style,
+                                    default.size = NULL, show.others = TRUE,
+                                    require.markers = FALSE) {
     if (is.null(annotate.by) || is.null(highlight_vals) || length(highlight_vals) == 0) {
         return(fig)
     }
@@ -547,10 +578,15 @@
 #'
 #' @return The combined list of annotation objects, or NULL when both are empty.
 #'
+#' @seealso [create_selected_annotations()], [create_highlight_annotations()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_merge_annotation_sets
-#' @keywords internal
-.merge_annotation_sets <- function(annos, extra) {
+#' @examples
+#' a <- list(list(x = 1, y = 2, text = "A"))
+#' b <- list(list(x = 1, y = 2, text = "A"), list(x = 3, y = 4, text = "B"))
+#' length(merge_annotation_sets(a, b))
+merge_annotation_sets <- function(annos, extra) {
     if (is.null(extra) || length(extra) == 0) {
         return(annos)
     }

@@ -32,7 +32,7 @@
 #' @author Jacob Martin
 radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
@@ -91,7 +91,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$trace.colors, default_palette_values,
-                .default_group_colors(defaults, "trace.colors")
+                default_group_colors(defaults, "trace.colors")
             ))
 
             # The picker is seeded with this, so it is also what the plot should be
@@ -137,7 +137,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             # Trace colors
             updateColourInput(session, "single.color",
                 value = get_default(defaults, "single.color", "#1F77B4"))
-            .reset_group_colors(session, "trace.colors", defaults, trace_levels(), default_palette_values)
+            reset_group_colors(session, "trace.colors", defaults, trace_levels(), default_palette_values)
 
             # Radial axis
             updateCheckboxInput(session, "radial.visible",
@@ -191,7 +191,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                 value = get_default(defaults, "polar.bgcolor", "#FFFFFF"))
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
         })
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -223,7 +223,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
                     unique(na.omit(as.character(d[[group_col]]))),
                     isolate_fn(palette_store()),
                     default_palette_values,
-                    .default_group_colors(defaults, "trace.colors")
+                    default_group_colors(defaults, "trace.colors")
                 )
             }
 

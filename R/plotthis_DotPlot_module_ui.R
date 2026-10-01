@@ -126,7 +126,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Continuous palette choices for the fill gradient.
-    palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+    palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
 
     selected <- list(
         "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
@@ -182,7 +182,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Facet" = tagList(
             tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c("", .facet_check(data))
+                choices = c("", facet_check(data))
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
@@ -204,7 +204,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             tipify(viz_select_input(ns("palette.name"), "Color Palette",

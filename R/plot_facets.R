@@ -658,10 +658,12 @@ clean_facet_dim <- function(val) {
 #'   Numeric columns and categorical columns with 50 or more distinct values
 #'   are always excluded.
 #'
+#' @export
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_facet_check
-.facet_check <- function(data) {
+#' @examples
+#' facet_check(iris)
+#' facet_check(mtcars)
+facet_check <- function(data) {
     if (is.null(data) || ncol(data) == 0) {
         return(character(0))
     }

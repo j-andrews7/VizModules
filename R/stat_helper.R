@@ -1119,11 +1119,20 @@ stat_bracket_y_max <- function(df, x, y, pairs = NULL, group.by = NULL,
 #'
 #' @return A single number, or `NULL` when no brackets would be drawn.
 #'
+#' @seealso [stat_bracket_y_max()], [uniform_stats_inputs_ui()], [setup_axis_range()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_stat_bracket_headroom
-#' @keywords internal
-.stat_bracket_headroom <- function(df, x, y, group.by = NULL, facet.by = NULL,
-                                   per.facet = TRUE, input, dodge.width = 1) {
+#' @examples
+#' \dontrun{
+#' # As the `headroom` of setup_axis_range(), inside a module server:
+#' headroom <- function() {
+#'     if (!isTRUE(input$stats.enabled)) return(NULL)
+#'     stat_bracket_headroom(data(), x = input$x.data, y = input$y.data, input = input)
+#' }
+#' }
+stat_bracket_headroom <- function(df, x, y, group.by = NULL, facet.by = NULL,
+                                  per.facet = TRUE, input, dodge.width = 1) {
     num_or <- function(value, fallback) {
         if (is.null(value) || length(value) != 1 || is.na(value) || !is.numeric(value)) {
             fallback
@@ -1171,10 +1180,16 @@ stat_bracket_y_max <- function(df, x, y, pairs = NULL, group.by = NULL,
 #'
 #' @return Called for its side effect; `NULL`, invisibly.
 #'
+#' @seealso [apply_stat_annotations()], [compute_pairwise_stats()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_note_brackets_skipped
-#' @keywords internal
-.note_brackets_skipped <- function(session = shiny::getDefaultReactiveDomain()) {
+#' @examples
+#' \dontrun{
+#' # Inside a module's renderPlotly(), when the values run along the x-axis:
+#' note_brackets_skipped()
+#' }
+note_brackets_skipped <- function(session = shiny::getDefaultReactiveDomain()) {
     if (is.null(session)) {
         return(invisible(NULL))
     }
@@ -1402,10 +1417,15 @@ parse_pair_strings <- function(pair_strings) {
 #'   When it names none, `""`, which is what the selector needs to show an
 #'   empty selection (and means every pair is tested).
 #'
+#' @seealso [generate_pair_strings()], [parse_pair_strings()], [reset_stats_inputs()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_default_stat_pairs
-#' @keywords internal
-.default_stat_pairs <- function(defaults, pair_strings) {
+#' @examples
+#' choices <- c("Entry vs Mid", "Entry vs Late", "Mid vs Late")
+#' default_stat_pairs(list(stat.pairs = "Mid vs Entry"), choices)
+#' default_stat_pairs(NULL, choices)
+default_stat_pairs <- function(defaults, pair_strings) {
     wanted <- get_default(defaults, "stat.pairs", character(0), is.character)
     wanted <- wanted[!is.na(wanted) & nzchar(wanted)]
     pair_strings <- pair_strings[!is.na(pair_strings) & nzchar(pair_strings)]

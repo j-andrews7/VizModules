@@ -248,12 +248,20 @@ show_input <- function(session, ids) {
 #'
 #' @return `NULL`, invisibly. Called for its side effect.
 #'
+#' @seealso [main_title_input_ids], [hide_input()], [show_input()], [add_plot_config()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_toggle_facet_title_inputs
-#' @keywords internal
-.toggle_facet_title_inputs <- function(session, faceted, extra = NULL, hidden = NULL) {
+#' @examples
+#' \dontrun{
+#' # Inside a module server, whenever the facet choice changes:
+#' observe({
+#'     toggle_facet_title_inputs(session, faceted = nz_value(input$facet.by), hidden = hide.inputs)
+#' })
+#' }
+toggle_facet_title_inputs <- function(session, faceted, extra = NULL, hidden = NULL) {
     facet_ids <- c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family", extra)
-    main_ids <- .main_title_input_ids
+    main_ids <- main_title_input_ids
 
     shown <- if (isTRUE(faceted)) facet_ids else main_ids
     hide_input(session, if (isTRUE(faceted)) main_ids else facet_ids)
@@ -262,8 +270,20 @@ show_input <- function(session, ids) {
     invisible(NULL)
 }
 
-# Inputs styling the main plot title, which a faceted plot does not draw.
-.main_title_input_ids <- c(
+#' Input IDs that style the main plot title
+#'
+#' The inputs a faceted plot has no use for, since [add_plot_config()] disables its
+#' main title. [toggle_facet_title_inputs()] hides them while a plot is faceted.
+#'
+#' @format A character vector of input IDs (without namespacing).
+#'
+#' @seealso [toggle_facet_title_inputs()]
+#'
+#' @export
+#' @author Jared Andrews
+#' @examples
+#' main_title_input_ids
+main_title_input_ids <- c(
     "title.font.family", "title.font.color", "title.font.size", "axis.title.horizontal.position"
 )
 

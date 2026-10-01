@@ -251,7 +251,7 @@ test_that("highlighting restyles only the jitter points that match", {
     fig <- fixture$fig
     before <- fig$x$data
 
-    out <- .apply_highlight_styling(
+    out <- apply_highlight_styling(
         fig,
         annotate.by = "lab",
         highlight_vals = c("cell1", "cell7"),
@@ -282,7 +282,7 @@ test_that("highlighting restyles only the jitter points that match", {
 test_that("auto-annotations label each highlighted jitter point where it is drawn", {
     fixture <- .yplot_jitter_fixture()
 
-    annos <- .create_highlight_annotations(
+    annos <- create_highlight_annotations(
         plot_data = fixture$df,
         fig = fixture$fig,
         annotate.by = "lab",
@@ -324,10 +324,10 @@ test_that("hand-selected and highlighted labels for the same point merge into on
     a <- list(x = 1, y = 2, text = "cell1")
     b <- list(x = 3, y = 4, text = "cell2")
 
-    expect_equal(.merge_annotation_sets(list(a), list(a)), list(a))
-    expect_equal(.merge_annotation_sets(list(a), list(b)), list(a, b))
-    expect_equal(.merge_annotation_sets(NULL, list(b)), list(b))
-    expect_equal(.merge_annotation_sets(list(a), NULL), list(a))
+    expect_equal(merge_annotation_sets(list(a), list(a)), list(a))
+    expect_equal(merge_annotation_sets(list(a), list(b)), list(a, b))
+    expect_equal(merge_annotation_sets(NULL, list(b)), list(b))
+    expect_equal(merge_annotation_sets(list(a), NULL), list(a))
 })
 
 test_that("selected points are labelled even after the jitter has been re-drawn", {
@@ -349,7 +349,7 @@ test_that("selected points are labelled even after the jitter has been re-drawn"
         y = trace$y[c(1, 3)]
     )
 
-    annos <- .create_selected_annotations(
+    annos <- create_selected_annotations(
         selected_data = selected,
         fig = fig,
         annotate.by = "lab",
@@ -373,7 +373,7 @@ test_that("selected points are labelled even after the jitter has been re-drawn"
 
 test_that("a fixed seed keeps jitter positions stable across rebuilds", {
     build <- function() {
-        .with_stable_seed(dittoViz::yPlot(
+        with_stable_seed(dittoViz::yPlot(
             data.frame(
                 grp = rep(c("A", "B"), each = 5),
                 val = as.numeric(1:10),
@@ -505,7 +505,7 @@ test_that("significance brackets are tested on and drawn over the plotted values
 
                 # The tests ran on the values drawn, not the raw column: t-test
                 # p-values change under a rescaling or a log.
-                plotted <- VizModules:::.adjusted_values(df$salary, adj[1], adj[2])
+                plotted <- VizModules:::adjusted_values(df$salary, adj[1], adj[2])
                 stats_df <- last_stats_df()
                 for (i in seq_len(nrow(stats_df))) {
                     a <- plotted[as.character(df$job_level) == stats_df$group1[i]]
