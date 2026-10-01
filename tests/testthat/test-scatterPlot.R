@@ -285,3 +285,37 @@ test_that("no fit lines are drawn while an adjustment makes an axis categorical"
     fit_names <- vapply(built$x$data, function(tr) tr$name %||% "", character(1))
     expect_false(any(fit_names %in% c("Linear Fit", "Custom")))
 })
+
+test_that("fig.fn lets a wrapper add layers and retitle an axis", {
+    hook <- function(fig, input, isolate_fn) {
+        fig$x$layout$xaxis$title$text <- paste(isolate_fn(input$x.by), "(hooked)")
+        plotly::add_annotations(fig, x = 0.5, y = 0.5, xref = "paper", yref = "paper",
+            text = "hook-marker", showarrow = FALSE)
+    }
+    fig <- NULL
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(id = "scatter", data = shiny::reactive(example_sales), fig.fn = hook),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .scatter_inputs())
+                session$flushReact()
+            })
+            fig <<- suppressWarnings(generate_scatterPlot())
+        }
+    )
+    annos <- plotly::plotly_build(fig)$x$layout$annotations
+    texts <- vapply(annos, function(a) as.character(a$text %||% ""), character(1))
+
+    expect_true("hook-marker" %in% texts)
+    # The retitled axis is the one made draggable, not the column name.
+    expect_true("units (hooked)" %in% texts)
+
+    unhooked <- .scatter_figure(example_sales, .scatter_inputs())
+    unhooked_texts <- vapply(plotly::plotly_build(unhooked)$x$layout$annotations,
+        function(a) as.character(a$text %||% ""), character(1))
+    expect_false("hook-marker" %in% unhooked_texts)
+    expect_true("units" %in% unhooked_texts)
+
+    expect_error(dittoViz_scatterPlotServer("x", shiny::reactive(example_sales), fig.fn = "not a function"))
+})

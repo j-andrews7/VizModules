@@ -15,6 +15,14 @@
 #'   the same list passed to the corresponding UI function. An entry may also be a
 #'   [shiny::reactive()] or [shiny::reactiveVal()], in which case the input tracks it as the
 #'   parent app's state changes; see [setup_reactive_defaults()].
+#' @param fig.fn An optional function `function(fig, input, isolate_fn)` returning the
+#'   figure, for a wrapper module to add to or adjust the plot (extra layers, annotations,
+#'   axis title text) before it is finalised. It runs inside the plot reactive, after the
+#'   legend is styled and before the axis titles become draggable annotations, so whatever
+#'   it adds reaches the rendered plot, manual-edit persistence and the source download
+#'   alike. `input` is this module's input, which a wrapper sharing the module's `id` also
+#'   writes its own inputs to. Read inputs as `isolate_fn(input$key)` so they respect the
+#'   module's auto-update setting.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny
@@ -30,8 +38,10 @@
 #'
 #' @export
 #' @author Jared Andrews
-dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
+dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL,
+                                       fig.fn = NULL) {
     stopifnot(is.reactive(data))
+    stopifnot(is.null(fig.fn) || is.function(fig.fn))
     data <- require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
@@ -861,6 +871,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Apply the uniform legend visibility and font inputs
             fig <- apply_legend_inputs(fig, input, isolate_fn)
+
+            # A wrapper's additions, before the axis titles become annotations so any
+            # title text it sets is the one made draggable.
+            if (!is.null(fig.fn)) {
+                fig <- fig.fn(fig, input, isolate_fn)
+            }
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)
