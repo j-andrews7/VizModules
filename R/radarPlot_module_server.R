@@ -114,15 +114,16 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
         observeEvent(input$reset, {
             numeric.data <- c("", names(data_reactive())[vapply(data_reactive(), is.numeric, logical(1))])
             cat.choices <- c("", names(data_reactive())[!vapply(data_reactive(), is.numeric, logical(1))])
-            all.choices <- c("", names(data_reactive()))
 
             # Data
             update_viz_select(session, "theta",
                 selected = get_default(defaults, "theta", cat.choices[2], function(x) x %in% cat.choices))
             update_viz_select(session, "r",
                 selected = get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
+            # The capped Group pool the UI offers (see radarPlotInputsUI()).
+            group.choices <- .discrete_choices(data_reactive(), keep = get_default(defaults, "group", NULL))
             update_viz_select(session, "group",
-                selected = get_default(defaults, "group", "", function(x) x == "" || x %in% all.choices))
+                selected = get_default(defaults, "group", "", function(x) x == "" || x %in% group.choices))
 
             # Trace style
             update_viz_select(session, "fill", selected = get_default(defaults, "fill", "toself"))

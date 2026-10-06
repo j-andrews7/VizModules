@@ -133,12 +133,14 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
         # Reset functionality
         observeEvent(input$reset, {
             d <- data_reactive()
-            all.choices <- c("", names(d))
+            # The capped Color By pool the UI offers (see parallelCoordinatesPlotInputsUI()).
+            color.disc <- .discrete_choices(d, keep = get_default(defaults, "color.by", NULL))
+            color.choices <- names(d)[vapply(d, is.numeric, logical(1)) | names(d) %in% color.disc]
             update_viz_select(session, "dimensions",
                 selected = get_default(defaults, "dimensions", names(d), function(x) all(x %in% names(d)))
             )
             update_viz_select(session, "color.by",
-                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% all.choices)
+                selected = get_default(defaults, "color.by", "", function(x) x == "" || x %in% color.choices)
             )
             update_viz_select(session, "color.scale",
                 selected = get_default(defaults, "color.scale", "Viridis")

@@ -219,6 +219,14 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
+    # Grouping, colour and shape choices leave out categoricals with too many
+    # levels to draw (an ID column asks for one group per row), unless the
+    # caller asked for one.
+    disc_for <- function(key) c("", .discrete_choices(data, keep = get_default(defaults, key, NULL)))
+    group.choices <- disc_for("group.by")
+    color.choices <- disc_for("color.by")
+    shape.choices <- disc_for("shape.by")
+
     # Recognized data adjustments for the (numeric) continuous variable.
     adj.choices <- c("", .adjustment_choices)
     adj.fxn.choices <- c("", .adj_fxn_choices)
@@ -279,10 +287,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("group.by"), "Group By",
-                    choices = cat.choices,
+                    choices = group.choices,
                     selected = get_default(
-                        defaults, "group.by", cat.choices[2],
-                        function(x) x %in% cat.choices
+                        defaults, "group.by", group.choices[2],
+                        function(x) x %in% group.choices
                     )
                 ),
                 documentParameters$group.by,
@@ -290,10 +298,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("color.by"), "Color By",
-                    choices = cat.choices,
+                    choices = color.choices,
                     selected = get_default(
                         defaults, "color.by", "",
-                        function(x) x %in% cat.choices
+                        function(x) x %in% color.choices
                     )
                 ),
                 documentParameters$color.by,
@@ -301,10 +309,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("shape.by"), "Shape By",
-                    choices = cat.choices,
+                    choices = shape.choices,
                     selected = get_default(
                         defaults, "shape.by", "",
-                        function(x) x %in% cat.choices
+                        function(x) x %in% shape.choices
                     )
                 ),
                 documentParameters$shape.by,

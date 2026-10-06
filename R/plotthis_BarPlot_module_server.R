@@ -178,11 +178,15 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Data
             update_viz_select(session, "x.data", selected = default.x)
             update_viz_select(session, "y.data", selected = default.y)
+            # The capped Group By and Fill By pools the UI offers (see plotthis_BarPlotInputsUI()).
+            group.choices <- c("", .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)))
+            fill.disc <- .discrete_choices(data(), keep = get_default(defaults, "fill.by", NULL))
+            fill.choices <- c("", names(data())[names(data()) %in% c(num.choices, fill.disc)])
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", char.choices[2], function(x) x %in% char.choices)
+                selected = get_default(defaults, "group.by", group.choices[2], function(x) x %in% group.choices)
             )
             update_viz_select(session, "fill.by",
-                selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% char.choices)
+                selected = get_default(defaults, "fill.by", "", function(x) x %in% fill.choices)
             )
 
 

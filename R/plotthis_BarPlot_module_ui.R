@@ -177,6 +177,12 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
+    # Group By and Fill By leave out categoricals with too many levels to draw
+    # (an ID column asks for one bar segment per row), unless the caller asked
+    # for one. Fill By keeps numeric columns, which plotthis draws as a gradient.
+    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
+    fill.disc <- .discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
+    fill.choices <- c("", names(data)[names(data) %in% c(num.choices, fill.disc)])
 
     # Axis range values
     if (length(num.choices) >= 2) {
@@ -211,13 +217,13 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         choices = num.choices[nzchar(num.choices)]
         ), documentParameters$y, placement = "top", options = list(container = "body")),
         tipify(viz_select_input(ns("group.by"), "Group By",
-        selected = get_default(defaults, "group.by", char.choices[2],
-            function(x) x %in% c("", names(data))),
-        choices = c("", names(data))
+        selected = get_default(defaults, "group.by", group.choices[2],
+            function(x) x %in% group.choices),
+        choices = group.choices
         ), documentParameters$group_by, placement = "top", options = list(container = "body")),
         tipify(viz_select_input(ns("fill.by"), "Fill By",
-        selected = get_default(defaults, "fill.by", "", function(x) x == "" || x %in% names(data)),
-            choices = c("", names(data))),
+        selected = get_default(defaults, "fill.by", "", function(x) x %in% fill.choices),
+            choices = fill.choices),
             documentParameters$fill_by, placement = "top", options = list(container = "body"))
     ),
 

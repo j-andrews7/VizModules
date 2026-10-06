@@ -128,6 +128,9 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    # Group By leaves out categoricals with too many levels to draw (an ID
+    # column asks for one line per row), unless the caller asked for one.
+    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.y <- max(numeric.data, na.rm = TRUE)
     min.y <- min(numeric.data, na.rm = TRUE)
@@ -163,10 +166,10 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group.by"), "Group By",
                 selected = get_default(
-                    defaults, "group.by", cat.choices[1],
-                    function(x) x %in% cat.choices
+                    defaults, "group.by", group.choices[1],
+                    function(x) x %in% group.choices
                 ),
-                choices = cat.choices
+                choices = group.choices
             ), documentParameters$colour.group.by, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("error.bar"), "Error Bars",
                 value = get_default(defaults, "error.bar", TRUE, is.logical)),

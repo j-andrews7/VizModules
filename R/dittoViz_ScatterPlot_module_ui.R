@@ -223,6 +223,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     # Get categorical variables of data.
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
+    # Colour and shape choices leave out categoricals with too many levels to
+    # draw (an ID column asks for one colour or shape per point), unless the
+    # caller asked for one. Numeric columns stay as continuous colour.
+    color.disc <- .discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
+    color.choices <- c("", names(data)[names(data) %in% c(num.choices, color.disc)])
+    shape.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "shape.by", NULL)))
+    traj.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "trajectory.group.by", NULL)))
+
     # Various other choice vectors
     adj.choices <- c("", .adjustment_choices)
     adj.fxn.choices <- c("", .adj_fxn_choices)
@@ -275,10 +283,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 )
             ), documentParameters$y.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("color.by"), "Color By",
-                choices = choices,
+                choices = color.choices,
                 selected = get_default(
                     defaults, "color.by", "",
-                    function(x) x %in% choices
+                    function(x) x %in% color.choices
                 )
             ), documentParameters$color.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("size.by"), "Size By",
@@ -289,10 +297,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 )
             ), documentParameters$size, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("shape.by"), "Shape By",
-                choices = cat.choices,
+                choices = shape.choices,
                 selected = get_default(
                     defaults, "shape.by", "",
-                    function(x) x %in% cat.choices
+                    function(x) x %in% shape.choices
                 )
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("split.by"), "Split By",
@@ -469,10 +477,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Trajectory" = tagList(
             tipify(viz_select_input(ns("trajectory.group.by"), "Trajectory Group By",
-                choices = cat.choices,
+                choices = traj.choices,
                 selected = get_default(
                     defaults, "trajectory.group.by", "",
-                    function(x) x %in% cat.choices
+                    function(x) x %in% traj.choices
                 )
             ), documentParameters$trajectory.group.by, placement = "top", options = list(container = "body")),
             tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",

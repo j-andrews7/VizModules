@@ -672,3 +672,14 @@ test_that("the linePlot module draws the error bar type and CI method chosen (#3
         }
     )
 })
+
+test_that("linePlot Group By leaves out categoricals with too many levels", {
+    df <- .wide_id_df()
+    group <- .select_choices(as.character(linePlotInputsUI("line", df)), "line-group.by")
+    expect_true(all(c("grp", "grp2", "flag") %in% group))
+    expect_false(any(c("id", "val") %in% group))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(linePlotInputsUI("line", df, defaults = list(group.by = "id")))
+    expect_true("id" %in% .select_choices(html, "line-group.by"))
+})

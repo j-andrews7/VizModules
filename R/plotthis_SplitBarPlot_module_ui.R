@@ -162,6 +162,11 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    # Fill By leaves out categoricals with too many levels to draw (an ID
+    # column asks for one fill colour per bar), unless the caller asked for
+    # one. Numeric columns stay, which plotthis draws as a gradient.
+    fill.disc <- .discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
+    fill.choices <- c("", names(data)[names(data) %in% c(num.choices, fill.disc)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.x <- max(numeric.data, na.rm = TRUE)
     min.x <- min(numeric.data, na.rm = TRUE)
@@ -200,10 +205,10 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
             # Changed from group.by to fill.by
             tipify(viz_select_input(ns("fill.by"), "Fill By",
                 selected = get_default(
-                    defaults, "fill.by", choices[2],
-                    function(x) x %in% choices
+                    defaults, "fill.by", fill.choices[2],
+                    function(x) x %in% fill.choices
                 ),
-                choices = choices
+                choices = fill.choices
             ), documentParameters$fill_by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(

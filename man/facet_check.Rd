@@ -4,10 +4,13 @@
 \alias{facet_check}
 \title{Identify columns valid for faceting or splitting}
 \usage{
-facet_check(data)
+facet_check(data, max.levels = 50)
 }
 \arguments{
 \item{data}{A data frame whose columns are evaluated.}
+
+\item{max.levels}{A single positive number. Columns with this many or more
+distinct values are excluded. Defaults to 50.}
 }
 \value{
 A character vector of column names suitable for faceting/splitting.
@@ -16,10 +19,12 @@ Returns \code{character(0)} when no column qualifies.
 \description{
 Scans a data frame and returns the names of columns that are appropriate
 choices for a facet/split selector. A column qualifies when it is
-categorical (character or factor) and has fewer than 50 unique values.
-This keeps facet/split inputs from offering numeric columns or
+categorical (character or factor) and has fewer than \code{max.levels} unique
+values. This keeps facet/split inputs from offering numeric columns or
 high-cardinality categoricals that would produce an unwieldy number of
-panels.
+panels. The modules also use it to limit their categorical colour, shape
+and group selectors, where a column of IDs would otherwise ask for one
+colour or shape per row.
 }
 \details{
 Intended to populate the \code{choices} of a facet/split \code{viz_select_input()} via
@@ -29,14 +34,16 @@ faceting variables are exposed to the user.
 A column is considered valid when both of the following hold:
 \itemize{
 \item It is categorical: \code{is.character(col)} or \code{is.factor(col)}.
-\item It has fewer than 50 unique values (\code{NA}s excluded).
+\item It has fewer than \code{max.levels} unique values (\code{NA}s excluded).
 }
-Numeric columns and categorical columns with 50 or more distinct values
-are always excluded.
+Numeric columns and categorical columns with \code{max.levels} or more
+distinct values are always excluded.
 }
 \examples{
 facet_check(iris)
 facet_check(mtcars)
+# A lower cap drops the 3-level Species column.
+facet_check(iris, max.levels = 3)
 }
 \author{
 Jacob Martin

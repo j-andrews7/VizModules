@@ -26,6 +26,36 @@ test_that("scatterPlot UI exposes a numeric 'Size By' selector", {
     expect_false("cat1" %in% size_by_choices)
 })
 
+test_that("scatterPlot Color By and Shape By leave out categoricals with too many levels", {
+    df <- data.frame(
+        x = seq_len(60),
+        y = rev(seq_len(60)),
+        id = paste0("gene", seq_len(60)),
+        grp = rep(c("a", "b", "c"), 20),
+        flag = rep(c(TRUE, FALSE), 30),
+        stringsAsFactors = FALSE
+    )
+    choices_of <- function(html, input) {
+        pat <- paste0("data-for=\"scatter-", input, "\">.*?</script>")
+        config <- regmatches(html, regexpr(pat, html))
+        jsonlite::fromJSON(sub("</script>$", "", sub("^data-for=\"[^\"]+\">", "", config)))$options$choices$value
+    }
+
+    html <- as.character(dittoViz_scatterPlotInputsUI("scatter", df))
+    color <- choices_of(html, "color.by")
+    shape <- choices_of(html, "shape.by")
+    # Numeric columns stay for a continuous colour; the 60-level ID column is gone.
+    expect_true(all(c("x", "y", "grp", "flag") %in% color))
+    expect_false("id" %in% color)
+    expect_true(all(c("grp", "flag") %in% shape))
+    expect_false(any(c("id", "x") %in% shape))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(dittoViz_scatterPlotInputsUI("scatter", df, defaults = list(color.by = "id")))
+    expect_true("id" %in% choices_of(html, "color.by"))
+    expect_false("id" %in% choices_of(html, "shape.by"))
+})
+
 test_that("a size column gives a spread of marker sizes and a custom size legend", {
     p <- dittoViz::scatterPlot(
         example_mtcars,

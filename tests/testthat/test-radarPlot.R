@@ -64,3 +64,14 @@ test_that("radarPlot applies its polar layout options", {
     expect_equal(polar$angularaxis$rotation, 45)
     expect_equal(polar$bgcolor, "#EAEAEA")
 })
+
+test_that("radarPlot Group leaves out categoricals with too many levels", {
+    df <- .wide_id_df()
+    group <- .select_choices(as.character(radarPlotInputsUI("radar", df)), "radar-group")
+    expect_true(all(c("grp", "grp2", "flag") %in% group))
+    expect_false(any(c("id", "val") %in% group))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(radarPlotInputsUI("radar", df, defaults = list(group = "id")))
+    expect_true("id" %in% .select_choices(html, "radar-group"))
+})

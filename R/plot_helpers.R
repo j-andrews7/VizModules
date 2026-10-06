@@ -346,8 +346,14 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
         return(if (!is.null(ann$textangle) && ann$textangle == -90) "axis:y" else "axis:x")
     }
 
-    if (!is.null(ann$text) && nzchar(ann$text)) {
-        return(paste0("text:", ann$text))
+    # A wrapper's annotation text can arrive as a factor (e.g. a label column
+    # factored by the data filter), which nzchar() rejects outright.
+    txt <- ann$text
+    if (is.atomic(txt) && length(txt) == 1 && !is.na(txt)) {
+        txt <- as.character(txt)
+        if (nzchar(txt)) {
+            return(paste0("text:", txt))
+        }
     }
 
     NULL

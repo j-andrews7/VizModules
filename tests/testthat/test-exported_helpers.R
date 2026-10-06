@@ -74,6 +74,26 @@ test_that("facet_check offers only categorical columns with fewer than 50 levels
     expect_identical(facet_check(df), c("few", "fct"))
     expect_identical(facet_check(NULL), character(0))
     expect_identical(facet_check(data.frame()), character(0))
+
+    # The cap is adjustable: raised to admit the 60-level column, lowered to drop the 3-level one.
+    expect_identical(facet_check(df, max.levels = 100), c("few", "many", "fct"))
+    expect_identical(facet_check(df, max.levels = 3), "few")
+    expect_error(facet_check(df, max.levels = 0), "single positive number")
+    expect_error(facet_check(df, max.levels = c(5, 10)), "single positive number")
+})
+
+test_that(".discrete_choices adds logical columns and kept names to facet_check()", {
+    df <- data.frame(
+        few = rep(c("a", "b"), 30),
+        many = paste0("id", seq_len(60)),
+        num = seq_len(60),
+        flag = rep(c(TRUE, FALSE), 30),
+        stringsAsFactors = FALSE
+    )
+    expect_identical(.discrete_choices(df), c("few", "flag"))
+    expect_identical(.discrete_choices(df, keep = c("many", "absent")), c("few", "many", "flag"))
+    expect_identical(.discrete_choices(df, max.levels = 100), c("few", "many", "flag"))
+    expect_identical(.discrete_choices(NULL), character(0))
 })
 
 test_that("main_title_input_ids names the inputs a faceted plot has no use for", {

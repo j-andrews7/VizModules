@@ -119,8 +119,15 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         observeEvent(input$x.data, ignoreInit = TRUE, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             group_facet_choices <- setdiff(char.choices, input$x.data)
-            update_viz_select(session, "group.by", choices = c(group_facet_choices), selected = if (input$group.by %in% group_facet_choices) input$group.by else "")
-            update_viz_select(session, "facet.by", choices = c("", group_facet_choices), selected = if (input$facet.by %in% group_facet_choices) input$facet.by else "")
+            # The same capped pools the UI offers (see plotthis_AreaPlotInputsUI()).
+            group_choices <- c("", setdiff(
+                .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), input$x.data
+            ))
+            facet_choices <- c("", intersect(group_facet_choices, facet_check(data())))
+            update_viz_select(session, "group.by", choices = group_choices,
+                selected = if (input$group.by %in% group_choices) input$group.by else "")
+            update_viz_select(session, "facet.by", choices = facet_choices,
+                selected = if (input$facet.by %in% facet_choices) input$facet.by else "")
         })
 
         # Reset functionality
@@ -130,7 +137,10 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
-            group_fallback <- c(group_facet_choices[nzchar(group_facet_choices)], "")[1]
+            group_choices <- setdiff(
+                .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), x_default
+            )
+            group_fallback <- c(group_choices, "")[1]
 
             # Data
             update_viz_select(session, "x.data", selected = x_default)
@@ -138,7 +148,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices))
             update_viz_select(session, "group.by",
                 selected = get_default(
-                    defaults, "group.by", group_fallback, function(x) x %in% c("", group_facet_choices)
+                    defaults, "group.by", group_fallback, function(x) x %in% c("", group_choices)
                 ))
 
             # Facet

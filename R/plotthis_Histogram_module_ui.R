@@ -152,6 +152,9 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    # Group By leaves out categoricals with too many levels to draw (an ID
+    # column asks for one group per row), unless the caller asked for one.
+    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
 
     selected <- list(
         "x", "group_by", "bins", "binwidth",
@@ -179,9 +182,9 @@ plotthis_HistogramInputsUI <- function(id, data, defaults = NULL, title = NULL, 
                 viz_select_input(ns("group.by"), "Group By",
                     selected = get_default(
                         defaults, "group.by", "",
-                        function(x) x %in% c("", cat.choices)
+                        function(x) x %in% group.choices
                     ),
-                    choices = c("", cat.choices)
+                    choices = group.choices
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")

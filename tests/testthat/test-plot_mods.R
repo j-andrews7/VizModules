@@ -1342,6 +1342,18 @@ test_that(".annotation_edit_key keys axis titles by side and others by text", {
     expect_equal(VizModules:::.annotation_edit_key(list(text = "p = 0.01")), "text:p = 0.01")
     expect_null(VizModules:::.annotation_edit_key(list(text = "")))
     expect_null(VizModules:::.annotation_edit_key(NULL))
+
+    # Text a wrapper built from a factor column keys like its label, and text
+    # that is not a single value has no key rather than an error.
+    expect_equal(VizModules:::.annotation_edit_key(list(text = factor("PLK1"))), "text:PLK1")
+    expect_equal(VizModules:::.annotation_edit_key(list(text = 5)), "text:5")
+    expect_null(VizModules:::.annotation_edit_key(list(text = character(0))))
+    expect_null(VizModules:::.annotation_edit_key(list(text = NA_character_)))
+    expect_null(VizModules:::.annotation_edit_key(list(text = list("a"))))
+    expect_identical(
+        VizModules:::.annotation_edit_keys(list(list(text = factor("A")), list(text = factor("A")))),
+        c("text:A#1", "text:A#2")
+    )
 })
 
 test_that(".capture_manual_edits records legend, annotation and colorbar drags, not zooms", {
@@ -1607,4 +1619,53 @@ test_that("AreaPlot offers every categorical column except X for Group By", {
     plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "product"))
     expect_equal(seen[["area-group.by"]]$selected, "region")
     expect_false("product" %in% seen[["area-group.by"]]$choices)
+})
+
+test_that("plotthis Group By and Fill By leave out categoricals with too many levels", {
+    df <- .wide_id_df()
+    cases <- list(
+        list(ui = plotthis_BarPlotInputsUI, id = "bar", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_BarPlotInputsUI, id = "bar", input = "fill.by", numeric = TRUE),
+        list(ui = plotthis_DensityPlotInputsUI, id = "dens", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_HistogramInputsUI, id = "hist", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_SplitBarPlotInputsUI, id = "split", input = "fill.by", numeric = TRUE)
+    )
+    for (case in cases) {
+        info <- paste(case$id, case$input)
+        input_id <- paste0(case$id, "-", case$input)
+        ch <- .select_choices(as.character(case$ui(case$id, df)), input_id)
+        expect_true(all(c("grp", "grp2", "flag") %in% ch), info = info)
+        expect_false("id" %in% ch, info = info)
+        # A fill gradient takes a numeric column; a grouping does not.
+        expect_identical(all(c("val", "val2") %in% ch), case$numeric, info = info)
+
+        # An explicit default naming the wide column is honoured.
+        html <- as.character(case$ui(case$id, df, defaults = setNames(list("id"), case$input)))
+        expect_true("id" %in% .select_choices(html, input_id), info = info)
+    }
+})
+
+test_that("AreaPlot Group By drops wide categoricals as well as X, at startup and when X changes", {
+    df <- .wide_id_df()
+    html <- as.character(plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "grp")))
+    expect_setequal(setdiff(.select_choices(html, "area-group.by"), ""), c("grp2", "flag"))
+
+    sent <- new.env()
+    local_mocked_bindings(update_viz_select = function(session, inputId, label = NULL, choices = NULL, ...) {
+        if (!is.null(choices)) {
+            sent[[inputId]] <- choices
+        }
+        invisible(NULL)
+    })
+    shiny::testServer(
+        plotthis_AreaPlotServer,
+        args = list(id = "area", data = shiny::reactive(df), defaults = list(x.data = "grp")),
+        {
+            suppressWarnings(session$setInputs(x.data = "grp", y.data = "val", group.by = "grp2", facet.by = ""))
+            suppressWarnings(session$setInputs(x.data = "grp2"))
+            expect_setequal(setdiff(sent[["group.by"]], ""), c("grp", "flag"))
+            # Facet By keeps to the facet_check() columns the UI offers.
+            expect_setequal(setdiff(sent[["facet.by"]], ""), "grp")
+        }
+    )
 })

@@ -181,8 +181,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
                 value = get_default(defaults, "flip.y", FALSE, is.logical))
+            # The capped Group By pool the UI offers (see linePlotInputsUI()).
+            group.choices <- .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% group.choices))
             update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             update_viz_select(session, "facet.scales",

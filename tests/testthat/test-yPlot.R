@@ -22,6 +22,32 @@ test_that("yPlot UI exposes the hover and point annotation inputs", {
     expect_true(grepl("Hover Round Digits", html, fixed = TRUE))
 })
 
+test_that("yPlot Group, Color and Shape By leave out categoricals with too many levels", {
+    df <- data.frame(
+        val = seq_len(60),
+        id = paste0("gene", seq_len(60)),
+        grp = rep(c("a", "b", "c"), 20),
+        flag = rep(c(TRUE, FALSE), 30),
+        stringsAsFactors = FALSE
+    )
+    choices_of <- function(html, input) {
+        pat <- paste0("data-for=\"yplot-", input, "\">.*?</script>")
+        config <- regmatches(html, regexpr(pat, html))
+        jsonlite::fromJSON(sub("</script>$", "", sub("^data-for=\"[^\"]+\">", "", config)))$options$choices$value
+    }
+
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df))
+    for (input in c("group.by", "color.by", "shape.by")) {
+        ch <- choices_of(html, input)
+        expect_true(all(c("grp", "flag") %in% ch), info = input)
+        expect_false("id" %in% ch, info = input)
+    }
+
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df, defaults = list(group.by = "id")))
+    expect_true("id" %in% choices_of(html, "group.by"))
+    expect_false("id" %in% choices_of(html, "color.by"))
+})
+
 test_that("yPlot UI takes several Y variables, with limits spanning all of them", {
     df <- data.frame(
         num1 = c(1, 2, 3),
