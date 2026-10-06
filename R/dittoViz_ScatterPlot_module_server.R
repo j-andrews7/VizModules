@@ -524,7 +524,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 color.adj.fxn = adjustment_fn(null.na.inputs$color.adjustment, null.na.inputs$color.adj.fxn),
                 split.show.all.others = isolate_fn(input$split.show.all.others),
                 opacity = isolate_fn(input$opacity),
-                color.panel = unname(palette_values),
+                # Named by group so a level with no points (left by a filter, or
+                # never drawn) cannot shift the colours of the levels after it.
+                color.panel = if (length(current_color_levels) == length(palette_values)) {
+                    structure(unname(palette_values), names = current_color_levels)
+                } else {
+                    unname(palette_values)
+                },
                 colors = if (length(palette_values) > 0) seq_len(length(palette_values)) else NULL,
                 split.nrow = null.na.inputs$split.nrow,
                 split.ncol = null.na.inputs$split.ncol,

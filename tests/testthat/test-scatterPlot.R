@@ -316,6 +316,32 @@ test_that("no fit lines are drawn while an adjustment makes an axis categorical"
     expect_false(any(fit_names %in% c("Linear Fit", "Custom")))
 })
 
+test_that("group colours follow their names when a factor level has no points", {
+    # "B" is a level with no rows, as a filtered table or a wrapper's fixed
+    # levels leave it. Positional colours would hand C the colour meant for B.
+    df <- data.frame(x = 1:4, y = 4:1, grp = factor(c("A", "A", "C", "C"), levels = c("A", "B", "C")))
+    fig <- NULL
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(
+            id = "scatter", data = shiny::reactive(df),
+            defaults = list(color.panel = c(A = "#FF0000", B = "#00FF00", C = "#0000FF"))
+        ),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .scatter_inputs(x.by = "x", y.by = "y", color.by = "grp"))
+                session$flushReact()
+            })
+            fig <<- suppressWarnings(generate_scatterPlot())
+        }
+    )
+    traces <- Filter(function(tr) identical(tr$mode, "markers") && !is.null(tr$name),
+        plotly::plotly_build(fig)$x$data)
+    colours <- vapply(traces, function(tr) as.character(tr$marker$color[1]), character(1))
+    names(colours) <- vapply(traces, function(tr) tr$name, character(1))
+    expect_identical(unname(colours[c("A", "C")]), c("rgba(255,0,0,1)", "rgba(0,0,255,1)"))
+})
+
 test_that("fig.fn lets a wrapper add layers and retitle an axis", {
     hook <- function(fig, input, isolate_fn) {
         fig$x$layout$xaxis$title$text <- paste(isolate_fn(input$x.by), "(hooked)")
