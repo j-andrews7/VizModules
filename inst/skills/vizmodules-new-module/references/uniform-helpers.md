@@ -100,7 +100,7 @@ the axis onto the brackets.
 - `viz_select_input()` / `update_viz_select()` — virtualised searchable dropdowns. Always these, never `selectInput()`.
 - `get_default(defaults, key, fallback, validator)` — every default read.
 - `resolve_palette(groups, selected_colors, default_palette, manual_colors)`, `default_palettes()`.
-- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
+- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `add_size_legend()` (the circle size legend plotly drops when marker size encodes a column), `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
 - `collect_source_data()` / `create_source_download_handler()` — the Source Download button's backing.
 - `hide_input()` / `show_input()` — reflow-aware show/hide.
 - `empty_plot()` — placeholder when there is nothing to draw.

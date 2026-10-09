@@ -1,4 +1,4 @@
-# VizModules 0.6.0.9000
+# VizModules 0.6.0.9001
 
 ## Improved/New Functionality
 
@@ -11,6 +11,7 @@
   * Module server boilerplate: `require_data_frame()`, `nz_value()`, `blank_to_null()`, `na_to_null()`, `facet_check()`, `flatten_palette_options()`, `reset_manual_edits()` and `with_stable_seed()`, which keeps jitter from jumping on every rebuild.
   * Drawn values: `as_plotted()`, `adjusted_values()` and `adjustment_fn()`, for anything drawn over an adjusted plot.
   * Point highlighting and labelling: `apply_highlight_styling()`, `create_highlight_annotations()`, `create_selected_annotations()`, `merge_annotation_sets()` and `parse_highlight_values()`.
+  * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops, sized from the figure's own markers. It takes a `title` and rounds its labels to `digits` (sciVizModules' dittoDotPlot uses it).
 
 * `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
 

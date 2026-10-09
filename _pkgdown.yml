@@ -234,6 +234,7 @@ reference:
       - reset_axis_title_text
       - apply_legend_styling
       - apply_legend_inputs
+      - add_size_legend
       - apply_plotly_newshape
       - apply_render_margins
       - apply_subplot_axis_styling

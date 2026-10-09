@@ -862,15 +862,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # column (see plotly.R#705), so draw a manual circle legend that
             # mirrors the plotted marker sizes when `size.by` is set. Hiding the
             # legend hides this one too.
-            fig <- .custom_legend(
+            fig <- add_size_legend(
                 fig,
                 data = data(),
-                size_by = if (isFALSE(isolate_fn(input$legend.show))) NULL else null.na.inputs$size.by,
+                size.by = if (isFALSE(isolate_fn(input$legend.show))) NULL else null.na.inputs$size.by,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),
-                start_y = isolate_fn(input$size.legend.y),
-                start_x = isolate_fn(input$size.legend.x),
+                start.y = isolate_fn(input$size.legend.y),
+                start.x = isolate_fn(input$size.legend.x),
                 font.family = isolate_fn(input$legend.font.family),
                 font.color = isolate_fn(input$legend.font.color)
             )

@@ -69,9 +69,9 @@ test_that("a size column gives a spread of marker sizes and a custom size legend
     expect_gt(length(sizes), 0)
     expect_gt(diff(range(sizes)), 0)
 
-    anns <- plotly::plotly_build(.custom_legend(
+    anns <- plotly::plotly_build(add_size_legend(
         p$plot,
-        data = example_mtcars, size_by = "hp",
+        data = example_mtcars, size.by = "hp",
         gap = 0.04, title.size = 14, text.size = 12
     ))$x$layout$annotations
     expect_length(Filter(function(a) grepl("font-size", a$text), anns), 5)

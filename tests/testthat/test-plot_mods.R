@@ -1172,7 +1172,7 @@ test_that("create_ggplot_axis_style draws a full border, axis lines only, or nei
     }
 })
 
-# ─── .custom_legend ───────────────────────────────────────────────────────────
+# ─── add_size_legend() ─────────────────────────────────────────────────────────
 
 # A two-group dot plot and its data, for the size legend to read.
 .size_legend_fixture <- function(...) {
@@ -1187,12 +1187,12 @@ test_that("create_ggplot_axis_style draws a full border, axis lines only, or nei
 
 # The built size legend over that fixture, with five fixed breaks.
 .size_legend <- function(fx, ...) {
-    plotly::plotly_build(VizModules:::.custom_legend(fx$fig, fx$data,
-        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), ...
+    plotly::plotly_build(add_size_legend(fx$fig, fx$data,
+        size.by = "pct_expressed", size.values = c(10, 20, 30, 40, 50), ...
     ))
 }
 
-test_that(".custom_legend styles its title and labels with the legend font", {
+test_that("add_size_legend() styles its title and labels with the legend font", {
     # The title and the break labels, not the circle glyphs.
     text_anns <- function(...) {
         anns <- .size_legend(.size_legend_fixture(), ...)$x$layout$annotations
@@ -1211,16 +1211,16 @@ test_that(".custom_legend styles its title and labels with the legend font", {
     }
 })
 
-test_that(".custom_legend returns the figure unchanged for a missing or non-numeric size_by", {
+test_that("add_size_legend() returns the figure unchanged for a missing or non-numeric size.by", {
     fig <- make_plotly()
     data <- data.frame(cell_type = c("A", "B"), pct_expressed = c(10, 20))
 
     for (size_by in list(NULL, "", "absent", "cell_type")) {
-        expect_identical(VizModules:::.custom_legend(fig, data, size_by = size_by), fig, info = toString(size_by))
+        expect_identical(add_size_legend(fig, data, size.by = size_by), fig, info = toString(size_by))
     }
 })
 
-test_that(".custom_legend appends one title, and one circle and label per break, for numeric size_by", {
+test_that("add_size_legend() appends one title, and one circle and label per break, for numeric size.by", {
     built <- .size_legend(.size_legend_fixture(), title.size = 22, text.size = 9)
     anns <- built$x$layout$annotations
 
@@ -1250,11 +1250,11 @@ test_that(".custom_legend appends one title, and one circle and label per break,
     expect_equal(length(rebuilt$x$layout$annotations), length(anns))
 })
 
-test_that(".custom_legend derives circle sizes from marker sizes when size_values is NULL", {
+test_that("add_size_legend() derives circle sizes from marker sizes when size.values is NULL", {
     fx <- .size_legend_fixture(marker = list(size = ~pct_expressed))
     fig <- fx$fig
 
-    result <- VizModules:::.custom_legend(fig, fx$data, size_by = "pct_expressed")
+    result <- add_size_legend(fig, fx$data, size.by = "pct_expressed")
     built <- plotly::plotly_build(result)
     anns <- built$x$layout$annotations
     circle_text <- Filter(function(a) grepl("font-size", a$text), anns)
@@ -1273,13 +1273,13 @@ test_that(".custom_legend derives circle sizes from marker sizes when size_value
     expect_false(is.unsorted(sizes))
 })
 
-test_that(".custom_legend strips the size variable from a combined legend title", {
+test_that("add_size_legend() strips the size variable from a combined legend title", {
     fx <- .size_legend_fixture()
     strip <- function(title) {
         fx$fig$x$layout$legend$title$text <- title
-        VizModules:::.custom_legend(fx$fig, fx$data,
-            size_by = "pct_expressed",
-            size_values = c(10, 20, 30, 40, 50)
+        add_size_legend(fx$fig, fx$data,
+            size.by = "pct_expressed",
+            size.values = c(10, 20, 30, 40, 50)
         )$x$layout$legend$title$text
     }
     expect_equal(strip("cell_type<br />pct_expressed"), "cell_type")
@@ -1287,18 +1287,32 @@ test_that(".custom_legend strips the size variable from a combined legend title"
     expect_equal(strip("pct_expressed"), "pct_expressed")
 })
 
-test_that(".custom_legend start_x and start_y move the legend column, ignoring invalid values", {
+test_that("add_size_legend() takes a title and rounds its break labels", {
+    fx <- .size_legend_fixture()
+    texts <- function(b) vapply(b$x$layout$annotations, function(a) a$text, character(1))
+
+    # Breaks run evenly from 5 to 90: 26.25 and 68.75 are not round.
+    raw <- texts(.size_legend(fx))
+    expect_true(all(c("pct_expressed", "26.25", "68.75") %in% raw))
+
+    tidy <- texts(.size_legend(fx, title = "% expressing", digits = 0))
+    expect_true("% expressing" %in% tidy)
+    expect_false("pct_expressed" %in% tidy)
+    expect_true(all(c("5", "26", "48", "69", "90") %in% tidy))
+})
+
+test_that("add_size_legend() start.x and start.y move the legend column, ignoring invalid values", {
     fx <- .size_legend_fixture()
     max_at <- function(b, coord) max(vapply(b$x$layout$annotations, function(a) a[[coord]], numeric(1)))
 
-    high <- .size_legend(fx, start_y = 0.95)
-    expect_true(max_at(.size_legend(fx, start_y = 0.45), "y") < max_at(high, "y"))
-    # An invalid start_y falls back to the default placement.
-    expect_equal(max_at(.size_legend(fx, start_y = NA), "y"), max_at(high, "y"))
+    high <- .size_legend(fx, start.y = 0.95)
+    expect_true(max_at(.size_legend(fx, start.y = 0.45), "y") < max_at(high, "y"))
+    # An invalid start.y falls back to the default placement.
+    expect_equal(max_at(.size_legend(fx, start.y = NA), "y"), max_at(high, "y"))
 
     default <- .size_legend(fx)
-    expect_true(max_at(.size_legend(fx, start_x = 1.2), "x") > max_at(default, "x"))
-    expect_equal(max_at(.size_legend(fx, start_x = NA), "x"), max_at(default, "x"))
+    expect_true(max_at(.size_legend(fx, start.x = 1.2), "x") > max_at(default, "x"))
+    expect_equal(max_at(.size_legend(fx, start.x = NA), "x"), max_at(default, "x"))
 })
 
 test_that(".extract_marker_sizes collects numeric marker sizes", {

@@ -249,21 +249,31 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 }
 
 
-#' Add a custom bubble-size legend to a plotly figure
+#' Add a point-size legend to a plotly figure
 #'
-#' Renders a manual size legend as a vertical column of HTML circle
-#' annotations alongside matching numeric labels. The legend is placed
-#' outside the right edge of the plot area using paper-referenced
-#' coordinates so it does not overlap data.
+#' plotly drops the size legend when marker size encodes a numeric column
+#' (plotly.R#705), whether the figure comes from [plotly::ggplotly()] or is
+#' built by hand. This draws one in its place: a vertical column of circles
+#' with numeric labels, outside the right edge of the plot area in
+#' paper-referenced coordinates so it does not overlap the data. The circles
+#' are sized from the figure's own markers, so the legend follows the plot's
+#' size scaling. The DotPlot and scatter plot modules use it, and a module in
+#' another package can too.
+#'
+#' Call it after the figure's traces are complete. It builds the figure and
+#' appends its annotations to the built layout, so later
+#' [plotly::plotly_build()] calls (e.g. [apply_legend_inputs()] or
+#' [axis_titles_as_annotations()]) do not duplicate them. A module hiding its
+#' legend should pass `size.by = NULL`.
 #'
 #' @param fig A plotly figure object.
 #' @param data A data frame containing the variable mapped to point size.
-#' @param size_by Character string, or `NULL`. Name of the column in
+#' @param size.by Character string, or `NULL`. Name of the column in
 #'   `data` whose range determines the legend break labels. When `NULL`
 #'   or empty (no size mapping is in effect), the figure is returned unchanged.
 #' @param gap Numeric. Vertical spacing (in paper units, 0–1) between
-#'   consecutive legend entries. Defaults to `0.03`.
-#' @param size_values Numeric vector of font sizes (px) used to render the
+#'   consecutive legend entries. Defaults to `0.05`.
+#' @param size.values Numeric vector of font sizes (px) used to render the
 #'   circle glyphs, one per legend entry. When `NULL` (the default), the
 #'   glyph sizes are derived from the actual marker sizes in `fig` so the
 #'   legend reflects the plot's size scaling (i.e. the `size_min`/
@@ -272,16 +282,20 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #'   so the rendered circles match the plotted dots. When supplied, the vector
 #'   is used verbatim as font sizes and its length determines the number of
 #'   legend entries.
+#' @param title Character. Legend title. Defaults to `size.by`.
+#' @param digits Integer, or `NULL`. Decimal places the break labels are
+#'   rounded to. When `NULL` (the default), the break values are printed as
+#'   they are.
 #' @param title.size Numeric, or `NULL`. Font size (px) of the legend
 #'   title annotation. When `NULL`, plotly's default is used.
 #' @param text.size Numeric, or `NULL`. Font size (px) of the numeric
 #'   label annotations. Defaults to `12` when `NULL`.
-#' @param start_y Numeric. Paper-space y coordinate (0–1) at which the legend
+#' @param start.y Numeric. Paper-space y coordinate (0–1) at which the legend
 #'   column begins; the title sits just above it and subsequent entries stack
 #'   downward. Lower it to vertically offset the size legend from an overlapping
 #'   color/shape legend. Invalid values fall back to the default. Defaults to
 #'   `0.95`.
-#' @param start_x Numeric. Paper-space x coordinate at which the legend column
+#' @param start.x Numeric. Paper-space x coordinate at which the legend column
 #'   (circles, labels and title) is anchored. Values just above `1` place
 #'   the legend to the right of the plot area; nudge it lower to pull the whole
 #'   set inward when it would otherwise overflow a narrow plot, or higher to push
@@ -291,43 +305,49 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #' @param font.color Character, or `NULL`. Font color of the title and label
 #'   annotations. Defaults to `"#000000"` when `NULL`. The circles stay black.
 #'
-#' @return The plotly figure with size-legend annotations appended, or the
-#'   unmodified figure when `size_by` is `NULL`/empty or not present
-#'   in `data`.
+#' @return The built plotly figure with size-legend annotations appended, or
+#'   the unmodified figure when `size.by` is `NULL`/empty, not present in
+#'   `data`, or not numeric.
 #'
-#' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_custom_legend
-.custom_legend <- function(fig, data, size_by, gap = 0.05, size_values = NULL,
-                           title.size = NULL, text.size = NULL, start_y = 0.95,
-                           start_x = 1.02, font.family = NULL, font.color = NULL) {
+#' @export
+#' @author Jacob Martin, Jared Andrews
+#' @examples
+#' library(plotly)
+#' df <- data.frame(x = 1:5, y = c(2, 4, 3, 5, 1), n = c(10, 40, 25, 80, 55))
+#' fig <- plot_ly(df, x = ~x, y = ~y, type = "scatter", mode = "markers",
+#'     marker = list(size = sqrt(df$n) * 3))
+#' add_size_legend(fig, df, size.by = "n", title = "Count", digits = 0)
+add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, title = size.by,
+                            digits = NULL, title.size = NULL, text.size = NULL, start.y = 0.95,
+                            start.x = 1.02, font.family = NULL, font.color = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
-    if (is.null(size_by) || !is.character(size_by) || length(size_by) != 1 ||
-        !nzchar(size_by) || !size_by %in% names(data)) {
+    if (is.null(size.by) || !is.character(size.by) || length(size.by) != 1 ||
+        !nzchar(size.by) || !size.by %in% names(data)) {
         return(fig)
     }
 
-    vals <- data[[size_by]]
+    vals <- data[[size.by]]
     if (!is.numeric(vals) || all(is.na(vals))) {
         return(fig)
     }
 
     valid_size <- function(s) is.numeric(s) && length(s) == 1L && !is.na(s)
 
-    if (!valid_size(start_x)) {
-        start_x <- 1.02
+    if (!valid_size(start.x)) {
+        start.x <- 1.02
     }
 
-    if (!valid_size(start_y)) {
-        start_y <- 0.95
+    if (!valid_size(start.y)) {
+        start.y <- 0.95
     }
 
-    n_breaks <- if (!is.null(size_values)) length(size_values) else 5L
+    n_breaks <- if (!is.null(size.values)) length(size.values) else 5L
     breaks <- seq(
         from = min(vals, na.rm = TRUE),
         to = max(vals, na.rm = TRUE),
         length.out = n_breaks
     )
+    if (valid_size(digits)) breaks <- round(breaks, digits)
     labels <- format(breaks, trim = TRUE, scientific = FALSE)
 
     # Build the figure once up front. This consolidates marker attributes (so
@@ -344,7 +364,7 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
     # anchor the smallest/largest legend entries and the intermediate breaks
     # follow ggplot2's sqrt (area) interpolation (plotthis uses
     # scale_size(range = c(size_min, size_max)), i.e. area scaling).
-    if (is.null(size_values)) {
+    if (is.null(size.values)) {
         marker_sizes <- .extract_marker_sizes(fig)
         if (length(marker_sizes) > 0) {
             d_min <- min(marker_sizes)
@@ -355,13 +375,13 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
             # A plotly marker's `size` is its diameter in px, but the HTML circle
             # glyph (U+25CF) only inks ~0.44x its font-size. Scale the font-size
             # up so the legend glyphs render at the plotted marker diameters.
-            size_values <- break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
+            size.values <- break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
         } else {
-            size_values <- c(10, 20, 30, 40, 50)
+            size.values <- c(10, 20, 30, 40, 50)
         }
     }
 
-    x_pos <- start_x
+    x_pos <- start.x
     # Constant pixel gap inserted between a circle's right edge and its numeric
     # label. The labels are anchored at the circle's x (paper space) but offset
     # via the annotation `xshift`, which plotly measures in pixels. Pairing a
@@ -379,11 +399,11 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
     # affects absolute spacing; if the real figure height differs the entries
     # simply sit a little closer/further apart while staying proportional.
     nominal_height_px <- 500
-    rendered_radii <- (size_values * .CIRCLE_GLYPH_DIAMETER_RATIO) / 2 / nominal_height_px
-    centers <- numeric(length(size_values))
-    for (i in seq_along(size_values)) {
+    rendered_radii <- (size.values * .CIRCLE_GLYPH_DIAMETER_RATIO) / 2 / nominal_height_px
+    centers <- numeric(length(size.values))
+    for (i in seq_along(size.values)) {
         centers[i] <- if (i == 1L) {
-            start_y - rendered_radii[i]
+            start.y - rendered_radii[i]
         } else {
             centers[i - 1L] - rendered_radii[i - 1L] - gap - rendered_radii[i]
         }
@@ -411,7 +431,7 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
         length(legend_title) == 1L) {
         parts <- unlist(strsplit(legend_title, "<br\\s*/?>|\n"))
         if (length(parts) > 1L) {
-            kept <- parts[parts != size_by]
+            kept <- parts[parts != size.by]
             if (length(kept) == 0L) {
                 kept <- parts[1]
             }
@@ -424,20 +444,20 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
     # subsequent builds.
     new_anns <- list(
         list(
-            x = x_pos + 0.02, y = min(start_y + gap, 1),
+            x = x_pos + 0.02, y = min(start.y + gap, 1),
             xref = "paper", yref = "paper",
-            text = size_by, showarrow = FALSE,
+            text = title, showarrow = FALSE,
             xanchor = "center", yanchor = "middle", font = title_font
         )
     )
-    for (i in seq_along(size_values)) {
+    for (i in seq_along(size.values)) {
         yc <- centers[i]
 
         # Circle annotation
         new_anns[[length(new_anns) + 1L]] <- list(
             x = x_pos, y = yc, xref = "paper", yref = "paper",
             text = paste0(
-                "<span style='font-size:", size_values[i],
+                "<span style='font-size:", size.values[i],
                 "px; color:#000000;'>&#9679;</span>"
             ),
             showarrow = FALSE, xanchor = "center", yanchor = "middle"
@@ -446,7 +466,7 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
         # Label annotation. Offset from the circle by a fixed pixel distance
         # (the glyph's rendered radius plus a constant gap) so the spacing does
         # not scale with plot width.
-        rendered_diameter_px <- size_values[i] * .CIRCLE_GLYPH_DIAMETER_RATIO
+        rendered_diameter_px <- size.values[i] * .CIRCLE_GLYPH_DIAMETER_RATIO
         label_xshift <- rendered_diameter_px / 2 + label_gap_px
         new_anns[[length(new_anns) + 1L]] <- list(
             x = x_pos, y = yc, xref = "paper", yref = "paper",

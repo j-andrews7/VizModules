@@ -4,7 +4,7 @@
 
 **VizModules** is an R package providing interactivity-first Shiny modules for common plot types. It ships ~17 plot modules (e.g. scatter, bar, box, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable `dataFilter` module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.6.0.9000 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.6.0.9001 (dev) | **License**: MIT
 
 ## Repository Structure
 
