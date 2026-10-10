@@ -71,19 +71,34 @@
 #'   Options: "log2", "log", "log10", "neg_log10", "log1p", "as.factor", "abs", "sqrt", or custom function. Default: NULL.
 #' @param color.adjustment Optional character or function, transformation to apply to color grouping variable.
 #'   Same options as x.adjustment and y.adjustment. Default: NULL.
-#' @param error.width numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable
-#' @param error.colour hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable
-#' @param error.bar Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
-#'   and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus the amount `error.type` selects,
-#'   computed from that group's y-values, where a group is a single x category, split further by `colour.group.by` and
-#'   `facet.by` when those are set. A group with fewer than two observations has no spread and is drawn without a bar.
-#' @param error.type What the error bars show, one of `"sd"` (one standard deviation, the default), `"sem"` (one
-#'   standard error of the mean, `sd / sqrt(n)`) or `"ci95"` (a 95% confidence interval for the mean). Missing values
-#'   are ignored when counting `n`.
+#' @param error.width Numeric, thickness of the error bars. Default: `NULL` (plotly's default).
+#' @param error.colour Hex colour of the error bars. Default: `NULL` (the series' own colour).
+#' @param error.bar Logical, whether to draw the interval `error.type` selects as error bars. Needs a single `y`, and a
+#'   single categorical `x` unless `error.type = "columns"`. For `"sd"`, `"sem"` and `"ci95"`, each bar spans the plotted
+#'   group mean plus or minus that amount, computed from the group's y-values, where a group is a single x category,
+#'   split further by `colour.group.by` and `facet.by` when those are set. A group with fewer than two observations has
+#'   no spread and is drawn without a bar. Default: `FALSE`.
+#' @param error.type What the error bars and ribbon show, one of `"sd"` (one standard deviation, the default),
+#'   `"sem"` (one standard error of the mean, `sd / sqrt(n)`), `"ci95"` (a 95% confidence interval for the mean) or
+#'   `"columns"` (the interval between the `error.lower` and `error.upper` columns). Missing values are ignored when
+#'   counting `n`. The first three summarise each group, so they need a categorical `x`. `"columns"` works with any
+#'   `x`. It suits intervals worked out beforehand, such as a model's confidence or prediction interval, a forecast
+#'   range or a min/max range.
 #' @param error.ci.method How `error.type = "ci95"` is computed, one of `"normal"` (the default; the standard error
 #'   times the 97.5th percentile of the normal distribution, 1.96) or `"t"` (the standard error times the 97.5th
 #'   percentile of the t distribution with `n - 1` degrees of freedom). The t interval is wider for small groups and
 #'   converges on the normal one as `n` grows. Ignored for the other error types.
+#' @param error.lower,error.upper Optional character, names of the numeric columns holding each point's lower and
+#'   upper bound, for `error.type = "columns"`. Either order works. The bounds are on the y-axis's scale, so
+#'   `y.adjustment` is applied to them too. With a categorical `x`, they are averaged per group, as `y` is, so supply
+#'   one row per x position (and colour/facet group). A bound that lies on the wrong side of the line draws no bar on
+#'   that side. Default: `NULL`.
+#' @param error.ribbon Logical, whether to draw the interval `error.type` selects as a shaded band (a ribbon) behind
+#'   each line, in the line's own colour, on its own or alongside the error bars. It has the same requirements as
+#'   `error.bar`. A point without an interval leaves a gap in the band, so an isolated point's interval shows only
+#'   as a bar. No ribbon is drawn for a numeric `colour.group.by`, which plotly does not split into separate lines.
+#'   Hovering a band's edge shows that bound. Default: `FALSE`.
+#' @param error.ribbon.opacity Numeric between 0 and 1, the ribbon's fill opacity. Default: 0.25.
 #'
 #' @return A plotly object representing the interactive line plot.
 #'
@@ -105,6 +120,32 @@
 #'     palette.selection = palette,
 #'     show.legend = TRUE
 #' )
+#'
+#' # Each product line's yearly mean revenue, with a 95% confidence interval ribbon.
+#' fig2 <- linePlot(
+#'     data = example_sales,
+#'     x = "year",
+#'     y = "revenue",
+#'     colour.group.by = "product_line",
+#'     palette.selection = palette[1:3],
+#'     error.type = "ci95",
+#'     error.ribbon = TRUE
+#' )
+#'
+#' # A band from columns holding precomputed bounds, on a numeric x-axis.
+#' fit <- data.frame(t = 1:20, est = sqrt(1:20))
+#' fit$lo <- fit$est - 0.4
+#' fit$hi <- fit$est + 0.4
+#' fig3 <- linePlot(
+#'     data = fit,
+#'     x = "t",
+#'     y = "est",
+#'     palette.selection = "#1B9E77",
+#'     error.type = "columns",
+#'     error.lower = "lo",
+#'     error.upper = "hi",
+#'     error.ribbon = TRUE
+#' )
 linePlot <- function(data, x, y, palette.selection, 
                      plot.mode = "lines", line.type = "solid", 
                      colour.group.by = NULL,
@@ -121,9 +162,27 @@ linePlot <- function(data, x, y, palette.selection,
                      title.text = "", title.font.size = 14, title.font.family = "Arial",
                      title.font.color = "black", title.x.position = 0.47, y.title = NULL, x.title = NULL, flip.x = FALSE, flip.y = FALSE,
                      x.adjustment = NULL, y.adjustment = NULL, color.adjustment = NULL, order.by = NULL, error.colour = NULL, error.width = NULL, error.bar = FALSE,
-                     error.type = c("sd", "sem", "ci95"), error.ci.method = c("normal", "t")) {
+                     error.type = c("sd", "sem", "ci95", "columns"), error.ci.method = c("normal", "t"),
+                     error.lower = NULL, error.upper = NULL, error.ribbon = FALSE, error.ribbon.opacity = 0.25) {
     error.type <- match.arg(error.type)
     error.ci.method <- match.arg(error.ci.method)
+
+    ribbon_opacity <- suppressWarnings(as.numeric(error.ribbon.opacity))
+    if (length(ribbon_opacity) != 1 || is.na(ribbon_opacity)) {
+        ribbon_opacity <- 0.25
+    }
+    ribbon_opacity <- min(max(ribbon_opacity, 0), 1)
+
+    # A "columns" interval is read from two bound columns and is tied to a single y.
+    bound_cols <- NULL
+    if (error.type == "columns" && length(y) == 1 && nz_value(error.lower) && nz_value(error.upper)) {
+        bound_cols <- c(error.lower, error.upper)
+        numeric_col <- vapply(bound_cols, function(b) is.numeric(data[[b]]), logical(1))
+        bad <- unique(bound_cols[!(bound_cols %in% names(data)) | !numeric_col])
+        if (length(bad) > 0) {
+            stop("error.lower and error.upper must name numeric columns of data; not: ", toString(bad), call. = FALSE)
+        }
+    }
 
     axis_title_font <- list(size = axis.title.font.size, color = axis.title.font.color, family = axis.title.font.family)
     facet_title_font <- list(
@@ -153,28 +212,26 @@ linePlot <- function(data, x, y, palette.selection,
 
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
-    if (!is.null(x.adjustment) && nzchar(x.adjustment)) {
-        data <- adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
-        x.new <- x
-        for (i in seq_along(x)) {
-            adj_name <- paste(x[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                x.new[i] <- adj_name
-            }
-        }
-        x <- x.new
+    # The column adjust_column_values() wrote for each of `cols`, or the column itself if it wrote none.
+    adjusted_cols <- function(cols) {
+        vapply(cols, function(col) {
+            adj_name <- paste(col, "adj", sep = ".")
+            if (adj_name %in% names(data)) adj_name else col
+        }, character(1), USE.NAMES = FALSE)
     }
 
+    if (!is.null(x.adjustment) && nzchar(x.adjustment)) {
+        data <- adjust_column_values(df = data, x.col = x, x.adj.fun = x.adjustment)
+        x <- adjusted_cols(x)
+    }
+
+    # The bounds are on y's scale, so they take y's adjustment too.
     if (!is.null(y.adjustment) && nzchar(y.adjustment)) {
-        data <- adjust_column_values(df = data, y.col = y, y.adj.fun = y.adjustment)
-        y.new <- y
-        for (i in seq_along(y)) {
-            adj_name <- paste(y[i], "adj", sep = ".")
-            if (adj_name %in% names(data)) {
-                y.new[i] <- adj_name
-            }
+        data <- adjust_column_values(df = data, y.col = c(y, bound_cols), y.adj.fun = y.adjustment)
+        y <- adjusted_cols(y)
+        if (!is.null(bound_cols)) {
+            bound_cols <- adjusted_cols(bound_cols)
         }
-        y <- y.new
     }
 
     if (!is.null(color.adjustment) && nzchar(color.adjustment) && !is.null(colour.group.by) && nzchar(colour.group.by)) {
@@ -195,13 +252,26 @@ linePlot <- function(data, x, y, palette.selection,
             y.title <- paste0("mean(", y_label, ")")
         }
 
-        # Compute the per-group mean and error bar half-width. What `summarise()` sees is
-        # data-masked, so a column named like one of this function's arguments (`y`,
-        # say) would shadow it and silently drop the bars. Everything it needs from
-        # here is resolved first, and only the closure is named inside it.
-        single_y <- length(y) == 1
+        # Compute the per-group mean and interval. What `summarise()` sees is data-masked,
+        # so a column named like a variable here (`y`, say) would shadow it and silently
+        # drop the interval. The closures and column names are injected with `!!`, so
+        # nothing is looked up in the data.
         y_col <- y[1]
-        error_fn <- function(values) .error_bar_halfwidth(values, error.type, error.ci.method)
+        halfwidth_of <- if (length(y) == 1 && error.type != "columns") {
+            function(values) .error_bar_halfwidth(values, error.type, error.ci.method)
+        } else {
+            function(values) NA_real_
+        }
+        bound_mean_of <- if (!is.null(bound_cols)) {
+            function(values) {
+                m <- mean(values, na.rm = TRUE)
+                if (is.nan(m)) NA_real_ else m
+            }
+        } else {
+            function(values) NA_real_
+        }
+        lo_col <- if (!is.null(bound_cols)) bound_cols[1] else y_col
+        hi_col <- if (!is.null(bound_cols)) bound_cols[2] else y_col
 
         group_vars <- x
         if (!is.null(facet.by) && nzchar(facet.by)) {
@@ -212,11 +282,13 @@ linePlot <- function(data, x, y, palette.selection,
             group_vars <- c(colour.group.by, group_vars)
         }
 
-        ex <- data |>
+        data <- data |>
             dplyr::group_by(dplyr::across(dplyr::all_of(group_vars))) |>
             dplyr::summarise(
                 # Before the means below, which overwrite the y column in place.
-                err_y = if (single_y) error_fn(.data[[y_col]]) else NA_real_,
+                err_hw = (!!halfwidth_of)(.data[[!!y_col]]),
+                err_lo = (!!bound_mean_of)(.data[[!!lo_col]]),
+                err_hi = (!!bound_mean_of)(.data[[!!hi_col]]),
                 dplyr::across(
                     dplyr::all_of(y),
                     list(mean = ~ mean(.x, na.rm = TRUE)),
@@ -224,11 +296,26 @@ linePlot <- function(data, x, y, palette.selection,
                 ),
                 .groups = "drop"
             )
-        data <- ex
+
+        # A computed interval is centred on the plotted mean.
+        if (is.null(bound_cols)) {
+            data$err_lo <- data[[y_col]] - data$err_hw
+            data$err_hi <- data[[y_col]] + data$err_hw
+        }
+        data$err_hw <- NULL
     } else {
-        data <- data |>
-            dplyr::mutate(err_y = NA)
+        data$err_lo <- rep(NA_real_, nrow(data))
+        data$err_hi <- rep(NA_real_, nrow(data))
+        if (!is.null(bound_cols)) {
+            data$err_lo <- data[[bound_cols[1]]]
+            data$err_hi <- data[[bound_cols[2]]]
+        }
     }
+
+    # Either column may hold the lower bound.
+    lo <- pmin(data$err_lo, data$err_hi)
+    data$err_hi <- pmax(data$err_lo, data$err_hi)
+    data$err_lo <- lo
 
     # Y axis styling by editing unique aspects of the x axis styling
     yaxis_style <- xaxis_style
@@ -263,8 +350,7 @@ linePlot <- function(data, x, y, palette.selection,
     # plotly re-sorts the data by the colour column before splitting it into traces, but
     # not an error bar array passed by value, so ordering by x alone (which interleaves the
     # groups) put bars on other groups' points. Only drawn bars care, so nothing else moves.
-    if (isTRUE(error.bar) && !is.null(colour.group.by) && nzchar(colour.group.by) &&
-        "err_y" %in% names(plot_data) && any(!is.na(plot_data$err_y))) {
+    if (isTRUE(error.bar) && !is.null(colour.group.by) && nzchar(colour.group.by) && .has_interval(plot_data)) {
         plot_data <- .group_rows_by_trace(plot_data, colour.group.by)
     }
 
@@ -276,38 +362,70 @@ linePlot <- function(data, x, y, palette.selection,
         color <- NULL
     }
 
+    # plotly only applies `colors` to a mapped colour, so a single series is coloured here.
+    series_colour <- NULL
+    if (is.null(color)) {
+        series_colour <- if (length(palette.selection) > 0) .normalize_hex(unname(palette.selection)[1]) else ""
+        if (!nzchar(series_colour)) {
+            series_colour <- "#1F77B4"
+        }
+    }
+
+    # A numeric colour is one trace drawn with a gradient, so there are no separate lines to band.
+    draw_ribbon <- isTRUE(error.ribbon) && length(y) == 1 &&
+        (is.null(color) || !is.numeric(plot_data[[colour.group.by]]))
+
+    # One panel's ribbon (underneath) and line. `group.legend` ties each series' traces
+    # together across facets so one legend click toggles it in every panel; plotly
+    # splits `legendgroup` per trace the same way it splits `color`.
+    build_panel <- function(panel_data, showlegend, group.legend = FALSE) {
+        has_interval <- .has_interval(panel_data)
+        ribbon <- if (draw_ribbon && has_interval) .ribbon_rows(panel_data, y, colour.group.by) else NULL
+        legendgroup <- if (!is.null(color)) color else y
+
+        line_params <- list(
+            data = panel_data,
+            x = reformulate(x),
+            y = reformulate(y),
+            type = "scatter",
+            mode = plot.mode,
+            color = color,
+            colors = palette.selection,
+            showlegend = showlegend
+        )
+        if ((group.legend && !is.null(color)) || !is.null(ribbon)) {
+            line_params$legendgroup <- legendgroup
+        }
+        if (isTRUE(error.bar) && has_interval) {
+            line_params$error_y <- .error_y_spec(panel_data, y, error.colour %||% series_colour, error.width)
+        }
+        # A NULL colour is left out rather than set: plotly merges these over the mapped
+        # colour with modifyList(), where a NULL entry deletes it.
+        if (plot.mode %in% c("lines", "lines+markers")) {
+            line_params$line <- c(list(dash = line.type), if (!is.null(series_colour)) list(color = series_colour))
+        }
+        if (!is.null(series_colour) && plot.mode %in% c("markers", "lines+markers")) {
+            line_params$marker <- list(color = series_colour)
+        }
+
+        # Empty, so it adds no placeholder trace, and the ribbon is added first to sit underneath.
+        fig <- plot_ly()
+        if (!is.null(ribbon)) {
+            fig <- .add_ribbon_trace(
+                fig, ribbon, x, y, color, palette.selection,
+                series.colour = series_colour, opacity = ribbon_opacity, legendgroup = legendgroup
+            )
+        }
+        do.call(add_trace, c(list(fig), line_params))
+    }
+
     if (!is.null(facet.by) && facet.by != "" && !multi_axis) {
-        # Split data by facet variable
+        # Split data by facet variable. Every facet draws the same set of colour groups,
+        # so only the first contributes legend entries.
         facet_levels <- unique(plot_data[[facet.by]])
         plots <- lapply(seq_along(facet_levels), function(i) {
             facet_data <- plot_data[plot_data[[facet.by]] == facet_levels[i], ]
-            # Build plot parameters conditionally. Every facet draws the same set of
-            # colour groups, so only the first contributes legend entries.
-            plot_params <- list(
-                data = facet_data,
-                x = reformulate(x),
-                y = reformulate(y),
-                type = "scatter",
-                mode = plot.mode,
-                color = color,
-                colors = palette.selection,
-                showlegend = show.legend && i == 1L
-            )
-            # Tie each colour group's traces together across facets so one legend click
-            # toggles the series in every panel. plotly splits `legendgroup` per trace
-            # the same way it splits `color`.
-            if (!is.null(color)) {
-                plot_params$legendgroup <- color
-            }
-            # Only add error_y if err_y exists and has non-NA values
-            if ("err_y" %in% names(facet_data) && any(!is.na(facet_data$err_y)) && error.bar) {
-                plot_params$error_y <- list(array = facet_data$err_y, color = error.colour, thickness = error.width)
-            }
-            # Only add line parameter if mode is "lines" or "lines+markers"
-            if (plot.mode %in% c("lines", "lines+markers")) {
-                plot_params$line <- list(dash = line.type)
-            }
-            do.call(plot_ly, plot_params)
+            build_panel(facet_data, showlegend = show.legend && i == 1L, group.legend = TRUE)
         })
 
         sharing <- resolve_facet_sharing(facet.scales)
@@ -405,27 +523,7 @@ linePlot <- function(data, x, y, palette.selection,
         # that still takes up a legend entry.
         fig <- plot_ly()
     } else {
-        # Build plot parameters conditionally
-        plot_params <- list(
-            data = plot_data,
-            x = reformulate(x),
-            y = reformulate(y),
-            type = "scatter",
-            mode = plot.mode,
-            color = color,
-            colors = palette.selection,
-            showlegend = show.legend
-        )
-
-        # Only add error_y if err_y exists and has non-NA values
-        if ("err_y" %in% names(plot_data) && any(!is.na(plot_data$err_y)) && error.bar) {
-            plot_params$error_y <- list(array = plot_data$err_y, color = error.colour, thickness = error.width)
-        }
-        # Only add line parameter if mode is "lines" or "lines+markers"
-        if (plot.mode %in% c("lines", "lines+markers")) {
-            plot_params$line <- list(dash = line.type)
-        }
-        fig <- do.call(plot_ly, plot_params)
+        fig <- build_panel(plot_data, showlegend = show.legend)
     }
 
     if (multi_axis && (is.null(facet.by) || facet.by == "")) {
@@ -455,15 +553,176 @@ linePlot <- function(data, x, y, palette.selection,
 }
 
 
-# What the error bars can show, and how a confidence interval can be worked out.
+# What the error bars and ribbon can show, and how a confidence interval can be worked out.
 # The values are the `error.type` / `error.ci.method` choices linePlot() accepts; the
 # names are what the module's selects display.
 .error_bar_type_choices <- c(
     "Standard deviation (SD)" = "sd",
     "Standard error of the mean (SEM)" = "sem",
-    "95% confidence interval" = "ci95"
+    "95% confidence interval" = "ci95",
+    "From columns" = "columns"
 )
 .error_bar_ci_method_choices <- c("Normal approximation" = "normal", "t distribution" = "t")
+
+
+#' Whether any row of a linePlot frame has an interval to draw
+#'
+#' @param df A frame carrying the `err_lo` / `err_hi` bounds [linePlot()] works out.
+#'
+#' @return `TRUE` if at least one row has both bounds.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_has_interval
+#' @keywords internal
+.has_interval <- function(df) {
+    all(c("err_lo", "err_hi") %in% names(df)) && any(!is.na(df$err_lo) & !is.na(df$err_hi))
+}
+
+
+#' Error bars spanning each row's interval
+#'
+#' The bars run from the plotted value to each bound, so an interval from columns can be
+#' asymmetric. A bound on the wrong side of the value draws no bar on that side.
+#'
+#' @param df The panel's rows, in the order they are drawn, carrying `err_lo` / `err_hi`.
+#' @param y Name of the plotted y column.
+#' @param colour Colour of the bars, or `NULL` for the series' own.
+#' @param width Thickness of the bars, or `NULL` for plotly's default.
+#'
+#' @return A list for a trace's `error_y`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_error_y_spec
+#' @keywords internal
+.error_y_spec <- function(df, y, colour = NULL, width = NULL) {
+    list(
+        type = "data",
+        symmetric = FALSE,
+        array = pmax(df$err_hi - df[[y]], 0),
+        arrayminus = pmax(df[[y]] - df$err_lo, 0),
+        color = colour,
+        thickness = width
+    )
+}
+
+
+#' The closed outlines of a linePlot ribbon
+#'
+#' Turns the rows a line is drawn through into the outline of the band around it, for a
+#' `fill = "toself"` trace. Each series (each level of `colour`) is walked in the order its
+#' line is drawn. Every unbroken run of rows with both bounds becomes one closed outline, the
+#' upper bounds forward and then the lower bounds back, numbered in `.ribbon_part`. Grouping
+#' by that column has plotly draw each outline separately, so a row without an interval
+#' leaves a gap in the band rather than one being drawn across it.
+#'
+#' The rows keep all of `df`'s columns and their types, so the same `x`, `y` and colour
+#' mappings, axis titles and colour levels apply as for the line itself.
+#'
+#' @param df The panel's rows, in the order the line is drawn, carrying `err_lo` / `err_hi`.
+#' @param y Name of the plotted y column, which takes the bound values.
+#' @param colour Name of the discrete column the lines are coloured by, or `NULL`.
+#'
+#' @return `df`'s rows rearranged into outlines, with a `.ribbon_side` column (`"Upper"` or
+#'   `"Lower"`) and a `.ribbon_part` column numbering the outlines within each series, or
+#'   `NULL` if no row has an interval.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_ribbon_rows
+#' @keywords internal
+.ribbon_rows <- function(df, y, colour = NULL) {
+    if (!.has_interval(df)) {
+        return(NULL)
+    }
+
+    series <- if (nz_value(colour) && colour %in% names(df)) {
+        split(seq_len(nrow(df)), df[[colour]], drop = TRUE)
+    } else {
+        list(seq_len(nrow(df)))
+    }
+
+    outlines <- function(rows) {
+        d <- df[rows, , drop = FALSE]
+        runs <- rle(is.finite(d$err_lo) & is.finite(d$err_hi))
+        ends <- cumsum(runs$lengths)
+        starts <- ends - runs$lengths + 1L
+        keep <- which(runs$values)
+
+        lapply(seq_along(keep), function(part) {
+            idx <- starts[keep[part]]:ends[keep[part]]
+            upper <- d[idx, , drop = FALSE]
+            upper[[y]] <- d$err_hi[idx]
+            upper$.ribbon_side <- rep("Upper", length(idx))
+            lower <- d[rev(idx), , drop = FALSE]
+            lower[[y]] <- d$err_lo[rev(idx)]
+            lower$.ribbon_side <- rep("Lower", length(idx))
+            outline <- dplyr::bind_rows(upper, lower)
+            outline$.ribbon_part <- rep(part, nrow(outline))
+            outline
+        })
+    }
+
+    out <- unlist(lapply(series, outlines), recursive = FALSE)
+    if (length(out) == 0) {
+        return(NULL)
+    }
+    out <- as.data.frame(dplyr::bind_rows(out))
+    rownames(out) <- NULL
+    out
+}
+
+
+#' Add a linePlot ribbon to a figure
+#'
+#' Adds the outlines from [.ribbon_rows()] as filled traces with no edge line, one outline per
+#' `.ribbon_part` group. With a
+#' colour mapping, the ribbon uses the same `color`/`colors` as its lines plus plotly's
+#' `alpha`, so plotly gives each series' band its line's colour (one colour scale is
+#' trained over every trace in a figure). A single series is given `series.colour`
+#' directly. The ribbon never takes a legend entry of its own; it joins its line's
+#' `legendgroup`, so the line's entry toggles both. Hovering a vertex shows that bound.
+#'
+#' @param fig A plotly figure.
+#' @param ribbon Rows from [.ribbon_rows()].
+#' @param x,y Names of the plotted x and y columns.
+#' @param color The lines' colour mapping (a formula), or `NULL` for a single series.
+#' @param colors The lines' palette.
+#' @param series.colour Colour of a single series, used when `color` is `NULL`.
+#' @param opacity Fill opacity, between 0 and 1.
+#' @param legendgroup The lines' legend group (a formula, or a name for a single series).
+#'
+#' @return `fig` with the ribbon added.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_add_ribbon_trace
+#' @keywords internal
+.add_ribbon_trace <- function(fig, ribbon, x, y, color, colors, series.colour, opacity, legendgroup) {
+    params <- list(
+        fig,
+        data = dplyr::group_by(ribbon, dplyr::across(dplyr::all_of(".ribbon_part"))),
+        x = reformulate(x),
+        y = reformulate(y),
+        type = "scatter",
+        mode = "lines",
+        fill = "toself",
+        line = list(width = 0),
+        hoveron = "points",
+        text = ~.ribbon_side,
+        showlegend = FALSE,
+        legendgroup = legendgroup
+    )
+    if (!is.null(color)) {
+        params$color <- color
+        params$colors <- colors
+        params$alpha <- opacity
+        params$hovertemplate <- "%{text}: %{y}<extra>%{fullData.name}</extra>"
+    } else {
+        # plotly would otherwise name the trace after its fill colour.
+        params$name <- legendgroup
+        params$fillcolor <- plotly::toRGB(series.colour, opacity)
+        params$hovertemplate <- "%{text}: %{y}<extra></extra>"
+    }
+    do.call(plotly::add_trace, params)
+}
 
 
 #' Sort rows the way plotly sorts them before splitting a discrete colour into traces

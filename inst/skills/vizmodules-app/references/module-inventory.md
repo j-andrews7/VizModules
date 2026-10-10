@@ -70,16 +70,21 @@ plots those per-sample frequencies, one facet per level. So `y.min`/`y.max`, the
 the point annotations (points are *samples*), and the source download all describe that
 summarised frequency table, not the input rows. `scale` picks percent vs count.
 
-`linePlot` draws error bars only for a single categorical X and a single Y, and its
-`defaults` keys are **not** the `linePlot()` argument names: `error.bar` (TRUE),
-`error.bar.type` (`"sd"` by default, or `"sem"`, `"ci95"`; `error.type` in the function),
-`error.bar.ci.method` (`"normal"` by default, or `"t"`; `error.ci.method` in the function),
-`error.bar.colour` and `error.bar.width`. Each bar is the group mean plus or minus the
-chosen amount, worked out from that group's y-values as plotted (after any Y adjustment),
-where a group is an x category within each `group.by`/`facet.by` level; a group with fewer
-than two values gets no bar. `"ci95"` uses 1.96 unless the method is `"t"`, which is wider
-for small groups. The method input only shows while the type is `"ci95"`. To fix the
-statistic for users: `defaults = list(error.bar.type = "sem")` with
+`linePlot` draws an interval around a single Y as error bars (`error.bar`, TRUE), as a
+shaded ribbon in each line's colour (`error.ribbon`, FALSE; `error.ribbon.opacity`, 0.25),
+or both. Several of its `defaults` keys are **not** the `linePlot()` argument names:
+`error.bar.type` (`"sd"` by default, or `"sem"`, `"ci95"`, `"columns"`; `error.type` in the
+function), `error.bar.ci.method` (`"normal"` by default, or `"t"`; `error.ci.method`),
+`error.bar.colour` and `error.bar.width`. `"sd"`/`"sem"`/`"ci95"` need a categorical X: the
+interval is the group mean plus or minus the chosen amount, worked out from that group's
+y-values as plotted (after any Y adjustment), where a group is an x category within each
+`group.by`/`facet.by` level; a group with fewer than two values gets none. `"ci95"` uses
+1.96 unless the method is `"t"`, which is wider for small groups. `"columns"` works with any
+X: the interval runs between the numeric columns named by `error.lower` and `error.upper`
+(same keys in the function; either order; Y's adjustment applies to them, and a categorical
+X averages them per group). Use it for precomputed CIs or ranges. The method input only
+shows while the type is `"ci95"`, and the bound selects only while it is `"columns"`. To fix
+the statistic for users: `defaults = list(error.bar.type = "sem")` with
 `hide.inputs = c("error.bar.type", "error.bar.ci.method")`.
 
 The colour key takes a **named character vector** mapping group level to colour, e.g.

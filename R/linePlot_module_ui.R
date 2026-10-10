@@ -34,13 +34,19 @@
 #' - `facet.ncol` - Number of columns in the facet grid (UI: "Columns", default: NULL; blank = auto)
 #' - `plot.mode` - Plot type (UI: "Plot type", default: "lines")
 #' - `line.type` - Line type (UI: "Line type", default: "solid")
-#' - `error.bar` - Show error bars (UI: "Error Bars", default: TRUE; requires a categorical X and a single Y)
-#' - `error.type` - What the error bars show: "sd", "sem" or "ci95" (UI: "Error Bar Type", defaults key:
-#'   `error.bar.type`, default: "sd")
+#' - `error.bar` - Show the interval as error bars (UI: "Error Bars", default: TRUE; requires a single X and a single
+#'   Y, and a categorical X unless the error type is "columns")
+#' - `error.ribbon` - Show the interval as a shaded band behind each line (UI: "Error Ribbon", default: FALSE; same
+#'   requirements as `error.bar`)
+#' - `error.type` - What the error bars and ribbon show: "sd", "sem", "ci95" or "columns" (UI: "Error Type",
+#'   defaults key: `error.bar.type`, default: "sd")
 #' - `error.ci.method` - How a "ci95" interval is computed: "normal" or "t" (UI: "Confidence Interval Method",
-#'   defaults key: `error.bar.ci.method`, default: "normal"; only shown while the error bar type is "ci95")
+#'   defaults key: `error.bar.ci.method`, default: "normal"; only shown while the error type is "ci95")
+#' - `error.lower`, `error.upper` - Numeric columns holding each point's lower and upper bound (UI: "Lower Bound" and
+#'   "Upper Bound", default: ""; only shown while the error type is "columns")
 #' - `error.colour` - Error bar color (UI: "Error Bar Colour", defaults key: `error.bar.colour`, default: "#000000")
 #' - `error.width` - Error bar cap width (UI: "Error Bar Width", defaults key: `error.bar.width`, default: 1)
+#' - `error.ribbon.opacity` - Ribbon fill opacity, 0 to 1 (UI: "Ribbon Opacity", default: 0.25)
 #' - `palette.selection` - Color palette (UI: palette picker, derived from palette)
 #' - `axis.showline` - Show axis border lines (UI: "Show Axis Borders", default: TRUE)
 #' - `axis.mirror` - Mirror axis lines on opposite side (UI: "Mirror Axis Borders", default: TRUE)
@@ -140,7 +146,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
     selected <- list(
         "x", "y", "colour.group.by", "error.bar", "order.by",
         "x.adjustment", "y.adjustment", "facet.by", "facet.scales",
-        "plot.mode", "line.type", "error.colour", "error.width", "error.type", "error.ci.method"
+        "plot.mode", "line.type", "error.colour", "error.width", "error.type", "error.ci.method",
+        c("error.lower", "error.upper"), "error.ribbon", "error.ribbon.opacity"
     )
 
     documentParameters <- get_documentation(
@@ -156,7 +163,8 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     function(x) all(x %in% names(data))
                 ),
                 choices = names(data), multiple = TRUE
-            ), paste(documentParameters$x, ".", "If you want error bars the X input must be a category and the Y input must only be length = 1"), placement = "top", options = list(container = "body")),
+            ), paste(documentParameters$x, ".", "Error bars and ribbons need a single X and a single Y,",
+                "and a categorical X unless the error type is From columns."), placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("y.value"), "Y Values",
                 selected = get_default(
                     defaults, "y.value", names(data)[2],
@@ -176,14 +184,19 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                 documentParameters$error.bar,
                 placement = "top", options = list(container = "body")
             ),
-            tipify(viz_select_input(ns("error.bar.type"), "Error Bar Type",
+            tipify(materialSwitch(ns("error.ribbon"), "Error Ribbon",
+                value = get_default(defaults, "error.ribbon", FALSE, is.logical)),
+                documentParameters$error.ribbon,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(viz_select_input(ns("error.bar.type"), "Error Type",
                 choices = .error_bar_type_choices,
                 selected = get_default(
                     defaults, "error.bar.type", "sd",
                     function(x) x %in% .error_bar_type_choices
                 )
             ), documentParameters$error.type, placement = "top", options = list(container = "body")),
-            # Shown only while the type is a confidence interval; see the x.value observer in the server.
+            # Shown only while the type is a confidence interval; see the error control observer in the server.
             tipify(viz_select_input(ns("error.bar.ci.method"), "Confidence Interval Method",
                 choices = .error_bar_ci_method_choices,
                 selected = get_default(
@@ -191,6 +204,15 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
                     function(x) x %in% .error_bar_ci_method_choices
                 )
             ), documentParameters$error.ci.method, placement = "top", options = list(container = "body")),
+            # Shown only while the type is "columns".
+            tipify(viz_select_input(ns("error.lower"), "Lower Bound",
+                choices = num.choices,
+                selected = get_default(defaults, "error.lower", "", function(x) x %in% num.choices)
+            ), documentParameters$error.lower, placement = "top", options = list(container = "body")),
+            tipify(viz_select_input(ns("error.upper"), "Upper Bound",
+                choices = num.choices,
+                selected = get_default(defaults, "error.upper", "", function(x) x %in% num.choices)
+            ), documentParameters$error.upper, placement = "top", options = list(container = "body")),
             tipify(materialSwitch(ns("order.by"), "Order by Y",
                 value = get_default(defaults, "order.by", FALSE, is.logical),
                 status = "success"
@@ -263,6 +285,12 @@ linePlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 
             tipify(numericInput(ns("error.bar.width"), "Error Bar Width",
                 value = get_default(defaults, "error.bar.width", 1, is.numeric), min = 0.1),
                 documentParameters$error.width,
+                placement = "top", options = list(container = "body")
+            ),
+            tipify(numericInput(ns("error.ribbon.opacity"), "Ribbon Opacity",
+                value = get_default(defaults, "error.ribbon.opacity", 0.25, is.numeric),
+                min = 0, max = 1, step = 0.05),
+                documentParameters$error.ribbon.opacity,
                 placement = "top", options = list(container = "body")
             )
         ),

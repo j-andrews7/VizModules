@@ -8,6 +8,11 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 
 * New **Size Scale Min** and **Size Scale Max** inputs set the **Size By** values drawn at the smallest and largest sizes, so the size legend can run over round numbers such as 0 to 100 rather than the data's own range (#359, #364). Blank keeps the data's range, values beyond a limit are drawn at that end's size, and both show only while **Size By** is set.
 
+### `linePlot`
+
+* Error intervals can now be drawn as a shaded band (#371). The new **Error Ribbon** switch (`error.ribbon` in `linePlot()`) draws the interval behind each line, in that line's colour, on its own or alongside the error bars. **Ribbon Opacity** sets its fill, and a point without an interval leaves a gap in the band. The module gallery's line plot now opens on 95% CI ribbons.
+  * **Error Bar Type**, now **Error Type**, gained **From columns**, which reads each point's interval from the **Lower Bound** and **Upper Bound** columns (`error.type = "columns"`, `error.lower`, `error.upper`). It suits intervals worked out beforehand, such as a model's confidence interval, a forecast range or a min/max range. Unlike SD, SEM and CI, it works with a numeric X, and its bars can be asymmetric.
+
 ### `scatterPlot`
 
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
@@ -32,6 +37,12 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 * The scatter plot colours groups by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
 * A plot whose annotation text is a factor (for instance a label column factored by the data filter) no longer stops with "'nzchar()' requires a character vector" when it is zoomed or resized (sciVizModules#17).
 * `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
+
+## Bug Fixes
+
+### `linePlot`
+
+* A line with no **Group By** now takes its colour from the **Plot colors** picker, as do its error bars. It was always drawn in plotly's default blue, because plotly applies a palette only to a mapped colour.
 
 # VizModules 0.5.0
 

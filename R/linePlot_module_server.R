@@ -56,19 +56,27 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # manual title text for that axis so it regenerates for the new variable.
         last_axis_val <- reactiveVal(NULL)
 
-        # Error bars need a single categorical X, and only a confidence interval has a
-        # method to choose. What the app hid via hide.inputs is never shown again here.
-        observeEvent(list(input$x.value, input$error.bar.type), {
+        # The error bars and ribbon need a single X and Y. SD, SEM and CI summarise each
+        # category, so they also need a categorical X, while an interval from columns works
+        # with any. Only a confidence interval has a method to choose, and only "columns"
+        # needs its bound columns. What the app hid via hide.inputs is never shown again here.
+        observeEvent(list(input$x.value, input$y.value, input$error.bar.type), {
             req(input$x.value)
-            bars_apply <- length(input$x.value) == 1 && !is.numeric(data()[[input$x.value]])
-            ci_applies <- bars_apply && identical(input$error.bar.type, "ci95")
+            single <- length(input$x.value) == 1 && length(input$y.value) <= 1
+            x_is_cat <- single && !is.numeric(data()[[input$x.value]])
+            from_columns <- identical(input$error.bar.type, "columns")
 
             toggle_cells <- function(ids, show) {
                 ids <- setdiff(ids, hide.inputs)
                 if (show) show_input(session, ids) else hide_input(session, ids)
             }
-            toggle_cells(c("error.bar", "error.bar.type", "error.bar.width", "error.bar.colour"), bars_apply)
-            toggle_cells("error.bar.ci.method", ci_applies)
+            toggle_cells("error.bar.type", single)
+            toggle_cells(
+                c("error.bar", "error.ribbon", "error.bar.width", "error.bar.colour", "error.ribbon.opacity"),
+                x_is_cat || (single && from_columns)
+            )
+            toggle_cells("error.bar.ci.method", x_is_cat && identical(input$error.bar.type, "ci95"))
+            toggle_cells(c("error.lower", "error.upper"), single && from_columns)
         })
 
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -201,6 +209,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = get_default(defaults, "error.bar.type", "sd"))
             update_viz_select(session, "error.bar.ci.method",
                 selected = get_default(defaults, "error.bar.ci.method", "normal"))
+            num.choices <- names(data())[vapply(data(), is.numeric, logical(1))]
+            for (bound in c("error.lower", "error.upper")) {
+                update_viz_select(session, bound,
+                    selected = get_default(defaults, bound, "", function(x) x == "" || x %in% num.choices))
+            }
+            updateMaterialSwitch(session, "error.ribbon",
+                value = get_default(defaults, "error.ribbon", FALSE, is.logical))
+            updateNumericInput(session, "error.ribbon.opacity",
+                value = get_default(defaults, "error.ribbon.opacity", 0.25, is.numeric))
             updateNumericInput(session, "error.bar.width",
                 value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
@@ -344,6 +361,14 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
             facet.ncol.val <- clean_facet_dim(isolate_fn(input$facet.ncol))
 
+            # A bound column left over from another dataset is ignored until the select catches up.
+            bound_col <- function(value) {
+                value <- blank_to_null(value)
+                if (!is.null(value) && value %in% names(d) && is.numeric(d[[value]])) value else NULL
+            }
+            error.lower <- bound_col(isolate_fn(input$error.lower))
+            error.upper <- bound_col(isolate_fn(input$error.upper))
+
             fig <- linePlot(
                 data = d,
                 x = isolate_fn(input$x.value),
@@ -395,7 +420,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 error.width = isolate_fn(input$error.bar.width),
                 error.bar = isolate_fn(input$error.bar),
                 error.type = isolate_fn(input$error.bar.type),
-                error.ci.method = isolate_fn(input$error.bar.ci.method)
+                error.ci.method = isolate_fn(input$error.bar.ci.method),
+                error.lower = error.lower,
+                error.upper = error.upper,
+                error.ribbon = isTRUE(isolate_fn(input$error.ribbon)),
+                error.ribbon.opacity = isolate_fn(input$error.ribbon.opacity)
             )
             # Add reference lines
             fig <- add_reference_lines(fig,

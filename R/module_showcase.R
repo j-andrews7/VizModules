@@ -192,10 +192,12 @@
             inputs_ui = linePlotInputsUI,
             output_ui = linePlotOutputUI,
             server_fn = linePlotServer,
-            # Error bars (on by default) show each year's spread across months and regions.
+            # A ribbon around each product line's yearly mean: the 95% CI over its months and
+            # regions. Gadgets climb, Doohickeys fall and Widgets hold, so the bands cross.
             defaults = list(
                 "x.value" = "year", "y.value" = "revenue", "group.by" = "product_line",
-                "plot.mode" = "lines+markers"
+                "plot.mode" = "lines+markers",
+                "error.bar" = FALSE, "error.ribbon" = TRUE, "error.bar.type" = "ci95"
             )
         ),
         parallel = list(
