@@ -17,7 +17,9 @@ add_size_legend(
   start.y = 0.95,
   start.x = 1.02,
   font.family = NULL,
-  font.color = NULL
+  font.color = NULL,
+  limits = NULL,
+  size.range = NULL
 )
 }
 \arguments{
@@ -34,13 +36,12 @@ consecutive legend entries. Defaults to \code{0.05}.}
 
 \item{size.values}{Numeric vector of font sizes (px) used to render the
 circle glyphs, one per legend entry. When \code{NULL} (the default), the
-glyph sizes are derived from the actual marker sizes in \code{fig} so the
-legend reflects the plot's size scaling (i.e. the \code{size_min}/
-\code{size_max} passed to the plot function); the marker pixel diameters
-are converted to glyph font-sizes via \code{.CIRCLE_GLYPH_DIAMETER_RATIO}
-so the rendered circles match the plotted dots. When supplied, the vector
-is used verbatim as font sizes and its length determines the number of
-legend entries.}
+glyph sizes follow the plot's size scaling: from \code{size.range} when it is
+given, otherwise from the marker sizes in \code{fig}. The marker pixel
+diameters are converted to glyph font-sizes via
+\code{.CIRCLE_GLYPH_DIAMETER_RATIO} so the rendered circles match the plotted
+dots. When supplied, the vector is used verbatim as font sizes and its
+length determines the number of legend entries.}
 
 \item{title}{Character. Legend title. Defaults to \code{size.by}.}
 
@@ -71,23 +72,41 @@ annotations. When \code{NULL}, plotly's default is used.}
 
 \item{font.color}{Character, or \code{NULL}. Font color of the title and label
 annotations. Defaults to \code{"#000000"} when \code{NULL}. The circles stay black.}
+
+\item{limits}{Numeric length-2 vector, or \code{NULL}. The \code{size.by} values drawn
+at the smallest and largest sizes, as given to the plot's size scale. The
+breaks run evenly between them. A \code{NA} end takes the data's minimum or
+maximum, and limits that are not in increasing order fall back to the
+data's range. Defaults to \code{NULL}, the data's range.}
+
+\item{size.range}{Numeric length-2 vector, or \code{NULL}. The size range the
+plot's size scale maps \code{limits} onto, in ggplot2 size units (the \code{range}
+of \code{\link[ggplot2:scale_size]{ggplot2::scale_size()}}). When given, each circle is drawn at the size
+the scale gives its break. When \code{NULL} (the default), the circles are read
+from the marker sizes in \code{fig}.}
 }
 \value{
 The built plotly figure with size-legend annotations appended, or
 the unmodified figure when \code{size.by} is \code{NULL}/empty, not present in
-\code{data}, or not numeric.
+\code{data}, not numeric, or has no finite values.
 }
 \description{
 plotly drops the size legend when marker size encodes a numeric column
 (plotly.R#705), whether the figure comes from \code{\link[plotly:ggplotly]{plotly::ggplotly()}} or is
 built by hand. This draws one in its place: a vertical column of circles
 with numeric labels, outside the right edge of the plot area in
-paper-referenced coordinates so it does not overlap the data. The circles
-are sized from the figure's own markers, so the legend follows the plot's
-size scaling. The DotPlot and scatter plot modules use it, and a module in
-another package can too.
+paper-referenced coordinates so it does not overlap the data. The breaks run
+evenly across the size scale's \code{limits}, and each circle is drawn at the size
+the scale gives its value, so the legend follows the plot's size scaling. The
+DotPlot and scatter plot modules use it, and a module in another package can
+too.
 }
 \details{
+For a ggplot drawn with \code{scale_size(range = r, limits = l)}, pass
+\code{size.range = r} and \code{limits = l}. Without \code{size.range}, the circles are read
+from the figure's own markers instead, taking its smallest and largest to be
+the data's minimum and maximum.
+
 Call it after the figure's traces are complete. It builds the figure and
 appends its annotations to the built layout, so later
 \code{\link[plotly:plotly_build]{plotly::plotly_build()}} calls (e.g. \code{\link[=apply_legend_inputs]{apply_legend_inputs()}} or
@@ -100,6 +119,13 @@ df <- data.frame(x = 1:5, y = c(2, 4, 3, 5, 1), n = c(10, 40, 25, 80, 55))
 fig <- plot_ly(df, x = ~x, y = ~y, type = "scatter", mode = "markers",
     marker = list(size = sqrt(df$n) * 3))
 add_size_legend(fig, df, size.by = "n", title = "Count", digits = 0)
+
+# A ggplot with a fixed size scale: the legend runs 0, 25, ..., 100.
+library(ggplot2)
+p <- ggplot(df, aes(x, y, size = n)) +
+    geom_point() +
+    scale_size(range = c(2, 8), limits = c(0, 100))
+add_size_legend(ggplotly(p), df, size.by = "n", limits = c(0, 100), size.range = c(2, 8))
 }
 \author{
 Jacob Martin, Jared Andrews

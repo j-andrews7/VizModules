@@ -255,10 +255,16 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #' (plotly.R#705), whether the figure comes from [plotly::ggplotly()] or is
 #' built by hand. This draws one in its place: a vertical column of circles
 #' with numeric labels, outside the right edge of the plot area in
-#' paper-referenced coordinates so it does not overlap the data. The circles
-#' are sized from the figure's own markers, so the legend follows the plot's
-#' size scaling. The DotPlot and scatter plot modules use it, and a module in
-#' another package can too.
+#' paper-referenced coordinates so it does not overlap the data. The breaks run
+#' evenly across the size scale's `limits`, and each circle is drawn at the size
+#' the scale gives its value, so the legend follows the plot's size scaling. The
+#' DotPlot and scatter plot modules use it, and a module in another package can
+#' too.
+#'
+#' For a ggplot drawn with `scale_size(range = r, limits = l)`, pass
+#' `size.range = r` and `limits = l`. Without `size.range`, the circles are read
+#' from the figure's own markers instead, taking its smallest and largest to be
+#' the data's minimum and maximum.
 #'
 #' Call it after the figure's traces are complete. It builds the figure and
 #' appends its annotations to the built layout, so later
@@ -275,13 +281,12 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #'   consecutive legend entries. Defaults to `0.05`.
 #' @param size.values Numeric vector of font sizes (px) used to render the
 #'   circle glyphs, one per legend entry. When `NULL` (the default), the
-#'   glyph sizes are derived from the actual marker sizes in `fig` so the
-#'   legend reflects the plot's size scaling (i.e. the `size_min`/
-#'   `size_max` passed to the plot function); the marker pixel diameters
-#'   are converted to glyph font-sizes via `.CIRCLE_GLYPH_DIAMETER_RATIO`
-#'   so the rendered circles match the plotted dots. When supplied, the vector
-#'   is used verbatim as font sizes and its length determines the number of
-#'   legend entries.
+#'   glyph sizes follow the plot's size scaling: from `size.range` when it is
+#'   given, otherwise from the marker sizes in `fig`. The marker pixel
+#'   diameters are converted to glyph font-sizes via
+#'   `.CIRCLE_GLYPH_DIAMETER_RATIO` so the rendered circles match the plotted
+#'   dots. When supplied, the vector is used verbatim as font sizes and its
+#'   length determines the number of legend entries.
 #' @param title Character. Legend title. Defaults to `size.by`.
 #' @param digits Integer, or `NULL`. Decimal places the break labels are
 #'   rounded to. When `NULL` (the default), the break values are printed as
@@ -304,10 +309,20 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #'   annotations. When `NULL`, plotly's default is used.
 #' @param font.color Character, or `NULL`. Font color of the title and label
 #'   annotations. Defaults to `"#000000"` when `NULL`. The circles stay black.
+#' @param limits Numeric length-2 vector, or `NULL`. The `size.by` values drawn
+#'   at the smallest and largest sizes, as given to the plot's size scale. The
+#'   breaks run evenly between them. A `NA` end takes the data's minimum or
+#'   maximum, and limits that are not in increasing order fall back to the
+#'   data's range. Defaults to `NULL`, the data's range.
+#' @param size.range Numeric length-2 vector, or `NULL`. The size range the
+#'   plot's size scale maps `limits` onto, in ggplot2 size units (the `range`
+#'   of [ggplot2::scale_size()]). When given, each circle is drawn at the size
+#'   the scale gives its break. When `NULL` (the default), the circles are read
+#'   from the marker sizes in `fig`.
 #'
 #' @return The built plotly figure with size-legend annotations appended, or
 #'   the unmodified figure when `size.by` is `NULL`/empty, not present in
-#'   `data`, or not numeric.
+#'   `data`, not numeric, or has no finite values.
 #'
 #' @export
 #' @author Jacob Martin, Jared Andrews
@@ -317,9 +332,17 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #' fig <- plot_ly(df, x = ~x, y = ~y, type = "scatter", mode = "markers",
 #'     marker = list(size = sqrt(df$n) * 3))
 #' add_size_legend(fig, df, size.by = "n", title = "Count", digits = 0)
+#'
+#' # A ggplot with a fixed size scale: the legend runs 0, 25, ..., 100.
+#' library(ggplot2)
+#' p <- ggplot(df, aes(x, y, size = n)) +
+#'     geom_point() +
+#'     scale_size(range = c(2, 8), limits = c(0, 100))
+#' add_size_legend(ggplotly(p), df, size.by = "n", limits = c(0, 100), size.range = c(2, 8))
 add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, title = size.by,
                             digits = NULL, title.size = NULL, text.size = NULL, start.y = 0.95,
-                            start.x = 1.02, font.family = NULL, font.color = NULL) {
+                            start.x = 1.02, font.family = NULL, font.color = NULL,
+                            limits = NULL, size.range = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size.by) || !is.character(size.by) || length(size.by) != 1 ||
         !nzchar(size.by) || !size.by %in% names(data)) {
@@ -327,7 +350,7 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
     }
 
     vals <- data[[size.by]]
-    if (!is.numeric(vals) || all(is.na(vals))) {
+    if (!is.numeric(vals) || !any(is.finite(vals))) {
         return(fig)
     }
 
@@ -341,14 +364,10 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
         start.y <- 0.95
     }
 
+    lims <- .size_limits(vals, limits[1], limits[2])
     n_breaks <- if (!is.null(size.values)) length(size.values) else 5L
-    breaks <- seq(
-        from = min(vals, na.rm = TRUE),
-        to = max(vals, na.rm = TRUE),
-        length.out = n_breaks
-    )
-    if (valid_size(digits)) breaks <- round(breaks, digits)
-    labels <- format(breaks, trim = TRUE, scientific = FALSE)
+    breaks <- seq(from = lims[1], to = lims[2], length.out = n_breaks)
+    labels <- format(if (valid_size(digits)) round(breaks, digits) else breaks, trim = TRUE, scientific = FALSE)
 
     # Build the figure once up front. This consolidates marker attributes (so
     # marker sizes can be read back) and, crucially, lets us append the legend
@@ -358,26 +377,37 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
     # axis_titles_as_annotations()) re-merges, duplicating every annotation.
     fig <- plotly::plotly_build(fig)
 
-    # Derive the circle glyph sizes from the plot's actual marker sizes so the
-    # legend matches the size scaling produced by size_min/size_max. The marker
-    # sizes already encode the area-based scale, so the smallest/largest markers
-    # anchor the smallest/largest legend entries and the intermediate breaks
-    # follow ggplot2's sqrt (area) interpolation (plotthis uses
-    # scale_size(range = c(size_min, size_max)), i.e. area scaling).
+    # Size each circle as the plot sizes its break, on ggplot2's area scale
+    # (scale_size(), which plotthis and dittoViz both use): from the scale's own
+    # range when the caller gives it, otherwise from the figure's markers.
     if (is.null(size.values)) {
-        marker_sizes <- .extract_marker_sizes(fig)
-        if (length(marker_sizes) > 0) {
+        range_known <- is.numeric(size.range) && length(size.range) == 2L && all(is.finite(size.range))
+        marker_sizes <- if (range_known) numeric(0) else .extract_marker_sizes(fig)
+        break_diameters <- if (range_known) {
+            .size_scale_px(breaks, size.range, lims)
+        } else if (length(marker_sizes) > 0) {
+            # The smallest and largest markers are the data's extremes, which sit
+            # inside the limits when those are wider than the data. Diameter is
+            # linear in the square root of a value's position within the limits,
+            # so the breaks are placed on that line.
             d_min <- min(marker_sizes)
             d_max <- max(marker_sizes)
-            frac <- if (n_breaks > 1L) seq(0, 1, length.out = n_breaks) else 0
-            # Break diameters (px) along ggplot2's area (sqrt) size scale.
-            break_diameters <- d_min + (d_max - d_min) * sqrt(frac)
-            # A plotly marker's `size` is its diameter in px, but the HTML circle
-            # glyph (U+25CF) only inks ~0.44x its font-size. Scale the font-size
-            # up so the legend glyphs render at the plotted marker diameters.
-            size.values <- break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
+            ends <- .size_scale_position(range(vals[is.finite(vals)]), lims)
+            pos <- .size_scale_position(breaks, lims)
+            if (ends[2] > ends[1]) {
+                pmax(0, d_min + (d_max - d_min) * (pos - ends[1]) / (ends[2] - ends[1]))
+            } else {
+                frac <- if (n_breaks > 1L) seq(0, 1, length.out = n_breaks) else 0
+                d_min + (d_max - d_min) * sqrt(frac)
+            }
+        }
+        # A plotly marker's `size` is its diameter in px, but the HTML circle
+        # glyph (U+25CF) only inks ~0.44x its font-size. Scale the font-size
+        # up so the legend glyphs render at the plotted marker diameters.
+        size.values <- if (is.null(break_diameters)) {
+            c(10, 20, 30, 40, 50)
         } else {
-            size.values <- c(10, 20, 30, 40, 50)
+            break_diameters / .CIRCLE_GLYPH_DIAMETER_RATIO
         }
     }
 
@@ -514,4 +544,110 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
         }
     }
     sizes[is.finite(sizes)]
+}
+
+
+#' Size range for a numeric size mapping
+#'
+#' The smallest and largest point sizes, in ggplot2 size units, from a module's
+#' min/max inputs. An end that is missing, `NA` or not numeric falls back to
+#' ggplot2's default range, `c(1, 6)`.
+#'
+#' @param min,max The smallest and largest sizes.
+#' @return A numeric length-2 vector.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @noRd
+.size_range <- function(min, max) {
+    valid <- function(s) is.numeric(s) && length(s) == 1L && is.finite(s)
+    c(if (valid(min)) min else 1, if (valid(max)) max else 6)
+}
+
+
+#' Limits for a numeric size mapping
+#'
+#' The values drawn at the smallest and largest sizes. A blank or `NA` end takes
+#' the data's minimum or maximum. Limits that do not increase (say a lower limit
+#' above the data's maximum) fall back to the data's range, since ggplot2 would
+#' otherwise reverse the scale. A module resolves the limits once and gives the
+#' same pair to `.size_scale()` and `add_size_legend()`, so the two agree.
+#'
+#' @param values The numeric values mapped to size.
+#' @param lower,upper The requested limits, or `NULL`/`NA` for the data's own.
+#' @return A numeric length-2 vector, or `NULL` when `values` has no finite value.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @noRd
+.size_limits <- function(values, lower = NULL, upper = NULL) {
+    values <- values[is.finite(values)]
+    if (length(values) == 0L) {
+        return(NULL)
+    }
+    valid <- function(s) is.numeric(s) && length(s) == 1L && is.finite(s)
+    data_range <- range(values)
+    lims <- c(if (valid(lower)) lower else data_range[1], if (valid(upper)) upper else data_range[2])
+    if (lims[1] < lims[2]) lims else data_range
+}
+
+
+#' Size scale for a numeric size mapping
+#'
+#' ggplot2's area size scale (what [ggplot2::scale_size()] builds) over the
+#' given limits, except that a value beyond a limit is drawn at that end's size
+#' rather than dropped. Adding it to a plot replaces any size scale already
+#' there.
+#'
+#' @param range The smallest and largest sizes, in ggplot2 size units.
+#' @param limits The values drawn at those sizes, or `NULL` for the data's range.
+#' @return A ggplot2 continuous scale for the `size` aesthetic.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @noRd
+.size_scale <- function(range, limits = NULL) {
+    ggplot2::continuous_scale(
+        "size",
+        palette = scales::area_pal(range),
+        limits = limits,
+        oob = scales::squish
+    )
+}
+
+
+#' Position of values on an area size scale
+#'
+#' The square root of each value's position between the limits, values beyond
+#' them taken as the nearest one. A point's diameter on ggplot2's area scale is
+#' linear in this.
+#'
+#' @param values Numeric values.
+#' @param limits The scale's limits.
+#' @return A numeric vector in `[0, 1]`.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @noRd
+.size_scale_position <- function(values, limits) {
+    sqrt(scales::rescale(pmin(pmax(values, limits[1]), limits[2]), from = limits))
+}
+
+
+#' Diameter of the marker drawn for a value on an area size scale
+#'
+#' The size `.size_scale()` (or `ggplot2::scale_size()`) gives each value, in
+#' the pixels `plotly::ggplotly()` draws it at: a size is in mm, at 96 px to the
+#' inch.
+#'
+#' @param values Numeric values.
+#' @param range The scale's smallest and largest sizes, in ggplot2 size units.
+#' @param limits The scale's limits.
+#' @return Marker diameters in px.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @noRd
+.size_scale_px <- function(values, range, limits) {
+    (range[1] + (range[2] - range[1]) * .size_scale_position(values, limits)) * 96 / 25.4
 }

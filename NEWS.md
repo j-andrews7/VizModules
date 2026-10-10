@@ -1,17 +1,27 @@
 # VizModules 0.6.0.9001
 
+The one where we shore up the foundations for additional extension (i.e. building `sciVizModules`).
+
 ## Improved/New Functionality
+
+### `DotPlot` and `scatterPlot`
+
+* New **Size Scale Min** and **Size Scale Max** inputs set the **Size By** values drawn at the smallest and largest sizes, so the size legend can run over round numbers such as 0 to 100 rather than the data's own range (#359, #364). Blank keeps the data's range, values beyond a limit are drawn at that end's size, and both show only while **Size By** is set.
+
+### `scatterPlot`
+
+* New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 
 ### Helpers and exported functions
 
-* Exported the helpers that modules share, so modules in extension packages can reuse them instead of keeping copies that drift (#369). Each used to be internal and is documented on the reference site.
+* Exported many helpers, so modules in extension packages can reuse them instead of keeping copies that drift (#369):
   * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
   * Group colours: `default_group_colors()` validates and hex-normalises a colour mapping in `defaults`, and `reset_group_colors()` restores a group colour picker to it on Reset.
   * Stats tab: `uniform_stats_inputs_ui()`, `reset_stats_inputs()`, `default_stat_pairs()`, `stat_bracket_headroom()` and `note_brackets_skipped()`.
   * Module server boilerplate: `require_data_frame()`, `nz_value()`, `blank_to_null()`, `na_to_null()`, `facet_check()`, `flatten_palette_options()`, `reset_manual_edits()` and `with_stable_seed()`, which keeps jitter from jumping on every rebuild.
   * Drawn values: `as_plotted()`, `adjusted_values()` and `adjustment_fn()`, for anything drawn over an adjusted plot.
   * Point highlighting and labelling: `apply_highlight_styling()`, `create_highlight_annotations()`, `create_selected_annotations()`, `merge_annotation_sets()` and `parse_highlight_values()`.
-  * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops, sized from the figure's own markers. It takes a `title` and rounds its labels to `digits` (sciVizModules' dittoDotPlot uses it).
+  * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers.
 
 * `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
 

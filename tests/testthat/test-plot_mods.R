@@ -1315,6 +1315,85 @@ test_that("add_size_legend() start.x and start.y move the legend column, ignorin
     expect_equal(max_at(.size_legend(fx, start.x = NA), "x"), max_at(default, "x"))
 })
 
+# Pixel diameters of a built size legend's circles, top to bottom.
+.size_legend_diameters <- function(built) {
+    circles <- Filter(function(a) grepl("font-size", a$text), built$x$layout$annotations)
+    font_px <- as.numeric(sub(".*font-size:([0-9.eE+-]+)px.*", "\\1", vapply(circles, function(a) a$text, character(1))))
+    font_px * VizModules:::.CIRCLE_GLYPH_DIAMETER_RATIO
+}
+
+# The break labels of a built size legend, top to bottom.
+.size_legend_labels <- function(built) {
+    texts <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    texts[grepl("^-?[0-9.]+$", texts)]
+}
+
+test_that("add_size_legend() spans its breaks across the size scale's limits", {
+    fx <- .size_legend_fixture()
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, 100))), c("0", "25", "50", "75", "100"))
+    # A missing end takes the data's (5 to 90 here).
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, NA))), c("0.0", "22.5", "45.0", "67.5", "90.0"))
+    expect_equal(
+        .size_legend_labels(.size_legend(fx, limits = c(NA, 10))),
+        c("5.00", "6.25", "7.50", "8.75", "10.00")
+    )
+    # Limits that do not increase fall back to the data's range.
+    data_range <- .size_legend_labels(.size_legend(fx))
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(100, 0))), data_range)
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(95, NA))), data_range)
+})
+
+test_that("add_size_legend() circles match the points a size scale draws", {
+    df <- data.frame(x = 1:5, y = 1:5, n = c(0, 25, 50, 75, 100))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+    fig <- plotly::ggplotly(p)
+    markers <- VizModules:::.extract_marker_sizes(fig)
+
+    built <- add_size_legend(fig, df, size.by = "n", limits = c(0, 100), size.range = c(2, 8))
+    expect_equal(.size_legend_labels(built), c("0", "25", "50", "75", "100"))
+    expect_equal(.size_legend_diameters(built), sort(markers))
+})
+
+test_that("add_size_legend() reads circles from the markers when the limits are wider than the data", {
+    # Only 20 to 80 are drawn, on a 0 to 100 scale, and no size.range is given.
+    df <- data.frame(x = 1:4, y = 1:4, n = c(20, 40, 60, 80))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+
+    built <- add_size_legend(plotly::ggplotly(p), df, size.by = "n", limits = c(0, 100))
+    expected <- VizModules:::.size_scale_px(c(0, 25, 50, 75, 100), c(2, 8), c(0, 100))
+    expect_equal(.size_legend_diameters(built), expected, tolerance = 1e-6)
+})
+
+test_that("the size scale draws values beyond its limits at the end sizes", {
+    df <- data.frame(x = 1:4, y = 1:4, n = c(-10, 0, 100, 150))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+    markers <- VizModules:::.extract_marker_sizes(plotly::ggplotly(p))
+
+    # No point is dropped, and each takes the size of the limit it is beyond.
+    expect_length(markers, 4)
+    expect_equal(markers, VizModules:::.size_scale_px(c(0, 0, 100, 100), c(2, 8), c(0, 100)))
+})
+
+test_that(".size_range and .size_limits fill what is missing", {
+    expect_equal(VizModules:::.size_range(2, 10), c(2, 10))
+    expect_equal(VizModules:::.size_range(NA, NULL), c(1, 6))
+    expect_equal(VizModules:::.size_range("a", 9), c(1, 9))
+
+    vals <- c(5, NA, 90, Inf)
+    expect_equal(VizModules:::.size_limits(vals), c(5, 90))
+    expect_equal(VizModules:::.size_limits(vals, 0, 100), c(0, 100))
+    expect_equal(VizModules:::.size_limits(vals, NA, 100), c(5, 100))
+    expect_equal(VizModules:::.size_limits(vals, 100, NA), c(5, 90))
+    expect_null(VizModules:::.size_limits(c(NA, NaN)))
+    expect_null(VizModules:::.size_limits(c("a", "b")))
+})
+
 test_that(".extract_marker_sizes collects numeric marker sizes", {
     fig <- plotly::plot_ly(
         x = 1:3, y = 1:3, type = "scatter", mode = "markers",

@@ -282,6 +282,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Points
             update_viz_select(session, "size.by", selected = get_default(defaults, "size.by", ""))
             updateNumericInput(session, "size", value = get_default(defaults, "size", 1, is.numeric))
+            updateNumericInput(session, "size.min", value = get_default(defaults, "size.min", 1, is.numeric))
+            updateNumericInput(session, "size.max", value = get_default(defaults, "size.max", 6, is.numeric))
+            updateNumericInput(session, "size.scale.min",
+                value = get_default(defaults, "size.scale.min", NA, is.numeric)
+            )
+            updateNumericInput(session, "size.scale.max",
+                value = get_default(defaults, "size.scale.max", NA, is.numeric)
+            )
             updateNumericInput(session, "opacity", value = get_default(defaults, "opacity", 1, is.numeric))
             updateCheckboxInput(session, "show.others",
                 value = get_default(defaults, "show.others", TRUE, is.logical)
@@ -382,6 +390,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             toggle_facet_title_inputs(session, split.set, hidden = hide.inputs)
         }, ignoreNULL = FALSE)
 
+        # A Size By column overrides Point Size with a size scale of its own.
+        observeEvent(input$size.by, {
+            size.scale.inputs <- c("size.min", "size.max", "size.scale.min", "size.scale.max")
+            sized <- nz_value(input$size.by)
+            hide_input(session, if (sized) "size" else size.scale.inputs)
+            show_input(session, setdiff(if (sized) size.scale.inputs else "size", hide.inputs))
+        }, ignoreInit = FALSE)
+
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
@@ -449,7 +465,17 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 axis.ticks = additional_theme$axis.ticks,
                 strip.background = element_blank()
             )
-              
+
+            # The value range and point sizes a Size By column spans, resolved once
+            # so the plot and its size legend agree.
+            size.range <- .size_range(isolate_fn(input$size.min), isolate_fn(input$size.max))
+            size.limits <- if (!is.null(null.na.inputs$size.by)) {
+                .size_limits(
+                    data()[[null.na.inputs$size.by]],
+                    isolate_fn(input$size.scale.min), isolate_fn(input$size.scale.max)
+                )
+            }
+
             # Reflect any applied data adjustments in the axis titles so they
             # accurately describe the values displayed (e.g. "z-score(log2(units))").
             x_axis_label <- adjusted_axis_label(
@@ -544,7 +570,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 min.value = isolate_fn(input$min.value),
                 max.value = isolate_fn(input$max.value),
                 plot.order = isolate_fn(input$plot.order),
-                theme = theme_style,
+                # dittoViz takes no size scale, but adds `theme` straight onto the
+                # plot (unless show.grid.lines = FALSE, which would add a theme to
+                # it), so a size scale can ride along with the theme.
+                theme = if (!is.null(size.limits)) {
+                    list(theme_style, .size_scale(size.range, size.limits))
+                } else {
+                    theme_style
+                },
                 do.hover = TRUE,
                 hover.data = hover.data,
                 hover.round.digits = isolate_fn(input$hover.round.digits),
@@ -859,13 +892,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Custom size legend:
             # plotly drops the size legend when point size encodes a numeric
-            # column (see plotly.R#705), so draw a manual circle legend that
-            # mirrors the plotted marker sizes when `size.by` is set. Hiding the
-            # legend hides this one too.
+            # column (see plotly.R#705), so draw a manual circle legend from the
+            # size scale when `size.by` is set. Hiding the legend hides this one too.
             fig <- add_size_legend(
                 fig,
                 data = data(),
                 size.by = if (isFALSE(isolate_fn(input$legend.show))) NULL else null.na.inputs$size.by,
+                limits = size.limits,
+                size.range = size.range,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),

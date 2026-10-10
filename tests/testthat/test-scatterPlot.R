@@ -182,7 +182,8 @@ test_that("highlight values may contain spaces when separated by commas", {
         x.by = "units", y.by = "revenue", color.by = "", shape.by = "", size.by = "", split.by = "",
         x.adjustment = "", y.adjustment = "", color.adjustment = "",
         x.adj.fxn = "", y.adj.fxn = "", color.adj.fxn = "",
-        size = 1, opacity = 1, show.others = FALSE, split.show.all.others = FALSE,
+        size = 1, size.min = 1, size.max = 6, size.scale.min = NA, size.scale.max = NA,
+        opacity = 1, show.others = FALSE, split.show.all.others = FALSE,
         plot.order = "unordered", shape.panel = "16, 15, 17, 23, 25, 8",
         min.color = "#F0E442", max.color = "#0072B2", min.value = NA, max.value = NA,
         do.contour = FALSE, contour.color = "black", contour.linetype = "solid", do.ellipse = FALSE,
@@ -374,4 +375,34 @@ test_that("fig.fn lets a wrapper add layers and retitle an axis", {
     expect_true("units" %in% unhooked_texts)
 
     expect_error(dittoViz_scatterPlotServer("x", shiny::reactive(example_sales), fig.fn = "not a function"))
+})
+
+test_that("a Size By column spans the chosen point sizes and limits, and the size legend follows (#364)", {
+    units <- example_sales$units
+    markers <- function(fig) sort(.extract_marker_sizes(fig))
+    legend_of <- function(fig) {
+        anns <- plotly::plotly_build(fig)$x$layout$annotations
+        texts <- vapply(anns, function(a) a$text, character(1))
+        circles <- texts[grepl("font-size", texts)]
+        font_px <- as.numeric(sub(".*font-size:([0-9.eE+-]+)px.*", "\\1", circles))
+        list(labels = texts[grepl("^[0-9.]+$", texts)], diameters = font_px * .CIRCLE_GLYPH_DIAMETER_RATIO)
+    }
+
+    # Left alone, the column spans ggplot2's default sizes over its own range.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(size.by = "units"))
+    expect_equal(markers(fig), sort(.size_scale_px(units, c(1, 6), range(units))))
+
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        size.by = "units", size.min = 2, size.max = 10, size.scale.min = 0, size.scale.max = 2000
+    ))
+    expect_equal(markers(fig), sort(.size_scale_px(units, c(2, 10), c(0, 2000))))
+    legend <- legend_of(fig)
+    expect_equal(legend$labels, c("0", "500", "1000", "1500", "2000"))
+    expect_equal(legend$diameters, .size_scale_px(c(0, 500, 1000, 1500, 2000), c(2, 10), c(0, 2000)))
+
+    # A lower limit above some of the values draws them at the smallest size
+    # rather than dropping them.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(size.by = "units", size.scale.min = 200))
+    expect_length(markers(fig), length(units))
+    expect_equal(min(markers(fig)), .size_scale_px(200, c(1, 6), c(200, max(units))))
 })

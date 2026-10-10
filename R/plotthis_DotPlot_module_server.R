@@ -141,6 +141,12 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             reset_legend_inputs(session, defaults)
             updateNumericInput(session, "size.min", value = get_default(defaults, "size.min", 1, is.numeric))
             updateNumericInput(session, "size.max", value = get_default(defaults, "size.max", 6, is.numeric))
+            updateNumericInput(session, "size.scale.min",
+                value = get_default(defaults, "size.scale.min", NA, is.numeric)
+            )
+            updateNumericInput(session, "size.scale.max",
+                value = get_default(defaults, "size.scale.max", NA, is.numeric)
+            )
 
             # Plotly
             reset_plotly_inputs(session, defaults)
@@ -162,6 +168,17 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 show_input(session, fill.scale.inputs)
             } else {
                 hide_input(session, fill.scale.inputs)
+            }
+        }, ignoreInit = FALSE)
+
+        # The size scale limits only apply to a Size By column; without one the
+        # dots size by count.
+        observeEvent(input$size.by, {
+            size.scale.inputs <- c("size.scale.min", "size.scale.max")
+            if (nz_value(input$size.by)) {
+                show_input(session, setdiff(size.scale.inputs, hide.inputs))
+            } else {
+                hide_input(session, size.scale.inputs)
             }
         }, ignoreInit = FALSE)
 
@@ -201,6 +218,13 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
+            # The value range the dot sizes span, resolved once so the plot and its
+            # size legend agree. Without a Size By column the dots size by count.
+            size.range <- .size_range(isolate_fn(input$size.min), isolate_fn(input$size.max))
+            size.limits <- if (!is.null(size.by)) {
+                .size_limits(data()[[size.by]], isolate_fn(input$size.scale.min), isolate_fn(input$size.scale.max))
+            }
+
             p <- DotPlot(
                 data(),
                 x = isolate_fn(input$x.data),
@@ -209,8 +233,8 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 size_by = size.by,
                 fill_by = fill.by,
                 fill_cutoff = fill.cutoff,
-                size_min = isolate_fn(input$size.min),
-                size_max = isolate_fn(input$size.max),
+                size_min = size.range[1],
+                size_max = size.range[2],
                 facet_by = facet.by,
                 facet_scales = isolate_fn(input$facet.scale),
                 facet_ncol = facet.ncol,
@@ -228,6 +252,11 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 lower_cutoff = na_to_null(isolate_fn(input$lower.cutoff)),
                 upper_cutoff = na_to_null(isolate_fn(input$upper.cutoff))
             )
+            # plotthis spans its size scale over the data's range; this one spans
+            # the chosen limits, and draws values beyond them at the end sizes.
+            if (!is.null(size.limits)) {
+                p <- suppressMessages(p + .size_scale(size.range, size.limits))
+            }
             fig <- ggplotly(p)
 
             if (!is.null(facet.by) && nzchar(facet.by)) {
@@ -276,12 +305,14 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             fig <- apply_plotly_newshape(fig, input, isolate_fn)
 
             # Custom Legend:
-            # Generates a custom dot plot circle legend based on the number of values in size_values.
+            # Generates a custom dot plot circle legend spanning the size scale's limits.
             # Hiding the legend hides this one too.
             fig <- add_size_legend(
                 fig,
                 data = data(),
                 size.by = if (isFALSE(isolate_fn(input$legend.show))) NULL else size.by,
+                limits = size.limits,
+                size.range = size.range,
                 gap = 0.04,
                 title.size = isolate_fn(input$legend.title.size),
                 text.size = isolate_fn(input$legend.text.size),

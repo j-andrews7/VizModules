@@ -71,9 +71,19 @@
 #' - `x.adj.fxn` - X adjustment function (UI: "X Adjustment Function", default: "")
 #' - `y.adj.fxn` - Y adjustment function (UI: "Y Adjustment Function", default: "")
 #' - `color.adj.fxn` - Color adjustment function (UI: "Color Adjustment Function", default: "")
-#' - `size` - Point size (UI: "Point Size", default: 1)
+#' - `size` - Point size (UI: "Point Size", default: 1); shown while `size.by` is unset
 #' - `size.by` - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
 #'   a custom circle size legend is drawn since plotly cannot render a native size legend
+#' - `size.min` - Smallest point size a `size.by` column maps onto (UI: "Min Point Size", default: 1).
+#'   Shown while `size.by` is set
+#' - `size.max` - Largest point size a `size.by` column maps onto (UI: "Max Point Size", default: 6).
+#'   Shown while `size.by` is set
+#' - `size.scale.min` - `size.by` value drawn at the minimum point size, where the size legend starts
+#'   (UI: "Size Scale Min", default: NA = the column's minimum); smaller values are drawn at the minimum size.
+#'   Shown while `size.by` is set
+#' - `size.scale.max` - `size.by` value drawn at the maximum point size, where the size legend ends
+#'   (UI: "Size Scale Max", default: NA = the column's maximum); larger values are drawn at the maximum size.
+#'   Shown while `size.by` is set
 #' - `opacity` - Point opacity (UI: "Point Opacity", default: 1)
 #' - `show.others` - Show others (UI: "Show Others", default: TRUE)
 #' - `split.show.all.others` - Show split others (UI: "Show Split Others", default: TRUE)
@@ -112,9 +122,9 @@
 #' - `legend.color.title` - Color legend title (UI: "Legend Title", default: "make")
 #' - `legend.color.breaks` - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 #' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
-#'   default: 1.02); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
+#'   default: 1.03); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
 #' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
-#'   default: 0.95); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
+#'   default: 0.35); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
 #' - `min.value` - Minimum value (UI: "Min Value", default: NA)
 #' - `max.value` - Maximum value (UI: "Max Value", default: NA)
 #' - `trajectory.group.by` - Trajectory group by (UI: "Trajectory Group By", default: "")
@@ -362,6 +372,30 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 value = get_default(defaults, "size", 1, is.numeric),
                 min = 0.1
             ), documentParameters$size, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.min"), "Min Point Size",
+                value = get_default(defaults, "size.min", 1, is.numeric),
+                min = 0, step = 0.5
+            ), "Smallest point size, drawn for the Size Scale Min value of the 'Size By' column.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.max"), "Max Point Size",
+                value = get_default(defaults, "size.max", 6, is.numeric),
+                min = 0, step = 0.5
+            ), "Largest point size, drawn for the Size Scale Max value of the 'Size By' column.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.min"), "Size Scale Min",
+                value = get_default(defaults, "size.scale.min", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Min Point Size, and where the size",
+                "legend starts. Leave blank to use the column's minimum. Smaller",
+                "values are drawn at the Min Point Size."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.max"), "Size Scale Max",
+                value = get_default(defaults, "size.scale.max", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Max Point Size, and where the size",
+                "legend ends. Leave blank to use the column's maximum. Larger",
+                "values are drawn at the Max Point Size."
+            ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("opacity"), "Point Opacity",
                 value = get_default(defaults, "opacity", 1, is.numeric),
                 max = 1,
