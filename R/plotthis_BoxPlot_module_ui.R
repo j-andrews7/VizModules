@@ -224,6 +224,9 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     choices <- c("", names(data))
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
+    # Group By leaves out categoricals with too many levels to draw (an ID
+    # column asks for one box per row), unless the caller asked for one.
+    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
 
     if (length(num.choices) >= 2) {
@@ -275,9 +278,9 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 viz_select_input(ns("group.by"), "Group By",
                     selected = get_default(
                         defaults, "group.by", "",
-                        function(x) x %in% c("", cat.choices)
+                        function(x) x %in% group.choices
                     ),
-                    choices = c("", cat.choices)
+                    choices = group.choices
                 ),
                 documentParameters$group_by,
                 placement = "top", options = list(container = "body")
@@ -359,7 +362,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Facet" = tagList(
             tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% cat.choices),
-                choices = c("", .facet_check(data))),
+                choices = c("", facet_check(data))),
                 documentParameters$facet_by,
                 placement = "top", options = list(container = "body")
             ),
@@ -387,9 +390,9 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
-        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
+        "Stats" = uniform_stats_inputs_ui(ns, defaults),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
         "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.flip = FALSE),

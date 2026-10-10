@@ -11,14 +11,31 @@ automatically. Each takes `ns` and a `defaults` list.
 | `uniform_lines_inputs_ui(ns, defaults, include.fit.lines = FALSE)` | Horizontal, vertical, diagonal reference lines | `reset_lines_inputs(session, include.fit.lines, defaults)` |
 | `uniform_plotly_inputs_ui(ns, defaults)` | Download buttons, margins, subplot spacing, draw-shape styling | `reset_plotly_inputs(session, defaults)` |
 | `uniform_annotation_inputs_ui(ns, defaults, choices, annotate.note)` | Highlighting and labelling individual data points | `reset_annotation_inputs(session, defaults, choices)` |
-| `.uniform_stats_inputs_ui(ns, defaults)` | Pairwise statistical testing and brackets | `.reset_stats_inputs(session, defaults)` |
-| `.uniform_subplot_spacing_inputs_ui(ns, defaults)` | Facet subplot spacing (goes on the Facet tab) | covered by `reset_plotly_inputs()` |
-
-The two dot-prefixed ones are internal; call them as `VizModules:::` from outside the
-package. Everything else is exported.
+| `uniform_stats_inputs_ui(ns, defaults)` | Pairwise statistical testing and brackets | `reset_stats_inputs(session, defaults, pair_strings)` |
+| `uniform_subplot_spacing_inputs_ui(ns, defaults)` | Facet subplot spacing (goes on the Facet tab) | covered by `reset_plotly_inputs()` |
 
 Call every reset counterpart you used from the module's `observeEvent(input$reset, ...)`
-block.
+block. `subplot_spacing_defaults(defaults)` resolves the spacing both the control and its
+reset start from. `reset_stats_inputs()` takes the pairs currently on offer, reselecting those
+`default_stat_pairs(defaults, pairs)` names.
+
+## Small helpers every module server needs
+
+| Helper | For |
+|---|---|
+| `require_data_frame(data)` | First line of the server: `NULL` becomes a silent skip, anything else is coerced to a data frame |
+| `nz_value(x)` | "Is this input a non-empty string?" Safe for an input that has not reported yet (`NULL`) |
+| `blank_to_null(x)` | `""`, `NA`, `NULL` and multi-value inputs become `NULL` before reaching a plotting/stats function |
+| `na_to_null(x)` | Same, for an empty `numericInput()` (`NA`) or `textInput()` (`""`) |
+| `facet_check(data)` | Columns worth offering in a facet/split selector |
+| `toggle_facet_title_inputs(session, faceted, extra, hidden)` | Shows the `facet.title.*` inputs and hides the main-title inputs (`main_title_input_ids`) while faceted; `hidden` is the app's `hide.inputs`, never re-shown |
+| `default_group_colors(defaults, key)` | The validated mapping to seed a `multiColorPicker()` with inside `renderUI()` |
+| `reset_group_colors(session, key, defaults, groups, default_palette)` | Restores a group colour picker on Reset |
+| `flatten_palette_options(default_palettes()$choices)` | Flat palette-name lookup |
+| `reset_manual_edits(store)` | Discards dragged legends/annotations/titles on Reset |
+| `with_stable_seed(expr)` | Builds a plot under a fixed seed, so jitter layers do not move on every rebuild |
+| `as_plotted(df, cols, adjustment, adj.fxn)`, `adjusted_values()`, `adjustment_fn()` | The values the plot draws, for anything drawn over it; `adjustment_fn()` is what to pass dittoViz as `*.adj.fxn` |
+| `error_bar_halfwidth(x, type, ci.method)` | The SD, SEM or 95% CI half-width `linePlot()` draws around a group mean; for a module that summarises its own groups and hands `linePlot()` the bounds via `error.type = "columns"` |
 
 ## Server-side stores
 
@@ -61,10 +78,10 @@ y_range_store <- setup_axis_range(
     input, session, params = params,
     headroom = function() {
         if (!isTRUE(input$stats.enabled)) return(NULL)
-        .stat_bracket_headroom(
+        stat_bracket_headroom(
             df = data(), x = input$x.data, y = input$y.data,
-            group.by = .blank_to_null(input$group.by),
-            facet.by = .blank_to_null(input$facet.by),
+            group.by = blank_to_null(input$group.by),
+            facet.by = blank_to_null(input$facet.by),
             per.facet = isTRUE(input$stat.per.facet),
             input = input
         )
@@ -84,7 +101,7 @@ the axis onto the brackets.
 - `viz_select_input()` / `update_viz_select()` — virtualised searchable dropdowns. Always these, never `selectInput()`.
 - `get_default(defaults, key, fallback, validator)` — every default read.
 - `resolve_palette(groups, selected_colors, default_palette, manual_colors)`, `default_palettes()`.
-- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
+- `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `add_size_legend()` (the circle size legend plotly drops when marker size encodes a column; give it the `limits` and `size.range` of the plot's `ggplot2::scale_size()` so its circles match the points, and `breaks` to choose the values shown), `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
 - `collect_source_data()` / `create_source_download_handler()` — the Source Download button's backing.
 - `hide_input()` / `show_input()` — reflow-aware show/hide.
 - `empty_plot()` — placeholder when there is nothing to draw.
@@ -94,8 +111,8 @@ the axis onto the brackets.
 Modules that draw individual points can adopt `uniform_annotation_inputs_ui()` so users
 can highlight and label points by the values of a chosen column. The server side needs
 that column carried in the plot's hover text (that is where values are read back from),
-then `.apply_highlight_styling()` to restyle matching markers and
-`.create_highlight_annotations()` / `.create_selected_annotations()` to build the labels.
+then `apply_highlight_styling()` to restyle matching markers and
+`create_highlight_annotations()` / `create_selected_annotations()` to build the labels.
 
 Set `require.markers = TRUE` when other scatter traces are drawn from the same data (box
 or violin outlines, say) so only point markers match. **Append** the resulting

@@ -67,9 +67,9 @@ test_that(".freq_sample_choices offers only columns that nest inside the groupin
     expect_true("batch" %in% .freq_sample_choices(df, character(0)))
 })
 
-test_that(".freq_sample_choices allows more samples than .facet_check() would", {
+test_that(".freq_sample_choices allows more samples than facet_check() would", {
     # Samples are the unit of observation rather than a facet, so a study with
-    # more than the fifty levels .facet_check() caps at is still valid.
+    # more than the fifty levels facet_check() caps at is still valid.
     set.seed(1)
     n <- 60
     df <- data.frame(
@@ -79,17 +79,17 @@ test_that(".freq_sample_choices allows more samples than .facet_check() would", 
         stringsAsFactors = FALSE
     )
 
-    expect_false("sample" %in% .facet_check(df))
+    expect_false("sample" %in% facet_check(df))
     expect_true("sample" %in% .freq_sample_choices(df, "condition"))
 })
 
 
 # --- 2. Small input normalizers ----------------------------------------------
 
-test_that(".freq_selected_vars keeps multi-value selections that .blank_to_null() would drop", {
-    # .blank_to_null() returns NULL for anything not length one, so a two-level
+test_that(".freq_selected_vars keeps multi-value selections that blank_to_null() would drop", {
+    # blank_to_null() returns NULL for anything not length one, so a two-level
     # selection would read as "no selection" and every facet would be drawn.
-    expect_null(.blank_to_null(c("T", "B")))
+    expect_null(blank_to_null(c("T", "B")))
     expect_equal(.freq_selected_vars(c("T", "B")), c("T", "B"))
 
     expect_null(.freq_selected_vars(NULL))

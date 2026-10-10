@@ -384,7 +384,7 @@ test_that("linePlot styles facet panel titles with facet.title.font.*", {
 
 # ---- Error bars: SD, SEM and 95% CI (#368) ------------------------------------------------------
 
-# Independent of .error_bar_halfwidth(), so the two cannot drift together.
+# Independent of error_bar_halfwidth(), so the two cannot drift together.
 .expected_bar <- function(v, type, ci.method = "normal") {
     v <- v[!is.na(v)]
     n <- length(v)
@@ -413,46 +413,46 @@ test_that("linePlot styles facet panel titles with facet.title.font.*", {
     )
 }
 
-test_that(".error_bar_halfwidth works out the SD, the SEM and both kinds of 95% CI", {
+test_that("error_bar_halfwidth works out the SD, the SEM and both kinds of 95% CI", {
     x <- c(2, 4, 4, 4, 5, 5, 7, 9)
     spread <- sd(x)
     sem <- spread / sqrt(8)
 
-    expect_equal(.error_bar_halfwidth(x, "sd"), spread)
-    expect_equal(.error_bar_halfwidth(x, "sem"), sem)
-    expect_equal(.error_bar_halfwidth(x, "ci95", "normal"), qnorm(0.975) * sem)
-    expect_equal(.error_bar_halfwidth(x, "ci95", "t"), qt(0.975, 7) * sem)
+    expect_equal(error_bar_halfwidth(x, "sd"), spread)
+    expect_equal(error_bar_halfwidth(x, "sem"), sem)
+    expect_equal(error_bar_halfwidth(x, "ci95", "normal"), qnorm(0.975) * sem)
+    expect_equal(error_bar_halfwidth(x, "ci95", "t"), qt(0.975, 7) * sem)
     # The t interval is the wider one, and the method is ignored by the other types.
-    expect_gt(.error_bar_halfwidth(x, "ci95", "t"), .error_bar_halfwidth(x, "ci95", "normal"))
-    expect_equal(.error_bar_halfwidth(x, "sd", "t"), spread)
-    expect_equal(.error_bar_halfwidth(x, "sem", "t"), sem)
+    expect_gt(error_bar_halfwidth(x, "ci95", "t"), error_bar_halfwidth(x, "ci95", "normal"))
+    expect_equal(error_bar_halfwidth(x, "sd", "t"), spread)
+    expect_equal(error_bar_halfwidth(x, "sem", "t"), sem)
     # SD is the default, and the normal interval the default CI.
-    expect_equal(.error_bar_halfwidth(x), spread)
-    expect_equal(.error_bar_halfwidth(x, "ci95"), qnorm(0.975) * sem)
+    expect_equal(error_bar_halfwidth(x), spread)
+    expect_equal(error_bar_halfwidth(x, "ci95"), qnorm(0.975) * sem)
     # A big group's t interval converges on the normal one.
     big <- seq(0, 1, length.out = 5000)
     expect_equal(
-        .error_bar_halfwidth(big, "ci95", "t"), .error_bar_halfwidth(big, "ci95", "normal"),
+        error_bar_halfwidth(big, "ci95", "t"), error_bar_halfwidth(big, "ci95", "normal"),
         tolerance = 1e-3
     )
-    expect_error(.error_bar_halfwidth(x, "sdev"))
-    expect_error(.error_bar_halfwidth(x, "ci95", "z"))
+    expect_error(error_bar_halfwidth(x, "sdev"))
+    expect_error(error_bar_halfwidth(x, "ci95", "z"))
 })
 
 test_that(".error_bar_halfwidth counts only the non-missing values and needs two of them", {
     x <- c(1, 3, NA, 5, 9, NA)
     complete <- x[!is.na(x)]
     for (type in c("sd", "sem", "ci95")) {
-        expect_equal(.error_bar_halfwidth(x, type), .error_bar_halfwidth(complete, type))
+        expect_equal(error_bar_halfwidth(x, type), error_bar_halfwidth(complete, type))
     }
     # n is 4 here, not 6.
-    expect_equal(.error_bar_halfwidth(x, "sem"), sd(complete) / 2)
+    expect_equal(error_bar_halfwidth(x, "sem"), sd(complete) / 2)
 
     for (type in c("sd", "sem", "ci95")) {
-        expect_true(is.na(.error_bar_halfwidth(5, type)))
-        expect_true(is.na(.error_bar_halfwidth(c(5, NA), type)))
-        expect_true(is.na(.error_bar_halfwidth(NA_real_, type)))
-        expect_true(is.na(.error_bar_halfwidth(numeric(0), type)))
+        expect_true(is.na(error_bar_halfwidth(5, type)))
+        expect_true(is.na(error_bar_halfwidth(c(5, NA), type)))
+        expect_true(is.na(error_bar_halfwidth(NA_real_, type)))
+        expect_true(is.na(error_bar_halfwidth(numeric(0), type)))
     }
 })
 
@@ -669,6 +669,320 @@ test_that("the linePlot module draws the error bar type and CI method chosen (#3
             do.call(session$setInputs, .line_inputs())
             suppressWarnings(session$flushReact())
             expect_equal(.line_error_bars(generate_linePlot())[[1]], by_region("sd"))
+        }
+    )
+})
+
+test_that("linePlot Group By leaves out categoricals with too many levels", {
+    df <- .wide_id_df()
+    group <- .select_choices(as.character(linePlotInputsUI("line", df)), "line-group.by")
+    expect_true(all(c("grp", "grp2", "flag") %in% group))
+    expect_false(any(c("id", "val") %in% group))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(linePlotInputsUI("line", df, defaults = list(group.by = "id")))
+    expect_true("id" %in% .select_choices(html, "line-group.by"))
+})
+
+# ---- Ribbons, and intervals from columns (#371) -------------------------------------------------
+
+# The ribbon traces of a figure, in trace order.
+.line_ribbons <- function(fig) {
+    built <- suppressWarnings(plotly::plotly_build(fig))
+    Filter(function(tr) identical(tr$fill, "toself"), built$x$data)
+}
+
+# One side's vertices of a ribbon trace, named by the x each sits at.
+.ribbon_edge <- function(tr, side) {
+    on_side <- as.character(unlist(tr$text)) %in% side
+    stats::setNames(as.numeric(unlist(tr$y))[on_side], as.character(unlist(tr$x))[on_side])
+}
+
+# A numeric x with each point's bounds; the bounds at t = 3 are missing.
+.bound_data <- function() {
+    data.frame(t = 1:6, est = c(2, 3, 5, 4, 6, 7), lo = c(1, 2, NA, 3, 5, 6), hi = c(3, 4.5, 6, 5, 7, 9))
+}
+
+test_that(".ribbon_rows outlines each unbroken run of intervals, series by series", {
+    d <- data.frame(
+        g = c("b", "b", "b", "b", "a", "a"), x = c(1, 2, 3, 4, 1, 2), y = c(1, 2, 3, 4, 5, 6),
+        err_lo = c(0, 1, NA, 3, 4, 5), err_hi = c(2, 3, NA, 5, 6, 7)
+    )
+    rows <- .ribbon_rows(d, "y", "g")
+
+    # Upper bounds forward, then lower bounds back.
+    a <- rows[rows$g == "a", ]
+    expect_equal(a$x, c(1, 2, 2, 1))
+    expect_equal(a$y, c(6, 7, 5, 4))
+    expect_equal(a$.ribbon_side, c("Upper", "Upper", "Lower", "Lower"))
+    expect_equal(unique(a$.ribbon_part), 1)
+
+    # The missing interval at x = 3 splits series b into two outlines rather than being bridged.
+    b <- rows[rows$g == "b", ]
+    expect_equal(b$x, c(1, 2, 2, 1, 4, 4))
+    expect_equal(b$y, c(2, 3, 1, 0, 5, 3))
+    expect_equal(b$.ribbon_part, c(1, 1, 1, 1, 2, 2))
+
+    # Without a colour column the rows are one series, and every column keeps its type.
+    expect_equal(.ribbon_rows(d[1:4, ], "y")$.ribbon_part, c(1, 1, 1, 1, 2, 2))
+    for (stored in list(factor(d$g, levels = c("b", "a")), factor(d$g, levels = c("b", "a"), ordered = TRUE))) {
+        typed <- d
+        typed$g <- stored
+        kept <- .ribbon_rows(typed, "y", "g")$g
+        expect_identical(class(kept), class(stored))
+        expect_identical(levels(kept), levels(stored))
+    }
+
+    expect_null(.ribbon_rows(transform(d, err_lo = NA_real_), "y", "g"))
+    expect_null(.ribbon_rows(d[, c("g", "x", "y")], "y", "g"))
+})
+
+test_that("linePlot draws each group's SD, SEM or CI as a ribbon around its line (#371)", {
+    d <- .bar_data()
+    means <- c(tapply(d$v, d$g, mean))
+    for (type in c("sd", "sem", "ci95")) {
+        for (ci.method in c("normal", "t")) {
+            info <- paste(type, ci.method)
+            fig <- linePlot(
+                d, x = "g", y = "v", palette.selection = "#1B9E77",
+                error.type = type, error.ci.method = ci.method, error.ribbon = TRUE
+            )
+            ribbons <- expect_ribbons_on_lines(fig)
+            expect_length(ribbons, 1)
+
+            # Group c has a single value and no interval, so the band spans a and b only.
+            hw <- c(tapply(d$v, d$g, .expected_bar, type = type, ci.method = ci.method))
+            expect_equal(.ribbon_edge(ribbons[[1]], "Upper"), (means + hw)[c("a", "b")], info = info)
+            expect_equal(.ribbon_edge(ribbons[[1]], "Lower"), (means - hw)[c("b", "a")], info = info)
+        }
+    }
+
+    # Off by default.
+    expect_length(.line_ribbons(linePlot(d, x = "g", y = "v", palette.selection = "#1B9E77")), 0)
+})
+
+test_that("linePlot's ribbons sit under their own colour group's line, in its colour (#371)", {
+    base <- .line_facet_data()
+    palette <- c("#1b9e77", "#d95f02", "#7570b3")
+    stored_as <- list(
+        character = function(g) g,
+        factor = function(g) factor(g, levels = c("B", "C", "A")),
+        ordered = function(g) factor(g, levels = c("C", "A", "B"), ordered = TRUE)
+    )
+
+    for (repr in names(stored_as)) {
+        d <- base
+        d$grp <- stored_as[[repr]](d$grp)
+        fig <- linePlot(
+            d, x = "x", y = "y", colour.group.by = "grp", palette.selection = palette,
+            error.ribbon = TRUE, error.ribbon.opacity = 0.4, error.type = "sem"
+        )
+        built <- suppressWarnings(plotly::plotly_build(fig))
+        is_ribbon <- vapply(built$x$data, function(tr) identical(tr$fill, "toself"), logical(1))
+        expect_equal(sum(is_ribbon), 3, info = repr)
+        # Added first, so they are drawn underneath.
+        expect_true(max(which(is_ribbon)) < min(which(!is_ribbon)), info = repr)
+        expect_ribbons_on_lines(fig, min.count = 3)
+
+        lines <- built$x$data[!is_ribbon]
+        for (rb in built$x$data[is_ribbon]) {
+            ln <- Filter(function(tr) identical(as.character(tr$name), as.character(rb$name)), lines)[[1]]
+            expect_identical(rb$fillcolor, sub(",1\\)$", ",0.4)", ln$line$color), info = paste(repr, rb$name))
+
+            in_grp <- as.character(d$grp) == as.character(rb$name)
+            by_x <- tapply(d$y[in_grp], d$x[in_grp], function(v) mean(v) + .expected_bar(v, "sem"))
+            upper <- .ribbon_edge(rb, "Upper")
+            expect_equal(unname(upper), as.numeric(by_x[names(upper)]), info = paste(repr, rb$name))
+        }
+
+        # Faceted: each panel's bands are worked out from that panel's rows.
+        faceted <- linePlot(
+            d, x = "x", y = "y", colour.group.by = "grp", facet.by = "fct", palette.selection = palette,
+            error.ribbon = TRUE, error.bar = TRUE, error.colour = "#000000", error.width = 1
+        )
+        expect_length(expect_ribbons_on_lines(faceted, min.count = 6), 6)
+    }
+})
+
+test_that("linePlot draws an interval from bound columns on a numeric x (#371)", {
+    bd <- .bound_data()
+    draw <- function(...) {
+        linePlot(
+            bd, x = "t", y = "est", palette.selection = "#1B9E77", error.type = "columns",
+            error.ribbon = TRUE, error.bar = TRUE, ...
+        )
+    }
+    fig <- draw(error.lower = "lo", error.upper = "hi")
+    ribbons <- expect_ribbons_on_lines(fig)
+    expect_length(ribbons, 1)
+    # The point without bounds at t = 3 leaves a gap: two outlines, each upper edge forward and
+    # lower edge back.
+    ok <- !is.na(bd$lo)
+    expect_equal(unname(.ribbon_edge(ribbons[[1]], "Upper")), bd$hi[ok])
+    expect_equal(unname(.ribbon_edge(ribbons[[1]], "Lower")), c(rev(bd$lo[1:2]), rev(bd$lo[4:6])))
+    expect_equal(sum(is.na(unlist(ribbons[[1]]$y))), 1)
+
+    # The bars reach each bound, so they need not be symmetric. Half an interval is none.
+    line <- suppressWarnings(plotly::plotly_build(fig))$x$data[[2]]
+    expect_equal(as.numeric(line$error_y$array), ifelse(ok, bd$hi - bd$est, NA))
+    expect_equal(as.numeric(line$error_y$arrayminus), bd$est - bd$lo)
+
+    # Either column may hold the lower bound.
+    swapped <- suppressWarnings(plotly::plotly_build(draw(error.lower = "hi", error.upper = "lo")))$x$data
+    expect_equal(swapped[[1]]$y, ribbons[[1]]$y)
+    expect_equal(as.numeric(swapped[[2]]$error_y$array), ifelse(ok, bd$hi - bd$est, NA))
+
+    # Without both bounds there is nothing to draw, and a bound must be a numeric column.
+    expect_length(.line_ribbons(draw(error.lower = "lo")), 0)
+    expect_error(draw(error.lower = "lo", error.upper = "nope"), "numeric columns")
+    expect_error(
+        linePlot(transform(bd, label = "a"), x = "t", y = "est", palette.selection = "red",
+            error.type = "columns", error.lower = "lo", error.upper = "label"),
+        "numeric columns"
+    )
+})
+
+test_that("linePlot's bound columns take the y adjustment and are averaged per category (#371)", {
+    bd <- .bound_data()
+    fig <- linePlot(
+        bd, x = "t", y = "est", palette.selection = "#1B9E77", y.adjustment = "log10",
+        error.type = "columns", error.lower = "lo", error.upper = "hi", error.ribbon = TRUE, error.bar = TRUE
+    )
+    ribbons <- expect_ribbons_on_lines(fig)
+    ok <- !is.na(bd$lo)
+    expect_equal(unname(.ribbon_edge(ribbons[[1]], "Upper")), log10(bd$hi[ok]))
+    line <- suppressWarnings(plotly::plotly_build(fig))$x$data[[2]]
+    expect_equal(as.numeric(line$error_y$array), ifelse(ok, log10(bd$hi) - log10(bd$est), NA))
+
+    # A categorical x plots each category's mean, and its bounds are averaged the same way.
+    d <- data.frame(g = c("a", "a", "b", "b"), v = c(1, 3, 5, 7), lo = c(0, 2, 4, 4), hi = c(2, 6, 8, 10))
+    ribbons <- .line_ribbons(linePlot(
+        d, x = "g", y = "v", palette.selection = "red",
+        error.type = "columns", error.lower = "lo", error.upper = "hi", error.ribbon = TRUE
+    ))
+    expect_equal(.ribbon_edge(ribbons[[1]], "Upper"), c(a = 4, b = 9))
+    expect_equal(.ribbon_edge(ribbons[[1]], "Lower"), c(b = 4, a = 1))
+})
+
+test_that("linePlot only draws a ribbon where there are separate lines to band (#371)", {
+    # A numeric colour is one trace drawn with a gradient.
+    cars <- transform(mtcars, lo = mpg - 1, hi = mpg + 1)
+    expect_length(.line_ribbons(linePlot(
+        cars, x = "wt", y = "mpg", colour.group.by = "gear", palette.selection = "Set2",
+        error.type = "columns", error.lower = "lo", error.upper = "hi", error.ribbon = TRUE
+    )), 0)
+    # Several y columns have no single interval.
+    d <- .line_facet_data()
+    expect_length(.line_ribbons(linePlot(
+        d, x = "rep", y = c("y", "y2"), palette.selection = c("red", "blue"), error.ribbon = TRUE
+    )), 0)
+    # SD, SEM and CI need a categorical x.
+    expect_length(.line_ribbons(linePlot(
+        mtcars, x = "wt", y = "mpg", palette.selection = "red", error.ribbon = TRUE
+    )), 0)
+})
+
+test_that("linePlot's ribbon leaves a character x-axis in the order its lines give it (#371)", {
+    d <- data.frame(
+        g = rep(c("A", "B"), each = 8),
+        x = c(rep(c("q", "r", "s", "t"), each = 2), "q", "q", "r", "s", "s", "t", "t", "t"),
+        v = c(1:8, 2:9)
+    )
+    order_of <- function(ribbon) {
+        built <- suppressWarnings(plotly::plotly_build(linePlot(
+            d, x = "x", y = "v", colour.group.by = "g", palette.selection = c("red", "blue"),
+            order.by = "v", error.ribbon = ribbon
+        )))
+        built$x$layout$xaxis$categoryarray
+    }
+    # B's single "r" has no interval, so its band skips that category.
+    expect_identical(order_of(TRUE), order_of(FALSE))
+})
+
+test_that("a single line takes its colour from the palette, as do its ribbon and bars (#371)", {
+    built <- suppressWarnings(plotly::plotly_build(linePlot(
+        .bar_data(), x = "g", y = "v", palette.selection = c("#E41A1C", "#377EB8"), plot.mode = "lines+markers",
+        error.ribbon = TRUE, error.bar = TRUE
+    )))
+    ribbon <- built$x$data[[1]]
+    line <- built$x$data[[2]]
+    expect_identical(ribbon$fill, "toself")
+    expect_equal(line$line$color, "#E41A1C")
+    expect_equal(line$marker$color, "#E41A1C")
+    expect_equal(line$error_y$color, "#E41A1C")
+    expect_equal(ribbon$fillcolor, plotly::toRGB("#E41A1C", 0.25))
+
+    # A palette plotly resolves itself still builds, falling back to plotly's first colour.
+    line <- plotly::plotly_build(linePlot(mtcars, x = "wt", y = "mpg", palette.selection = "Set2"))$x$data[[1]]
+    expect_equal(line$line$color, "#1F77B4")
+})
+
+test_that("linePlot keeps the ribbon opacity between 0 and 1, falling back to 0.25", {
+    opacity_of <- function(opacity) {
+        ribbon <- .line_ribbons(linePlot(
+            .bar_data(), x = "g", y = "v", palette.selection = "#E41A1C",
+            error.ribbon = TRUE, error.ribbon.opacity = opacity
+        ))[[1]]
+        as.numeric(sub(".*,([0-9.]+)\\)$", "\\1", ribbon$fillcolor))
+    }
+    expect_equal(opacity_of(0.6), 0.6)
+    expect_equal(opacity_of(NULL), 0.25)
+    expect_equal(opacity_of(NA), 0.25)
+    expect_equal(opacity_of("lots"), 0.25)
+    expect_equal(opacity_of(3), 1)
+    expect_equal(opacity_of(-1), 0)
+})
+
+test_that("the linePlot module seeds the ribbon and bound inputs from defaults (#371)", {
+    html <- paste(as.character(linePlotInputsUI("lp", example_sales, defaults = list(
+        error.bar.type = "columns", error.lower = "profit", error.upper = "units",
+        error.ribbon = TRUE, error.ribbon.opacity = 0.6
+    ))), collapse = "")
+    expect_equal(.seeded_select(html, "lp-error.bar.type"), "columns")
+    expect_equal(.seeded_select(html, "lp-error.lower"), "profit")
+    expect_equal(.seeded_select(html, "lp-error.upper"), "units")
+    expect_match(html, '<input id="lp-error.ribbon" type="checkbox" checked', fixed = TRUE)
+    expect_match(html, 'id="lp-error.ribbon.opacity" type="number" class="shiny-input-number form-control" value="0.6"',
+        fixed = TRUE)
+
+    # The bounds are numeric columns only; anything else falls back to none.
+    expect_false("region" %in% .select_choices(html, "lp-error.lower"))
+    plain <- paste(as.character(linePlotInputsUI("lp", example_sales, defaults = list(error.lower = "region"))),
+        collapse = "")
+    expect_true(is.na(.seeded_select(plain, "lp-error.lower")))
+    expect_match(plain, '<input id="lp-error.ribbon" type="checkbox"/>', fixed = TRUE)
+})
+
+test_that("the linePlot module draws ribbons and intervals from columns (#371)", {
+    by_region <- function(f, col = "revenue") as.numeric(tapply(example_sales[[col]], example_sales$region, f))
+    shiny::testServer(
+        linePlotServer,
+        args = list(id = "lp", data = shiny::reactive(example_sales)),
+        {
+            ribbons <- function(...) {
+                do.call(session$setInputs, .line_inputs(error.ribbon = TRUE, ...))
+                suppressWarnings(session$flushReact())
+                .line_ribbons(generate_linePlot())
+            }
+
+            rb <- ribbons(error.bar.type = "sem")
+            expect_length(rb, 1)
+            expect_equal(
+                unname(.ribbon_edge(rb[[1]], "Upper")),
+                by_region(mean) + by_region(function(v) .expected_bar(v, "sem"))
+            )
+
+            rb <- ribbons(error.bar.type = "columns", error.lower = "profit", error.upper = "units")
+            expect_equal(unname(.ribbon_edge(rb[[1]], "Upper")), by_region(mean, "units"))
+            expect_equal(rev(unname(.ribbon_edge(rb[[1]], "Lower"))), by_region(mean, "profit"))
+
+            # A bound left over from another dataset, or a blank one, draws nothing rather than failing.
+            expect_length(ribbons(error.bar.type = "columns", error.lower = "gone", error.upper = "units"), 0)
+            expect_length(ribbons(error.bar.type = "columns", error.lower = "", error.upper = "units"), 0)
+            # Switched off, there is no ribbon.
+            do.call(session$setInputs, .line_inputs(error.ribbon = FALSE, error.bar.type = "sem"))
+            suppressWarnings(session$flushReact())
+            expect_length(.line_ribbons(generate_linePlot()), 0)
         }
     )
 })

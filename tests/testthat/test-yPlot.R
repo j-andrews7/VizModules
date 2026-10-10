@@ -22,6 +22,32 @@ test_that("yPlot UI exposes the hover and point annotation inputs", {
     expect_true(grepl("Hover Round Digits", html, fixed = TRUE))
 })
 
+test_that("yPlot Group, Color and Shape By leave out categoricals with too many levels", {
+    df <- data.frame(
+        val = seq_len(60),
+        id = paste0("gene", seq_len(60)),
+        grp = rep(c("a", "b", "c"), 20),
+        flag = rep(c(TRUE, FALSE), 30),
+        stringsAsFactors = FALSE
+    )
+    choices_of <- function(html, input) {
+        pat <- paste0("data-for=\"yplot-", input, "\">.*?</script>")
+        config <- regmatches(html, regexpr(pat, html))
+        jsonlite::fromJSON(sub("</script>$", "", sub("^data-for=\"[^\"]+\">", "", config)))$options$choices$value
+    }
+
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df))
+    for (input in c("group.by", "color.by", "shape.by")) {
+        ch <- choices_of(html, input)
+        expect_true(all(c("grp", "flag") %in% ch), info = input)
+        expect_false("id" %in% ch, info = input)
+    }
+
+    html <- as.character(dittoViz_yPlotInputsUI("yplot", df, defaults = list(group.by = "id")))
+    expect_true("id" %in% choices_of(html, "group.by"))
+    expect_false("id" %in% choices_of(html, "color.by"))
+})
+
 test_that("yPlot UI takes several Y variables, with limits spanning all of them", {
     df <- data.frame(
         num1 = c(1, 2, 3),
@@ -251,7 +277,7 @@ test_that("highlighting restyles only the jitter points that match", {
     fig <- fixture$fig
     before <- fig$x$data
 
-    out <- .apply_highlight_styling(
+    out <- apply_highlight_styling(
         fig,
         annotate.by = "lab",
         highlight_vals = c("cell1", "cell7"),
@@ -282,7 +308,7 @@ test_that("highlighting restyles only the jitter points that match", {
 test_that("auto-annotations label each highlighted jitter point where it is drawn", {
     fixture <- .yplot_jitter_fixture()
 
-    annos <- .create_highlight_annotations(
+    annos <- create_highlight_annotations(
         plot_data = fixture$df,
         fig = fixture$fig,
         annotate.by = "lab",
@@ -324,10 +350,10 @@ test_that("hand-selected and highlighted labels for the same point merge into on
     a <- list(x = 1, y = 2, text = "cell1")
     b <- list(x = 3, y = 4, text = "cell2")
 
-    expect_equal(.merge_annotation_sets(list(a), list(a)), list(a))
-    expect_equal(.merge_annotation_sets(list(a), list(b)), list(a, b))
-    expect_equal(.merge_annotation_sets(NULL, list(b)), list(b))
-    expect_equal(.merge_annotation_sets(list(a), NULL), list(a))
+    expect_equal(merge_annotation_sets(list(a), list(a)), list(a))
+    expect_equal(merge_annotation_sets(list(a), list(b)), list(a, b))
+    expect_equal(merge_annotation_sets(NULL, list(b)), list(b))
+    expect_equal(merge_annotation_sets(list(a), NULL), list(a))
 })
 
 test_that("selected points are labelled even after the jitter has been re-drawn", {
@@ -349,7 +375,7 @@ test_that("selected points are labelled even after the jitter has been re-drawn"
         y = trace$y[c(1, 3)]
     )
 
-    annos <- .create_selected_annotations(
+    annos <- create_selected_annotations(
         selected_data = selected,
         fig = fig,
         annotate.by = "lab",
@@ -373,7 +399,7 @@ test_that("selected points are labelled even after the jitter has been re-drawn"
 
 test_that("a fixed seed keeps jitter positions stable across rebuilds", {
     build <- function() {
-        .with_stable_seed(dittoViz::yPlot(
+        with_stable_seed(dittoViz::yPlot(
             data.frame(
                 grp = rep(c("A", "B"), each = 5),
                 val = as.numeric(1:10),
@@ -505,7 +531,7 @@ test_that("significance brackets are tested on and drawn over the plotted values
 
                 # The tests ran on the values drawn, not the raw column: t-test
                 # p-values change under a rescaling or a log.
-                plotted <- VizModules:::.adjusted_values(df$salary, adj[1], adj[2])
+                plotted <- VizModules:::adjusted_values(df$salary, adj[1], adj[2])
                 stats_df <- last_stats_df()
                 for (i in seq_len(nrow(stats_df))) {
                     a <- plotted[as.character(df$job_level) == stats_df$group1[i]]

@@ -1,3 +1,50 @@
+# VizModules 0.6.0.9001
+
+The one where we shore up the foundations for additional extension (i.e. building `sciVizModules`).
+
+## Improved/New Functionality
+
+### `DotPlot` and `scatterPlot`
+
+* New **Size Scale Min** and **Size Scale Max** inputs set the **Size By** values drawn at the smallest and largest sizes, so the size legend can run over round numbers such as 0 to 100 rather than the data's own range (#359, #364). Blank keeps the data's range, values beyond a limit are drawn at that end's size, and both show only while **Size By** is set.
+
+### `linePlot`
+
+* Error intervals can now be drawn as a shaded band (#371). The new **Error Ribbon** switch (`error.ribbon` in `linePlot()`) draws the interval behind each line, in that line's colour, on its own or alongside the error bars. **Ribbon Opacity** sets its fill, and a point without an interval leaves a gap in the band. The module gallery's line plot now opens on 95% CI ribbons.
+  * **Error Bar Type**, now **Error Type**, gained **From columns**, which reads each point's interval from the **Lower Bound** and **Upper Bound** columns (`error.type = "columns"`, `error.lower`, `error.upper`). It suits intervals worked out beforehand, such as a model's confidence interval, a forecast range or a min/max range. Unlike SD, SEM and CI, it works with a numeric X, and its bars can be asymmetric.
+
+### `scatterPlot`
+
+* New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
+
+### Helpers and exported functions
+
+* Exported many helpers, so modules in extension packages can reuse them instead of keeping copies that drift (#369):
+  * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
+  * Group colours: `default_group_colors()` validates and hex-normalises a colour mapping in `defaults`, and `reset_group_colors()` restores a group colour picker to it on Reset.
+  * Stats tab: `uniform_stats_inputs_ui()`, `reset_stats_inputs()`, `default_stat_pairs()`, `stat_bracket_headroom()` and `note_brackets_skipped()`.
+  * Module server boilerplate: `require_data_frame()`, `nz_value()`, `blank_to_null()`, `na_to_null()`, `facet_check()`, `flatten_palette_options()`, `reset_manual_edits()` and `with_stable_seed()`, which keeps jitter from jumping on every rebuild.
+  * Drawn values: `as_plotted()`, `adjusted_values()` and `adjustment_fn()`, for anything drawn over an adjusted plot.
+  * Point highlighting and labelling: `apply_highlight_styling()`, `create_highlight_annotations()`, `create_selected_annotations()`, `merge_annotation_sets()` and `parse_highlight_values()`.
+  * Error intervals: `error_bar_halfwidth()` works out the SD, SEM or 95% CI half-width `linePlot()` draws around a group's mean, so a module that summarises its own groups (over a numeric x, which linePlot's own summaries do not cover) can hand `linePlot()` matching bounds through `error.type = "columns"` (sciVizModules' pkConcentrationTime uses it; #371).
+  * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers. `breaks` picks the values to draw a circle for, such as round numbers, or leaves out the lower limit of a scale starting at size 0, whose circle would be empty. Its title sits just above the first circle, so a title of several lines no longer runs into a small one.
+
+* `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
+
+### Modules
+
+* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and could bring an app down (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group.
+* The AreaPlot's Facet By keeps its `facet_check()` limit when X changes.
+* The scatter plot colours groups by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
+* A plot whose annotation text is a factor (for instance a label column factored by the data filter) no longer stops with "'nzchar()' requires a character vector" when it is zoomed or resized (sciVizModules#17).
+* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
+
+## Bug Fixes
+
+### `linePlot`
+
+* A line with no **Group By** now takes its colour from the **Plot colors** picker, as do its error bars. It was always drawn in plotly's default blue, because plotly applies a palette only to a mapped colour.
+
 # VizModules 0.5.0
 
 The one where we make the heatmap module not suck and stop accidentally butchering app CSS.

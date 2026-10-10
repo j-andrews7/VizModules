@@ -295,3 +295,14 @@ test_that("SplitBarPlot x.min/x.max defaults survive startup until the columns c
         }
     )
 })
+
+test_that("BoxPlot Group By leaves out categoricals with too many levels", {
+    df <- .wide_id_df()
+    group <- .select_choices(as.character(plotthis_BoxPlotInputsUI("box", df)), "box-group.by")
+    expect_true(all(c("grp", "grp2", "flag") %in% group))
+    expect_false(any(c("id", "val") %in% group))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(plotthis_BoxPlotInputsUI("box", df, defaults = list(group.by = "id")))
+    expect_true("id" %in% .select_choices(html, "box-group.by"))
+})

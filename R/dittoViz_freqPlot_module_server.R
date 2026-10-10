@@ -33,7 +33,7 @@
 #' @author Jared Andrews
 dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
         params <- setup_reactive_defaults(defaults, input, session)
@@ -50,7 +50,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # main title (see add_plot_config()), so its styling inputs are hidden too.
         observeEvent(data(), {
             delay(100, {
-                hide_input(session, c(hide.inputs, "stat.per.facet", .main_title_input_ids))
+                hide_input(session, c(hide.inputs, "stat.per.facet", main_title_input_ids))
                 for (tab.name in hide.tabs) hideTab(inputId = "freqPlotTabsetPanel", target = tab.name)
             })
         })
@@ -82,9 +82,9 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             .freq_summary(
                 df,
                 var = input$var %__% "",
-                sample.by = .blank_to_null(input$sample.by),
+                sample.by = blank_to_null(input$sample.by),
                 group.by = input$group.by %__% "",
-                color.by = .blank_to_null(input$color.by),
+                color.by = blank_to_null(input$color.by),
                 scale = input$scale %__% "percent",
                 max.normalize = isTRUE(input$max.normalize),
                 vars.use = .freq_selected_vars(input$vars.use)
@@ -109,7 +109,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         observeEvent(data(), {
             df <- data()
             req(df)
-            cat.choices <- .facet_check(df)
+            cat.choices <- facet_check(df)
             if (identical(cat.choices, cat_choice_cache())) {
                 return()
             }
@@ -221,7 +221,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             freezeReactiveValue(input, "stat.pairs")
             update_viz_select(session, "stat.pairs",
                 choices = c("", pair_strings),
-                selected = .default_stat_pairs(defaults, pair_strings)
+                selected = default_stat_pairs(defaults, pair_strings)
             )
         })
 
@@ -259,7 +259,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # ---- Colour picker -------------------------------------------------------
         default_palette_name <- "dittoColors"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -273,7 +273,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (is.null(df)) {
                 return(character(0))
             }
-            col_to_use <- .blank_to_null(input$color.by) %__% .blank_to_null(input$group.by)
+            col_to_use <- blank_to_null(input$color.by) %__% blank_to_null(input$group.by)
             if (is.null(col_to_use) || !col_to_use %in% names(df)) {
                 return(character(0))
             }
@@ -296,7 +296,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$palette.colours, default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
 
             # Seed the store with exactly what the picker is built from, so the first
@@ -335,7 +335,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             if (!y.col %in% names(summ)) {
                 return(NULL)
             }
-            .stat_bracket_headroom(
+            stat_bracket_headroom(
                 df = summ, x = "grouping", y = y.col,
                 group.by = .freq_stats_group_col(input$group.by, input$color.by),
                 facet.by = "label", per.facet = TRUE, input = input,
@@ -374,7 +374,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         observeEvent(input$reset, {
             df <- data()
             choices <- c("", names(df))
-            cat.choices <- .facet_check(df)
+            cat.choices <- facet_check(df)
 
             var.default <- get_default(
                 defaults, "var", if (length(cat.choices)) cat.choices[1] else "",
@@ -419,8 +419,8 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 value = get_default(defaults, "max.normalize", FALSE, is.logical))
 
             reset.summary <- .freq_summary(
-                df, var = var.default, sample.by = .blank_to_null(sample.default),
-                group.by = group.default, color.by = .blank_to_null(color.default),
+                df, var = var.default, sample.by = blank_to_null(sample.default),
+                group.by = group.default, color.by = blank_to_null(color.default),
                 scale = get_default(defaults, "scale", "percent"),
                 max.normalize = get_default(defaults, "max.normalize", FALSE, is.logical)
             )
@@ -488,17 +488,17 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             updateNumericInput(session, "split.nrow", value = get_default(defaults, "split.nrow", NA, is.numeric))
 
             # Group colors
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             # Shared tabs
             reset_axes_inputs(session, defaults)
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
             reset_annotation_inputs(session, defaults, choices)
             selected.data(NULL)
-            .reset_stats_inputs(session, defaults, pair_choices())
+            reset_stats_inputs(session, defaults, pair_choices())
         })
 
         # ---- Build the figure ----------------------------------------------------
@@ -508,10 +508,10 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             var.col <- isolate_fn(input$var)
             group.col <- isolate_fn(input$group.by)
-            sample.col <- .blank_to_null(isolate_fn(input$sample.by))
-            color.col <- .blank_to_null(isolate_fn(input$color.by))
+            sample.col <- blank_to_null(isolate_fn(input$sample.by))
+            color.col <- blank_to_null(isolate_fn(input$color.by))
 
-            # `vars.use` is a multi-select, so .blank_to_null() would read any
+            # `vars.use` is a multi-select, so blank_to_null() would read any
             # multi-value selection as "no selection" and silently draw every facet.
             vars.use <- .freq_selected_vars(isolate_fn(input$vars.use))
 
@@ -534,9 +534,9 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Resolved server-side, so they already clear any significance brackets.
             y.limits <- isolate_fn(y_range_store())
 
-            split.ncol <- .na_to_null(isolate_fn(input$split.ncol))
-            split.nrow <- .na_to_null(isolate_fn(input$split.nrow))
-            ridgeplot.binwidth <- .na_to_null(isolate_fn(input$ridgeplot.binwidth))
+            split.ncol <- na_to_null(isolate_fn(input$split.ncol))
+            split.nrow <- na_to_null(isolate_fn(input$split.nrow))
+            ridgeplot.binwidth <- na_to_null(isolate_fn(input$ridgeplot.binwidth))
 
             # Keep names so scale_fill_manual matches colors to groups by name,
             # making the mapping independent of positional order.
@@ -585,7 +585,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             boxgap <- .box_num(isolate_fn(input$boxgap), 0.3)
             boxgroupgap <- .box_num(isolate_fn(input$boxgroupgap), 0.2)
 
-            p <- .with_stable_seed(freqPlot(
+            p <- with_stable_seed(freqPlot(
                 data_frame = df,
                 var = var.col,
                 sample.by = sample.col,
@@ -707,7 +707,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                     # dittoViz lays the whole figure out horizontally once a ridge plot
                     # is in it, so the values run along the x-axis and there is no room
                     # above them for brackets. The tests still reach the source download.
-                    .note_brackets_skipped(session)
+                    note_brackets_skipped(session)
                 } else {
                     stat_result <- create_stat_annotations(
                         stats_df = stats_df, fig = fig, df = summ,
@@ -741,7 +741,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Highlight and label individual jitter points, which here are samples.
             # Rasterized jitter is drawn as a single image, so there are no points
             # left to match against.
-            annotate.by <- .na_to_null(isolate_fn(input$annotate.by))
+            annotate.by <- na_to_null(isolate_fn(input$annotate.by))
             jitter.drawn <- "jitter" %in% isolate_fn(input$plots) &&
                 !isTRUE(isolate_fn(input$do.raster))
             annos <- NULL
@@ -750,11 +750,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 highlight_points_raw <- isolate_fn(input$highlight.points)
                 highlight_vals <- character(0)
                 if (!is.null(highlight_points_raw) && highlight_points_raw != "") {
-                    highlight_vals <- .parse_highlight_values(highlight_points_raw, data()[[annotate.by]])
+                    highlight_vals <- parse_highlight_values(highlight_points_raw, data()[[annotate.by]])
                 }
 
                 if (length(highlight_vals) > 0) {
-                    fig <- .apply_highlight_styling(
+                    fig <- apply_highlight_styling(
                         fig,
                         annotate.by = annotate.by,
                         highlight_vals = highlight_vals,
@@ -781,7 +781,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 )
 
                 if (!is.null(selected.data())) {
-                    annos <- .create_selected_annotations(
+                    annos <- create_selected_annotations(
                         selected_data = selected.data(),
                         fig = fig,
                         annotate.by = annotate.by,
@@ -793,7 +793,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 if (isTRUE(isolate_fn(input$highlight.auto.annotate)) && length(highlight_vals) > 0) {
                     # Read from the summary: the highlighted points are rows of the
                     # frequency table, not of the input data.
-                    highlight_annos <- .create_highlight_annotations(
+                    highlight_annos <- create_highlight_annotations(
                         plot_data = summ,
                         fig = fig,
                         annotate.by = annotate.by,
@@ -803,7 +803,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                         annotation_params = annotation_params,
                         require.markers = TRUE
                     )
-                    annos <- .merge_annotation_sets(annos, highlight_annos)
+                    annos <- merge_annotation_sets(annos, highlight_annos)
                 }
             }
 

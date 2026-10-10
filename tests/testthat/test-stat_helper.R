@@ -550,17 +550,17 @@ test_that("comparisons against a group absent from an x category are not drawn",
     expect_length(result$annotations, 4)
 })
 
-test_that(".default_stat_pairs selects the defaulted comparisons in either orientation", {
+test_that("default_stat_pairs selects the defaulted comparisons in either orientation", {
     offered <- c("Entry vs Mid", "Entry vs Senior", "Mid vs Senior")
 
     expect_equal(
-        .default_stat_pairs(list(stat.pairs = c("Mid vs Entry", "Mid vs Senior")), offered),
+        default_stat_pairs(list(stat.pairs = c("Mid vs Entry", "Mid vs Senior")), offered),
         c("Entry vs Mid", "Mid vs Senior")
     )
     # Nothing named, or nothing named that is on offer: an empty selection,
     # which tests every pair.
-    expect_equal(.default_stat_pairs(NULL, offered), "")
-    expect_equal(.default_stat_pairs(list(stat.pairs = "Lead vs Entry"), offered), "")
-    expect_equal(.default_stat_pairs(list(stat.pairs = "Entry vs Mid"), character(0)), "")
-    expect_equal(.default_stat_pairs(list(stat.pairs = 3), offered), "")
+    expect_equal(default_stat_pairs(NULL, offered), "")
+    expect_equal(default_stat_pairs(list(stat.pairs = "Lead vs Entry"), offered), "")
+    expect_equal(default_stat_pairs(list(stat.pairs = "Entry vs Mid"), character(0)), "")
+    expect_equal(default_stat_pairs(list(stat.pairs = 3), offered), "")
 })

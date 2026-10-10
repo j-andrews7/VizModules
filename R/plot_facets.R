@@ -636,16 +636,20 @@ clean_facet_dim <- function(val) {
 #'
 #' Scans a data frame and returns the names of columns that are appropriate
 #' choices for a facet/split selector. A column qualifies when it is
-#' categorical (character or factor) and has fewer than 50 unique values.
-#' This keeps facet/split inputs from offering numeric columns or
+#' categorical (character or factor) and has fewer than `max.levels` unique
+#' values. This keeps facet/split inputs from offering numeric columns or
 #' high-cardinality categoricals that would produce an unwieldy number of
-#' panels.
+#' panels. The modules also use it to limit their categorical colour, shape
+#' and group selectors, where a column of IDs would otherwise ask for one
+#' colour or shape per row.
 #'
 #' Intended to populate the `choices` of a facet/split `viz_select_input()` via
 #' [update_viz_select()] inside a module server, so that only sensible
 #' faceting variables are exposed to the user.
 #'
 #' @param data A data frame whose columns are evaluated.
+#' @param max.levels A single positive number. Columns with this many or more
+#'   distinct values are excluded. Defaults to 50.
 #'
 #' @return A character vector of column names suitable for faceting/splitting.
 #'   Returns `character(0)` when no column qualifies.
@@ -653,15 +657,22 @@ clean_facet_dim <- function(val) {
 #' @details A column is considered valid when both of the following hold:
 #'   \itemize{
 #'     \item It is categorical: `is.character(col)` or `is.factor(col)`.
-#'     \item It has fewer than 50 unique values (`NA`s excluded).
+#'     \item It has fewer than `max.levels` unique values (`NA`s excluded).
 #'   }
-#'   Numeric columns and categorical columns with 50 or more distinct values
-#'   are always excluded.
+#'   Numeric columns and categorical columns with `max.levels` or more
+#'   distinct values are always excluded.
 #'
+#' @export
 #' @author Jacob Martin
-#' @keywords internal
-#' @rdname INTERNAL_facet_check
-.facet_check <- function(data) {
+#' @examples
+#' facet_check(iris)
+#' facet_check(mtcars)
+#' # A lower cap drops the 3-level Species column.
+#' facet_check(iris, max.levels = 3)
+facet_check <- function(data, max.levels = 50) {
+    if (!is.numeric(max.levels) || length(max.levels) != 1 || is.na(max.levels) || max.levels <= 0) {
+        stop("`max.levels` must be a single positive number.", call. = FALSE)
+    }
     if (is.null(data) || ncol(data) == 0) {
         return(character(0))
     }
@@ -669,9 +680,36 @@ clean_facet_dim <- function(val) {
     for (nm in names(data)) {
         col <- data[[nm]]
         if ((is.character(col) || is.factor(col)) &&
-            length(unique(col[!is.na(col)])) < 50) {
+            length(unique(col[!is.na(col)])) < max.levels) {
             valid_cols <- c(valid_cols, nm)
         }
     }
     valid_cols
+}
+
+#' Choices for a categorical colour, shape or group selector
+#'
+#' The columns [facet_check()] accepts plus the logical columns, in data
+#' order. A TRUE/FALSE column is a sensible shape or group, but
+#' `facet_check()` leaves it out of the split choices.
+#'
+#' @param data A data frame.
+#' @param max.levels Passed to [facet_check()].
+#' @param keep Column names to keep whatever their size, e.g. a caller's
+#'   explicit default. Names not in `data` are ignored.
+#' @return A character vector of column names.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_discrete_choices
+.discrete_choices <- function(data, max.levels = 50, keep = NULL) {
+    if (is.null(data) || ncol(data) == 0) {
+        return(character(0))
+    }
+    nm <- names(data)
+    if (!is.character(keep)) keep <- character(0)
+    ok <- nm %in% facet_check(data, max.levels) |
+        vapply(data, is.logical, logical(1)) |
+        nm %in% keep
+    nm[ok]
 }

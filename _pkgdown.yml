@@ -174,13 +174,19 @@ reference:
     contents:
       - createModuleApp
       - empty_plot
+      - facet_check
       - hide_input
+      - main_title_input_ids
       - module_tack_ui
+      - na_to_null
       - organize_inputs
+      - require_data_frame
+      - reset_manual_edits
       - setup_auto_update_logic
       - setup_axis_range
       - setup_reactive_defaults
       - show_input
+      - toggle_facet_title_inputs
       - toggle_input_cell
       - use_vizmodules_skills
       - viz_select_input
@@ -193,12 +199,16 @@ reference:
       - uniform_legend_inputs_ui
       - uniform_lines_inputs_ui
       - uniform_plotly_inputs_ui
+      - uniform_stats_inputs_ui
+      - uniform_subplot_spacing_inputs_ui
+      - subplot_spacing_defaults
       - uniform_annotation_inputs_ui
       - reset_annotation_inputs
       - reset_axes_inputs
       - reset_legend_inputs
       - reset_lines_inputs
       - reset_plotly_inputs
+      - reset_stats_inputs
       - get_default
 
   - title: "Facet & Subplot Utilities"
@@ -224,6 +234,7 @@ reference:
       - reset_axis_title_text
       - apply_legend_styling
       - apply_legend_inputs
+      - add_size_legend
       - apply_plotly_newshape
       - apply_render_margins
       - apply_subplot_axis_styling
@@ -235,6 +246,15 @@ reference:
       - recycle_line_style
       - string_to_linetypes
       - heatmap_fit_width
+
+  - title: "Point Highlighting & Labels"
+    desc: "Helpers for highlighting and labelling individual points, for modules that adopt uniform_annotation_inputs_ui()."
+    contents:
+      - apply_highlight_styling
+      - create_highlight_annotations
+      - create_selected_annotations
+      - merge_annotation_sets
+      - parse_highlight_values
 
   - title: "Manual Plot Edits"
     desc: "Functions for applying user-drawn shapes and annotations to plotly figures."
@@ -255,15 +275,21 @@ reference:
     contents:
       - apply_stat_annotations
       - compute_pairwise_stats
+      - default_stat_pairs
       - create_stat_annotations
       - generate_pair_strings
+      - note_brackets_skipped
       - parse_pair_strings
+      - stat_bracket_headroom
       - stat_bracket_y_max
 
   - title: "Palette & Color Utilities"
     desc: "Functions for managing color palettes."
     contents:
+      - default_group_colors
       - default_palettes
+      - flatten_palette_options
+      - reset_group_colors
       - resolve_palette
       - setup_group_colors
 
@@ -281,12 +307,19 @@ reference:
     desc: "General-purpose helper functions for data handling and validation."
     contents:
       - adjust_column_values
+      - adjusted_values
+      - adjustment_fn
+      - as_plotted
+      - blank_to_null
+      - error_bar_halfwidth
       - get_documentation
       - is_pure_type
+      - nz_value
       - parse_numeric_list
       - safe_eval_filter
       - safe_resolve_adj_fxn
       - validate_expression
+      - with_stable_seed
 
   - title: "Example Data"
     desc: "Built-in datasets for demos and testing."

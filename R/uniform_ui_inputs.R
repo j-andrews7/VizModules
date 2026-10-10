@@ -457,10 +457,14 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' @importFrom colourpicker colourInput
 #' @importFrom shinyBS tipify
 #'
+#' @seealso [reset_stats_inputs()], [default_stat_pairs()], [stat_bracket_headroom()],
+#'   [create_stat_annotations()], [apply_stat_annotations()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_stats_inputs_ui
-#' @keywords internal
-.uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
+#' @examples
+#' uniform_stats_inputs_ui(shiny::NS("stats"))
+uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
     tagList(
         tipify(
@@ -611,7 +615,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #' modules. Includes interactive download controls, plot margin adjustments,
 #' and user-drawn shape styling for Plotly's drawing tools. (Subplot spacing
 #' controls live in each module's "Facet" tab via
-#' `.uniform_subplot_spacing_inputs_ui()`.)
+#' `uniform_subplot_spacing_inputs_ui()`.)
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
@@ -746,12 +750,15 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 #' @importFrom shiny numericInput tagList
 #' @importFrom shinyBS tipify
 #'
+#' @seealso [subplot_spacing_defaults()], [apply_facet_subplot_spacing()], [reset_plotly_inputs()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_uniform_subplot_spacing_inputs_ui
-#' @keywords internal
-.uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
+#' @examples
+#' uniform_subplot_spacing_inputs_ui(shiny::NS("spacing"), defaults = list(subplot.margin = 0.05))
+uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
-    spacing <- .subplot_spacing_defaults(defaults)
+    spacing <- subplot_spacing_defaults(defaults)
 
     tagList(
         tipify(
@@ -782,7 +789,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 
 #' Resolve the subplot spacing defaults
 #'
-#' Shared by [.uniform_subplot_spacing_inputs_ui()] and [reset_plotly_inputs()]
+#' Shared by [uniform_subplot_spacing_inputs_ui()] and [reset_plotly_inputs()]
 #' so the controls start and reset to the same values. A `subplot.margin` entry
 #' sets both directions at once (linePlot uses it for its tighter default);
 #' `subplot.margin.x`/`subplot.margin.y` override it per direction.
@@ -791,10 +798,12 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 #'
 #' @return A list with numeric `x` and `y`.
 #'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_subplot_spacing_defaults
-#' @keywords internal
-.subplot_spacing_defaults <- function(defaults) {
+#' @examples
+#' subplot_spacing_defaults(NULL)
+#' subplot_spacing_defaults(list(subplot.margin = 0.05, subplot.margin.y = 0.2))
+subplot_spacing_defaults <- function(defaults) {
     both <- get_default(defaults, "subplot.margin", NULL, is.numeric)
     list(
         x = get_default(defaults, "subplot.margin.x", both %||% 0.03, is.numeric),
