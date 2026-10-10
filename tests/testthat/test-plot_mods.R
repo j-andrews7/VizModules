@@ -1343,6 +1343,21 @@ test_that("add_size_legend() spans its breaks across the size scale's limits", {
     expect_equal(.size_legend_labels(.size_legend(fx, limits = c(95, NA))), data_range)
 })
 
+test_that("add_size_legend() draws circles for the breaks it is given, within the limits", {
+    fx <- .size_legend_fixture()
+    built <- add_size_legend(fx$fig, fx$data, size.by = "pct_expressed",
+        limits = c(1, 100), size.range = c(0, 6), breaks = c(0, 20, 40, 60, 80, 100, 120, NA))
+    expect_equal(.size_legend_labels(built), c("20", "40", "60", "80", "100"))
+    # Each circle is the size the scale gives its break.
+    px <- VizModules:::.size_scale_px(c(20, 40, 60, 80, 100), c(0, 6), c(1, 100))
+    expect_equal(.size_legend_diameters(built), px, tolerance = 1e-3)
+
+    # No usable break falls back to five even ones; size.values is recycled to the breaks.
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, 100), breaks = 200)),
+        c("0", "25", "50", "75", "100"))
+    expect_length(.size_legend_labels(.size_legend(fx, limits = c(0, 100), breaks = c(10, 90))), 2)
+})
+
 test_that("add_size_legend() circles match the points a size scale draws", {
     df <- data.frame(x = 1:5, y = 1:5, n = c(0, 25, 50, 75, 100))
     p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +

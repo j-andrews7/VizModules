@@ -319,6 +319,12 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #'   of [ggplot2::scale_size()]). When given, each circle is drawn at the size
 #'   the scale gives its break. When `NULL` (the default), the circles are read
 #'   from the marker sizes in `fig`.
+#' @param breaks Numeric vector, or `NULL`. The `size.by` values to draw a circle
+#'   for, in place of five spaced evenly between the limits. Values outside the
+#'   limits are dropped. Useful for round labels, or to leave out the lower limit
+#'   of a scale whose `size.range` starts at 0, which would draw an empty circle.
+#'   When `size.values` is also given, it is recycled to one glyph size per break.
+#'   Defaults to `NULL`.
 #'
 #' @return The built plotly figure with size-legend annotations appended, or
 #'   the unmodified figure when `size.by` is `NULL`/empty, not present in
@@ -342,7 +348,7 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, title = size.by,
                             digits = NULL, title.size = NULL, text.size = NULL, start.y = 0.95,
                             start.x = 1.02, font.family = NULL, font.color = NULL,
-                            limits = NULL, size.range = NULL) {
+                            limits = NULL, size.range = NULL, breaks = NULL) {
     # No size mapping -> nothing to draw, return the figure untouched.
     if (is.null(size.by) || !is.character(size.by) || length(size.by) != 1 ||
         !nzchar(size.by) || !size.by %in% names(data)) {
@@ -365,8 +371,18 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
     }
 
     lims <- .size_limits(vals, limits[1], limits[2])
-    n_breaks <- if (!is.null(size.values)) length(size.values) else 5L
-    breaks <- seq(from = lims[1], to = lims[2], length.out = n_breaks)
+    # Caller-chosen breaks, kept within the limits; without any, five run evenly
+    # between them (or one per size.values glyph).
+    breaks <- if (is.numeric(breaks)) breaks[is.finite(breaks) & breaks >= lims[1] & breaks <= lims[2]] else numeric(0)
+    breaks <- sort(unique(breaks))
+    if (length(breaks) == 0) {
+        n_breaks <- if (!is.null(size.values)) length(size.values) else 5L
+        breaks <- seq(from = lims[1], to = lims[2], length.out = n_breaks)
+    }
+    n_breaks <- length(breaks)
+    if (!is.null(size.values) && length(size.values) != n_breaks) {
+        size.values <- rep_len(size.values, n_breaks)
+    }
     labels <- format(if (valid_size(digits)) round(breaks, digits) else breaks, trim = TRUE, scientific = FALSE)
 
     # Build the figure once up front. This consolidates marker attributes (so

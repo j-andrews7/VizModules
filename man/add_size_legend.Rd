@@ -19,7 +19,8 @@ add_size_legend(
   font.family = NULL,
   font.color = NULL,
   limits = NULL,
-  size.range = NULL
+  size.range = NULL,
+  breaks = NULL
 )
 }
 \arguments{
@@ -84,6 +85,13 @@ plot's size scale maps \code{limits} onto, in ggplot2 size units (the \code{rang
 of \code{\link[ggplot2:scale_size]{ggplot2::scale_size()}}). When given, each circle is drawn at the size
 the scale gives its break. When \code{NULL} (the default), the circles are read
 from the marker sizes in \code{fig}.}
+
+\item{breaks}{Numeric vector, or \code{NULL}. The \code{size.by} values to draw a circle
+for, in place of five spaced evenly between the limits. Values outside the
+limits are dropped. Useful for round labels, or to leave out the lower limit
+of a scale whose \code{size.range} starts at 0, which would draw an empty circle.
+When \code{size.values} is also given, it is recycled to one glyph size per break.
+Defaults to \code{NULL}.}
 }
 \value{
 The built plotly figure with size-legend annotations appended, or
