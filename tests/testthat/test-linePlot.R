@@ -384,7 +384,7 @@ test_that("linePlot styles facet panel titles with facet.title.font.*", {
 
 # ---- Error bars: SD, SEM and 95% CI (#368) ------------------------------------------------------
 
-# Independent of .error_bar_halfwidth(), so the two cannot drift together.
+# Independent of error_bar_halfwidth(), so the two cannot drift together.
 .expected_bar <- function(v, type, ci.method = "normal") {
     v <- v[!is.na(v)]
     n <- length(v)
@@ -413,46 +413,46 @@ test_that("linePlot styles facet panel titles with facet.title.font.*", {
     )
 }
 
-test_that(".error_bar_halfwidth works out the SD, the SEM and both kinds of 95% CI", {
+test_that("error_bar_halfwidth works out the SD, the SEM and both kinds of 95% CI", {
     x <- c(2, 4, 4, 4, 5, 5, 7, 9)
     spread <- sd(x)
     sem <- spread / sqrt(8)
 
-    expect_equal(.error_bar_halfwidth(x, "sd"), spread)
-    expect_equal(.error_bar_halfwidth(x, "sem"), sem)
-    expect_equal(.error_bar_halfwidth(x, "ci95", "normal"), qnorm(0.975) * sem)
-    expect_equal(.error_bar_halfwidth(x, "ci95", "t"), qt(0.975, 7) * sem)
+    expect_equal(error_bar_halfwidth(x, "sd"), spread)
+    expect_equal(error_bar_halfwidth(x, "sem"), sem)
+    expect_equal(error_bar_halfwidth(x, "ci95", "normal"), qnorm(0.975) * sem)
+    expect_equal(error_bar_halfwidth(x, "ci95", "t"), qt(0.975, 7) * sem)
     # The t interval is the wider one, and the method is ignored by the other types.
-    expect_gt(.error_bar_halfwidth(x, "ci95", "t"), .error_bar_halfwidth(x, "ci95", "normal"))
-    expect_equal(.error_bar_halfwidth(x, "sd", "t"), spread)
-    expect_equal(.error_bar_halfwidth(x, "sem", "t"), sem)
+    expect_gt(error_bar_halfwidth(x, "ci95", "t"), error_bar_halfwidth(x, "ci95", "normal"))
+    expect_equal(error_bar_halfwidth(x, "sd", "t"), spread)
+    expect_equal(error_bar_halfwidth(x, "sem", "t"), sem)
     # SD is the default, and the normal interval the default CI.
-    expect_equal(.error_bar_halfwidth(x), spread)
-    expect_equal(.error_bar_halfwidth(x, "ci95"), qnorm(0.975) * sem)
+    expect_equal(error_bar_halfwidth(x), spread)
+    expect_equal(error_bar_halfwidth(x, "ci95"), qnorm(0.975) * sem)
     # A big group's t interval converges on the normal one.
     big <- seq(0, 1, length.out = 5000)
     expect_equal(
-        .error_bar_halfwidth(big, "ci95", "t"), .error_bar_halfwidth(big, "ci95", "normal"),
+        error_bar_halfwidth(big, "ci95", "t"), error_bar_halfwidth(big, "ci95", "normal"),
         tolerance = 1e-3
     )
-    expect_error(.error_bar_halfwidth(x, "sdev"))
-    expect_error(.error_bar_halfwidth(x, "ci95", "z"))
+    expect_error(error_bar_halfwidth(x, "sdev"))
+    expect_error(error_bar_halfwidth(x, "ci95", "z"))
 })
 
 test_that(".error_bar_halfwidth counts only the non-missing values and needs two of them", {
     x <- c(1, 3, NA, 5, 9, NA)
     complete <- x[!is.na(x)]
     for (type in c("sd", "sem", "ci95")) {
-        expect_equal(.error_bar_halfwidth(x, type), .error_bar_halfwidth(complete, type))
+        expect_equal(error_bar_halfwidth(x, type), error_bar_halfwidth(complete, type))
     }
     # n is 4 here, not 6.
-    expect_equal(.error_bar_halfwidth(x, "sem"), sd(complete) / 2)
+    expect_equal(error_bar_halfwidth(x, "sem"), sd(complete) / 2)
 
     for (type in c("sd", "sem", "ci95")) {
-        expect_true(is.na(.error_bar_halfwidth(5, type)))
-        expect_true(is.na(.error_bar_halfwidth(c(5, NA), type)))
-        expect_true(is.na(.error_bar_halfwidth(NA_real_, type)))
-        expect_true(is.na(.error_bar_halfwidth(numeric(0), type)))
+        expect_true(is.na(error_bar_halfwidth(5, type)))
+        expect_true(is.na(error_bar_halfwidth(c(5, NA), type)))
+        expect_true(is.na(error_bar_halfwidth(NA_real_, type)))
+        expect_true(is.na(error_bar_halfwidth(numeric(0), type)))
     }
 })
 

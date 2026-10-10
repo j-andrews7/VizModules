@@ -258,7 +258,7 @@ linePlot <- function(data, x, y, palette.selection,
         # nothing is looked up in the data.
         y_col <- y[1]
         halfwidth_of <- if (length(y) == 1 && error.type != "columns") {
-            function(values) .error_bar_halfwidth(values, error.type, error.ci.method)
+            function(values) error_bar_halfwidth(values, error.type, error.ci.method)
         } else {
             function(values) NA_real_
         }
@@ -758,8 +758,14 @@ linePlot <- function(data, x, y, palette.selection,
 
 #' Half-width of a group's error bar
 #'
-#' What [linePlot()] draws either side of a group's mean. Missing values are dropped
-#' before `n` is counted, so the bar describes the values that went into the mean.
+#' What [linePlot()] draws either side of a group's mean for `error.type = "sd"`,
+#' `"sem"` or `"ci95"`. Missing values are dropped before `n` is counted, so the bar
+#' describes the values that went into the mean.
+#'
+#' A module that summarises its own groups (over a numeric x, say, which linePlot's
+#' own summaries do not cover) can work out each interval with this and hand
+#' [linePlot()] the bounds through `error.type = "columns"`, so its bars and ribbons
+#' match the line plot module's.
 #'
 #' @param x Numeric vector of one group's y-values.
 #' @param type One of `"sd"` (standard deviation), `"sem"` (standard error of the mean,
@@ -772,9 +778,16 @@ linePlot <- function(data, x, y, palette.selection,
 #'   have no spread to draw.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_error_bar_halfwidth
-#' @keywords internal
-.error_bar_halfwidth <- function(x, type = c("sd", "sem", "ci95"), ci.method = c("normal", "t")) {
+#' @export
+#' @seealso [linePlot()]
+#' @examples
+#' x <- c(4.1, 5.3, 4.8, 6.0, 5.5)
+#' error_bar_halfwidth(x, "sd")
+#' error_bar_halfwidth(x, "sem")
+#' # The t interval is wider for small groups.
+#' error_bar_halfwidth(x, "ci95", "normal")
+#' error_bar_halfwidth(x, "ci95", "t")
+error_bar_halfwidth <- function(x, type = c("sd", "sem", "ci95"), ci.method = c("normal", "t")) {
     type <- match.arg(type)
     ci.method <- match.arg(ci.method)
 

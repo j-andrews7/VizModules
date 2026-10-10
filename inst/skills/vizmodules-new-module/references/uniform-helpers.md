@@ -35,6 +35,7 @@ reset start from. `reset_stats_inputs()` takes the pairs currently on offer, res
 | `reset_manual_edits(store)` | Discards dragged legends/annotations/titles on Reset |
 | `with_stable_seed(expr)` | Builds a plot under a fixed seed, so jitter layers do not move on every rebuild |
 | `as_plotted(df, cols, adjustment, adj.fxn)`, `adjusted_values()`, `adjustment_fn()` | The values the plot draws, for anything drawn over it; `adjustment_fn()` is what to pass dittoViz as `*.adj.fxn` |
+| `error_bar_halfwidth(x, type, ci.method)` | The SD, SEM or 95% CI half-width `linePlot()` draws around a group mean; for a module that summarises its own groups and hands `linePlot()` the bounds via `error.type = "columns"` |
 
 ## Server-side stores
 

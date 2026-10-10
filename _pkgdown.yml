@@ -311,6 +311,7 @@ reference:
       - adjustment_fn
       - as_plotted
       - blank_to_null
+      - error_bar_halfwidth
       - get_documentation
       - is_pure_type
       - nz_value
