@@ -488,12 +488,14 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
     # Assemble the legend annotations and append them directly to the built
     # layout (see plotly_build() note above) so they are not duplicated by
     # subsequent builds.
+    # The title's foot sits just above the first entry, so a title of several
+    # lines grows upwards instead of running into a small first circle.
     new_anns <- list(
         list(
-            x = x_pos + 0.02, y = min(start.y + gap, 1),
+            x = x_pos + 0.02, y = min(start.y + gap / 2, 1),
             xref = "paper", yref = "paper",
             text = title, showarrow = FALSE,
-            xanchor = "center", yanchor = "middle", font = title_font
+            xanchor = "center", yanchor = "bottom", font = title_font
         )
     )
     for (i in seq_along(size.values)) {
