@@ -94,6 +94,9 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[!vapply(data, is.numeric, logical(1))])
     all.choices <- c("", names(data))
+    # Group leaves out categoricals with too many levels to draw (an ID column
+    # asks for one trace per row), unless the caller asked for one.
+    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group", NULL)))
 
     font.choices <- .font_family_choices
 
@@ -129,8 +132,8 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
                 choices = num.choices[nzchar(num.choices)]
             ), documentParameters$r, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group"), "Group",
-                selected = get_default(defaults, "group", ""),
-                choices = all.choices
+                selected = get_default(defaults, "group", "", function(x) x %in% group.choices),
+                choices = group.choices
             ), documentParameters$group, placement = "top", options = list(container = "body"))
         ),
         "Aesthetics" = tagList(

@@ -98,3 +98,15 @@ test_that("parallelCoordinatesPlot styles its lines, label and tick fonts", {
     expect_equal(trace$tickfont$color, "#0000FF")
     expect_equal(trace$tickfont$family, "Times")
 })
+
+test_that("parallelCoordinatesPlot Color By keeps numerics but leaves out wide categoricals", {
+    df <- .wide_id_df()
+    color <- .select_choices(as.character(parallelCoordinatesPlotInputsUI("pc", df)), "pc-color.by")
+    # Numeric columns stay for the continuous colour scale; the 60-level ID column is gone.
+    expect_true(all(c("val", "val2", "grp", "grp2", "flag") %in% color))
+    expect_false("id" %in% color)
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(parallelCoordinatesPlotInputsUI("pc", df, defaults = list(color.by = "id")))
+    expect_true("id" %in% .select_choices(html, "pc-color.by"))
+})

@@ -141,10 +141,12 @@
             inputs_ui = plotthis_DotPlotInputsUI,
             output_ui = plotthis_DotPlotOutputUI,
             server_fn = plotthis_DotPlotServer,
-            # Dotted lines between each cell type's block of marker genes.
+            # Dotted lines between each cell type's block of marker genes, and a
+            # size legend running over the whole percentage scale.
             defaults = list(
                 "x.data" = "gene", "y.data" = "cell_type",
                 "size.by" = "pct_expressed", "fill.by" = "avg_expression",
+                "size.scale.min" = 0, "size.scale.max" = 100,
                 "vline.intercepts" = "2.5, 4.5, 6.5, 8.5, 10.5, 11.5, 12.5",
                 "vline.colors" = "#AAAAAA", "vline.linetypes" = "dotted"
             )
@@ -190,10 +192,12 @@
             inputs_ui = linePlotInputsUI,
             output_ui = linePlotOutputUI,
             server_fn = linePlotServer,
-            # Error bars (on by default) show each year's spread across months and regions.
+            # A ribbon around each product line's yearly mean: the 95% CI over its months and
+            # regions. Gadgets climb, Doohickeys fall and Widgets hold, so the bands cross.
             defaults = list(
                 "x.value" = "year", "y.value" = "revenue", "group.by" = "product_line",
-                "plot.mode" = "lines+markers"
+                "plot.mode" = "lines+markers",
+                "error.bar" = FALSE, "error.ribbon" = TRUE, "error.bar.type" = "ci95"
             )
         ),
         parallel = list(

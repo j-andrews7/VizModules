@@ -146,9 +146,10 @@
 #'
 #' @param plot_reactive A reactive expression returning a `plotly` plot object.
 #' @param stats_reactive Optional. A reactive expression (e.g. a
-#'   [shiny::reactiveVal()]) returning a `data.frame` of statistical test results.
-#'   When `NULL` or when the reactive returns `NULL`, no statistics data is
-#'   included.
+#'   [shiny::reactiveVal()]) returning a `data.frame` of statistical test results,
+#'   or a named list of them for a plot with more than one table (a per-group
+#'   summary and pairwise comparisons, say). When `NULL` or when the reactive
+#'   returns `NULL`, no statistics data is included.
 #' @param inputs_reactive Optional. A named list of UI input values (for
 #'   example `reactiveValuesToList(input)`), or a reactive expression returning
 #'   one. When `NULL` or when it returns `NULL`, no UI input data is included.
@@ -158,7 +159,8 @@
 #'   \item{plot}{The `plotly` plot object.}
 #'   \item{plot_data}{A `data.frame` of the plot's underlying data, limited to
 #'     the columns and rows actually rendered (see Details).}
-#'   \item{stats}{A `data.frame` of statistical test results, or `NULL`.}
+#'   \item{stats}{A `data.frame` of statistical test results, a named list of
+#'     them (written to the archive as one CSV each), or `NULL`.}
 #'   \item{inputs}{A `data.frame` of UI input names and values, or `NULL`.}
 #' }
 #'
@@ -216,8 +218,17 @@ collect_source_data <- function(plot_reactive,
 
     if (!is.null(stats_reactive)) {
         stats_df <- tryCatch(stats_reactive(), error = function(e) NULL)
-        if (!is.null(stats_df)) {
-            stats <- as.data.frame(stats_df) 
+        if (is.list(stats_df) && !is.data.frame(stats_df)) {
+            # Several tables: kept apart, as the archive writes one CSV each.
+            stats <- lapply(Filter(Negate(is.null), stats_df), as.data.frame)
+            if (length(stats) == 0) {
+                stats <- NULL
+            } else {
+                nm <- names(stats) %||% rep("", length(stats))
+                names(stats) <- ifelse(is.na(nm) | !nzchar(nm), paste0("table", seq_along(stats)), nm)
+            }
+        } else if (!is.null(stats_df)) {
+            stats <- as.data.frame(stats_df)
         }
     }
 
@@ -551,7 +562,13 @@ collect_source_data <- function(plot_reactive,
         # as part of a file path.
         safe <- gsub("[^A-Za-z0-9._-]+", "_", x)
 
-        if (!is.null(object$stats)) {
+        if (is.list(object$stats) && !is.data.frame(object$stats)) {
+            # A named list of tables: one CSV each.
+            for (tbl in names(object$stats)) {
+                csv <- paste0(safe, "_stats_", gsub("[^A-Za-z0-9._-]+", "_", tbl), ".csv")
+                write.csv(object$stats[[tbl]], file.path(tmp, csv), row.names = FALSE)
+            }
+        } else if (!is.null(object$stats)) {
             write.csv(object$stats, file.path(tmp, paste0(safe, "_stats_data.csv")), row.names = FALSE)
         }
 

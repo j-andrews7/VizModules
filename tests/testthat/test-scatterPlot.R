@@ -26,6 +26,36 @@ test_that("scatterPlot UI exposes a numeric 'Size By' selector", {
     expect_false("cat1" %in% size_by_choices)
 })
 
+test_that("scatterPlot Color By and Shape By leave out categoricals with too many levels", {
+    df <- data.frame(
+        x = seq_len(60),
+        y = rev(seq_len(60)),
+        id = paste0("gene", seq_len(60)),
+        grp = rep(c("a", "b", "c"), 20),
+        flag = rep(c(TRUE, FALSE), 30),
+        stringsAsFactors = FALSE
+    )
+    choices_of <- function(html, input) {
+        pat <- paste0("data-for=\"scatter-", input, "\">.*?</script>")
+        config <- regmatches(html, regexpr(pat, html))
+        jsonlite::fromJSON(sub("</script>$", "", sub("^data-for=\"[^\"]+\">", "", config)))$options$choices$value
+    }
+
+    html <- as.character(dittoViz_scatterPlotInputsUI("scatter", df))
+    color <- choices_of(html, "color.by")
+    shape <- choices_of(html, "shape.by")
+    # Numeric columns stay for a continuous colour; the 60-level ID column is gone.
+    expect_true(all(c("x", "y", "grp", "flag") %in% color))
+    expect_false("id" %in% color)
+    expect_true(all(c("grp", "flag") %in% shape))
+    expect_false(any(c("id", "x") %in% shape))
+
+    # An explicit default naming the wide column is honoured.
+    html <- as.character(dittoViz_scatterPlotInputsUI("scatter", df, defaults = list(color.by = "id")))
+    expect_true("id" %in% choices_of(html, "color.by"))
+    expect_false("id" %in% choices_of(html, "shape.by"))
+})
+
 test_that("a size column gives a spread of marker sizes and a custom size legend", {
     p <- dittoViz::scatterPlot(
         example_mtcars,
@@ -39,9 +69,9 @@ test_that("a size column gives a spread of marker sizes and a custom size legend
     expect_gt(length(sizes), 0)
     expect_gt(diff(range(sizes)), 0)
 
-    anns <- plotly::plotly_build(.custom_legend(
+    anns <- plotly::plotly_build(add_size_legend(
         p$plot,
-        data = example_mtcars, size_by = "hp",
+        data = example_mtcars, size.by = "hp",
         gap = 0.04, title.size = 14, text.size = 12
     ))$x$layout$annotations
     expect_length(Filter(function(a) grepl("font-size", a$text), anns), 5)
@@ -132,15 +162,15 @@ test_that("scatterPlot uses the default single point color when nothing is group
 test_that("highlight values may contain spaces when separated by commas", {
     available <- c("CD4 T", "CD8 T", "B", "P01", "P07")
 
-    expect_equal(.parse_highlight_values("CD4 T, B", available), c("CD4 T", "B"))
-    expect_equal(.parse_highlight_values("CD4 T\nCD8 T", available), c("CD4 T", "CD8 T"))
+    expect_equal(parse_highlight_values("CD4 T, B", available), c("CD4 T", "B"))
+    expect_equal(parse_highlight_values("CD4 T\nCD8 T", available), c("CD4 T", "CD8 T"))
     # Space-separated lists of values without spaces still split as before.
-    expect_equal(.parse_highlight_values("P01 P07", available), c("P01", "P07"))
-    expect_equal(.parse_highlight_values("P01, P07 B", available), c("P01", "P07", "B"))
+    expect_equal(parse_highlight_values("P01 P07", available), c("P01", "P07"))
+    expect_equal(parse_highlight_values("P01, P07 B", available), c("P01", "P07", "B"))
     # With nothing to match against, every entry splits on whitespace.
-    expect_equal(.parse_highlight_values("a b,c"), c("a", "b", "c"))
-    expect_equal(.parse_highlight_values(""), character(0))
-    expect_equal(.parse_highlight_values(NULL), character(0))
+    expect_equal(parse_highlight_values("a b,c"), c("a", "b", "c"))
+    expect_equal(parse_highlight_values(""), character(0))
+    expect_equal(parse_highlight_values(NULL), character(0))
 })
 
 # --- Driving the module's own build ------------------------------------------
@@ -152,7 +182,8 @@ test_that("highlight values may contain spaces when separated by commas", {
         x.by = "units", y.by = "revenue", color.by = "", shape.by = "", size.by = "", split.by = "",
         x.adjustment = "", y.adjustment = "", color.adjustment = "",
         x.adj.fxn = "", y.adj.fxn = "", color.adj.fxn = "",
-        size = 1, opacity = 1, show.others = FALSE, split.show.all.others = FALSE,
+        size = 1, size.min = 1, size.max = 6, size.scale.min = NA, size.scale.max = NA,
+        opacity = 1, show.others = FALSE, split.show.all.others = FALSE,
         plot.order = "unordered", shape.panel = "16, 15, 17, 23, 25, 8",
         min.color = "#F0E442", max.color = "#0072B2", min.value = NA, max.value = NA,
         do.contour = FALSE, contour.color = "black", contour.linetype = "solid", do.ellipse = FALSE,
@@ -228,8 +259,8 @@ test_that("fit and model lines are fit to the plotted values under every axis ad
         lines <- expect_fit_lines_on_points(linear, c("Linear Fit", "Custom"), min.count = 2, full.span = TRUE)
 
         # ...and is the least-squares line through them.
-        px <- VizModules:::.adjusted_values(df$units, adj$x.adjustment, adj$x.adj.fxn)
-        py <- VizModules:::.adjusted_values(df$revenue, adj$y.adjustment, adj$y.adj.fxn)
+        px <- VizModules:::adjusted_values(df$units, adj$x.adjustment, adj$x.adj.fxn)
+        py <- VizModules:::adjusted_values(df$revenue, adj$y.adjustment, adj$y.adj.fxn)
         expected <- stats::coef(stats::lm(py ~ px))
         for (ln in lines) {
             lx <- unlist(ln$x)
@@ -284,4 +315,94 @@ test_that("no fit lines are drawn while an adjustment makes an axis categorical"
     built <- plotly::plotly_build(fig)
     fit_names <- vapply(built$x$data, function(tr) tr$name %||% "", character(1))
     expect_false(any(fit_names %in% c("Linear Fit", "Custom")))
+})
+
+test_that("group colours follow their names when a factor level has no points", {
+    # "B" is a level with no rows, as a filtered table or a wrapper's fixed
+    # levels leave it. Positional colours would hand C the colour meant for B.
+    df <- data.frame(x = 1:4, y = 4:1, grp = factor(c("A", "A", "C", "C"), levels = c("A", "B", "C")))
+    fig <- NULL
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(
+            id = "scatter", data = shiny::reactive(df),
+            defaults = list(color.panel = c(A = "#FF0000", B = "#00FF00", C = "#0000FF"))
+        ),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .scatter_inputs(x.by = "x", y.by = "y", color.by = "grp"))
+                session$flushReact()
+            })
+            fig <<- suppressWarnings(generate_scatterPlot())
+        }
+    )
+    traces <- Filter(function(tr) identical(tr$mode, "markers") && !is.null(tr$name),
+        plotly::plotly_build(fig)$x$data)
+    colours <- vapply(traces, function(tr) as.character(tr$marker$color[1]), character(1))
+    names(colours) <- vapply(traces, function(tr) tr$name, character(1))
+    expect_identical(unname(colours[c("A", "C")]), c("rgba(255,0,0,1)", "rgba(0,0,255,1)"))
+})
+
+test_that("fig.fn lets a wrapper add layers and retitle an axis", {
+    hook <- function(fig, input, isolate_fn) {
+        fig$x$layout$xaxis$title$text <- paste(isolate_fn(input$x.by), "(hooked)")
+        plotly::add_annotations(fig, x = 0.5, y = 0.5, xref = "paper", yref = "paper",
+            text = "hook-marker", showarrow = FALSE)
+    }
+    fig <- NULL
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(id = "scatter", data = shiny::reactive(example_sales), fig.fn = hook),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .scatter_inputs())
+                session$flushReact()
+            })
+            fig <<- suppressWarnings(generate_scatterPlot())
+        }
+    )
+    annos <- plotly::plotly_build(fig)$x$layout$annotations
+    texts <- vapply(annos, function(a) as.character(a$text %||% ""), character(1))
+
+    expect_true("hook-marker" %in% texts)
+    # The retitled axis is the one made draggable, not the column name.
+    expect_true("units (hooked)" %in% texts)
+
+    unhooked <- .scatter_figure(example_sales, .scatter_inputs())
+    unhooked_texts <- vapply(plotly::plotly_build(unhooked)$x$layout$annotations,
+        function(a) as.character(a$text %||% ""), character(1))
+    expect_false("hook-marker" %in% unhooked_texts)
+    expect_true("units" %in% unhooked_texts)
+
+    expect_error(dittoViz_scatterPlotServer("x", shiny::reactive(example_sales), fig.fn = "not a function"))
+})
+
+test_that("a Size By column spans the chosen point sizes and limits, and the size legend follows (#364)", {
+    units <- example_sales$units
+    markers <- function(fig) sort(.extract_marker_sizes(fig))
+    legend_of <- function(fig) {
+        anns <- plotly::plotly_build(fig)$x$layout$annotations
+        texts <- vapply(anns, function(a) a$text, character(1))
+        circles <- texts[grepl("font-size", texts)]
+        font_px <- as.numeric(sub(".*font-size:([0-9.eE+-]+)px.*", "\\1", circles))
+        list(labels = texts[grepl("^[0-9.]+$", texts)], diameters = font_px * .CIRCLE_GLYPH_DIAMETER_RATIO)
+    }
+
+    # Left alone, the column spans ggplot2's default sizes over its own range.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(size.by = "units"))
+    expect_equal(markers(fig), sort(.size_scale_px(units, c(1, 6), range(units))))
+
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        size.by = "units", size.min = 2, size.max = 10, size.scale.min = 0, size.scale.max = 2000
+    ))
+    expect_equal(markers(fig), sort(.size_scale_px(units, c(2, 10), c(0, 2000))))
+    legend <- legend_of(fig)
+    expect_equal(legend$labels, c("0", "500", "1000", "1500", "2000"))
+    expect_equal(legend$diameters, .size_scale_px(c(0, 500, 1000, 1500, 2000), c(2, 10), c(0, 2000)))
+
+    # A lower limit above some of the values draws them at the smallest size
+    # rather than dropping them.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(size.by = "units", size.scale.min = 200))
+    expect_length(markers(fig), length(units))
+    expect_equal(min(markers(fig)), .size_scale_px(200, c(1, 6), c(200, max(units))))
 })

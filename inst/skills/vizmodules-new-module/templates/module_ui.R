@@ -121,7 +121,7 @@
                     defaults, "facet.by", "",
                     function(x) x %in% c(group_facet_choices, "")
                 ),
-                choices = c(intersect(group_facet_choices, .facet_check(data)), "")
+                choices = c(intersect(group_facet_choices, facet_check(data)), "")
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
@@ -142,7 +142,7 @@
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical),
                 status = "success"
             ), documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             # [T] The colour picker is rendered server-side; this is only its slot.
@@ -152,7 +152,7 @@
                 min = 0, max = 1
             ), "Fill transparency", placement = "top", options = list(container = "body"))
         ),
-        # [T] Shared tabs. Add `"Stats" = .uniform_stats_inputs_ui(ns, defaults)` only for
+        # [T] Shared tabs. Add `"Stats" = uniform_stats_inputs_ui(ns, defaults)` only for
         # categorical-x / numeric-y plots. See references/stats-integration.md.
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),

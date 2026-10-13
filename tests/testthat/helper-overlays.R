@@ -1,5 +1,5 @@
 # Expectations for anything VizModules draws over a plot it did not draw itself:
-# significance brackets, fit lines, model lines. Such an overlay is only right if
+# significance brackets, fit lines, model lines, ribbons. Such an overlay is only right if
 # it is in the plot's own coordinate space -- after any axis adjustment, on the
 # panel it describes, within the range the axis finally shows. That is easiest to
 # check on the built figure, which is what these do. Use them for any new overlay.
@@ -114,4 +114,49 @@ expect_fit_lines_on_points <- function(fig, names, min.count = 1, full.span = FA
                 toString(signif(range(ly), 4)), toString(signif(y_range, 4))))
     }
     invisible(lines)
+}
+
+# Every ribbon (a `fill = "toself"` trace) belongs to exactly one line drawn on the same
+# axes, in the same legend group, and spans only x positions that line is drawn at: a
+# ribbon off to one side, or on another panel, was built from other rows. With `contains`,
+# its upper edge is at or above the line and its lower edge at or below it at every x, as
+# any interval worked out around the plotted value is. Returns the ribbons invisibly.
+expect_ribbons_on_lines <- function(fig, min.count = 1, contains = TRUE) {
+    built <- suppressWarnings(plotly::plotly_build(fig))
+    is_ribbon <- vapply(built$x$data, function(tr) identical(tr$fill, "toself"), logical(1))
+    ribbons <- built$x$data[is_ribbon]
+    lines <- built$x$data[!is_ribbon]
+    testthat::expect_gte(length(ribbons), min.count)
+
+    for (rb in ribbons) {
+        xref <- rb$xaxis %||% "x"
+        yref <- rb$yaxis %||% "y"
+        where <- sprintf("ribbon '%s' on %s/%s", as.character(rb$name), xref, yref)
+        owners <- Filter(function(tr) {
+            identical(as.character(tr$legendgroup), as.character(rb$legendgroup)) &&
+                identical(tr$xaxis %||% "x", xref) && identical(tr$yaxis %||% "y", yref)
+        }, lines)
+        testthat::expect_true(length(owners) == 1, label = paste(where, "has one line in its legend group"))
+        if (length(owners) != 1) next
+        ln <- owners[[1]]
+        testthat::expect_false(isTRUE(rb$showlegend), label = paste(where, "takes no legend entry"))
+
+        # group2NA() separates the outlines with missing rows.
+        rx <- as.character(unlist(rb$x))
+        ry <- as.numeric(unlist(rb$y))
+        side <- as.character(unlist(rb$text))
+        drawn <- !is.na(rx) & !is.na(ry)
+        lx <- as.character(unlist(ln$x))
+        testthat::expect_true(all(rx[drawn] %in% lx), label = paste(where, "spans only its line's x positions"))
+
+        if (contains) {
+            ly <- as.numeric(unlist(ln$y))[match(rx, lx)]
+            tol <- 1e-8 * max(1, abs(ly), na.rm = TRUE)
+            up <- drawn & side == "Upper"
+            down <- drawn & side == "Lower"
+            testthat::expect_true(all(ry[up] >= ly[up] - tol) && all(ry[down] <= ly[down] + tol),
+                label = paste(where, "encloses its line"))
+        }
+    }
+    invisible(ribbons)
 }

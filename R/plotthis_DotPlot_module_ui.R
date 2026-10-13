@@ -60,6 +60,12 @@
 #' - `size_by` - Numeric column mapped to dot size (UI: "Size By", default: "" = count)
 #' - `size_min` - Minimum dot size (UI: "Min Dot Size", default: 1)
 #' - `size_max` - Maximum dot size (UI: "Max Dot Size", default: 6)
+#' - `size.scale.min` - `size_by` value drawn at the minimum dot size, where the size legend starts
+#'   (UI: "Size Scale Min", default: NA = the column's minimum); smaller values are drawn at the minimum size.
+#'   Shown while `size_by` is set
+#' - `size.scale.max` - `size_by` value drawn at the maximum dot size, where the size legend ends
+#'   (UI: "Size Scale Max", default: NA = the column's maximum); larger values are drawn at the maximum size.
+#'   Shown while `size_by` is set
 #' - `fill_by` - Numeric column mapped to dot fill (UI: "Fill By", default: "")
 #' - `fill_cutoff` - Cutoff applied to the fill column (UI: "Fill Cutoff", default: NA)
 #' - `fill_cutoff_direction` - Direction of the fill cutoff (UI: "Fill Cutoff Direction",
@@ -126,7 +132,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     char.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
     # Continuous palette choices for the fill gradient.
-    palette_names <- names(.flatten_palette_options(default_palettes()[["choices"]]))
+    palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
 
     selected <- list(
         "x", "y", "size_by", "fill_by", "fill_cutoff", "size_min", "size_max",
@@ -182,7 +188,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         "Facet" = tagList(
             tipify(viz_select_input(ns("facet.by"), "Facet By",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices),
-                choices = c("", .facet_check(data))
+                choices = c("", facet_check(data))
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
@@ -204,7 +210,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$facet_byrow,
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             tipify(viz_select_input(ns("palette.name"), "Color Palette",
@@ -280,6 +286,20 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
             tipify(numericInput(ns("size.max"), "Max Dot Size",
                 value = get_default(defaults, "size.max", 6, is.numeric), min = 0, step = 1
             ), documentParameters$size_max, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.min"), "Size Scale Min",
+                value = get_default(defaults, "size.scale.min", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Min Dot Size, and where the size",
+                "legend starts. Leave blank to use the column's minimum. Smaller",
+                "values are drawn at the Min Dot Size."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.max"), "Size Scale Max",
+                value = get_default(defaults, "size.scale.max", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Max Dot Size, and where the size",
+                "legend ends. Leave blank to use the column's maximum. Larger",
+                "values are drawn at the Max Dot Size."
+            ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("size.legend.x"), "Size Legend X Position",
                 value = get_default(defaults, "size.legend.x", 1.04, is.numeric),
                 step = 0.02

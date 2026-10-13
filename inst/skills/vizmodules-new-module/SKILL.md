@@ -53,7 +53,7 @@ The single biggest source of rework. Ask first:
 
 ## Traps inside this package
 
-- **`.blank_to_null()` returns `NULL` for anything not length 1.** A multi-select feeding it reads as "no selection", so every facet is drawn. Handle multi-value inputs explicitly.
+- **`blank_to_null()` returns `NULL` for anything not length 1.** A multi-select feeding it reads as "no selection", so every facet is drawn. Handle multi-value inputs explicitly.
 - **Named palettes do not apply to dittoViz ridgeplots.** They fill by an internal composite column, so a named vector matches nothing and ggplot2 silently drops every colour to grey. Drop the names for that layer.
 - **`boxgap`/`boxgroupgap` are not in plotly 4.12.1's layout schema.** The warning is pre-existing and package-wide (`dittoViz_yPlot` and `plotthis_BoxPlot` emit it identically). Match the siblings rather than diverging one module.
 - **Freeze only what you will actually update, and never at startup.** An unconditional freeze on an input the generate reactive always reads suspends the plot forever, waiting for an echo that never comes. Use `ignoreInit = TRUE`.

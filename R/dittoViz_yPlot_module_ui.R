@@ -219,6 +219,14 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
+    # Grouping, colour and shape choices leave out categoricals with too many
+    # levels to draw (an ID column asks for one group per row), unless the
+    # caller asked for one.
+    disc_for <- function(key) c("", .discrete_choices(data, keep = get_default(defaults, key, NULL)))
+    group.choices <- disc_for("group.by")
+    color.choices <- disc_for("color.by")
+    shape.choices <- disc_for("shape.by")
+
     # Recognized data adjustments for the (numeric) continuous variable.
     adj.choices <- c("", .adjustment_choices)
     adj.fxn.choices <- c("", .adj_fxn_choices)
@@ -227,7 +235,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     # The limits are in the units plotted, so any default adjustment applies.
     default.var <- get_default(defaults, "var", num.choices[2], function(x) all(x %in% num.choices))
     y.range <- .calculate_range(
-        df = .as_plotted(
+        df = as_plotted(
             data, default.var,
             get_default(defaults, "var.adjustment", "", function(x) x %in% adj.choices),
             get_default(defaults, "var.adj.fxn", "", function(x) x %in% adj.fxn.choices)
@@ -279,10 +287,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("group.by"), "Group By",
-                    choices = cat.choices,
+                    choices = group.choices,
                     selected = get_default(
-                        defaults, "group.by", cat.choices[2],
-                        function(x) x %in% cat.choices
+                        defaults, "group.by", group.choices[2],
+                        function(x) x %in% group.choices
                     )
                 ),
                 documentParameters$group.by,
@@ -290,10 +298,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("color.by"), "Color By",
-                    choices = cat.choices,
+                    choices = color.choices,
                     selected = get_default(
                         defaults, "color.by", "",
-                        function(x) x %in% cat.choices
+                        function(x) x %in% color.choices
                     )
                 ),
                 documentParameters$color.by,
@@ -301,10 +309,10 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
             ),
             tipify(
                 viz_select_input(ns("shape.by"), "Shape By",
-                    choices = cat.choices,
+                    choices = shape.choices,
                     selected = get_default(
                         defaults, "shape.by", "",
-                        function(x) x %in% cat.choices
+                        function(x) x %in% shape.choices
                     )
                 ),
                 documentParameters$shape.by,
@@ -565,11 +573,11 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 placement = "top", options = list(container = "body")
             )
         ),
-        "Stats" = .uniform_stats_inputs_ui(ns, defaults),
+        "Stats" = uniform_stats_inputs_ui(ns, defaults),
         "Facet" = tagList(
             tipify(
                 viz_select_input(ns("split.by"), "Split by (facet)",
-                    choices = c("", .facet_check(data)),
+                    choices = c("", facet_check(data)),
                     selected = get_default(
                         defaults, "split.by", "",
                         function(x) x %in% cat.choices
@@ -619,7 +627,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$multivar.split.dir,
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices,
             annotate.note = paste(

@@ -1172,7 +1172,7 @@ test_that("create_ggplot_axis_style draws a full border, axis lines only, or nei
     }
 })
 
-# ─── .custom_legend ───────────────────────────────────────────────────────────
+# ─── add_size_legend() ─────────────────────────────────────────────────────────
 
 # A two-group dot plot and its data, for the size legend to read.
 .size_legend_fixture <- function(...) {
@@ -1187,12 +1187,12 @@ test_that("create_ggplot_axis_style draws a full border, axis lines only, or nei
 
 # The built size legend over that fixture, with five fixed breaks.
 .size_legend <- function(fx, ...) {
-    plotly::plotly_build(VizModules:::.custom_legend(fx$fig, fx$data,
-        size_by = "pct_expressed", size_values = c(10, 20, 30, 40, 50), ...
+    plotly::plotly_build(add_size_legend(fx$fig, fx$data,
+        size.by = "pct_expressed", size.values = c(10, 20, 30, 40, 50), ...
     ))
 }
 
-test_that(".custom_legend styles its title and labels with the legend font", {
+test_that("add_size_legend() styles its title and labels with the legend font", {
     # The title and the break labels, not the circle glyphs.
     text_anns <- function(...) {
         anns <- .size_legend(.size_legend_fixture(), ...)$x$layout$annotations
@@ -1211,16 +1211,16 @@ test_that(".custom_legend styles its title and labels with the legend font", {
     }
 })
 
-test_that(".custom_legend returns the figure unchanged for a missing or non-numeric size_by", {
+test_that("add_size_legend() returns the figure unchanged for a missing or non-numeric size.by", {
     fig <- make_plotly()
     data <- data.frame(cell_type = c("A", "B"), pct_expressed = c(10, 20))
 
     for (size_by in list(NULL, "", "absent", "cell_type")) {
-        expect_identical(VizModules:::.custom_legend(fig, data, size_by = size_by), fig, info = toString(size_by))
+        expect_identical(add_size_legend(fig, data, size.by = size_by), fig, info = toString(size_by))
     }
 })
 
-test_that(".custom_legend appends one title, and one circle and label per break, for numeric size_by", {
+test_that("add_size_legend() appends one title, and one circle and label per break, for numeric size.by", {
     built <- .size_legend(.size_legend_fixture(), title.size = 22, text.size = 9)
     anns <- built$x$layout$annotations
 
@@ -1250,11 +1250,11 @@ test_that(".custom_legend appends one title, and one circle and label per break,
     expect_equal(length(rebuilt$x$layout$annotations), length(anns))
 })
 
-test_that(".custom_legend derives circle sizes from marker sizes when size_values is NULL", {
+test_that("add_size_legend() derives circle sizes from marker sizes when size.values is NULL", {
     fx <- .size_legend_fixture(marker = list(size = ~pct_expressed))
     fig <- fx$fig
 
-    result <- VizModules:::.custom_legend(fig, fx$data, size_by = "pct_expressed")
+    result <- add_size_legend(fig, fx$data, size.by = "pct_expressed")
     built <- plotly::plotly_build(result)
     anns <- built$x$layout$annotations
     circle_text <- Filter(function(a) grepl("font-size", a$text), anns)
@@ -1273,13 +1273,13 @@ test_that(".custom_legend derives circle sizes from marker sizes when size_value
     expect_false(is.unsorted(sizes))
 })
 
-test_that(".custom_legend strips the size variable from a combined legend title", {
+test_that("add_size_legend() strips the size variable from a combined legend title", {
     fx <- .size_legend_fixture()
     strip <- function(title) {
         fx$fig$x$layout$legend$title$text <- title
-        VizModules:::.custom_legend(fx$fig, fx$data,
-            size_by = "pct_expressed",
-            size_values = c(10, 20, 30, 40, 50)
+        add_size_legend(fx$fig, fx$data,
+            size.by = "pct_expressed",
+            size.values = c(10, 20, 30, 40, 50)
         )$x$layout$legend$title$text
     }
     expect_equal(strip("cell_type<br />pct_expressed"), "cell_type")
@@ -1287,18 +1287,126 @@ test_that(".custom_legend strips the size variable from a combined legend title"
     expect_equal(strip("pct_expressed"), "pct_expressed")
 })
 
-test_that(".custom_legend start_x and start_y move the legend column, ignoring invalid values", {
+test_that("add_size_legend() takes a title and rounds its break labels", {
+    fx <- .size_legend_fixture()
+    texts <- function(b) vapply(b$x$layout$annotations, function(a) a$text, character(1))
+
+    # Breaks run evenly from 5 to 90: 26.25 and 68.75 are not round.
+    raw <- texts(.size_legend(fx))
+    expect_true(all(c("pct_expressed", "26.25", "68.75") %in% raw))
+
+    tidy <- texts(.size_legend(fx, title = "% expressing", digits = 0))
+    expect_true("% expressing" %in% tidy)
+    expect_false("pct_expressed" %in% tidy)
+    expect_true(all(c("5", "26", "48", "69", "90") %in% tidy))
+})
+
+test_that("add_size_legend() start.x and start.y move the legend column, ignoring invalid values", {
     fx <- .size_legend_fixture()
     max_at <- function(b, coord) max(vapply(b$x$layout$annotations, function(a) a[[coord]], numeric(1)))
 
-    high <- .size_legend(fx, start_y = 0.95)
-    expect_true(max_at(.size_legend(fx, start_y = 0.45), "y") < max_at(high, "y"))
-    # An invalid start_y falls back to the default placement.
-    expect_equal(max_at(.size_legend(fx, start_y = NA), "y"), max_at(high, "y"))
+    high <- .size_legend(fx, start.y = 0.95)
+    expect_true(max_at(.size_legend(fx, start.y = 0.45), "y") < max_at(high, "y"))
+    # An invalid start.y falls back to the default placement.
+    expect_equal(max_at(.size_legend(fx, start.y = NA), "y"), max_at(high, "y"))
 
     default <- .size_legend(fx)
-    expect_true(max_at(.size_legend(fx, start_x = 1.2), "x") > max_at(default, "x"))
-    expect_equal(max_at(.size_legend(fx, start_x = NA), "x"), max_at(default, "x"))
+    expect_true(max_at(.size_legend(fx, start.x = 1.2), "x") > max_at(default, "x"))
+    expect_equal(max_at(.size_legend(fx, start.x = NA), "x"), max_at(default, "x"))
+})
+
+# Pixel diameters of a built size legend's circles, top to bottom.
+.size_legend_diameters <- function(built) {
+    circles <- Filter(function(a) grepl("font-size", a$text), built$x$layout$annotations)
+    font_px <- as.numeric(sub(".*font-size:([0-9.eE+-]+)px.*", "\\1", vapply(circles, function(a) a$text, character(1))))
+    font_px * VizModules:::.CIRCLE_GLYPH_DIAMETER_RATIO
+}
+
+# The break labels of a built size legend, top to bottom.
+.size_legend_labels <- function(built) {
+    texts <- vapply(built$x$layout$annotations, function(a) a$text, character(1))
+    texts[grepl("^-?[0-9.]+$", texts)]
+}
+
+test_that("add_size_legend() spans its breaks across the size scale's limits", {
+    fx <- .size_legend_fixture()
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, 100))), c("0", "25", "50", "75", "100"))
+    # A missing end takes the data's (5 to 90 here).
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, NA))), c("0.0", "22.5", "45.0", "67.5", "90.0"))
+    expect_equal(
+        .size_legend_labels(.size_legend(fx, limits = c(NA, 10))),
+        c("5.00", "6.25", "7.50", "8.75", "10.00")
+    )
+    # Limits that do not increase fall back to the data's range.
+    data_range <- .size_legend_labels(.size_legend(fx))
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(100, 0))), data_range)
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(95, NA))), data_range)
+})
+
+test_that("add_size_legend() draws circles for the breaks it is given, within the limits", {
+    fx <- .size_legend_fixture()
+    built <- add_size_legend(fx$fig, fx$data, size.by = "pct_expressed",
+        limits = c(1, 100), size.range = c(0, 6), breaks = c(0, 20, 40, 60, 80, 100, 120, NA))
+    expect_equal(.size_legend_labels(built), c("20", "40", "60", "80", "100"))
+    # Each circle is the size the scale gives its break.
+    px <- VizModules:::.size_scale_px(c(20, 40, 60, 80, 100), c(0, 6), c(1, 100))
+    expect_equal(.size_legend_diameters(built), px, tolerance = 1e-3)
+
+    # No usable break falls back to five even ones; size.values is recycled to the breaks.
+    expect_equal(.size_legend_labels(.size_legend(fx, limits = c(0, 100), breaks = 200)),
+        c("0", "25", "50", "75", "100"))
+    expect_length(.size_legend_labels(.size_legend(fx, limits = c(0, 100), breaks = c(10, 90))), 2)
+})
+
+test_that("add_size_legend() circles match the points a size scale draws", {
+    df <- data.frame(x = 1:5, y = 1:5, n = c(0, 25, 50, 75, 100))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+    fig <- plotly::ggplotly(p)
+    markers <- VizModules:::.extract_marker_sizes(fig)
+
+    built <- add_size_legend(fig, df, size.by = "n", limits = c(0, 100), size.range = c(2, 8))
+    expect_equal(.size_legend_labels(built), c("0", "25", "50", "75", "100"))
+    expect_equal(.size_legend_diameters(built), sort(markers))
+})
+
+test_that("add_size_legend() reads circles from the markers when the limits are wider than the data", {
+    # Only 20 to 80 are drawn, on a 0 to 100 scale, and no size.range is given.
+    df <- data.frame(x = 1:4, y = 1:4, n = c(20, 40, 60, 80))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+
+    built <- add_size_legend(plotly::ggplotly(p), df, size.by = "n", limits = c(0, 100))
+    expected <- VizModules:::.size_scale_px(c(0, 25, 50, 75, 100), c(2, 8), c(0, 100))
+    expect_equal(.size_legend_diameters(built), expected, tolerance = 1e-6)
+})
+
+test_that("the size scale draws values beyond its limits at the end sizes", {
+    df <- data.frame(x = 1:4, y = 1:4, n = c(-10, 0, 100, 150))
+    p <- ggplot2::ggplot(df, ggplot2::aes(x, y, size = n)) +
+        ggplot2::geom_point() +
+        VizModules:::.size_scale(c(2, 8), c(0, 100))
+    markers <- VizModules:::.extract_marker_sizes(plotly::ggplotly(p))
+
+    # No point is dropped, and each takes the size of the limit it is beyond.
+    expect_length(markers, 4)
+    expect_equal(markers, VizModules:::.size_scale_px(c(0, 0, 100, 100), c(2, 8), c(0, 100)))
+})
+
+test_that(".size_range and .size_limits fill what is missing", {
+    expect_equal(VizModules:::.size_range(2, 10), c(2, 10))
+    expect_equal(VizModules:::.size_range(NA, NULL), c(1, 6))
+    expect_equal(VizModules:::.size_range("a", 9), c(1, 9))
+
+    vals <- c(5, NA, 90, Inf)
+    expect_equal(VizModules:::.size_limits(vals), c(5, 90))
+    expect_equal(VizModules:::.size_limits(vals, 0, 100), c(0, 100))
+    expect_equal(VizModules:::.size_limits(vals, NA, 100), c(5, 100))
+    expect_equal(VizModules:::.size_limits(vals, 100, NA), c(5, 90))
+    expect_null(VizModules:::.size_limits(c(NA, NaN)))
+    expect_null(VizModules:::.size_limits(c("a", "b")))
 })
 
 test_that(".extract_marker_sizes collects numeric marker sizes", {
@@ -1342,6 +1450,18 @@ test_that(".annotation_edit_key keys axis titles by side and others by text", {
     expect_equal(VizModules:::.annotation_edit_key(list(text = "p = 0.01")), "text:p = 0.01")
     expect_null(VizModules:::.annotation_edit_key(list(text = "")))
     expect_null(VizModules:::.annotation_edit_key(NULL))
+
+    # Text a wrapper built from a factor column keys like its label, and text
+    # that is not a single value has no key rather than an error.
+    expect_equal(VizModules:::.annotation_edit_key(list(text = factor("PLK1"))), "text:PLK1")
+    expect_equal(VizModules:::.annotation_edit_key(list(text = 5)), "text:5")
+    expect_null(VizModules:::.annotation_edit_key(list(text = character(0))))
+    expect_null(VizModules:::.annotation_edit_key(list(text = NA_character_)))
+    expect_null(VizModules:::.annotation_edit_key(list(text = list("a"))))
+    expect_identical(
+        VizModules:::.annotation_edit_keys(list(list(text = factor("A")), list(text = factor("A")))),
+        c("text:A#1", "text:A#2")
+    )
 })
 
 test_that(".capture_manual_edits records legend, annotation and colorbar drags, not zooms", {
@@ -1532,7 +1652,7 @@ test_that(".add_colorbar_listener attaches a render hook to the figure", {
     expect_false(is.null(out$jsHooks$render))
 })
 
-test_that(".reset_manual_edits clears the store a module reads, not a copy", {
+test_that("reset_manual_edits clears the store a module reads, not a copy", {
     shiny::testServer(function(input, output, session) {
         store <- setup_manual_edits(input, session, "src")
     }, {
@@ -1540,7 +1660,7 @@ test_that(".reset_manual_edits clears the store a module reads, not a copy", {
         store$edits$annotations <- list(`axis:x#1` = list(x = 0.4))
         store$edits$colorbar <- list(x = 1.1)
 
-        .reset_manual_edits(store)
+        reset_manual_edits(store)
 
         edits <- shiny::isolate(shiny::reactiveValuesToList(store$edits))
         expect_null(edits$legend)
@@ -1607,4 +1727,53 @@ test_that("AreaPlot offers every categorical column except X for Group By", {
     plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "product"))
     expect_equal(seen[["area-group.by"]]$selected, "region")
     expect_false("product" %in% seen[["area-group.by"]]$choices)
+})
+
+test_that("plotthis Group By and Fill By leave out categoricals with too many levels", {
+    df <- .wide_id_df()
+    cases <- list(
+        list(ui = plotthis_BarPlotInputsUI, id = "bar", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_BarPlotInputsUI, id = "bar", input = "fill.by", numeric = TRUE),
+        list(ui = plotthis_DensityPlotInputsUI, id = "dens", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_HistogramInputsUI, id = "hist", input = "group.by", numeric = FALSE),
+        list(ui = plotthis_SplitBarPlotInputsUI, id = "split", input = "fill.by", numeric = TRUE)
+    )
+    for (case in cases) {
+        info <- paste(case$id, case$input)
+        input_id <- paste0(case$id, "-", case$input)
+        ch <- .select_choices(as.character(case$ui(case$id, df)), input_id)
+        expect_true(all(c("grp", "grp2", "flag") %in% ch), info = info)
+        expect_false("id" %in% ch, info = info)
+        # A fill gradient takes a numeric column; a grouping does not.
+        expect_identical(all(c("val", "val2") %in% ch), case$numeric, info = info)
+
+        # An explicit default naming the wide column is honoured.
+        html <- as.character(case$ui(case$id, df, defaults = setNames(list("id"), case$input)))
+        expect_true("id" %in% .select_choices(html, input_id), info = info)
+    }
+})
+
+test_that("AreaPlot Group By drops wide categoricals as well as X, at startup and when X changes", {
+    df <- .wide_id_df()
+    html <- as.character(plotthis_AreaPlotInputsUI("area", df, defaults = list(x.data = "grp")))
+    expect_setequal(setdiff(.select_choices(html, "area-group.by"), ""), c("grp2", "flag"))
+
+    sent <- new.env()
+    local_mocked_bindings(update_viz_select = function(session, inputId, label = NULL, choices = NULL, ...) {
+        if (!is.null(choices)) {
+            sent[[inputId]] <- choices
+        }
+        invisible(NULL)
+    })
+    shiny::testServer(
+        plotthis_AreaPlotServer,
+        args = list(id = "area", data = shiny::reactive(df), defaults = list(x.data = "grp")),
+        {
+            suppressWarnings(session$setInputs(x.data = "grp", y.data = "val", group.by = "grp2", facet.by = ""))
+            suppressWarnings(session$setInputs(x.data = "grp2"))
+            expect_setequal(setdiff(sent[["group.by"]], ""), c("grp", "flag"))
+            # Facet By keeps to the facet_check() columns the UI offers.
+            expect_setequal(setdiff(sent[["facet.by"]], ""), "grp")
+        }
+    )
 })

@@ -8,7 +8,7 @@ comparisons — box, violin, y-plot shapes. Everything else should skip it.
 Add one entry to the `inputs` list:
 
 ```r
-"Stats" = .uniform_stats_inputs_ui(ns, defaults),
+"Stats" = uniform_stats_inputs_ui(ns, defaults),
 ```
 
 That supplies all fifteen controls: `stats.enabled` (the master toggle, note the plural),
@@ -62,7 +62,7 @@ plus `stat.test`, `stat.p.adjust`, `stat.display`, `stat.sig.threshold`, `stat.h
 
    ```r
    observeEvent(input$x.data, {
-       pairs <- generate_pair_strings(data(), input$x.data, group.by = .blank_to_null(input$group.by))
+       pairs <- generate_pair_strings(data(), input$x.data, group.by = blank_to_null(input$group.by))
        if (length(pairs) > 0) {
            freezeReactiveValue(input, "stat.pairs")
            update_viz_select(session, "stat.pairs", choices = c("", pairs), selected = "")
@@ -70,7 +70,7 @@ plus `stat.test`, `stat.p.adjust`, `stat.display`, `stat.sig.threshold`, `stat.h
    })
    ```
 
-4. Call `.reset_stats_inputs(session, defaults)` from the reset observer.
+4. Call `reset_stats_inputs(session, defaults)` from the reset observer.
 
 5. Pass the stats reactive to `collect_source_data()` so the table lands in the source
    download:
@@ -95,16 +95,16 @@ The stats helpers use whatever frame they are given, and the brackets are placed
 heights. If the plot transforms a column before drawing it (dittoViz's `var.adjustment` /
 `var.adj.fxn`, a summary like `freqPlot`'s), give the tests, `create_stat_annotations()`, the
 headroom **and** the axis-range calculation the values as drawn. Otherwise the brackets
-land in another coordinate space, far off the axis (#319). Inside the package that is
-`.as_plotted()`; `adjust_column_values()` is the exported equivalent. Both apply the
+land in another coordinate space, far off the axis (#319). Use
+`as_plotted()` (or `adjust_column_values()`, which also adds the `.adj` column). Both apply the
 adjustment function first and then the z-score/relative rescaling, the reverse of dittoViz,
-so hand dittoViz the combined `.adjustment_fn()` as its `*.adj.fxn` (and no `*.adjustment`)
+so hand dittoViz the combined `adjustment_fn()` as its `*.adj.fxn` (and no `*.adjustment`)
 or the plot and the overlays disagree. Build that frame in
 one function that both the headroom and the render call (`.yplot_stat_context()` is the
 worked example), so the two cannot drift apart.
 
 - **Values along the x-axis** (a rotated plot, dittoViz with a ridge plot): brackets cannot
-  go there. Test and ship the table, but skip drawing and call `.note_brackets_skipped()`.
+  go there. Test and ship the table, but skip drawing and call `note_brackets_skipped()`.
 - **Free y facet scales**: pass `free.y = TRUE` to `create_stat_annotations()` so each
   panel's brackets sit on its own data, return `NULL` from the headroom, and do not pass one
   shared `min`/`max` to a dittoViz plot, whose `coord_cartesian()` would pin every panel to it.

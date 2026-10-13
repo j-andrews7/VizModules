@@ -105,9 +105,19 @@ The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parame
 \item \code{x.adj.fxn} - X adjustment function (UI: "X Adjustment Function", default: "")
 \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
-\item \code{size} - Point size (UI: "Point Size", default: 1)
+\item \code{size} - Point size (UI: "Point Size", default: 1); shown while \code{size.by} is unset
 \item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
 a custom circle size legend is drawn since plotly cannot render a native size legend
+\item \code{size.min} - Smallest point size a \code{size.by} column maps onto (UI: "Min Point Size", default: 1).
+Shown while \code{size.by} is set
+\item \code{size.max} - Largest point size a \code{size.by} column maps onto (UI: "Max Point Size", default: 6).
+Shown while \code{size.by} is set
+\item \code{size.scale.min} - \code{size.by} value drawn at the minimum point size, where the size legend starts
+(UI: "Size Scale Min", default: NA = the column's minimum); smaller values are drawn at the minimum size.
+Shown while \code{size.by} is set
+\item \code{size.scale.max} - \code{size.by} value drawn at the maximum point size, where the size legend ends
+(UI: "Size Scale Max", default: NA = the column's maximum); larger values are drawn at the maximum size.
+Shown while \code{size.by} is set
 \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
 \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
 \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
@@ -146,9 +156,9 @@ default: ""). Values containing spaces
 \item \code{legend.color.title} - Color legend title (UI: "Legend Title", default: "make")
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+default: 1.03); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
+default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
 \item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")

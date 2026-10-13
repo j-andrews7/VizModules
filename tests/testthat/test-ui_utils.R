@@ -173,29 +173,29 @@ test_that("organize_inputs keeps its layout out of inline styles", {
     calls
 }
 
-test_that(".toggle_facet_title_inputs swaps the main title inputs for the facet ones", {
+test_that("toggle_facet_title_inputs swaps the main title inputs for the facet ones", {
     main <- c("title.font.family", "title.font.color", "title.font.size", "axis.title.horizontal.position")
     facet <- c("facet.title.font.size", "facet.title.font.color", "facet.title.font.family")
 
     calls <- .record_toggles()
-    .toggle_facet_title_inputs(NULL, TRUE, extra = "facet.nrow")
+    toggle_facet_title_inputs(NULL, TRUE, extra = "facet.nrow")
     expect_setequal(calls$shown, c(facet, "facet.nrow"))
     expect_setequal(calls$hidden, main)
 
     calls <- .record_toggles()
-    .toggle_facet_title_inputs(NULL, FALSE, extra = "facet.nrow")
+    toggle_facet_title_inputs(NULL, FALSE, extra = "facet.nrow")
     expect_setequal(calls$shown, main)
     expect_setequal(calls$hidden, c(facet, "facet.nrow"))
 })
 
-test_that(".toggle_facet_title_inputs never re-shows an input the app hid", {
+test_that("toggle_facet_title_inputs never re-shows an input the app hid", {
     calls <- .record_toggles()
-    .toggle_facet_title_inputs(NULL, FALSE, hidden = c("title.font.size", "legend.x"))
+    toggle_facet_title_inputs(NULL, FALSE, hidden = c("title.font.size", "legend.x"))
     expect_false("title.font.size" %in% calls$shown)
     expect_true("title.font.color" %in% calls$shown)
 
     calls <- .record_toggles()
-    .toggle_facet_title_inputs(NULL, TRUE, hidden = "facet.title.font.color")
+    toggle_facet_title_inputs(NULL, TRUE, hidden = "facet.title.font.color")
     expect_false("facet.title.font.color" %in% calls$shown)
     expect_true("facet.title.font.size" %in% calls$shown)
 })
@@ -248,13 +248,13 @@ test_that("reset_plotly_inputs() restores the values uniform_plotly_inputs_ui() 
 test_that("subplot spacing starts and resets to the same values, honouring subplot.margin", {
     ids <- c("subplot.margin.x", "subplot.margin.y")
     for (defaults in list(NULL, list(subplot.margin = 0.05), list(subplot.margin = 0.05, subplot.margin.y = 0.2))) {
-        start <- .ui_start_values(.uniform_subplot_spacing_inputs_ui(identity, defaults), ids)
+        start <- .ui_start_values(uniform_subplot_spacing_inputs_ui(identity, defaults), ids)
         sent <- .reset_sent_values(reset_plotly_inputs, defaults)
         for (id in ids) {
             expect_equal(sent[[id]], start[[id]], info = paste(id, format(defaults)))
         }
     }
-    expect_equal(.subplot_spacing_defaults(list(subplot.margin = 0.05)), list(x = 0.05, y = 0.05))
+    expect_equal(subplot_spacing_defaults(list(subplot.margin = 0.05)), list(x = 0.05, y = 0.05))
 })
 
 test_that("reset_legend_inputs() restores the values uniform_legend_inputs_ui() starts at", {
@@ -274,11 +274,11 @@ test_that("reset_legend_inputs() restores the values uniform_legend_inputs_ui() 
     expect_equal(sent[["legend.font.family"]], "Courier New")
 })
 
-test_that(".reset_stats_inputs() restores the values the Stats tab starts at", {
+test_that("reset_stats_inputs() restores the values the Stats tab starts at", {
     ids <- c("stats.enabled", "stat.hide.ns", "stat.paired", "stat.per.facet", "stat.sig.threshold",
         "stat.line.width", "stat.step.increase", "stat.text.bump", "stat.bracket.inset")
-    start <- .ui_start_values(.uniform_stats_inputs_ui(identity), ids)
-    sent <- .reset_sent_values(.reset_stats_inputs)
+    start <- .ui_start_values(uniform_stats_inputs_ui(identity), ids)
+    sent <- .reset_sent_values(reset_stats_inputs)
     for (id in ids) {
         expect_equal(sent[[id]], start[[id]], info = id)
     }
@@ -309,18 +309,18 @@ test_that("shape-drawing controls can be left out, and are for plots without car
 
 # ---- Reading module inputs that have not reported yet ----------------------
 
-test_that(".nz_value answers FALSE where nzchar() would error", {
+test_that("nz_value answers FALSE where nzchar() would error", {
     # Every one of these is logical(0) under nzchar()/== "", which makes
     # `if (...)` an "argument is of length zero" error rather than a FALSE.
-    expect_false(.nz_value(NULL))
-    expect_false(.nz_value(character(0)))
+    expect_false(nz_value(NULL))
+    expect_false(nz_value(character(0)))
 
-    expect_false(.nz_value(""))
-    expect_false(.nz_value(NA_character_))
-    expect_false(.nz_value(c("a", "b")))
+    expect_false(nz_value(""))
+    expect_false(nz_value(NA_character_))
+    expect_false(nz_value(c("a", "b")))
 
-    expect_true(.nz_value("x"))
-    expect_true(.nz_value("some.column"))
+    expect_true(nz_value("x"))
+    expect_true(nz_value("some.column"))
 })
 
 
@@ -329,7 +329,7 @@ test_that("no module server tests a bare input with nzchar/is.na/== ''", {
     # reactives only req() the x/y columns -- so group.by, fill.by, facet.by and
     # friends are readably NULL while the plot is first built. Each of the forms
     # below is logical(0) on a NULL, which makes `if (...)` an error rather than
-    # a FALSE; they crashed the render across a dozen modules. Use .nz_value()
+    # a FALSE; they crashed the render across a dozen modules. Use nz_value()
     # (for a column name) or .has_value() (for a number) instead.
     #
     # Checked against the deparsed bodies rather than the source files so this
