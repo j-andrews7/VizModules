@@ -14,9 +14,10 @@ collect_source_data(
 \item{plot_reactive}{A reactive expression returning a \code{plotly} plot object.}
 
 \item{stats_reactive}{Optional. A reactive expression (e.g. a
-\code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}) returning a \code{data.frame} of statistical test results.
-When \code{NULL} or when the reactive returns \code{NULL}, no statistics data is
-included.}
+\code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}) returning a \code{data.frame} of statistical test results,
+or a named list of them for a plot with more than one table (a per-group
+summary and pairwise comparisons, say). When \code{NULL} or when the reactive
+returns \code{NULL}, no statistics data is included.}
 
 \item{inputs_reactive}{Optional. A named list of UI input values (for
 example \code{reactiveValuesToList(input)}), or a reactive expression returning
@@ -28,7 +29,8 @@ A named list with elements:
 \item{plot}{The \code{plotly} plot object.}
 \item{plot_data}{A \code{data.frame} of the plot's underlying data, limited to
 the columns and rows actually rendered (see Details).}
-\item{stats}{A \code{data.frame} of statistical test results, or \code{NULL}.}
+\item{stats}{A \code{data.frame} of statistical test results, a named list of
+them (written to the archive as one CSV each), or \code{NULL}.}
 \item{inputs}{A \code{data.frame} of UI input names and values, or \code{NULL}.}
 }
 }

@@ -1,4 +1,4 @@
-# VizModules 0.6.0.9001
+# VizModules 0.6.0.9002
 
 The one where we shore up the foundations for additional extension (i.e. building `sciVizModules`).
 
@@ -30,6 +30,8 @@ The one where we shore up the foundations for additional extension (i.e. buildin
   * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers. `breaks` picks the values to draw a circle for, such as round numbers, or leaves out the lower limit of a scale starting at size 0, whose circle would be empty. Its title sits just above the first circle, so a title of several lines no longer runs into a small one.
 
 * `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
+
+* `collect_source_data()` accepts a named list of statistics tables, and the source download writes each to its own `<name>_stats_<table>.csv`, for a plot with more than one table (sciVizModules' survival curve exports its per-group summary and its pairwise comparisons this way). A single table is still written to `<name>_stats_data.csv`.
 
 ### Modules
 
