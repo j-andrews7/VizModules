@@ -161,9 +161,20 @@ default: 1.03); nudges the manual size legend (drawn when \code{size.by} is set)
 default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
-\item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
-\item \code{add.trajectory.by.groups} - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
-\item \code{trajectory.arrow.size} - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+\item \code{trajectory.group.by} - Column whose groups the trajectories pass through (UI: "Trajectory Group By",
+default: "")
+\item \code{add.trajectory.by.groups} - Trajectories, each the groups it visits in order (UI: "Trajectories", a
+\code{\link[=multiDynamicInput]{multiDynamicInput()}} with one row per trajectory, each picking its groups in order from the
+\code{trajectory.group.by} column; default: none). In \code{defaults}, a list of character vectors as dittoViz
+takes it, e.g. \code{list(c("A", "B"), c("C", "D", "E"))}, applied while \code{trajectory.group.by} is its default
+column; the bracketed text \code{"[A,B],[C,D,E]"} also works. Changing the column clears the list. The module
+draws each as a path through its groups' medians, ending in an arrowhead (ggplotly drops dittoViz's).
+The medians are of the values as plotted, after any adjustment. On a split plot each panel's path runs
+through that panel's medians, and a path is left out of any panel, or plot, missing one of its groups.
+None are drawn while an adjustment makes an axis categorical. Zoomed in, a path stops at the panel's
+edge, but an arrowhead just past the edge is still drawn, as plotly does not clip annotations to the
+plot area
+\item \code{trajectory.arrow.size} - Arrowhead length in inches (UI: "Trajectory Arrow Size", default: 0.1)
 \item \code{do.ellipse} - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
 \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
 \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")

@@ -209,6 +209,59 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             )
         })
 
+        # The groups a trajectory can visit: the Trajectory Group By column's levels,
+        # in factor order as for colour. Held in a reactiveVal that changes only when
+        # they do, so filtering the data table does not rebuild the Trajectories list.
+        traj_state <- reactiveVal(NULL)
+        observe({
+            by <- input$trajectory.group.by %||% get_default(defaults, "trajectory.group.by", "")
+            df <- data()
+            levels <- if (nz_value(by) && by %in% names(df)) {
+                col <- df[[by]]
+                if (is.factor(col)) levels(col) else levels(as.factor(col))
+            } else {
+                character(0)
+            }
+            state <- list(by = if (nz_value(by)) by else "", levels = levels)
+            if (!identical(state, isolate(traj_state()))) traj_state(state)
+        })
+
+        # One Trajectories row per path, each picking its groups in order. Its rows
+        # carry over while the column stays the same. A new column clears them, as
+        # their groups belong to the old one, unless it is the default column, which
+        # brings back the default paths. A group no longer in the data stays
+        # selectable, so a filter does not quietly edit a path.
+        default_traj_by <- get_default(defaults, "trajectory.group.by", "")
+        traj_rendered_by <- NULL
+        output$add.trajectory.by.groups.ui <- renderUI({
+            state <- traj_state()
+            req(state)
+            if (length(state$levels) == 0) {
+                return(helpText("Choose a Trajectory Group By column to draw trajectories between its groups."))
+            }
+            current <- isolate(input$add.trajectory.by.groups)
+            paths <- if (!is.null(current) && identical(state$by, traj_rendered_by)) {
+                .trajectory_paths(current)
+            } else if (identical(state$by, default_traj_by)) {
+                .trajectory_paths(get_default(defaults, "add.trajectory.by.groups", NULL))
+            } else {
+                list()
+            }
+            traj_rendered_by <<- state$by
+            multiDynamicInput(
+                ns("add.trajectory.by.groups"), "Trajectories",
+                row_spec = list(groups = list(type = "select", args = list(
+                    label = "Groups, in order", choices = unique(c(state$levels, unlist(paths))), multiple = TRUE
+                ))),
+                elements = .trajectory_rows(paths),
+                max_per_row = 1,
+                add_label = "+ Add Trajectory"
+            )
+        })
+        # Built while the Trajectory tab is hidden too, so default paths are drawn
+        # before anyone opens it.
+        outputOptions(output, "add.trajectory.by.groups.ui", suspendWhenHidden = FALSE)
+
         # Store for manual layout edits (legend/annotation/axis-title/colorbar
         # moves) so they persist across re-renders. See setup_manual_edits().
         edit_store <- setup_manual_edits(input, session, plot_source)
@@ -349,11 +402,14 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             update_viz_select(session, "trajectory.group.by",
                 selected = get_default(defaults, "trajectory.group.by", "", function(x) x == "" || x %in% choices)
             )
-            updateTextInput(session, "add.trajectory.by.groups",
-                value = get_default(defaults, "add.trajectory.by.groups", "")
-            )
+            default_paths <- .trajectory_paths(get_default(defaults, "add.trajectory.by.groups", NULL))
+            if (length(default_paths) > 0) {
+                updateMultiDynamicInput(session, "add.trajectory.by.groups", elements = .trajectory_rows(default_paths))
+            } else {
+                updateMultiDynamicInput(session, "add.trajectory.by.groups", clear = TRUE)
+            }
             updateNumericInput(session, "trajectory.arrow.size",
-                value = get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric)
+                value = get_default(defaults, "trajectory.arrow.size", 0.1, is.numeric)
             )
 
             # Marginals
@@ -458,7 +514,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
                 "trajectory.group.by" = na_to_null(isolate_fn(input$trajectory.group.by)),
-                "add.trajectory.by.groups" = na_to_null(isolate_fn(input$add.trajectory.by.groups)),
                 "color.by" = na_to_null(isolate_fn(input$color.by)),
                 "shape.by" = na_to_null(isolate_fn(input$shape.by)),
                 "size.by" = na_to_null(isolate_fn(input$size.by)),
@@ -637,9 +692,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 do.contour = isolate_fn(input$do.contour),
                 contour.color = isolate_fn(input$contour.color),
                 contour.linetype = isolate_fn(input$contour.linetype),
-                add.trajectory.by.groups = .string_to_list_of_vectors(null.na.inputs$add.trajectory.by.groups),
-                trajectory.group.by = null.na.inputs$trajectory.group.by,
-                trajectory.arrow.size = isolate_fn(input$trajectory.arrow.size),
+                # Trajectories are drawn below, from the plotted values: dittoViz's lose
+                # their arrowheads in ggplotly and miss an adjusted axis's values.
+                add.trajectory.by.groups = NULL,
+                trajectory.group.by = NULL,
                 do.ellipse = isolate_fn(input$do.ellipse),
                 legend.show = isolate_fn(input$legend.show),
                 legend.color.title = legend_color_title,
@@ -833,8 +889,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             y.plot <- p$cols_used$y.by
             want.fits <- isTRUE(isolate_fn(input$linear.model)) || isTRUE(isolate_fn(input$best.fit)) ||
                 isTRUE(isolate_fn(input$custom.model.enable))
-            fits.possible <- is.numeric(plot_data[[x.plot]]) && is.numeric(plot_data[[y.plot]])
-            if (want.fits && !fits.possible) {
+            numeric.xy <- is.numeric(plot_data[[x.plot]]) && is.numeric(plot_data[[y.plot]])
+            if (want.fits && !numeric.xy) {
                 showNotification(
                     paste(
                         "Fit lines need a numeric X and Y axis, so none are drawn while",
@@ -843,7 +899,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     id = session$ns("fit-lines-skipped"), type = "message"
                 )
             }
-            fit_df <- if (fits.possible) {
+            fit_df <- if (numeric.xy) {
                 plot_data[is.finite(plot_data[[x.plot]]) & is.finite(plot_data[[y.plot]]), , drop = FALSE]
             }
 
@@ -852,7 +908,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             group_col <- blank_to_null(null.na.inputs$color.by, data(), numeric_is_null = TRUE)
 
             # Linear model fits
-            if (fits.possible && isTRUE(isolate_fn(input$linear.model))) {
+            if (numeric.xy && isTRUE(isolate_fn(input$linear.model))) {
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
                     df = fit_df,
@@ -865,7 +921,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     fit_type = "linear",
                     line_width = 3
                 )
-            } else if (fits.possible && isTRUE(isolate_fn(input$best.fit))) {
+            } else if (numeric.xy && isTRUE(isolate_fn(input$best.fit))) {
                 # LOESS smooth fit lines (only if linear model not selected)
                 fig <- .add_fit_lines_to_subplots(
                     fig = fig,
@@ -891,7 +947,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Formulas name the raw columns (e.g. `mpg ~ hp`), so the plotted values
             # are put under those names: a model is then fit to, and drawn over,
             # exactly what the points show.
-            if (fits.possible && isTRUE(isolate_fn(input$custom.model.enable))) {
+            if (numeric.xy && isTRUE(isolate_fn(input$custom.model.enable))) {
                 model_df <- fit_df
                 model_df[[isolate_fn(input$x.by)]] <- fit_df[[x.plot]]
                 model_df[[isolate_fn(input$y.by)]] <- fit_df[[y.plot]]
@@ -940,6 +996,38 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                             )
                         }
                     }
+                }
+            }
+
+            # Trajectories run through the group medians of the plotted values, taken
+            # per facet panel. ggplotly drops the arrowheads of dittoViz's own, so each
+            # path is drawn here, its head as an annotation arrow. Until the
+            # Trajectories list has reported, the default paths stand in for it.
+            traj.input <- isolate_fn(input$add.trajectory.by.groups)
+            trajectories <- .trajectory_paths(
+                if (is.null(traj.input)) get_default(defaults, "add.trajectory.by.groups", NULL) else traj.input
+            )
+            traj.group <- null.na.inputs$trajectory.group.by
+            if (length(trajectories) > 0 && !is.null(traj.group) && traj.group %in% names(plot_data)) {
+                if (!numeric.xy) {
+                    showNotification(
+                        paste(
+                            "Trajectories need a numeric X and Y axis, so none are drawn while",
+                            "an axis adjustment makes one categorical."
+                        ),
+                        id = session$ns("trajectories-skipped"), type = "message"
+                    )
+                } else {
+                    fig <- .add_trajectory_arrows(
+                        fig,
+                        df = plot_data,
+                        x.col = x.plot,
+                        y.col = y.plot,
+                        group.col = traj.group,
+                        trajectories = trajectories,
+                        split.by = null.na.inputs$split.by,
+                        arrow.size = isolate_fn(input$trajectory.arrow.size)
+                    )
                 }
             }
 

@@ -1,5 +1,5 @@
 # Expectations for anything VizModules draws over a plot it did not draw itself:
-# significance brackets, fit lines, model lines, ribbons. Such an overlay is only right if
+# significance brackets, fit lines, model lines, ribbons, trajectory arrows. Such an overlay is only right if
 # it is in the plot's own coordinate space -- after any axis adjustment, on the
 # panel it describes, within the range the axis finally shows. That is easiest to
 # check on the built figure, which is what these do. Use them for any new overlay.
@@ -114,6 +114,52 @@ expect_fit_lines_on_points <- function(fig, names, min.count = 1, full.span = FA
                 toString(signif(range(ly), 4)), toString(signif(y_range, 4))))
     }
     invisible(lines)
+}
+
+# Arrows anchored to data coordinates at both ends (trajectory segments) in a built figure.
+.data_arrows <- function(built) {
+    Filter(function(a) isTRUE(a$showarrow) && .data_ref(a$axref), built$x$layout$annotations)
+}
+
+# Every arrow anchored to data coordinates at both ends has its head and its tail on
+# the axes of one panel, among the points drawn there, and within the range those
+# axes show. An arrow between medians of the values as plotted lies among that
+# panel's points; one taken from another panel's points, or from values the plot
+# does not draw (the raw values of an adjusted axis), lies off them. Returns the
+# arrows invisibly.
+expect_arrows_on_points <- function(fig, min.count = 1) {
+    built <- plotly::plotly_build(fig)
+    arrows <- .data_arrows(built)
+    testthat::expect_gte(length(arrows), min.count)
+
+    for (a in arrows) {
+        where <- sprintf("arrow on %s/%s", a$xref, a$yref)
+        testthat::expect_true(identical(a$axref, a$xref) && identical(a$ayref, a$yref),
+            label = paste(where, "has its tail on the same axes as its head"))
+        points <- Filter(function(tr) {
+            grepl("markers", tr$mode %||% "") && identical(tr$xaxis %||% "x", a$xref) &&
+                identical(tr$yaxis %||% "y", a$yref)
+        }, built$x$data)
+        px <- as.numeric(unlist(lapply(points, `[[`, "x")))
+        py <- as.numeric(unlist(lapply(points, `[[`, "y")))
+        xs <- suppressWarnings(as.numeric(unlist(c(a$ax, a$x))))
+        ys <- suppressWarnings(as.numeric(unlist(c(a$ay, a$y))))
+        ends <- sprintf("%s from (%s) to (%s)", where, toString(signif(c(xs[1], ys[1]), 4)),
+            toString(signif(c(xs[2], ys[2]), 4)))
+
+        testthat::expect_true(length(xs) == 2 && length(ys) == 2 && all(is.finite(c(xs, ys))),
+            label = paste(ends, "has finite ends"))
+        testthat::expect_true(length(px) > 0 && .within(xs, range(px[is.finite(px)])) &&
+            .within(ys, range(py[is.finite(py)])),
+            label = paste(ends, "lies among its panel's points"))
+        x_range <- .built_axis_range(built, a$xref)
+        y_range <- .built_axis_range(built, a$yref)
+        testthat::expect_true(
+            (is.null(x_range) || .within(xs, x_range)) && (is.null(y_range) || .within(ys, y_range)),
+            label = paste(ends, "within its axes")
+        )
+    }
+    invisible(arrows)
 }
 
 # Every ribbon (a `fill = "toself"` trace) belongs to exactly one line drawn on the same

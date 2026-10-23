@@ -187,7 +187,7 @@ test_that("highlight values may contain spaces when separated by commas", {
         plot.order = "unordered", shape.panel = "16, 15, 17, 23, 25, 8",
         min.color = "#F0E442", max.color = "#0072B2", min.value = NA, max.value = NA,
         do.contour = FALSE, contour.color = "black", contour.linetype = "solid", do.ellipse = FALSE,
-        trajectory.group.by = "", add.trajectory.by.groups = "", trajectory.arrow.size = 0.15,
+        trajectory.group.by = "", add.trajectory.by.groups = list(), trajectory.arrow.size = 0.1,
         split.nrow = NA, split.ncol = NA, split.adjust.scales = "fixed", multivar.split.dir = "col",
         subplot.margin.x = 0.03, subplot.margin.y = 0.1,
         legend.show = TRUE, legend.color.title = "make", legend.color.breaks = "",
@@ -224,11 +224,11 @@ test_that("highlight values may contain spaces when separated by commas", {
 }
 
 # Build the scatter figure for `inputs` in a fresh session.
-.scatter_figure <- function(df, inputs) {
+.scatter_figure <- function(df, inputs, defaults = NULL) {
     fig <- NULL
     shiny::testServer(
         dittoViz_scatterPlotServer,
-        args = list(id = "scatter", data = shiny::reactive(df)),
+        args = list(id = "scatter", data = shiny::reactive(df), defaults = defaults),
         {
             suppressWarnings({
                 do.call(session$setInputs, inputs)
@@ -318,6 +318,162 @@ test_that("no fit lines are drawn while an adjustment makes an axis categorical"
     built <- plotly::plotly_build(fig)
     fit_names <- vapply(built$x$data, function(tr) tr$name %||% "", character(1))
     expect_false(any(fit_names %in% c("Linear Fit", "Custom")))
+})
+
+.iris_trajectory <- function(paths, ...) {
+    .scatter_inputs(
+        x.by = "Sepal.Length", y.by = "Sepal.Width", color.by = "Species",
+        trajectory.group.by = "Species", add.trajectory.by.groups = VizModules:::.trajectory_rows(paths), ...
+    )
+}
+
+test_that("trajectories run through the plotted group medians and end in an arrowhead (#231)", {
+    df <- example_iris
+    # The path doubles back: virginica's median lies right of versicolor's, so a path
+    # sorted by x would visit the groups in another order.
+    visit <- c("setosa", "virginica", "versicolor")
+    for (adj in list(list(), list(x.adj.fxn = "log2", y.adjustment = "z-score"))) {
+        info <- paste(names(adj), unlist(adj), collapse = ", ")
+        fig <- .scatter_figure(df, do.call(.iris_trajectory, c(list(list(visit)), adj)))
+        expect_s3_class(fig, "plotly")
+        paths <- expect_fit_lines_on_points(fig, "Trajectory")
+        heads <- expect_arrows_on_points(fig)
+        expect_length(paths, 1)
+        expect_length(heads, 1)
+
+        px <- VizModules:::adjusted_values(df$Sepal.Length, adj$x.adjustment, adj$x.adj.fxn)
+        py <- VizModules:::adjusted_values(df$Sepal.Width, adj$y.adjustment, adj$y.adj.fxn)
+        mx <- vapply(split(px, df$Species), stats::median, numeric(1))
+        my <- vapply(split(py, df$Species), stats::median, numeric(1))
+        expect_equal(as.numeric(unlist(paths[[1]]$x)), unname(mx[visit]), info = info)
+        expect_equal(as.numeric(unlist(paths[[1]]$y)), unname(my[visit]), info = info)
+
+        # The head points along the last segment, from virginica to versicolor.
+        h <- heads[[1]]
+        expect_equal(
+            as.numeric(c(h$ax, h$ay, h$x, h$y)),
+            unname(c(mx["virginica"], my["virginica"], mx["versicolor"], my["versicolor"])),
+            info = info
+        )
+
+        # dittoViz's own path, which lost its head in ggplotly, is not drawn as well.
+        lines <- Filter(function(tr) grepl("lines", tr$mode %||% ""), plotly::plotly_build(fig)$x$data)
+        expect_equal(vapply(lines, function(tr) tr$name %||% "", character(1)), "Trajectory", info = info)
+    }
+})
+
+test_that("each facet panel's trajectory runs through the medians of its own points", {
+    # Each panel's points lie apart from the other's, so a path drawn from the other
+    # panel's medians, or from the whole data's, lies off them. Panel A has no "late"
+    # points, so the path through "late" is left out of it. That path doubles back in
+    # x, so it must keep the order it visits its groups in.
+    df <- data.frame(
+        x = c(1:30, 101:130),
+        y = c(1:30, 101:130),
+        g = rep(c("B", "A"), each = 30),
+        stage = rep(rep(c("early", "mid", "late"), each = 10), 2),
+        stringsAsFactors = FALSE
+    )
+    df <- df[!(df$g == "A" & df$stage == "late"), ]
+
+    fig <- .scatter_figure(df, .scatter_inputs(
+        x.by = "x", y.by = "y", split.by = "g",
+        trajectory.group.by = "stage",
+        add.trajectory.by.groups = VizModules:::.trajectory_rows(list(c("late", "early", "mid"), c("early", "mid")))
+    ))
+    paths <- expect_fit_lines_on_points(fig, "Trajectory", min.count = 3)
+    heads <- expect_arrows_on_points(fig, min.count = 3)
+    expect_length(paths, 3)
+    expect_length(heads, 3)
+    in_a <- vapply(paths, function(tr) min(as.numeric(unlist(tr$x))) > 100, logical(1))
+    expect_equal(sum(in_a), 1)
+    expect_length(unlist(paths[in_a][[1]]$x), 2)
+
+    # Panel B's medians are 5.5 (early), 15.5 (mid) and 25.5 (late).
+    long <- Filter(function(tr) length(unlist(tr$x)) == 3, paths)
+    expect_length(long, 1)
+    expect_equal(as.numeric(unlist(long[[1]]$x)), c(25.5, 5.5, 15.5))
+    expect_true(any(vapply(heads, function(h) isTRUE(all.equal(as.numeric(c(h$ax, h$x)), c(5.5, 15.5))),
+        logical(1))))
+})
+
+test_that("no trajectory is drawn along a categorical axis, nor through a group with no points", {
+    trajectory_count <- function(fig) {
+        built <- plotly::plotly_build(fig)
+        names <- vapply(built$x$data, function(tr) tr$name %||% "", character(1))
+        c(paths = sum(names == "Trajectory"), heads = length(.data_arrows(built)))
+    }
+
+    categorical <- .scatter_figure(
+        example_iris, .iris_trajectory(list(c("setosa", "virginica")), x.adj.fxn = "as.factor")
+    )
+    expect_s3_class(categorical, "plotly")
+    expect_equal(trajectory_count(categorical), c(paths = 0, heads = 0))
+
+    # A group with no points (a misspelt default, or one filtered out) leaves out only
+    # the path through it.
+    missing <- .scatter_figure(
+        example_iris, .iris_trajectory(list(c("setosa", "virginca"), c("setosa", "versicolor")))
+    )
+    expect_equal(trajectory_count(missing), c(paths = 1, heads = 1))
+    expect_arrows_on_points(missing)
+})
+
+test_that("trajectory paths are read from the Trajectories rows and from each defaults form", {
+    rows <- list(trajectories1 = list(groups = c("B", "A")), trajectories2 = list(groups = character(0)))
+    expect_identical(VizModules:::.trajectory_paths(rows), list(c("B", "A")))
+    expect_identical(VizModules:::.trajectory_paths(list(c("A", "B"), c("C", "", "D"))), list(c("A", "B"), c("C", "D")))
+    expect_identical(VizModules:::.trajectory_paths(c("A", "B")), list(c("A", "B")))
+    expect_identical(VizModules:::.trajectory_paths("[A, B], [C,D,E]"), list(c("A", "B"), c("C", "D", "E")))
+    expect_identical(VizModules:::.trajectory_paths(""), list())
+    expect_identical(VizModules:::.trajectory_paths(NULL), list())
+    expect_identical(VizModules:::.trajectory_rows(list(c("B", "A"))), list(trajectories1 = list(groups = c("B", "A"))))
+})
+
+test_that("default trajectories are drawn before the Trajectories list reports", {
+    inputs <- .iris_trajectory(list())
+    inputs$add.trajectory.by.groups <- NULL
+    fig <- .scatter_figure(example_iris, inputs, defaults = list(
+        trajectory.group.by = "Species", add.trajectory.by.groups = list(c("setosa", "virginica"))
+    ))
+    heads <- expect_arrows_on_points(fig)
+    expect_length(heads, 1)
+    mx <- vapply(split(example_iris$Sepal.Length, example_iris$Species), stats::median, numeric(1))
+    expect_equal(as.numeric(c(heads[[1]]$ax, heads[[1]]$x)), unname(mx[c("setosa", "virginica")]))
+})
+
+test_that("the Trajectories list offers the group column's levels and clears when the column changes", {
+    # The rows a rendered list starts with, from its data-initial attribute.
+    initial_rows <- function(html) {
+        attr <- regmatches(html, regexpr('data-initial="[^"]*"', html))
+        rows <- jsonlite::fromJSON(gsub("&quot;", "\"", sub('^data-initial="(.*)"$', "\\1", attr)),
+            simplifyVector = FALSE)
+        lapply(rows, function(r) unlist(r$fields[[1]]$value))
+    }
+    shiny::testServer(
+        dittoViz_scatterPlotServer,
+        args = list(id = "scatter", data = shiny::reactive(example_iris), defaults = list(
+            trajectory.group.by = "Species", add.trajectory.by.groups = list(c("virginica", "setosa"))
+        )),
+        {
+            session$setInputs(trajectory.group.by = "Species")
+            html <- output$add.trajectory.by.groups.ui$html
+            expect_match(html, "<select[^>]*multiple", perl = TRUE)
+            for (lvl in levels(example_iris$Species)) expect_match(html, sprintf('<option value="%s"', lvl))
+            expect_identical(initial_rows(html), list(c("virginica", "setosa")))
+
+            # Rows the user made carry over while the column stays the same...
+            session$setInputs(add.trajectory.by.groups = list(trajectories1 = list(groups = c("setosa", "versicolor"))))
+            session$setInputs(trajectory.group.by = "Group")
+            html <- output$add.trajectory.by.groups.ui$html
+            expect_match(html, '<option value="D"')
+            expect_identical(initial_rows(html), list())
+
+            # ...and the default column brings back the default paths.
+            session$setInputs(trajectory.group.by = "Species")
+            expect_identical(initial_rows(output$add.trajectory.by.groups.ui$html), list(c("virginica", "setosa")))
+        }
+    )
 })
 
 test_that("group colours follow their names when a factor level has no points", {

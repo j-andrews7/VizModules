@@ -127,9 +127,20 @@
 #'   default: 0.35); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
 #' - `min.value` - Minimum value (UI: "Min Value", default: NA)
 #' - `max.value` - Maximum value (UI: "Max Value", default: NA)
-#' - `trajectory.group.by` - Trajectory group by (UI: "Trajectory Group By", default: "")
-#' - `add.trajectory.by.groups` - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
-#' - `trajectory.arrow.size` - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+#' - `trajectory.group.by` - Column whose groups the trajectories pass through (UI: "Trajectory Group By",
+#'   default: "")
+#' - `add.trajectory.by.groups` - Trajectories, each the groups it visits in order (UI: "Trajectories", a
+#'   [multiDynamicInput()] with one row per trajectory, each picking its groups in order from the
+#'   `trajectory.group.by` column; default: none). In `defaults`, a list of character vectors as dittoViz
+#'   takes it, e.g. `list(c("A", "B"), c("C", "D", "E"))`, applied while `trajectory.group.by` is its default
+#'   column; the bracketed text `"[A,B],[C,D,E]"` also works. Changing the column clears the list. The module
+#'   draws each as a path through its groups' medians, ending in an arrowhead (ggplotly drops dittoViz's).
+#'   The medians are of the values as plotted, after any adjustment. On a split plot each panel's path runs
+#'   through that panel's medians, and a path is left out of any panel, or plot, missing one of its groups.
+#'   None are drawn while an adjustment makes an axis categorical. Zoomed in, a path stops at the panel's
+#'   edge, but an arrowhead just past the edge is still drawn, as plotly does not clip annotations to the
+#'   plot area
+#' - `trajectory.arrow.size` - Arrowhead length in inches (UI: "Trajectory Arrow Size", default: 0.1)
 #' - `do.ellipse` - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
 #' - `do.contour` - Enable contour (UI: "Enable Contour", default: FALSE)
 #' - `hover.data` - Hover data columns (UI: "Hover Data", default: "")
@@ -286,8 +297,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         c("legend.color.title", "legend.shape.title"),
         "legend.color.breaks",
         c("min.value", "max.value"),
-        "trajectory.group.by", "add.trajectory.by.groups",
-        "trajectory.arrow.size"
+        "trajectory.group.by", "trajectory.arrow.size"
     )
 
     documentParameters <- get_documentation(
@@ -545,15 +555,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                     function(x) x %in% traj.choices
                 )
             ), documentParameters$trajectory.group.by, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
-                placeholder = "e.g. [A,B],[C,D,E]",
-                value = get_default(defaults, "add.trajectory.by.groups", "")
-            ), documentParameters$add.trajectory.by.groups, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("trajectory.arrow.size"), "Trajectory Arrow Size",
-                value = get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric),
+                value = get_default(defaults, "trajectory.arrow.size", 0.1, is.numeric),
                 min = 0,
                 step = 0.05
-            ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
+            ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body")),
+            # The Trajectories list picks from the Trajectory Group By column's groups,
+            # so the server builds it once that column is known.
+            uiOutput(ns("add.trajectory.by.groups.ui"))
         ),
         "Marginals" = tagList(
             tipify(viz_select_input(ns("marginal.x"), "Top Marginal (X)",

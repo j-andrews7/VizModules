@@ -64,6 +64,11 @@ The component is generic over input type. Each field in \code{row_spec} is
 described by an input constructor and its arguments, so any Shiny input that
 takes \code{inputId} as its first argument can be used. Common types have a short
 \code{type = "..."} alias.
+
+A \code{"select"} field given \code{multiple = TRUE} in its \code{args} reports a character
+vector of its items, in the order they were picked, which suits a field
+listing steps in order. Pre-fill one in \code{elements} with a character vector in
+the order wanted.
 }
 \examples{
 if (interactive()) {

@@ -19,8 +19,11 @@ The one where we shore up the foundations for additional extension (i.e. buildin
   * Marginals are drawn from the plotted values, after any adjustment.
   * Marginals are not drawn on a split plot.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
+* Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
 
 ### Helpers and exported functions
+
+* `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row.
 
 * Exported many helpers, so modules in extension packages can reuse them instead of keeping copies that drift (#369):
   * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
@@ -55,6 +58,10 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 ### `linePlot`
 
 * A line with no **Group By** now takes its colour from the **Plot colors** picker, as do its error bars. It was always drawn in plotly's default blue, because plotly applies a palette only to a mapped colour.
+
+### `scatterPlot`
+
+* Trajectories now end in an arrowhead, which ggplotly dropped, and no longer stop the plot with an error while an axis adjustment is set (#231). The module now draws them itself, through the group medians of the plotted values, after any adjustment. On a split plot, each panel's path runs through that panel's own medians rather than repeating the whole data's.
 
 # VizModules 0.5.0
 

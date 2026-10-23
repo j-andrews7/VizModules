@@ -129,6 +129,7 @@ Anything in Suggests must be reached through `requireNamespace(..., quietly = TR
 6. **Document missing features** - clearly note functionality unavailable in plotly
 7. **Use organize_inputs()** helper for consistent UI layouts
 8. **Ask user to validate** - rather than trying to run apps yourself continually, just ask user to validate specific changes to save time and tokens
+9. **Never read `R/dittoViz_ScatterPlot_module_server.R` whole** - it is over 1,100 lines; search it, or read only the lines you need
 
 ## Best Practices
 
