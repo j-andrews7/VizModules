@@ -356,6 +356,37 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 value = get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric)
             )
 
+            # Marginals
+            for (side in c("marginal.x", "marginal.y")) {
+                update_viz_select(session, side,
+                    selected = get_default(defaults, side, character(0), .valid_marginal_types)
+                )
+            }
+            updateNumericInput(session, "marginal.x.size",
+                value = get_default(defaults, "marginal.x.size", 0.15, is.numeric)
+            )
+            updateNumericInput(session, "marginal.y.size",
+                value = get_default(defaults, "marginal.y.size", 0.15, is.numeric)
+            )
+            updateNumericInput(session, "marginal.opacity",
+                value = get_default(defaults, "marginal.opacity", 0.5, is.numeric)
+            )
+            updateNumericInput(session, "marginal.bins",
+                value = get_default(defaults, "marginal.bins", 30, is.numeric)
+            )
+            updateNumericInput(session, "marginal.binwidth",
+                value = get_default(defaults, "marginal.binwidth", NA, is.numeric)
+            )
+            updateNumericInput(session, "marginal.density.adjust",
+                value = get_default(defaults, "marginal.density.adjust", 1, is.numeric)
+            )
+            updateNumericInput(session, "marginal.rug.height",
+                value = get_default(defaults, "marginal.rug.height", 0.3, is.numeric)
+            )
+            updateNumericInput(session, "marginal.rug.width",
+                value = get_default(defaults, "marginal.rug.width", 1, is.numeric)
+            )
+
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             reset_plotly_inputs(session, defaults)
@@ -397,6 +428,28 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             hide_input(session, if (sized) "size" else size.scale.inputs)
             show_input(session, setdiff(if (sized) size.scale.inputs else "size", hide.inputs))
         }, ignoreInit = FALSE)
+
+        # Each marginal control shows only while a side draws what it adjusts. An empty
+        # multi-select never reports, so the opacity input, which always does once the
+        # tab is rendered, is watched too. What the app hid via hide.inputs stays hidden.
+        observeEvent(list(input$marginal.x, input$marginal.y, input$marginal.opacity), {
+            top <- intersect(.marginal_types, input$marginal.x)
+            right <- intersect(.marginal_types, input$marginal.y)
+            has <- function(type) type %in% c(top, right)
+            shares.rug <- function(side) "rug" %in% side && any(c("density", "histogram") %in% side)
+
+            toggle_cells <- function(ids, show) {
+                ids <- setdiff(ids, hide.inputs)
+                if (show) show_input(session, ids) else hide_input(session, ids)
+            }
+            toggle_cells("marginal.x.size", length(top) > 0)
+            toggle_cells("marginal.y.size", length(right) > 0)
+            toggle_cells("marginal.opacity", length(c(top, right)) > 0)
+            toggle_cells(c("marginal.bins", "marginal.binwidth"), has("histogram"))
+            toggle_cells("marginal.density.adjust", has("density"))
+            toggle_cells("marginal.rug.height", shares.rug(top) || shares.rug(right))
+            toggle_cells("marginal.rug.width", has("rug"))
+        }, ignoreNULL = FALSE)
 
         # Reactive expression to generate the plot (used by both output and download)
         generate_scatterPlot <- reactive({
@@ -920,6 +973,69 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             # Make single-panel x/y axis titles draggable (matches faceted behaviour)
             fig <- axis_titles_as_annotations(fig)
+
+            # Marginal distributions go on last: the helpers above treat any extra axis
+            # as a facet panel, so none of them may see the marginals' axes. They are
+            # drawn from the plotted values, like the fit lines, and are not drawn on a
+            # split plot or along an axis an adjustment has made categorical.
+            marginal.top <- intersect(.marginal_types, isolate_fn(input$marginal.x))
+            marginal.right <- intersect(.marginal_types, isolate_fn(input$marginal.y))
+            if (length(marginal.top) || length(marginal.right)) {
+                skip.note <- NULL
+                if (!is.null(null.na.inputs$split.by)) {
+                    skip.note <- "Marginal plots are not drawn on a split plot."
+                    marginal.top <- marginal.right <- character(0)
+                }
+                if (length(marginal.top) && !is.numeric(plot_data[[x.plot]])) {
+                    marginal.top <- character(0)
+                    skip.note <- "Marginal plots need a numeric axis, so none are drawn along a categorical one."
+                }
+                if (length(marginal.right) && !is.numeric(plot_data[[y.plot]])) {
+                    marginal.right <- character(0)
+                    skip.note <- "Marginal plots need a numeric axis, so none are drawn along a categorical one."
+                }
+                if (!is.null(skip.note)) {
+                    showNotification(skip.note, id = session$ns("marginals-skipped"), type = "message")
+                }
+
+                # Groups as plotted, which also catches a numeric column an adjustment made
+                # categorical; a numeric colour is a gradient and gives one distribution.
+                color.plot <- p$cols_used$color.by
+                marginal.groups <- if (!is.null(color.plot) && !is.numeric(plot_data[[color.plot]])) {
+                    droplevels(as.factor(plot_data[[color.plot]]))
+                }
+                marginal.colors <- if (!is.null(marginal.groups)) {
+                    marginal.levels <- levels(marginal.groups)
+                    fallback <- rep_len(default_palette_values, length(marginal.levels))
+                    cols <- if (!is.null(names(palette_values))) {
+                        unname(palette_values[marginal.levels])
+                    } else {
+                        rep(NA_character_, length(marginal.levels))
+                    }
+                    cols[is.na(cols)] <- fallback[is.na(cols)]
+                    setNames(cols, marginal.levels)
+                } else {
+                    palette_values[1]
+                }
+
+                fig <- add_marginal_plots(
+                    fig,
+                    x = plot_data[[x.plot]],
+                    y = plot_data[[y.plot]],
+                    groups = marginal.groups,
+                    colors = marginal.colors,
+                    top = marginal.top,
+                    right = marginal.right,
+                    top.size = isolate_fn(input$marginal.x.size),
+                    right.size = isolate_fn(input$marginal.y.size),
+                    opacity = isolate_fn(input$marginal.opacity),
+                    bins = isolate_fn(input$marginal.bins),
+                    binwidth = isolate_fn(input$marginal.binwidth),
+                    density.adjust = isolate_fn(input$marginal.density.adjust),
+                    rug.size = isolate_fn(input$marginal.rug.height),
+                    rug.width = isolate_fn(input$marginal.rug.width)
+                )
+            }
 
             fig
         })

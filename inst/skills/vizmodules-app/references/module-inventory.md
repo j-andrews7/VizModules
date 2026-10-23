@@ -87,6 +87,24 @@ shows while the type is `"ci95"`, and the bound selects only while it is `"colum
 the statistic for users: `defaults = list(error.bar.type = "sem")` with
 `hide.inputs = c("error.bar.type", "error.bar.ci.method")`.
 
+`dittoViz_scatterPlot` can draw the distribution of X above the plot (`marginal.x`) and of Y
+to its right (`marginal.y`). Each takes a character vector of any of `"density"`,
+`"histogram"` and `"rug"`, and the default (empty) draws none. There is one distribution per
+`color.by` group, in its colour, or one in `single.point.color` when the plot has no groups.
+They are drawn from the plotted values, after any X/Y adjustment. A density and a histogram
+share a strip, with the histogram scaled to a density. The rug gets its own strip next to the
+plot, with one lane per group. The other keys:
+- `marginal.x.size` and `marginal.y.size` (0.15): share of the plot each side takes.
+- `marginal.opacity` (0.5).
+- `marginal.bins` (30), or `marginal.binwidth` (NA), which overrides it.
+- `marginal.density.adjust` (1): bandwidth multiplier.
+- `marginal.rug.height` (0.3): the rug's share of a side it shares with a density or histogram.
+- `marginal.rug.width` (1): line width of the rug ticks, in pixels.
+
+Each control shows only while a side draws what it adjusts. No marginals are drawn on a
+`split.by` plot or along an axis an `as.factor` adjustment makes categorical. Example:
+`defaults = list(marginal.x = c("density", "rug"), marginal.y = "density")`.
+
 The colour key takes a **named character vector** mapping group level to colour, e.g.
 `defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red"))`. Unnamed
 groups fall back to the stock palette; the user can still edit every colour.
@@ -95,7 +113,7 @@ groups fall back to the stock palette; the user can still edit every colour.
 
 | Module | Tabs |
 |---|---|
-| `dittoViz_scatterPlot` | Data, Adjustments, Points, Colors, Facet, Annotations, Legend, Trajectory, Lines, Axes, Plotly, Extras |
+| `dittoViz_scatterPlot` | Data, Adjustments, Points, Colors, Facet, Annotations, Legend, Trajectory, Marginals, Lines, Axes, Plotly, Extras |
 | `dittoViz_yPlot` | Data, Adjustments, Jitter, Box, Violin, Ridge, Stats, Facet, Annotations, Legend, Axes, Lines, Plotly |
 | `plotthis_BoxPlot` | Data, Adjustments, Highlight, Facet, Stats, Legend, Axes, Lines, Plotly |
 | `plotthis_AreaPlot`, `plotthis_DotPlot`, `linePlot`, `dumbbellPlot` | Data, Facet, Aesthetics, Legend, Axes, Lines, Plotly |

@@ -15,6 +15,9 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 
 ### `scatterPlot`
 
+* New **Marginals** tab draws the distribution of X above the plot and of Y to its right (#113). Each side can show any of a density, a histogram and a rug, with one per **Color By** group in its colour. The module gallery's scatter plot now opens on densities.
+  * Marginals are drawn from the plotted values, after any adjustment.
+  * Marginals are not drawn on a split plot.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 
 ### Helpers and exported functions
@@ -29,6 +32,8 @@ The one where we shore up the foundations for additional extension (i.e. buildin
   * Error intervals: `error_bar_halfwidth()` works out the SD, SEM or 95% CI half-width `linePlot()` draws around a group's mean, so a module that summarises its own groups (over a numeric x, which linePlot's own summaries do not cover) can hand `linePlot()` matching bounds through `error.type = "columns"` (sciVizModules' pkConcentrationTime uses it; #371).
   * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers. `breaks` picks the values to draw a circle for, such as round numbers, or leaves out the lower limit of a scale starting at size 0, whose circle would be empty. Its title sits just above the first circle, so a title of several lines no longer runs into a small one.
 
+* New `add_marginal_plots()` adds density, histogram and rug marginals to a single-panel plotly figure, given the plotted X and Y values and their groups. The scatter module's **Marginals** tab uses it (#113).
+
 * `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
 
 * `collect_source_data()` accepts a named list of statistics tables, and the source download writes each to its own `<name>_stats_<table>.csv`, for a plot with more than one table (sciVizModules' survival curve exports its per-group summary and its pairwise comparisons this way). A single table is still written to `<name>_stats_data.csv`.
@@ -42,6 +47,10 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 * `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ## Bug Fixes
+
+### All modules
+
+* **Reset** now redraws the plot for a multi-select it changes, such as **Split By**, **Hover Data** or the scatter plot's marginals. The control showed the reset value, but `viz_select_input()` multi-selects only report when their dropdown closes, so the plot kept the old selection.
 
 ### `linePlot`
 

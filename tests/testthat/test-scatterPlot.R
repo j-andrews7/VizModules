@@ -195,6 +195,9 @@ test_that("highlight values may contain spaces when separated by commas", {
         hover.data = "", hover.round.digits = 5, webgl = FALSE, single.point.color = "#000000",
         linear.model = FALSE, best.fit = FALSE, line.best.smoothness = 1, line.best.colour = "#000000",
         custom.model.enable = FALSE, custom.models = NULL,
+        marginal.x = character(0), marginal.y = character(0), marginal.x.size = 0.15, marginal.y.size = 0.15,
+        marginal.opacity = 0.5, marginal.bins = 30, marginal.binwidth = NA, marginal.density.adjust = 1,
+        marginal.rug.height = 0.3, marginal.rug.width = 1,
         annotate.by = "", highlight.points = "", highlight.auto.annotate = TRUE,
         highlight.color = "#00FFF7", highlight.size = 7,
         highlight.border.color = "#000000", highlight.border.width = 1,
@@ -405,4 +408,100 @@ test_that("a Size By column spans the chosen point sizes and limits, and the siz
     fig <- .scatter_figure(example_sales, .scatter_inputs(size.by = "units", size.scale.min = 200))
     expect_length(markers(fig), length(units))
     expect_equal(min(markers(fig)), .size_scale_px(200, c(1, 6), c(200, max(units))))
+})
+
+# --- Marginal plots (#113) ----------------------------------------------------
+
+# Marginal traces sit off the main x/y pair.
+.scatter_marginals <- function(fig) {
+    Filter(
+        function(tr) !identical(tr$xaxis %||% "x", "x") || !identical(tr$yaxis %||% "y", "y"),
+        plotly::plotly_build(fig)$x$data
+    )
+}
+
+test_that("the marginals follow Color By, in the points' colours", {
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        color.by = "product_line", linear.model = TRUE, marginal.x = "density", marginal.y = "density"
+    ))
+    built <- plotly::plotly_build(fig)
+    marginals <- .scatter_marginals(fig)
+    expect_length(marginals, 6)
+
+    points <- Filter(function(tr) identical(tr$mode, "markers") && !is.null(tr$name), built$x$data)
+    point.colors <- stats::setNames(
+        vapply(points, function(tr) as.character(tr$marker$color[1]), character(1)),
+        vapply(points, `[[`, character(1), "name")
+    )
+    for (tr in marginals) {
+        expect_identical(plotly::toRGB(tr$line$color), point.colors[[tr$name]])
+        expect_identical(tr$legendgroup, tr$name)
+    }
+
+    # Fit lines stay on the main panel.
+    expect_fit_lines_on_points(fig, paste("Linear Fit", names(point.colors)), min.count = 3)
+    fit.axes <- unique(unlist(lapply(
+        Filter(function(tr) grepl("^Linear Fit", tr$name %||% ""), built$x$data),
+        function(tr) paste(tr$xaxis, tr$yaxis)
+    )))
+    expect_identical(fit.axes, "x y")
+})
+
+test_that("the marginals are drawn from the plotted values, after an adjustment", {
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        x.adj.fxn = "log10", marginal.x = "rug", marginal.rug.width = 2.5
+    ))
+    rug <- .scatter_marginals(fig)
+    expect_length(rug, 1)
+    expect_equal(rug[[1]]$line$width, 2.5)
+    ticks <- rug[[1]]$x[!is.na(rug[[1]]$x)][c(TRUE, FALSE)]
+    expect_equal(sort(ticks), sort(log10(example_sales$units)))
+})
+
+test_that("no marginals are drawn on a split plot, nor along a categorical axis", {
+    split <- .scatter_figure(example_sales, .scatter_inputs(
+        split.by = "product_line", marginal.x = "density", marginal.y = "rug"
+    ))
+    fills <- vapply(plotly::plotly_build(split)$x$data, function(tr) tr$fill %||% "", character(1))
+    expect_false(any(fills %in% c("tozeroy", "tozerox")))
+    expect_false(any(vapply(plotly::plotly_build(split)$x$data, function(tr) identical(tr$hoverinfo, "skip") &&
+        identical(tr$mode, "lines"), logical(1))))
+
+    # A categorical X keeps the Y marginal only.
+    categorical <- .scatter_figure(example_sales, .scatter_inputs(
+        x.adj.fxn = "as.factor", marginal.x = "density", marginal.y = "density"
+    ))
+    fills <- vapply(.scatter_marginals(categorical), function(tr) tr$fill %||% "", character(1))
+    expect_identical(fills, "tozerox")
+})
+
+test_that("the Marginals tab seeds its inputs from defaults", {
+    selected <- function(html, id) {
+        html <- paste(html, collapse = "")
+        config <- regmatches(html, regexpr(paste0('data-for="', id, '">.*?</script>'), html, perl = TRUE))
+        json <- sub("</script>$", "", sub('^data-for="[^"]+">', "", config))
+        unlist(jsonlite::fromJSON(json)$config$selectedValue)
+    }
+    plain <- as.character(dittoViz_scatterPlotInputsUI("scatter", example_sales))
+    expect_length(selected(plain, "scatter-marginal.x"), 0)
+    expect_identical(.select_choices(plain, "scatter-marginal.x"), c("density", "histogram", "rug"))
+
+    seeded <- paste(as.character(dittoViz_scatterPlotInputsUI("scatter", example_sales, defaults = list(
+        marginal.x = c("density", "rug"), marginal.y = "histogram", marginal.bins = 12, marginal.rug.height = 0.4
+    ))), collapse = "")
+    expect_identical(selected(seeded, "scatter-marginal.x"), c("density", "rug"))
+    expect_identical(selected(seeded, "scatter-marginal.y"), "histogram")
+    expect_match(seeded, 'id="scatter-marginal.bins" type="number" class="shiny-input-number form-control" value="12"',
+        fixed = TRUE
+    )
+    expect_match(seeded,
+        'id="scatter-marginal.rug.height" type="number" class="shiny-input-number form-control" value="0.4"',
+        fixed = TRUE
+    )
+
+    # An unknown marginal type falls back to none.
+    bad <- as.character(dittoViz_scatterPlotInputsUI("scatter", example_sales,
+        defaults = list(marginal.x = "violin")
+    ))
+    expect_length(selected(bad, "scatter-marginal.x"), 0)
 })

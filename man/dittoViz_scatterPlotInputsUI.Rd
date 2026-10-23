@@ -225,7 +225,35 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{line.best.smoothness} - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
+\item \code{marginal.x} - Distributions of the X values drawn above the plot, any of \code{"density"}, \code{"histogram"}
+and \code{"rug"} (UI: "Top Marginal (X)", default: none)
+\item \code{marginal.y} - Distributions of the Y values drawn to the right of the plot, any of \code{"density"},
+\code{"histogram"} and \code{"rug"} (UI: "Right Marginal (Y)", default: none)
+\item \code{marginal.x.size} - Share of the plot's height given to the top marginal (UI: "Top Marginal Height",
+default: 0.15). Shown while \code{marginal.x} is set
+\item \code{marginal.y.size} - Share of the plot's width given to the right marginal (UI: "Right Marginal Width",
+default: 0.15). Shown while \code{marginal.y} is set
+\item \code{marginal.opacity} - Opacity of the density and histogram fills and the rug lines
+(UI: "Marginal Opacity", default: 0.5). Shown while either marginal is set
+\item \code{marginal.bins} - Number of histogram bins (UI: "Histogram Bins", default: 30). Shown while either
+marginal has a histogram
+\item \code{marginal.binwidth} - Histogram bin width, overriding \code{marginal.bins} (UI: "Histogram Bin Width",
+default: NA = use \code{marginal.bins}). Shown while either marginal has a histogram
+\item \code{marginal.density.adjust} - Multiplier on the density bandwidth (UI: "Density Bandwidth Adjust",
+default: 1). Shown while either marginal has a density
+\item \code{marginal.rug.height} - Share of a marginal given to its rug when it sits alongside a density or
+histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
+\item \code{marginal.rug.width} - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
+Shown while either marginal has a rug
 }
+
+Marginal plots show one distribution per Color By group, in the group's colour, or a single one in
+the Point color when the plot has no groups (including a numeric Color By). Like the fit lines, they
+are drawn from the plotted values, after any X/Y adjustment. A density and a histogram share their
+marginal, the histogram scaled to a density so the two match; a histogram on its own shows counts.
+The rug sits in its own strip next to the plot, with a lane for each group. Zooming the plot zooms
+its marginals, and hiding a group in the legend hides its marginals too. Marginals are not drawn on
+a split plot, nor along an axis an adjustment (\code{as.factor}) makes categorical.
 
 Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
 result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} applies

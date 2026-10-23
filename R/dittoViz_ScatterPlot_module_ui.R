@@ -188,6 +188,34 @@
 #' - `line.best.smoothness` - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 #' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 #' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
+#' - `marginal.x` - Distributions of the X values drawn above the plot, any of `"density"`, `"histogram"`
+#'   and `"rug"` (UI: "Top Marginal (X)", default: none)
+#' - `marginal.y` - Distributions of the Y values drawn to the right of the plot, any of `"density"`,
+#'   `"histogram"` and `"rug"` (UI: "Right Marginal (Y)", default: none)
+#' - `marginal.x.size` - Share of the plot's height given to the top marginal (UI: "Top Marginal Height",
+#'   default: 0.15). Shown while `marginal.x` is set
+#' - `marginal.y.size` - Share of the plot's width given to the right marginal (UI: "Right Marginal Width",
+#'   default: 0.15). Shown while `marginal.y` is set
+#' - `marginal.opacity` - Opacity of the density and histogram fills and the rug lines
+#'   (UI: "Marginal Opacity", default: 0.5). Shown while either marginal is set
+#' - `marginal.bins` - Number of histogram bins (UI: "Histogram Bins", default: 30). Shown while either
+#'   marginal has a histogram
+#' - `marginal.binwidth` - Histogram bin width, overriding `marginal.bins` (UI: "Histogram Bin Width",
+#'   default: NA = use `marginal.bins`). Shown while either marginal has a histogram
+#' - `marginal.density.adjust` - Multiplier on the density bandwidth (UI: "Density Bandwidth Adjust",
+#'   default: 1). Shown while either marginal has a density
+#' - `marginal.rug.height` - Share of a marginal given to its rug when it sits alongside a density or
+#'   histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
+#' - `marginal.rug.width` - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
+#'   Shown while either marginal has a rug
+#'
+#' Marginal plots show one distribution per Color By group, in the group's colour, or a single one in
+#' the Point color when the plot has no groups (including a numeric Color By). Like the fit lines, they
+#' are drawn from the plotted values, after any X/Y adjustment. A density and a histogram share their
+#' marginal, the histogram scaled to a density so the two match; a histogram on its own shows counts.
+#' The rug sits in its own strip next to the plot, with a lane for each group. Zooming the plot zooms
+#' its marginals, and hiding a group in the legend hides its marginals too. Marginals are not drawn on
+#' a split plot, nor along an axis an adjustment (`as.factor`) makes categorical.
 #'
 #' Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
 #' result (e.g. log10, then z-score), the reverse of the order [dittoViz::scatterPlot()] applies
@@ -526,6 +554,68 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 min = 0,
                 step = 0.05
             ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
+        ),
+        "Marginals" = tagList(
+            tipify(viz_select_input(ns("marginal.x"), "Top Marginal (X)",
+                choices = .marginal_types,
+                multiple = TRUE,
+                selected = get_default(defaults, "marginal.x", character(0), .valid_marginal_types)
+            ), paste(
+                "Distribution of the X values drawn above the plot, one per Color By group.",
+                "Pick any of density, histogram and rug."
+            ), placement = "top", options = list(container = "body")),
+            tipify(viz_select_input(ns("marginal.y"), "Right Marginal (Y)",
+                choices = .marginal_types,
+                multiple = TRUE,
+                selected = get_default(defaults, "marginal.y", character(0), .valid_marginal_types)
+            ), paste(
+                "Distribution of the Y values drawn to the right of the plot, one per Color By group.",
+                "Pick any of density, histogram and rug."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.x.size"), "Top Marginal Height",
+                value = get_default(defaults, "marginal.x.size", 0.15, is.numeric),
+                min = 0.05, max = 0.5, step = 0.05
+            ), "Share of the plot's height given to the top marginal.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.y.size"), "Right Marginal Width",
+                value = get_default(defaults, "marginal.y.size", 0.15, is.numeric),
+                min = 0.05, max = 0.5, step = 0.05
+            ), "Share of the plot's width given to the right marginal.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.opacity"), "Marginal Opacity",
+                value = get_default(defaults, "marginal.opacity", 0.5, is.numeric),
+                min = 0, max = 1, step = 0.05
+            ), "Opacity of the density and histogram fills and of the rug lines.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.bins"), "Histogram Bins",
+                value = get_default(defaults, "marginal.bins", 30, is.numeric),
+                min = 1, step = 1
+            ), "Number of histogram bins, shared by every group so their bins line up.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.binwidth"), "Histogram Bin Width",
+                value = get_default(defaults, "marginal.binwidth", NA, is.numeric),
+                min = 0
+            ), paste(
+                "Width of each histogram bin, in the axis' units. Overrides Histogram Bins when set.",
+                "Leave blank to use Histogram Bins."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.density.adjust"), "Density Bandwidth Adjust",
+                value = get_default(defaults, "marginal.density.adjust", 1, is.numeric),
+                min = 0.1, step = 0.1
+            ), "Multiplier on the density bandwidth. Larger values give smoother curves.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.rug.height"), "Rug Height",
+                value = get_default(defaults, "marginal.rug.height", 0.3, is.numeric),
+                min = 0.1, max = 0.9, step = 0.05
+            ), paste(
+                "Share of a marginal given to its rug when the rug sits alongside a density",
+                "or histogram. A rug on its own fills the marginal."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.rug.width"), "Rug Line Width",
+                value = get_default(defaults, "marginal.rug.width", 1, is.numeric),
+                min = 0.1, step = 0.5
+            ), "Line width of each rug tick, in pixels.",
+            placement = "top", options = list(container = "body"))
         ),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
         "Extras" = tagList(

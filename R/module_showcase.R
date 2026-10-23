@@ -236,11 +236,13 @@
             inputs_ui = dittoViz_scatterPlotInputsUI,
             output_ui = dittoViz_scatterPlotOutputUI,
             server_fn = dittoViz_scatterPlotServer,
-            # One fit per product line, and the two planted outliers labelled:
-            # a promotion (Sale_352) and a clearance sale (Sale_540).
+            # One fit per product line, each line's units and revenue in the marginals,
+            # and the two planted outliers labelled: a promotion (Sale_352) and a
+            # clearance sale (Sale_540).
             defaults = list(
                 "x.by" = "units", "y.by" = "revenue", "color.by" = "product_line",
                 "linear.model" = TRUE,
+                "marginal.x" = "density", "marginal.y" = "density",
                 "annotate.by" = "sale_id", "highlight.points" = "Sale_352, Sale_540"
             )
         ),

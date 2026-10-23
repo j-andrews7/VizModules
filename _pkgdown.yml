@@ -226,6 +226,7 @@ reference:
     contents:
       - add_ablines
       - add_hlines
+      - add_marginal_plots
       - add_plot_config
       - add_reference_lines
       - add_vlines
