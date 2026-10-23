@@ -24,8 +24,8 @@ or additional UI controls while reusing the full functionality of the base modul
 This vignette demonstrates how to create a custom module by building on top of the `scatterPlot` module.
 
 If you are working with an AI coding agent, the package ships an
-[Agent Skill](https://agentskills.io) covering exactly this material -
-**`vizmodules-custom-module`** - along with the namespace contract, reactive `defaults`,
+[Agent Skill](https://agentskills.io) covering exactly this material 
+(**`vizmodules-custom-module`**), along with the namespace contract, reactive `defaults`,
 avoiding double renders, manual-edit persistence, and model-line backends. Install it (and
 its two siblings) into your project with `VizModules::use_vizmodules_skills(".")`, or pass
 `client = "copilot"` / `client = "claude"` to write to `.github/skills/` or `.claude/skills/`
@@ -33,7 +33,7 @@ instead of the default `.agents/skills/`. See the README for details.
 
 ## The Pattern
 
-When building a custom module, you need to handle Shiny's namespacing correctly. The key insight is:
+When building a custom module, you need to handle Shiny's namespacing correctly. Some key tips include:
 
 1. **Your module's custom inputs** need to be namespaced with `NS(id)`.
 2. **The base module's UI and server functions** should receive the bare `id`, not a namespaced version.
@@ -209,6 +209,44 @@ customPlotServer <- function(id, data_reactive) {
 
 See the "Adding a New Module" vignette for the full description of these helpers, 
 but this is pretty much all you need to do.
+
+## Helpers for Modules in Extension Packages
+
+A module built on VizModules' exports (in your own package, say) can reuse the helpers the
+built-in modules share, rather than keeping copies:
+
+```{r extension-helpers}
+extendedServer <- function(id, data, defaults = NULL, hide.inputs = NULL) {
+    moduleServer(id, function(input, output, session) {
+        data <- require_data_frame(data)
+
+        # A faceted plot has no editable main title: swap in the facet title inputs.
+        observe({
+            toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
+        })
+
+        output$plot <- renderPlotly({
+            # "" (nothing chosen), NA and NULL all become NULL.
+            facet.by <- blank_to_null(input$facet.by)
+            # Jitter stays put across rebuilds instead of redrawing on every input change.
+            with_stable_seed(build_my_plotly_figure(data(), facet.by = facet.by))
+        })
+
+        observeEvent(input$reset, {
+            # Restore the group colour picker to the mapping in `defaults`.
+            reset_group_colors(session, "palette.colours", defaults, groups(), default_palette_values)
+            reset_plotly_inputs(session, defaults)
+        })
+    })
+}
+```
+
+On the UI side, `uniform_subplot_spacing_inputs_ui(ns, defaults)` adds the subplot spacing
+controls to a Facet tab (`reset_plotly_inputs()` already resets them, and
+`apply_facet_subplot_spacing()` applies them), and `uniform_stats_inputs_ui(ns, defaults)` adds
+the Stats tab (`reset_stats_inputs()` resets it). Seed a `multiColorPicker()` built inside
+`renderUI()` from `default_group_colors(defaults, "palette.colours")`. See the "Adding a New
+Module" vignette for the full list.
 
 ## Best Practices
 

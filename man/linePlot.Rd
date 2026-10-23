@@ -56,8 +56,12 @@ linePlot(
   error.colour = NULL,
   error.width = NULL,
   error.bar = FALSE,
-  error.type = c("sd", "sem", "ci95"),
-  error.ci.method = c("normal", "t")
+  error.type = c("sd", "sem", "ci95", "columns"),
+  error.ci.method = c("normal", "t"),
+  error.lower = NULL,
+  error.upper = NULL,
+  error.ribbon = FALSE,
+  error.ribbon.opacity = 0.25
 )
 }
 \arguments{
@@ -178,23 +182,41 @@ Same options as x.adjustment and y.adjustment. Default: NULL.}
 
 \item{order.by}{Optional character vector, column name(s) to order data by before plotting. Default: NULL.}
 
-\item{error.colour}{hex colour input to set the colour of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+\item{error.colour}{Hex colour of the error bars. Default: \code{NULL} (the series' own colour).}
 
-\item{error.width}{numeric input to set the width of the error bars on a plot with a categorical X axis and only 1 Y axis variable}
+\item{error.width}{Numeric, thickness of the error bars. Default: \code{NULL} (plotly's default).}
 
-\item{error.bar}{Boolean value to determine if error bars will be on or off on a plot with a categorical X axis
-and only 1 Y axis variable. Each bar spans the plotted group mean plus or minus the amount \code{error.type} selects,
-computed from that group's y-values, where a group is a single x category, split further by \code{colour.group.by} and
-\code{facet.by} when those are set. A group with fewer than two observations has no spread and is drawn without a bar.}
+\item{error.bar}{Logical, whether to draw the interval \code{error.type} selects as error bars. Needs a single \code{y}, and a
+single categorical \code{x} unless \code{error.type = "columns"}. For \code{"sd"}, \code{"sem"} and \code{"ci95"}, each bar spans the plotted
+group mean plus or minus that amount, computed from the group's y-values, where a group is a single x category,
+split further by \code{colour.group.by} and \code{facet.by} when those are set. A group with fewer than two observations has
+no spread and is drawn without a bar. Default: \code{FALSE}.}
 
-\item{error.type}{What the error bars show, one of \code{"sd"} (one standard deviation, the default), \code{"sem"} (one
-standard error of the mean, \code{sd / sqrt(n)}) or \code{"ci95"} (a 95\% confidence interval for the mean). Missing values
-are ignored when counting \code{n}.}
+\item{error.type}{What the error bars and ribbon show, one of \code{"sd"} (one standard deviation, the default),
+\code{"sem"} (one standard error of the mean, \code{sd / sqrt(n)}), \code{"ci95"} (a 95\% confidence interval for the mean) or
+\code{"columns"} (the interval between the \code{error.lower} and \code{error.upper} columns). Missing values are ignored when
+counting \code{n}. The first three summarise each group, so they need a categorical \code{x}. \code{"columns"} works with any
+\code{x}. It suits intervals worked out beforehand, such as a model's confidence or prediction interval, a forecast
+range or a min/max range.}
 
 \item{error.ci.method}{How \code{error.type = "ci95"} is computed, one of \code{"normal"} (the default; the standard error
 times the 97.5th percentile of the normal distribution, 1.96) or \code{"t"} (the standard error times the 97.5th
 percentile of the t distribution with \code{n - 1} degrees of freedom). The t interval is wider for small groups and
 converges on the normal one as \code{n} grows. Ignored for the other error types.}
+
+\item{error.lower, error.upper}{Optional character, names of the numeric columns holding each point's lower and
+upper bound, for \code{error.type = "columns"}. Either order works. The bounds are on the y-axis's scale, so
+\code{y.adjustment} is applied to them too. With a categorical \code{x}, they are averaged per group, as \code{y} is, so supply
+one row per x position (and colour/facet group). A bound that lies on the wrong side of the line draws no bar on
+that side. Default: \code{NULL}.}
+
+\item{error.ribbon}{Logical, whether to draw the interval \code{error.type} selects as a shaded band (a ribbon) behind
+each line, in the line's own colour, on its own or alongside the error bars. It has the same requirements as
+\code{error.bar}. A point without an interval leaves a gap in the band, so an isolated point's interval shows only
+as a bar. No ribbon is drawn for a numeric \code{colour.group.by}, which plotly does not split into separate lines.
+Hovering a band's edge shows that bound. Default: \code{FALSE}.}
+
+\item{error.ribbon.opacity}{Numeric between 0 and 1, the ribbon's fill opacity. Default: 0.25.}
 }
 \value{
 A plotly object representing the interactive line plot.
@@ -213,6 +235,32 @@ fig <- linePlot(
     colour.group.by = "mpg",
     palette.selection = palette,
     show.legend = TRUE
+)
+
+# Each product line's yearly mean revenue, with a 95\% confidence interval ribbon.
+fig2 <- linePlot(
+    data = example_sales,
+    x = "year",
+    y = "revenue",
+    colour.group.by = "product_line",
+    palette.selection = palette[1:3],
+    error.type = "ci95",
+    error.ribbon = TRUE
+)
+
+# A band from columns holding precomputed bounds, on a numeric x-axis.
+fit <- data.frame(t = 1:20, est = sqrt(1:20))
+fit$lo <- fit$est - 0.4
+fit$hi <- fit$est + 0.4
+fig3 <- linePlot(
+    data = fit,
+    x = "t",
+    y = "est",
+    palette.selection = "#1B9E77",
+    error.type = "columns",
+    error.lower = "lo",
+    error.upper = "hi",
+    error.ribbon = TRUE
 )
 }
 \author{

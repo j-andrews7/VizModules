@@ -34,7 +34,7 @@
 #' @author Your Name
 <MODULE>Server <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
 
     moduleServer(id, function(input, output, session) {
         # [T] MUST be the first statement. Returns NULL when no `defaults` entry is
@@ -62,7 +62,7 @@
 
         # ---- Colour picker -------------------------------------------------------
         default_palette_name <- "dittoColors"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -99,7 +99,7 @@
             }
             initial_colors <- isolate(resolve_palette(
                 groups, input$palette.colours, default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
             # Seed the store with exactly what the picker is built from, so the first
             # draw uses the right palette rather than waiting for the client to report.
@@ -157,14 +157,14 @@
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical))
             updateNumericInput(session, "alpha", value = get_default(defaults, "alpha", 1, is.numeric))
 
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             # [T] One call per shared tab you included in the UI.
             reset_axes_inputs(session, defaults)
             reset_plotly_inputs(session, defaults)
             reset_legend_inputs(session, defaults)
             reset_lines_inputs(session, defaults = defaults)
-            # .reset_stats_inputs(session, defaults)   # only if you added a Stats tab
+            # reset_stats_inputs(session, defaults, pair_strings)   # only if you added a Stats tab
         })
 
         # ---- Build the figure ----------------------------------------------------
@@ -182,14 +182,14 @@
             if (!isolate_fn(input$facet.by) == "") {
                 facet.by <- isolate_fn(input$facet.by)
             }
-            facet.ncol <- .na_to_null(isolate_fn(input$facet.ncol))
-            facet.nrow <- .na_to_null(isolate_fn(input$facet.nrow))
+            facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
+            facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 
             palette_values <- resolve_palette(
                 isolate_fn(palette_groups()),
                 isolate_fn(palette_store()),
                 default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             )
             palcolor_arg <- NULL
             if (!is.null(palette_values) && length(palette_values) > 0) {

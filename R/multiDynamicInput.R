@@ -15,6 +15,11 @@
 #' takes `inputId` as its first argument can be used. Common types have a short
 #' `type = "..."` alias.
 #'
+#' A `"select"` field given `multiple = TRUE` in its `args` reports a character
+#' vector of its items, in the order they were picked, which suits a field
+#' listing steps in order. Pre-fill one in `elements` with a character vector in
+#' the order wanted.
+#'
 #' @param inputId Character. Shiny input id.
 #' @param label Optional label displayed next to the add button.
 #' @param row_spec A named list describing one row. Each element is itself a
@@ -332,7 +337,10 @@ updateMultiDynamicInput <- function(session, inputId, elements = NULL, clear = F
                 if (is.null(fields) || length(fields) == 0) {
                     return(stats::setNames(list(), character(0)))
                 }
-                vals <- lapply(fields, function(f) f$value)
+                # A multi-select reports an array of its items, in the order picked.
+                vals <- lapply(fields, function(f) {
+                    if (is.list(f$value)) as.character(unlist(f$value)) else f$value
+                })
                 names(vals) <- vapply(fields, function(f) f$key %||% "", character(1))
                 vals
             })

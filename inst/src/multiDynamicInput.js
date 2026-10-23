@@ -24,15 +24,35 @@
   const templateEl = (el) => el.querySelector(".mdi-row-template");
 
   // Read a single field's value straight off its form control: a checkbox
-  // reports its checked state, everything else its string value (so numeric
-  // fields arrive as strings and the server converts them).
+  // reports its checked state, a multi-select an array of its items, everything
+  // else its string value (so numeric fields arrive as strings and the server
+  // converts them).
   const readField = (fieldEl) => {
     const bound = fieldEl.querySelector(".shiny-bound-input");
     const target = bound || fieldEl.querySelector("input, select, textarea");
     if (!target) return null;
 
     if (target.type === "checkbox") return target.checked;
+    if (target.tagName === "SELECT" && target.multiple) {
+      // selectize keeps its items in the order they were picked; the <select>
+      // itself lists them in option order.
+      if (target.selectize) return target.selectize.getValue();
+      return Array.prototype.map.call(target.selectedOptions, (o) => o.value);
+    }
     return target.value;
+  };
+
+  // Select `values` in a multi-select, in that order. selectize builds its items
+  // from the selected options in document order, so each chosen option is moved
+  // to the front of its list, last first, before the row is bound.
+  const selectInOrder = (select, values) => {
+    Array.prototype.forEach.call(select.options, (o) => { o.selected = false; });
+    values.slice().reverse().forEach((v) => {
+      const opt = Array.prototype.find.call(select.options, (o) => o.value === String(v));
+      if (!opt) return;
+      opt.selected = true;
+      opt.parentNode.insertBefore(opt, opt.parentNode.firstChild);
+    });
   };
 
   const readValue = (el) => {
@@ -97,6 +117,8 @@
       if (f.value !== undefined && f.value !== null) {
         if (target.type === "checkbox") {
           target.checked = !!f.value;
+        } else if (target.tagName === "SELECT" && target.multiple) {
+          selectInOrder(target, Array.isArray(f.value) ? f.value : [f.value]);
         } else {
           target.value = f.value;
         }

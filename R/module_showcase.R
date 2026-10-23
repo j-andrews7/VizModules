@@ -141,10 +141,12 @@
             inputs_ui = plotthis_DotPlotInputsUI,
             output_ui = plotthis_DotPlotOutputUI,
             server_fn = plotthis_DotPlotServer,
-            # Dotted lines between each cell type's block of marker genes.
+            # Dotted lines between each cell type's block of marker genes, and a
+            # size legend running over the whole percentage scale.
             defaults = list(
                 "x.data" = "gene", "y.data" = "cell_type",
                 "size.by" = "pct_expressed", "fill.by" = "avg_expression",
+                "size.scale.min" = 0, "size.scale.max" = 100,
                 "vline.intercepts" = "2.5, 4.5, 6.5, 8.5, 10.5, 11.5, 12.5",
                 "vline.colors" = "#AAAAAA", "vline.linetypes" = "dotted"
             )
@@ -190,10 +192,12 @@
             inputs_ui = linePlotInputsUI,
             output_ui = linePlotOutputUI,
             server_fn = linePlotServer,
-            # Error bars (on by default) show each year's spread across months and regions.
+            # A ribbon around each product line's yearly mean: the 95% CI over its months and
+            # regions. Gadgets climb, Doohickeys fall and Widgets hold, so the bands cross.
             defaults = list(
                 "x.value" = "year", "y.value" = "revenue", "group.by" = "product_line",
-                "plot.mode" = "lines+markers"
+                "plot.mode" = "lines+markers",
+                "error.bar" = FALSE, "error.ribbon" = TRUE, "error.bar.type" = "ci95"
             )
         ),
         parallel = list(
@@ -232,11 +236,13 @@
             inputs_ui = dittoViz_scatterPlotInputsUI,
             output_ui = dittoViz_scatterPlotOutputUI,
             server_fn = dittoViz_scatterPlotServer,
-            # One fit per product line, and the two planted outliers labelled:
-            # a promotion (Sale_352) and a clearance sale (Sale_540).
+            # One fit per product line, each line's units and revenue in the marginals,
+            # and the two planted outliers labelled: a promotion (Sale_352) and a
+            # clearance sale (Sale_540).
             defaults = list(
                 "x.by" = "units", "y.by" = "revenue", "color.by" = "product_line",
                 "linear.model" = TRUE,
+                "marginal.x" = "density", "marginal.y" = "density",
                 "annotate.by" = "sale_id", "highlight.points" = "Sale_352, Sale_540"
             )
         ),

@@ -30,7 +30,7 @@
 #' @author Jacob Martin
 linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
     data_reactive <- data
 
     # linePlot-specific default for subplot spacing (tighter than the global 0.1),
@@ -56,19 +56,27 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         # manual title text for that axis so it regenerates for the new variable.
         last_axis_val <- reactiveVal(NULL)
 
-        # Error bars need a single categorical X, and only a confidence interval has a
-        # method to choose. What the app hid via hide.inputs is never shown again here.
-        observeEvent(list(input$x.value, input$error.bar.type), {
+        # The error bars and ribbon need a single X and Y. SD, SEM and CI summarise each
+        # category, so they also need a categorical X, while an interval from columns works
+        # with any. Only a confidence interval has a method to choose, and only "columns"
+        # needs its bound columns. What the app hid via hide.inputs is never shown again here.
+        observeEvent(list(input$x.value, input$y.value, input$error.bar.type), {
             req(input$x.value)
-            bars_apply <- length(input$x.value) == 1 && !is.numeric(data()[[input$x.value]])
-            ci_applies <- bars_apply && identical(input$error.bar.type, "ci95")
+            single <- length(input$x.value) == 1 && length(input$y.value) <= 1
+            x_is_cat <- single && !is.numeric(data()[[input$x.value]])
+            from_columns <- identical(input$error.bar.type, "columns")
 
             toggle_cells <- function(ids, show) {
                 ids <- setdiff(ids, hide.inputs)
                 if (show) show_input(session, ids) else hide_input(session, ids)
             }
-            toggle_cells(c("error.bar", "error.bar.type", "error.bar.width", "error.bar.colour"), bars_apply)
-            toggle_cells("error.bar.ci.method", ci_applies)
+            toggle_cells("error.bar.type", single)
+            toggle_cells(
+                c("error.bar", "error.ribbon", "error.bar.width", "error.bar.colour", "error.ribbon.opacity"),
+                x_is_cat || (single && from_columns)
+            )
+            toggle_cells("error.bar.ci.method", x_is_cat && identical(input$error.bar.type, "ci95"))
+            toggle_cells(c("error.lower", "error.upper"), single && from_columns)
         })
 
         # Hide individual inputs/tabs if specified. The inputs UI is injected by the
@@ -85,7 +93,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
         }
 
         default_palette_name <- "dittoColors"
-        palette_lookup <- .flatten_palette_options(default_palettes()[["choices"]])
+        palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
             default_palette_values <- if (length(palette_lookup) > 0) palette_lookup[[1]] else character(0)
@@ -145,7 +153,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$palette.colours, default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
 
             # The picker is seeded with this, so it is also what the plot should be
@@ -181,8 +189,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 value = get_default(defaults, "flip.x", FALSE, is.logical))
             updateMaterialSwitch(session, "flip.y",
                 value = get_default(defaults, "flip.y", FALSE, is.logical))
+            # The capped Group By pool the UI offers (see linePlotInputsUI()).
+            group.choices <- .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% choices))
+                selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% group.choices))
             update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% choices))
             update_viz_select(session, "facet.scales",
@@ -199,6 +209,15 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 selected = get_default(defaults, "error.bar.type", "sd"))
             update_viz_select(session, "error.bar.ci.method",
                 selected = get_default(defaults, "error.bar.ci.method", "normal"))
+            num.choices <- names(data())[vapply(data(), is.numeric, logical(1))]
+            for (bound in c("error.lower", "error.upper")) {
+                update_viz_select(session, bound,
+                    selected = get_default(defaults, bound, "", function(x) x == "" || x %in% num.choices))
+            }
+            updateMaterialSwitch(session, "error.ribbon",
+                value = get_default(defaults, "error.ribbon", FALSE, is.logical))
+            updateNumericInput(session, "error.ribbon.opacity",
+                value = get_default(defaults, "error.ribbon.opacity", 0.25, is.numeric))
             updateNumericInput(session, "error.bar.width",
                 value = get_default(defaults, "error.bar.width", 1, is.numeric))
             updateColourInput(session, "error.bar.colour",
@@ -208,10 +227,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
             # Plotly
             # Group colors
-            .reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+            reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
             reset_legend_inputs(session, defaults)
 
             # Lines
@@ -220,8 +239,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
 
 
         observeEvent(input$facet.by, {
-            .toggle_facet_title_inputs(
-                session, .nz_value(input$facet.by),
+            toggle_facet_title_inputs(
+                session, nz_value(input$facet.by),
                 extra = c("facet.nrow", "facet.ncol"), hidden = hide.inputs
             )
         })
@@ -240,7 +259,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 isolate_fn(palette_groups()),
                 isolate_fn(palette_store()),
                 default_palette_values,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             )
 
             palette_selection <- palette_values
@@ -290,12 +309,12 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             y.adjustment <- NULL
-            if (.nz_value(isolate_fn(input$y.adjustment))) {
+            if (nz_value(isolate_fn(input$y.adjustment))) {
                 y.adjustment <- isolate_fn(input$y.adjustment)
             }
 
             x.adjustment <- NULL
-            if (.nz_value(isolate_fn(input$x.adjustment))) {
+            if (nz_value(isolate_fn(input$x.adjustment))) {
                 x.adjustment <- isolate_fn(input$x.adjustment)
             }
 
@@ -336,11 +355,19 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             }
 
             facet.by <- NULL
-            if (.nz_value(isolate_fn(input$facet.by))) {
+            if (nz_value(isolate_fn(input$facet.by))) {
                 facet.by <- isolate_fn(input$facet.by)
             }
             facet.nrow.val <- clean_facet_dim(isolate_fn(input$facet.nrow))
             facet.ncol.val <- clean_facet_dim(isolate_fn(input$facet.ncol))
+
+            # A bound column left over from another dataset is ignored until the select catches up.
+            bound_col <- function(value) {
+                value <- blank_to_null(value)
+                if (!is.null(value) && value %in% names(d) && is.numeric(d[[value]])) value else NULL
+            }
+            error.lower <- bound_col(isolate_fn(input$error.lower))
+            error.upper <- bound_col(isolate_fn(input$error.upper))
 
             fig <- linePlot(
                 data = d,
@@ -393,7 +420,11 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 error.width = isolate_fn(input$error.bar.width),
                 error.bar = isolate_fn(input$error.bar),
                 error.type = isolate_fn(input$error.bar.type),
-                error.ci.method = isolate_fn(input$error.bar.ci.method)
+                error.ci.method = isolate_fn(input$error.bar.ci.method),
+                error.lower = error.lower,
+                error.upper = error.upper,
+                error.ribbon = isTRUE(isolate_fn(input$error.ribbon)),
+                error.ribbon.opacity = isolate_fn(input$error.ribbon.opacity)
             )
             # Add reference lines
             fig <- add_reference_lines(fig,
@@ -459,7 +490,7 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             } else if (dual_multiAxis) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs for both X and Y inputs simultaneously")
-            } else if (multi_axis && .nz_value(input$group.by)) {
+            } else if (multi_axis && nz_value(input$group.by)) {
                 return_empty <- TRUE
                 txt <- c(txt, "You cannot have multiple inputs on x and y axis and group by at the same time")
             }

@@ -70,7 +70,7 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
                              col.visibility = FALSE, hide.columns = NULL,
                              filter.max.options = 50) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
     if (!is.numeric(filter.max.options) || length(filter.max.options) != 1 || filter.max.options < 1) {
         stop("'filter.max.options' must be a single positive number.", call. = FALSE)
     }

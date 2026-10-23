@@ -71,9 +71,19 @@
 #' - `x.adj.fxn` - X adjustment function (UI: "X Adjustment Function", default: "")
 #' - `y.adj.fxn` - Y adjustment function (UI: "Y Adjustment Function", default: "")
 #' - `color.adj.fxn` - Color adjustment function (UI: "Color Adjustment Function", default: "")
-#' - `size` - Point size (UI: "Point Size", default: 1)
+#' - `size` - Point size (UI: "Point Size", default: 1); shown while `size.by` is unset
 #' - `size.by` - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
 #'   a custom circle size legend is drawn since plotly cannot render a native size legend
+#' - `size.min` - Smallest point size a `size.by` column maps onto (UI: "Min Point Size", default: 1).
+#'   Shown while `size.by` is set
+#' - `size.max` - Largest point size a `size.by` column maps onto (UI: "Max Point Size", default: 6).
+#'   Shown while `size.by` is set
+#' - `size.scale.min` - `size.by` value drawn at the minimum point size, where the size legend starts
+#'   (UI: "Size Scale Min", default: NA = the column's minimum); smaller values are drawn at the minimum size.
+#'   Shown while `size.by` is set
+#' - `size.scale.max` - `size.by` value drawn at the maximum point size, where the size legend ends
+#'   (UI: "Size Scale Max", default: NA = the column's maximum); larger values are drawn at the maximum size.
+#'   Shown while `size.by` is set
 #' - `opacity` - Point opacity (UI: "Point Opacity", default: 1)
 #' - `show.others` - Show others (UI: "Show Others", default: TRUE)
 #' - `split.show.all.others` - Show split others (UI: "Show Split Others", default: TRUE)
@@ -112,14 +122,25 @@
 #' - `legend.color.title` - Color legend title (UI: "Legend Title", default: "make")
 #' - `legend.color.breaks` - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 #' - `size.legend.x` - Custom size-legend x position (UI: "Size Legend X Position",
-#'   default: 1.02); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
+#'   default: 1.03); nudges the manual size legend (drawn when `size.by` is set) along the x-axis.
 #' - `size.legend.y` - Custom size-legend y position (UI: "Size Legend Y Position",
-#'   default: 0.95); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
+#'   default: 0.35); nudges the manual size legend (drawn when `size.by` is set) along the y-axis.
 #' - `min.value` - Minimum value (UI: "Min Value", default: NA)
 #' - `max.value` - Maximum value (UI: "Max Value", default: NA)
-#' - `trajectory.group.by` - Trajectory group by (UI: "Trajectory Group By", default: "")
-#' - `add.trajectory.by.groups` - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
-#' - `trajectory.arrow.size` - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+#' - `trajectory.group.by` - Column whose groups the trajectories pass through (UI: "Trajectory Group By",
+#'   default: "")
+#' - `add.trajectory.by.groups` - Trajectories, each the groups it visits in order (UI: "Trajectories", a
+#'   [multiDynamicInput()] with one row per trajectory, each picking its groups in order from the
+#'   `trajectory.group.by` column; default: none). In `defaults`, a list of character vectors as dittoViz
+#'   takes it, e.g. `list(c("A", "B"), c("C", "D", "E"))`, applied while `trajectory.group.by` is its default
+#'   column; the bracketed text `"[A,B],[C,D,E]"` also works. Changing the column clears the list. The module
+#'   draws each as a path through its groups' medians, ending in an arrowhead (ggplotly drops dittoViz's).
+#'   The medians are of the values as plotted, after any adjustment. On a split plot each panel's path runs
+#'   through that panel's medians, and a path is left out of any panel, or plot, missing one of its groups.
+#'   None are drawn while an adjustment makes an axis categorical. Zoomed in, a path stops at the panel's
+#'   edge, but an arrowhead just past the edge is still drawn, as plotly does not clip annotations to the
+#'   plot area
+#' - `trajectory.arrow.size` - Arrowhead length in inches (UI: "Trajectory Arrow Size", default: 0.1)
 #' - `do.ellipse` - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
 #' - `do.contour` - Enable contour (UI: "Enable Contour", default: FALSE)
 #' - `hover.data` - Hover data columns (UI: "Hover Data", default: "")
@@ -178,6 +199,34 @@
 #' - `line.best.smoothness` - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 #' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 #' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
+#' - `marginal.x` - Distributions of the X values drawn above the plot, any of `"density"`, `"histogram"`
+#'   and `"rug"` (UI: "Top Marginal (X)", default: none)
+#' - `marginal.y` - Distributions of the Y values drawn to the right of the plot, any of `"density"`,
+#'   `"histogram"` and `"rug"` (UI: "Right Marginal (Y)", default: none)
+#' - `marginal.x.size` - Share of the plot's height given to the top marginal (UI: "Top Marginal Height",
+#'   default: 0.15). Shown while `marginal.x` is set
+#' - `marginal.y.size` - Share of the plot's width given to the right marginal (UI: "Right Marginal Width",
+#'   default: 0.15). Shown while `marginal.y` is set
+#' - `marginal.opacity` - Opacity of the density and histogram fills and the rug lines
+#'   (UI: "Marginal Opacity", default: 0.5). Shown while either marginal is set
+#' - `marginal.bins` - Number of histogram bins (UI: "Histogram Bins", default: 30). Shown while either
+#'   marginal has a histogram
+#' - `marginal.binwidth` - Histogram bin width, overriding `marginal.bins` (UI: "Histogram Bin Width",
+#'   default: NA = use `marginal.bins`). Shown while either marginal has a histogram
+#' - `marginal.density.adjust` - Multiplier on the density bandwidth (UI: "Density Bandwidth Adjust",
+#'   default: 1). Shown while either marginal has a density
+#' - `marginal.rug.height` - Share of a marginal given to its rug when it sits alongside a density or
+#'   histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
+#' - `marginal.rug.width` - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
+#'   Shown while either marginal has a rug
+#'
+#' Marginal plots show one distribution per Color By group, in the group's colour, or a single one in
+#' the Point color when the plot has no groups (including a numeric Color By). Like the fit lines, they
+#' are drawn from the plotted values, after any X/Y adjustment. A density and a histogram share their
+#' marginal, the histogram scaled to a density so the two match; a histogram on its own shows counts.
+#' The rug sits in its own strip next to the plot, with a lane for each group. Zooming the plot zooms
+#' its marginals, and hiding a group in the legend hides its marginals too. Marginals are not drawn on
+#' a split plot, nor along an axis an adjustment (`as.factor`) makes categorical.
 #'
 #' Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
 #' result (e.g. log10, then z-score), the reverse of the order [dittoViz::scatterPlot()] applies
@@ -223,6 +272,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     # Get categorical variables of data.
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
 
+    # Colour and shape choices leave out categoricals with too many levels to
+    # draw (an ID column asks for one colour or shape per point), unless the
+    # caller asked for one. Numeric columns stay as continuous colour.
+    color.disc <- .discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
+    color.choices <- c("", names(data)[names(data) %in% c(num.choices, color.disc)])
+    shape.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "shape.by", NULL)))
+    traj.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "trajectory.group.by", NULL)))
+
     # Various other choice vectors
     adj.choices <- c("", .adjustment_choices)
     adj.fxn.choices <- c("", .adj_fxn_choices)
@@ -240,8 +297,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         c("legend.color.title", "legend.shape.title"),
         "legend.color.breaks",
         c("min.value", "max.value"),
-        "trajectory.group.by", "add.trajectory.by.groups",
-        "trajectory.arrow.size"
+        "trajectory.group.by", "trajectory.arrow.size"
     )
 
     documentParameters <- get_documentation(
@@ -275,10 +331,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 )
             ), documentParameters$y.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("color.by"), "Color By",
-                choices = choices,
+                choices = color.choices,
                 selected = get_default(
                     defaults, "color.by", "",
-                    function(x) x %in% choices
+                    function(x) x %in% color.choices
                 )
             ), documentParameters$color.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("size.by"), "Size By",
@@ -289,14 +345,14 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 )
             ), documentParameters$size, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("shape.by"), "Shape By",
-                choices = cat.choices,
+                choices = shape.choices,
                 selected = get_default(
                     defaults, "shape.by", "",
-                    function(x) x %in% cat.choices
+                    function(x) x %in% shape.choices
                 )
             ), documentParameters$shape.by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("split.by"), "Split By",
-                choices = c("", .facet_check(data)),
+                choices = c("", facet_check(data)),
                 selected = get_default(
                     defaults, "split.by", "",
                     function(x) all(x %in% cat.choices)
@@ -354,6 +410,30 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 value = get_default(defaults, "size", 1, is.numeric),
                 min = 0.1
             ), documentParameters$size, placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.min"), "Min Point Size",
+                value = get_default(defaults, "size.min", 1, is.numeric),
+                min = 0, step = 0.5
+            ), "Smallest point size, drawn for the Size Scale Min value of the 'Size By' column.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.max"), "Max Point Size",
+                value = get_default(defaults, "size.max", 6, is.numeric),
+                min = 0, step = 0.5
+            ), "Largest point size, drawn for the Size Scale Max value of the 'Size By' column.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.min"), "Size Scale Min",
+                value = get_default(defaults, "size.scale.min", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Min Point Size, and where the size",
+                "legend starts. Leave blank to use the column's minimum. Smaller",
+                "values are drawn at the Min Point Size."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("size.scale.max"), "Size Scale Max",
+                value = get_default(defaults, "size.scale.max", NA, is.numeric)
+            ), paste(
+                "'Size By' value drawn at the Max Point Size, and where the size",
+                "legend ends. Leave blank to use the column's maximum. Larger",
+                "values are drawn at the Max Point Size."
+            ), placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("opacity"), "Point Opacity",
                 value = get_default(defaults, "opacity", 1, is.numeric),
                 max = 1,
@@ -431,7 +511,7 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 ), "Control whether facet panels share the same axis scales or allow them to vary independently",
                 placement = "top", options = list(container = "body")
             ),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Annotations" = uniform_annotation_inputs_ui(ns, defaults, choices),
         "Legend" = tagList(
@@ -469,21 +549,82 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
         ),
         "Trajectory" = tagList(
             tipify(viz_select_input(ns("trajectory.group.by"), "Trajectory Group By",
-                choices = cat.choices,
+                choices = traj.choices,
                 selected = get_default(
                     defaults, "trajectory.group.by", "",
-                    function(x) x %in% cat.choices
+                    function(x) x %in% traj.choices
                 )
             ), documentParameters$trajectory.group.by, placement = "top", options = list(container = "body")),
-            tipify(textInput(ns("add.trajectory.by.groups"), "Add Trajectory By Groups",
-                placeholder = "e.g. [A,B],[C,D,E]",
-                value = get_default(defaults, "add.trajectory.by.groups", "")
-            ), documentParameters$add.trajectory.by.groups, placement = "top", options = list(container = "body")),
             tipify(numericInput(ns("trajectory.arrow.size"), "Trajectory Arrow Size",
-                value = get_default(defaults, "trajectory.arrow.size", 0.15, is.numeric),
+                value = get_default(defaults, "trajectory.arrow.size", 0.1, is.numeric),
                 min = 0,
                 step = 0.05
-            ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body"))
+            ), documentParameters$trajectory.arrow.size, placement = "top", options = list(container = "body")),
+            # The Trajectories list picks from the Trajectory Group By column's groups,
+            # so the server builds it once that column is known.
+            uiOutput(ns("add.trajectory.by.groups.ui"))
+        ),
+        "Marginals" = tagList(
+            tipify(viz_select_input(ns("marginal.x"), "Top Marginal (X)",
+                choices = .marginal_types,
+                multiple = TRUE,
+                selected = get_default(defaults, "marginal.x", character(0), .valid_marginal_types)
+            ), paste(
+                "Distribution of the X values drawn above the plot, one per Color By group.",
+                "Pick any of density, histogram and rug."
+            ), placement = "top", options = list(container = "body")),
+            tipify(viz_select_input(ns("marginal.y"), "Right Marginal (Y)",
+                choices = .marginal_types,
+                multiple = TRUE,
+                selected = get_default(defaults, "marginal.y", character(0), .valid_marginal_types)
+            ), paste(
+                "Distribution of the Y values drawn to the right of the plot, one per Color By group.",
+                "Pick any of density, histogram and rug."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.x.size"), "Top Marginal Height",
+                value = get_default(defaults, "marginal.x.size", 0.15, is.numeric),
+                min = 0.05, max = 0.5, step = 0.05
+            ), "Share of the plot's height given to the top marginal.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.y.size"), "Right Marginal Width",
+                value = get_default(defaults, "marginal.y.size", 0.15, is.numeric),
+                min = 0.05, max = 0.5, step = 0.05
+            ), "Share of the plot's width given to the right marginal.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.opacity"), "Marginal Opacity",
+                value = get_default(defaults, "marginal.opacity", 0.5, is.numeric),
+                min = 0, max = 1, step = 0.05
+            ), "Opacity of the density and histogram fills and of the rug lines.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.bins"), "Histogram Bins",
+                value = get_default(defaults, "marginal.bins", 30, is.numeric),
+                min = 1, step = 1
+            ), "Number of histogram bins, shared by every group so their bins line up.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.binwidth"), "Histogram Bin Width",
+                value = get_default(defaults, "marginal.binwidth", NA, is.numeric),
+                min = 0
+            ), paste(
+                "Width of each histogram bin, in the axis' units. Overrides Histogram Bins when set.",
+                "Leave blank to use Histogram Bins."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.density.adjust"), "Density Bandwidth Adjust",
+                value = get_default(defaults, "marginal.density.adjust", 1, is.numeric),
+                min = 0.1, step = 0.1
+            ), "Multiplier on the density bandwidth. Larger values give smoother curves.",
+            placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.rug.height"), "Rug Height",
+                value = get_default(defaults, "marginal.rug.height", 0.3, is.numeric),
+                min = 0.1, max = 0.9, step = 0.05
+            ), paste(
+                "Share of a marginal given to its rug when the rug sits alongside a density",
+                "or histogram. A rug on its own fills the marginal."
+            ), placement = "top", options = list(container = "body")),
+            tipify(numericInput(ns("marginal.rug.width"), "Rug Line Width",
+                value = get_default(defaults, "marginal.rug.width", 1, is.numeric),
+                min = 0.1, step = 0.5
+            ), "Line width of each rug tick, in pixels.",
+            placement = "top", options = list(container = "body"))
         ),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
         "Extras" = tagList(

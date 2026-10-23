@@ -105,9 +105,19 @@ The following \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} parame
 \item \code{x.adj.fxn} - X adjustment function (UI: "X Adjustment Function", default: "")
 \item \code{y.adj.fxn} - Y adjustment function (UI: "Y Adjustment Function", default: "")
 \item \code{color.adj.fxn} - Color adjustment function (UI: "Color Adjustment Function", default: "")
-\item \code{size} - Point size (UI: "Point Size", default: 1)
+\item \code{size} - Point size (UI: "Point Size", default: 1); shown while \code{size.by} is unset
 \item \code{size.by} - Numeric column mapped to point size (UI: "Size By", default: ""); when set,
 a custom circle size legend is drawn since plotly cannot render a native size legend
+\item \code{size.min} - Smallest point size a \code{size.by} column maps onto (UI: "Min Point Size", default: 1).
+Shown while \code{size.by} is set
+\item \code{size.max} - Largest point size a \code{size.by} column maps onto (UI: "Max Point Size", default: 6).
+Shown while \code{size.by} is set
+\item \code{size.scale.min} - \code{size.by} value drawn at the minimum point size, where the size legend starts
+(UI: "Size Scale Min", default: NA = the column's minimum); smaller values are drawn at the minimum size.
+Shown while \code{size.by} is set
+\item \code{size.scale.max} - \code{size.by} value drawn at the maximum point size, where the size legend ends
+(UI: "Size Scale Max", default: NA = the column's maximum); larger values are drawn at the maximum size.
+Shown while \code{size.by} is set
 \item \code{opacity} - Point opacity (UI: "Point Opacity", default: 1)
 \item \code{show.others} - Show others (UI: "Show Others", default: TRUE)
 \item \code{split.show.all.others} - Show split others (UI: "Show Split Others", default: TRUE)
@@ -146,14 +156,25 @@ default: ""). Values containing spaces
 \item \code{legend.color.title} - Color legend title (UI: "Legend Title", default: "make")
 \item \code{legend.color.breaks} - Legend tick breaks (UI: "Legend Tick Breaks", default: "")
 \item \code{size.legend.x} - Custom size-legend x position (UI: "Size Legend X Position",
-default: 1.02); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
+default: 1.03); nudges the manual size legend (drawn when \code{size.by} is set) along the x-axis.
 \item \code{size.legend.y} - Custom size-legend y position (UI: "Size Legend Y Position",
-default: 0.95); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
+default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set) along the y-axis.
 \item \code{min.value} - Minimum value (UI: "Min Value", default: NA)
 \item \code{max.value} - Maximum value (UI: "Max Value", default: NA)
-\item \code{trajectory.group.by} - Trajectory group by (UI: "Trajectory Group By", default: "")
-\item \code{add.trajectory.by.groups} - Add trajectory by groups (UI: "Add Trajectory By Groups", default: "")
-\item \code{trajectory.arrow.size} - Trajectory arrow size (UI: "Trajectory Arrow Size", default: 0.15)
+\item \code{trajectory.group.by} - Column whose groups the trajectories pass through (UI: "Trajectory Group By",
+default: "")
+\item \code{add.trajectory.by.groups} - Trajectories, each the groups it visits in order (UI: "Trajectories", a
+\code{\link[=multiDynamicInput]{multiDynamicInput()}} with one row per trajectory, each picking its groups in order from the
+\code{trajectory.group.by} column; default: none). In \code{defaults}, a list of character vectors as dittoViz
+takes it, e.g. \code{list(c("A", "B"), c("C", "D", "E"))}, applied while \code{trajectory.group.by} is its default
+column; the bracketed text \code{"[A,B],[C,D,E]"} also works. Changing the column clears the list. The module
+draws each as a path through its groups' medians, ending in an arrowhead (ggplotly drops dittoViz's).
+The medians are of the values as plotted, after any adjustment. On a split plot each panel's path runs
+through that panel's medians, and a path is left out of any panel, or plot, missing one of its groups.
+None are drawn while an adjustment makes an axis categorical. Zoomed in, a path stops at the panel's
+edge, but an arrowhead just past the edge is still drawn, as plotly does not clip annotations to the
+plot area
+\item \code{trajectory.arrow.size} - Arrowhead length in inches (UI: "Trajectory Arrow Size", default: 0.1)
 \item \code{do.ellipse} - Enable ellipses (UI: "Enable Ellipses", default: FALSE)
 \item \code{do.contour} - Enable contour (UI: "Enable Contour", default: FALSE)
 \item \code{hover.data} - Hover data columns (UI: "Hover Data", default: "")
@@ -215,7 +236,35 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{line.best.smoothness} - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
+\item \code{marginal.x} - Distributions of the X values drawn above the plot, any of \code{"density"}, \code{"histogram"}
+and \code{"rug"} (UI: "Top Marginal (X)", default: none)
+\item \code{marginal.y} - Distributions of the Y values drawn to the right of the plot, any of \code{"density"},
+\code{"histogram"} and \code{"rug"} (UI: "Right Marginal (Y)", default: none)
+\item \code{marginal.x.size} - Share of the plot's height given to the top marginal (UI: "Top Marginal Height",
+default: 0.15). Shown while \code{marginal.x} is set
+\item \code{marginal.y.size} - Share of the plot's width given to the right marginal (UI: "Right Marginal Width",
+default: 0.15). Shown while \code{marginal.y} is set
+\item \code{marginal.opacity} - Opacity of the density and histogram fills and the rug lines
+(UI: "Marginal Opacity", default: 0.5). Shown while either marginal is set
+\item \code{marginal.bins} - Number of histogram bins (UI: "Histogram Bins", default: 30). Shown while either
+marginal has a histogram
+\item \code{marginal.binwidth} - Histogram bin width, overriding \code{marginal.bins} (UI: "Histogram Bin Width",
+default: NA = use \code{marginal.bins}). Shown while either marginal has a histogram
+\item \code{marginal.density.adjust} - Multiplier on the density bandwidth (UI: "Density Bandwidth Adjust",
+default: 1). Shown while either marginal has a density
+\item \code{marginal.rug.height} - Share of a marginal given to its rug when it sits alongside a density or
+histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
+\item \code{marginal.rug.width} - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
+Shown while either marginal has a rug
 }
+
+Marginal plots show one distribution per Color By group, in the group's colour, or a single one in
+the Point color when the plot has no groups (including a numeric Color By). Like the fit lines, they
+are drawn from the plotted values, after any X/Y adjustment. A density and a histogram share their
+marginal, the histogram scaled to a density so the two match; a histogram on its own shows counts.
+The rug sits in its own strip next to the plot, with a lane for each group. Zooming the plot zooms
+its marginals, and hiding a group in the legend hides its marginals too. Marginals are not drawn on
+a split plot, nor along an axis an adjustment (\code{as.factor}) makes categorical.
 
 Each "Adjustment Function" is applied first and the matching "Adjustment" then rescales the
 result (e.g. log10, then z-score), the reverse of the order \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}} applies

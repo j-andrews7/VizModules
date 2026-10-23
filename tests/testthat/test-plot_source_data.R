@@ -508,3 +508,34 @@ test_that(".write_source_images falls back to a screenshot when it must", {
     )
     expect_equal(readBin(file.path(dir3, "x_plot.png"), "raw", n = 1e7), shot)
 })
+
+
+test_that("collect_source_data keeps several statistics tables apart", {
+    fig <- plotly::plot_ly(data.frame(a = 1:3, b = 4:6), x = ~a, y = ~b, type = "scatter", mode = "markers")
+    tables <- list(strata = data.frame(group = c("A", "B"), n = 2:3), pairwise = data.frame(p = 0.01), empty = NULL)
+    result <- collect_source_data(plot_reactive = function() fig, stats_reactive = function() tables)
+    expect_named(result$stats, c("strata", "pairwise"))
+    expect_identical(result$stats$strata, tables$strata)
+
+    # Unnamed tables are still written, under a name of their own.
+    unnamed <- collect_source_data(plot_reactive = function() fig, stats_reactive = function() list(tables$strata))
+    expect_named(unnamed$stats, "table1")
+
+    # A lone table is still a data frame.
+    lone <- collect_source_data(plot_reactive = function() fig, stats_reactive = function() tables$strata)
+    expect_s3_class(lone$stats, "data.frame")
+})
+
+
+test_that(".write_source_zip writes each statistics table to its own CSV", {
+    f <- withr::local_tempfile(fileext = ".zip")
+    .write_source_zip(
+        f,
+        list(plot = NULL, plot_data = data.frame(a = 1),
+            stats = list(strata = data.frame(n = 1:2), "pair wise" = data.frame(p = 0.5)), inputs = NULL)
+    )
+    expect_setequal(
+        zip::zip_list(f)$filename,
+        c("Data_plot_data.csv", "Data_stats_strata.csv", "Data_stats_pair_wise.csv")
+    )
+})
