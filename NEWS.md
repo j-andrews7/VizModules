@@ -1,12 +1,12 @@
 # VizModules 0.6.0
 
-The one where we shore up the foundations for additional extension (i.e. building `sciVizModules`).
+The one where we fix all the wonkiness with extending modules (i.e. building `sciVizModules`).
 
 ## Improved/New Functionality
 
 ### All modules
 
-* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and could bring an app down (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
+* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
 ### `DotPlot` and `scatterPlot`
 
@@ -19,9 +19,9 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 
 ### `scatterPlot`
 
-* New **Marginals** tab draws the distribution of X above the plot and of Y to its right (#113). Each side can show any of a density, a histogram and a rug, with one per **Color By** group in its colour. The module gallery's scatter plot now opens on densities.
+* New **Marginals** tab draws the distribution of X above the plot and of Y to its right (#113). Each side can show any of a density, a histogram, and a rug plot, with one per **Color By** group.
   * Marginals are drawn from the plotted values, after any adjustment.
-  * Marginals are not drawn on a split plot.
+  * Marginals are not drawn on a split plot because that'd be a mess.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
 * `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
@@ -30,12 +30,12 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 
 * `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row (#231).
 
-* Exported many helpers, so modules in extension packages can reuse them instead of keeping copies that drift (#369):
+* Exported many helpers for custom module use (#369):
   * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
   * Group colours: `default_group_colors()` validates and hex-normalises a colour mapping in `defaults`, and `reset_group_colors()` restores a group colour picker to it on Reset.
-  * Stats tab: `uniform_stats_inputs_ui()`, `reset_stats_inputs()`, `default_stat_pairs()`, `stat_bracket_headroom()` and `note_brackets_skipped()`.
+  * Stats tab: `uniform_stats_inputs_ui()`, `reset_stats_inputs()`, `default_stat_pairs()`, `stat_bracket_headroom()`, and `note_brackets_skipped()`.
   * Module server boilerplate: `require_data_frame()`, `nz_value()`, `blank_to_null()`, `na_to_null()`, `facet_check()`, `flatten_palette_options()`, `reset_manual_edits()` and `with_stable_seed()`, which keeps jitter from jumping on every rebuild.
-  * Drawn values: `as_plotted()`, `adjusted_values()` and `adjustment_fn()`, for anything drawn over an adjusted plot.
+  * Drawn values: `as_plotted()`, `adjusted_values()`, and `adjustment_fn()`, for anything drawn over an adjusted plot.
   * Point highlighting and labelling: `apply_highlight_styling()`, `create_highlight_annotations()`, `create_selected_annotations()`, `merge_annotation_sets()` and `parse_highlight_values()`.
   * Error intervals: `error_bar_halfwidth()` works out the SD, SEM or 95% CI half-width `linePlot()` draws around a group's mean, so a module that summarises its own groups (over a numeric x, which linePlot's own summaries do not cover) can hand `linePlot()` matching bounds through `error.type = "columns"` (sciVizModules' pkConcentrationTime uses it; #371).
   * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers. `breaks` picks the values to draw a circle for, such as round numbers, or leaves out the lower limit of a scale starting at size 0, whose circle would be empty. Its title sits just above the first circle, so a title of several lines no longer runs into a small one.
