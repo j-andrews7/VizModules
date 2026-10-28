@@ -215,7 +215,8 @@ updateMultiDynamicInput <- function(session, inputId, elements = NULL, clear = F
     if (isTRUE(clear)) {
         msg <- list(clear = TRUE)
     } else if (!is.null(elements)) {
-        msg <- list(value = .mdi_value_to_payload(elements, NULL))
+        # Unnamed, so the rows serialise as a JSON array rather than an object.
+        msg <- list(value = unname(.mdi_value_to_payload(elements, NULL)))
     } else {
         stop("Provide `elements` to set rows, or `clear = TRUE` to empty.")
     }

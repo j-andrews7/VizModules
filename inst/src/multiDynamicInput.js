@@ -230,7 +230,9 @@
   const setValue = (el, rows, callback) => {
     el._mdiMounted = true;
     clearRows(el, null);
-    (rows || []).forEach((r) => addRow(el, r.fields, null));
+    // A named R list arrives as an object rather than an array.
+    const list = Array.isArray(rows) ? rows : Object.values(rows || {});
+    list.forEach((r) => addRow(el, r.fields, null));
     if (callback) callback();
   };
 

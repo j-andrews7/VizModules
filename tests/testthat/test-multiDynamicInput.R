@@ -109,3 +109,20 @@ test_that("a multi-select field reports its items in the order picked, and can b
         simplifyVector = FALSE)
     expect_equal(unlist(initial[[1]]$fields[[1]]$value), c("C", "A"))
 })
+
+test_that("updateMultiDynamicInput sends named rows as a JSON array", {
+    captured <- NULL
+    session <- list(sendInputMessage = function(inputId, message) captured <<- message)
+
+    # Row names, as the scatter module's Trajectories reset and a heatmap
+    # annotation default carry, would otherwise serialise to a JSON object,
+    # which the client cannot iterate.
+    updateMultiDynamicInput(session, "traj", elements = .trajectory_rows(list(c("A", "B"), c("B", "C"))))
+    expect_null(names(captured$value))
+    json <- jsonlite::toJSON(captured, auto_unbox = TRUE)
+    expect_match(json, '^\\{"value":\\[', perl = TRUE)
+    expect_equal(unlist(captured$value[[2]]$fields[[1]]$value), c("B", "C"))
+
+    updateMultiDynamicInput(session, "traj", clear = TRUE)
+    expect_identical(captured, list(clear = TRUE))
+})
