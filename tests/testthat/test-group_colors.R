@@ -23,20 +23,20 @@ test_that("resolve_palette prefers user picks, then manual colours, then the rec
     )
 })
 
-test_that(".default_group_colors normalizes color names, resolves reactives, and rejects unnamed vectors", {
+test_that("default_group_colors normalizes color names, resolves reactives, and rejects unnamed vectors", {
     expect_equal(
-        .default_group_colors(list(palette.colours = c(A = "red", B = "#0f0")), "palette.colours"),
+        default_group_colors(list(palette.colours = c(A = "red", B = "#0f0")), "palette.colours"),
         c(A = "#FF0000", B = "#00FF00")
     )
     mapping <- shiny::reactiveVal(c(A = "red"))
     expect_equal(
-        shiny::isolate(.default_group_colors(list(palette.colours = mapping), "palette.colours")),
+        shiny::isolate(default_group_colors(list(palette.colours = mapping), "palette.colours")),
         c(A = "#FF0000")
     )
-    expect_null(.default_group_colors(list(palette.colours = c("red", "blue")), "palette.colours"))
-    expect_null(.default_group_colors(list(palette.colours = 1:3), "palette.colours"))
-    expect_null(.default_group_colors(NULL, "palette.colours"))
-    expect_null(.default_group_colors(list(other = c(A = "red")), "palette.colours"))
+    expect_null(default_group_colors(list(palette.colours = c("red", "blue")), "palette.colours"))
+    expect_null(default_group_colors(list(palette.colours = 1:3), "palette.colours"))
+    expect_null(default_group_colors(NULL, "palette.colours"))
+    expect_null(default_group_colors(list(other = c(A = "red")), "palette.colours"))
 })
 
 # A minimal module assembled from the real helpers, wired exactly as every plot
@@ -58,7 +58,7 @@ mini_color_server <- function(id, groups, defaults = NULL, runs) {
         seed_picker <- function() {
             initial <- shiny::isolate(resolve_palette(
                 groups(), input$palette.colours, fallback,
-                .default_group_colors(defaults, "palette.colours")
+                default_group_colors(defaults, "palette.colours")
             ))
             palette_store(initial)
             initial

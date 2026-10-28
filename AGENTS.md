@@ -4,19 +4,19 @@
 
 **VizModules** is an R package providing interactivity-first Shiny modules for common plot types. It ships ~17 plot modules (e.g. scatter, bar, box, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable `dataFilter` module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.5.0.9000 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.6.0 | **License**: MIT
 
 ## Repository Structure
 
 File counts below are deliberately approximate — check the directory rather than trusting a number here.
 
-- **R/** - ~85 source files: `*_module_ui.R` (UI), `*_module_server.R` (logic), `*_module_app.R` (examples), plus utils and standalone plot functions
-- **man/** - Auto-generated roxygen2 docs (~275 .Rd files). `INTERNAL_*.Rd` are gitignored by design
+- **R/** - ~90 source files: `*_module_ui.R` (UI), `*_module_server.R` (logic), `*_module_app.R` (examples), plus utils and standalone plot functions
+- **man/** - Auto-generated roxygen2 docs (~330 .Rd files). `INTERNAL_*.Rd` are gitignored by design
 - **data/** - 13 example datasets (`example_bar`, `example_composition`, `example_demographics`, `example_heatmap_column_data`, `example_heatmap_matrix`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`, `example_skills`)
 - **data-raw/** - `generate_example_data.R` script that builds the example datasets
 - **inst/apps/** - `module-gallery`, a thin deploy wrapper around `moduleGalleryApp()`; **inst/src/** - bundled JS/CSS assets; **inst/skills/** - agent skills shipped with the package and installed by `use_vizmodules_skills()`
 - **vignettes/** - adding-a-new-module, custom-model-lines, custom-modules, custom-shiny-inputs, data-filtering, defaults-and-hiding, quick-start, statistical-testing (all `eval = FALSE`, so `R CMD check` never runs their code)
-- **tests/testthat/** - ~22 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
+- **tests/testthat/** - ~30 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
 - **paper.md / paper.bib** - JOSS manuscript sources
 - **.github/workflows/** - `R-CMD-check.yaml`, `pkgdown.yaml` (docs site to GitHub Pages), `draft-pdf.yaml` (JOSS paper)
 - **DESCRIPTION** - Package metadata and dependencies
@@ -58,9 +58,9 @@ R CMD check --no-build-vignettes VizModules_*.tar.gz     # Quick check
 
 ## CI/CD
 
-- **R-CMD-check.yaml** - Runs `R CMD check` on push/PR to main/master.
-- **pkgdown.yaml** - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses `use-public-rspm: true` for fast binary installs on Ubuntu.
-- **draft-pdf.yaml** - Renders the JOSS paper.
+- **R-CMD-check.yaml** - Runs `R CMD check` on push to main/master and on every pull request.
+- **pkgdown.yaml** - Triggers on push/PR to devel/main, published releases, or manual dispatch. Builds docs website (plus `llms.txt`) and deploys to gh-pages on non-PR events. Uses `use-public-rspm: true` for fast binary installs on Ubuntu.
+- **draft-pdf.yaml** - Renders the JOSS paper on every push.
 
 ## Coding Conventions
 
@@ -129,14 +129,15 @@ Anything in Suggests must be reached through `requireNamespace(..., quietly = TR
 6. **Document missing features** - clearly note functionality unavailable in plotly
 7. **Use organize_inputs()** helper for consistent UI layouts
 8. **Ask user to validate** - rather than trying to run apps yourself continually, just ask user to validate specific changes to save time and tokens
+9. **Never read `R/dittoViz_ScatterPlot_module_server.R` whole** - it is over 1,100 lines; search it, or read only the lines you need
 
 ## Best Practices
 
 - Avoid `sapply` usage, it is unsafe in package code.
-- A Shiny input that has not reported yet is `NULL`, and both `nzchar(NULL)` and `NULL == ""` are `logical(0)`, which makes `if (...)` an error rather than a `FALSE`. Use the internal `.nz_value()` predicate for "is this input set to a non-empty string?".
+- A Shiny input that has not reported yet is `NULL`, and both `nzchar(NULL)` and `NULL == ""` are `logical(0)`, which makes `if (...)` an error rather than a `FALSE`. Use the exported `nz_value()` predicate for "is this input set to a non-empty string?".
 - User-typed expressions (filters, highlights, model formulas) go through `safe_eval_filter()` / `validate_expression()` / `.safe_build_model()`, which share one AST walker and allowlist in `R/parse_utils.R`. Never add a second copy of that allowlist, and never widen it with anything impure.
-- Anything drawn over a plot (significance brackets, fit/model lines, point labels, axis limits, headroom) is computed from the values the plot *draws*, after any data adjustment, never raw `data()`. Use dittoViz's `data.out` frame, `.as_plotted()` inside the package, or the exported `adjust_column_values()`; the adjustment choices live in `.adjustment_choices` / `.adj_fxn_choices`. Check new overlays with the `expect_brackets_within_axes()` / `expect_fit_lines_on_points()` / `expect_point_labels_on_points()` expectations in `tests/testthat/helper-overlays.R`, which test the built figure.
-- The modules apply an adjustment function *before* the z-score/relative-to-max rescaling (log, then z-score); dittoViz does the reverse when given both. So never pass dittoViz both `*.adjustment` and `*.adj.fxn`: pass `*.adj.fxn = .adjustment_fn(adjustment, fxn)` and no `*.adjustment`, which keeps its `.adj` columns and hover text while plotting `.adjusted_values()`.
+- Anything drawn over a plot (significance brackets, fit/model lines, point labels, axis limits, headroom) is computed from the values the plot *draws*, after any data adjustment, never raw `data()`. Use dittoViz's `data.out` frame, `as_plotted()` or `adjust_column_values()` (both exported); the adjustment choices live in `.adjustment_choices` / `.adj_fxn_choices`. Check new overlays with the `expect_brackets_within_axes()` / `expect_fit_lines_on_points()` / `expect_point_labels_on_points()` expectations in `tests/testthat/helper-overlays.R`, which test the built figure.
+- The modules apply an adjustment function *before* the z-score/relative-to-max rescaling (log, then z-score); dittoViz does the reverse when given both. So never pass dittoViz both `*.adjustment` and `*.adj.fxn`: pass `*.adj.fxn = adjustment_fn(adjustment, fxn)` and no `*.adjustment`, which keeps its `.adj` columns and hover text while plotting `adjusted_values()`.
 - Never queue a copy of an existing layout element (a whole axis, say) through `plotly::layout()`. Queued updates are merged in at build time, after anything written straight into `fig$x$layout`, so the copy silently reverts those writes. Queue only the properties being changed.
 - Map facet levels to panels by their strip labels (`.build_facet_axis_map()`, `.fit_panels()`), never by the order rows or axes appear in: ggplot orders facets alphabetically, and ggplotly shares axes across a row or column of panels.
 

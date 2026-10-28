@@ -127,7 +127,7 @@
 #' @rdname INTERNAL_heatmap_resolve_title
 #' @keywords internal
 .heatmap_resolve_title <- function(text, show_slice_titles = TRUE) {
-    if (.nz_value(text)) {
+    if (nz_value(text)) {
         return(text)
     }
     if (isTRUE(show_slice_titles)) character(0) else NULL
@@ -195,7 +195,7 @@
 #' column matching the matrix's selected column names, for column
 #' annotations). This normalizes either shape to the list form.
 #'
-#' Deliberately does not use the shared [.require_data_frame()] — that helper
+#' Deliberately does not use the shared [require_data_frame()] — that helper
 #' coerces its input straight to one data frame via [as.data.frame()], which
 #' would mangle the two-table list shape.
 #'

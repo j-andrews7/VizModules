@@ -91,7 +91,7 @@ multiColorPicker <- function(inputId,
         palette_source <- default_palettes()$choices
     }
 
-    palette_lookup <- .flatten_palette_options(palette_source)
+    palette_lookup <- flatten_palette_options(palette_source)
     if (length(palette_lookup) == 0) {
         stop("`palette_options` must contain at least one palette.")
     }
@@ -393,10 +393,14 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
 #'
 #' @return A flattened named list of palettes.
 #'
+#' @seealso [default_palettes()], [resolve_palette()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_flatten_palette_options
-#' @keywords internal
-.flatten_palette_options <- function(palettes) {
+#' @examples
+#' pal_lookup <- flatten_palette_options(default_palettes()[["choices"]])
+#' head(names(pal_lookup))
+flatten_palette_options <- function(palettes) {
     out <- list()
     if (is.null(palettes) || length(palettes) == 0) {
         return(out)

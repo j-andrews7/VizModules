@@ -156,7 +156,7 @@ It allows you to interactively compose complicated figures using the modules in 
 
 ## Building Custom Wrapper Modules
 
-The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules. Many internal helpers for axes, faceting, and layouts are now exported to support this, along with the `defaults`/`hide.inputs`/`hide.tabs` controls covered in [`vignette("defaults-and-hiding", package = "VizModules")`][28].
+The modules in **VizModules** are designed to be composed and extended. You can build higher-level modules that add custom logic while reusing the full functionality of the base modules. The helpers the built-in modules share (axes, faceting, layouts, stats brackets, colour pickers, point highlighting, size legends, marginals, and the module-server boilerplate) are exported to support this, along with the `defaults`/`hide.inputs`/`hide.tabs` controls covered in [`vignette("defaults-and-hiding", package = "VizModules")`][28]. A wrapper around the scatter module can also draw its own layers, annotations, or axis titles onto the scatter figure through the `fig.fn` hook of `dittoViz_scatterPlotServer()`.
 
 For more details, see [`vignette("custom-modules", package = "VizModules")`.][17]
 
@@ -178,7 +178,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 ### `dittoViz`
 
-* `dittoViz_scatterPlot` - x/y coordinate plots with additional color and shape encodings (wraps `dittoViz::scatterPlot`). Supports overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, or a registered backend), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26]. 
+* `dittoViz_scatterPlot` - x/y coordinate plots with additional color, shape, and size encodings (wraps `dittoViz::scatterPlot`). Supports density, histogram, and rug marginal distributions along each axis, trajectories through groups' medians, a size legend over a scale you set, and overlaying fit lines, including **multiple custom model lines** defined interactively: add a row per model, each with its own R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function (`lm`, `glm`, `loess`, or a registered backend), line colour, and width, see [`vignette("custom-model-lines", package = "VizModules")`][26].
 * `dittoViz_yPlot` - Multi-variate Y-axis plots (boxplot, jitter, violinplots - wraps `dittoViz::yPlot`).
 * `dittoViz_freqPlot` - Box/jitter plots for discrete observation frequencies per sample/group (wraps `dittoViz::freqPlot`).
 
@@ -189,7 +189,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 * `plotthis_BarPlot` - Bar charts (wraps `plotthis::BarPlot`).
 * `plotthis_SplitBarPlot` - Split bar charts (wraps `plotthis::SplitBarPlot`).
 * `plotthis_DensityPlot` - Density plots (wraps `plotthis::DensityPlot`).
-* `plotthis_DotPlot` - Dot plots (wraps `plotthis::DotPlot`).
+* `plotthis_DotPlot` - Dot plots (wraps `plotthis::DotPlot`), with a size legend over a scale you set.
 * `plotthis_Histogram` - Histograms (wraps `plotthis::Histogram`).
 
 ### `ComplexHeatmap`
@@ -201,7 +201,7 @@ Currently, **VizModules** contains a functional Shiny module for the following v
 
 Via direct implementation with plotly.
 
-* `linePlot` - Line plots
+* `linePlot` - Line plots, with SD, SEM, 95% CI, or precomputed (column-bound) intervals drawn as error bars and/or shaded ribbons
 * `piePlot` - Pie and donut plots
 * `radarPlot` - Radar plots
 * `parallelCoordinatesPlot` - Parallel coordinate plots

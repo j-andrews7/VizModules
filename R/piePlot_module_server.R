@@ -31,7 +31,7 @@
 #' @author Jacob Martin, Jared Andrews
 piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaults = NULL) {
     stopifnot(is.reactive(data))
-    data <- .require_data_frame(data)
+    data <- require_data_frame(data)
     data_reactive <- data
 
     moduleServer(id, function(input, output, session) {
@@ -84,7 +84,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
 
             initial_colors <- isolate(resolve_palette(
                 groups, input$slice.colors, default_palette_values,
-                .default_group_colors(defaults, "slice.colors")
+                default_group_colors(defaults, "slice.colors")
             ))
 
             # The picker is seeded with this, so it is also what the plot should be
@@ -164,10 +164,10 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 value = get_default(defaults, "slice.line.width", 0, is.numeric))
 
             # Slice colors
-            .reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
+            reset_group_colors(session, "slice.colors", defaults, slice_levels(), default_palette_values)
 
             reset_plotly_inputs(session, defaults)
-            .reset_manual_edits(edit_store)
+            reset_manual_edits(edit_store)
         })
 
         build_textinfo <- function(selected) {
@@ -201,7 +201,7 @@ piePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defaul
                 slice_levels,
                 isolate_fn(palette_store()),
                 default_palette_values,
-                .default_group_colors(defaults, "slice.colors")
+                default_group_colors(defaults, "slice.colors")
             )
             colour_vector <- unname(color_map[match(label_values, names(color_map))])
 

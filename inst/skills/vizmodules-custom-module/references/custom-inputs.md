@@ -58,6 +58,10 @@ row_spec = list(
 )
 ```
 
+A `"select"` field with `multiple = TRUE` in its `args` reports a character vector of its
+items in the order they were picked (the scatter module's Trajectories list relies on this);
+pre-fill it with a character vector in the order wanted.
+
 `elements` pre-fills rows on startup. The value is a named list of rows, keyed by the
 lowercased label plus an index:
 

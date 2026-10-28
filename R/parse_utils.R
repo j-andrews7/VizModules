@@ -61,11 +61,11 @@
 
 #' Parse a highlight string into the values it names
 #'
-#' Highlight values are typed as a comma- or newline-separated list, but they
-#' have also always been splittable on spaces, which left a value containing a
-#' space (`"CD4 T"`, `"Player A"`) impossible to name. Each comma- or
-#' newline-delimited entry is therefore kept whole when it is one of
-#' `available`, and split on whitespace as before otherwise.
+#' Highlight values are typed as a comma- or newline-separated list, and may
+#' also be separated by spaces. A value containing a space (`"CD4 T"`,
+#' `"Player A"`) would be impossible to name that way, so each comma- or
+#' newline-delimited entry is kept whole when it is one of `available`, and
+#' split on whitespace otherwise.
 #'
 #' @param x A single string, e.g. `"CD4 T, B"` or `"P01 P07"`, or `NULL`.
 #' @param available Character vector of the values the entries name (the
@@ -73,10 +73,15 @@
 #'
 #' @return A character vector of unique, non-blank values, possibly empty.
 #'
+#' @seealso [apply_highlight_styling()], [create_highlight_annotations()],
+#'   [uniform_annotation_inputs_ui()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_parse_highlight_values
-#' @keywords internal
-.parse_highlight_values <- function(x, available = NULL) {
+#' @examples
+#' parse_highlight_values("CD4 T, B", available = c("CD4 T", "B", "NK"))
+#' parse_highlight_values("P01 P07")
+parse_highlight_values <- function(x, available = NULL) {
     if (is.null(x) || length(x) == 0 || is.na(x[1]) || !nzchar(trimws(x[1]))) {
         return(character(0))
     }
@@ -148,10 +153,15 @@ string_to_linetypes <- function(x) {
 #' @param x A value that may be NA or an empty string.
 #' @return NULL if x is a single NA value or empty string, otherwise x unchanged.
 #'
+#' @seealso [blank_to_null()], [nz_value()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_na_to_null
-#' @keywords internal
-.na_to_null <- function(x) {
+#' @examples
+#' na_to_null(NA)
+#' na_to_null("")
+#' na_to_null(5)
+na_to_null <- function(x) {
     if (length(x) == 1 && (is.na(x) || identical(x, ""))) {
         return(NULL)
     }
@@ -186,10 +196,14 @@ neg_log10 <- function(x) {
 #'
 #' @import shiny
 #'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_require_data_frame
-#' @keywords internal
-.require_data_frame <- function(data) {
+#' @examples
+#' \dontrun{
+#' # First line of a module server, before anything reads `data()`:
+#' data <- require_data_frame(data)
+#' }
+require_data_frame <- function(data) {
     # Callers reassign onto `data`, so resolve the promise before it can recurse.
     force(data)
 
@@ -311,12 +325,14 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #' @return A named character vector of hex colors, or `NULL` when `defaults`
 #'   supplies no usable mapping.
 #'
-#' @seealso [resolve_palette()], [get_default()]
+#' @seealso [resolve_palette()], [get_default()], [setup_group_colors()], [reset_group_colors()]
 #'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_default_group_colors
-#' @keywords internal
-.default_group_colors <- function(defaults, key) {
+#' @examples
+#' default_group_colors(list(palette.colours = c(A = "red", B = "#00FF00")), "palette.colours")
+#' default_group_colors(list(palette.colours = c("red", "blue")), "palette.colours")
+default_group_colors <- function(defaults, key) {
     colors <- get_default(defaults, key, NULL, function(x) {
         is.character(x) && length(x) > 0 && !is.null(names(x)) && all(nzchar(names(x)))
     })
@@ -345,11 +361,17 @@ resolve_palette <- function(groups, selected_colors = NULL, default_palette = NU
 #'
 #' @return Invisibly `NULL`; called for its side effect.
 #'
+#' @seealso [default_group_colors()], [updateMultiColorPicker()], [setup_group_colors()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_reset_group_colors
-#' @keywords internal
-.reset_group_colors <- function(session, inputId, defaults, groups, default_palette = NULL) {
-    manual <- .default_group_colors(defaults, inputId)
+#' @examples
+#' \dontrun{
+#' # Inside a module's observeEvent(input$reset, ...):
+#' reset_group_colors(session, "palette.colours", defaults, palette_groups(), default_palette_values)
+#' }
+reset_group_colors <- function(session, inputId, defaults, groups, default_palette = NULL) {
+    manual <- default_group_colors(defaults, inputId)
     colors <- if (is.null(manual)) NULL else resolve_palette(groups, NULL, default_palette, manual)
 
     if (is.null(colors) || length(colors) == 0) {
@@ -455,7 +477,7 @@ setup_group_colors <- function(input, key, groups, default_palette = NULL,
 
         store(resolve_palette(
             levels, selected, default_palette,
-            .default_group_colors(defaults, key)
+            default_group_colors(defaults, key)
         ))
     })
 
@@ -608,6 +630,11 @@ setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max
 #' grouping column that is numeric is a gradient rather than a nesting, which
 #' the renders already treat as no grouping.
 #'
+#' Anything that is not a single, non-`NA`, non-empty value gives `NULL`: an
+#' input that has not reported yet (`NULL`), `NA`, `""` and a vector of more
+#' than one value alike. A multi-select therefore reads as "no selection", so
+#' handle those inputs explicitly.
+#'
 #' @param value The input value.
 #' @param df Optional data frame, needed only for `numeric_is_null`.
 #' @param numeric_is_null Logical; when `TRUE`, a numeric column in `df` also
@@ -615,10 +642,16 @@ setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max
 #'
 #' @return `value`, or `NULL`.
 #'
+#' @seealso [nz_value()], [na_to_null()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_blank_to_null
-#' @keywords internal
-.blank_to_null <- function(value, df = NULL, numeric_is_null = FALSE) {
+#' @examples
+#' blank_to_null("")
+#' blank_to_null(NULL)
+#' blank_to_null("Species")
+#' blank_to_null("Sepal.Length", df = iris, numeric_is_null = TRUE)
+blank_to_null <- function(value, df = NULL, numeric_is_null = FALSE) {
     if (is.null(value) || length(value) != 1 || is.na(value) || !nzchar(value)) {
         return(NULL)
     }
@@ -874,18 +907,26 @@ setup_auto_update_logic <- function(input, params = NULL) {
 
 #' Is an input's value a usable, non-empty string?
 #'
-#' [.has_value()] narrowed to the column-selecting inputs, whose "nothing
-#' chosen" state is the empty string rather than `NULL`.
+#' The check for the column-selecting inputs, whose "nothing chosen" state is
+#' the empty string rather than `NULL`. A Shiny input that has not reported yet
+#' is `NULL`, and both `nzchar(NULL)` and `NULL == ""` are `logical(0)`, which
+#' makes `if (...)` an error rather than `FALSE`; this returns `FALSE` instead.
 #'
 #' @param x A value from a Shiny input.
 #'
 #' @return `TRUE` for a length-1, non-`NA`, non-empty character scalar;
 #'   `FALSE` for anything else, `NULL` included.
 #'
+#' @seealso [blank_to_null()]
+#'
+#' @export
 #' @author Jared Andrews
-#' @rdname INTERNAL_nz_value
-#' @keywords internal
-.nz_value <- function(x) {
+#' @examples
+#' nz_value(NULL)
+#' nz_value("")
+#' nz_value(NA_character_)
+#' nz_value("Species")
+nz_value <- function(x) {
     .has_value(x) && nzchar(x)
 }
 

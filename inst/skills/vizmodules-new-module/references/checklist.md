@@ -45,6 +45,7 @@ Audit against this before opening a PR.
 
 - [ ] `viz_select_input()` / `update_viz_select()` everywhere; no `selectInput()` / `updateSelectInput()`.
 - [ ] Every default goes through `get_default()`, with a validator where the type matters.
+- [ ] Categorical colour/shape/group/fill selectors built with `discrete_choices(data, keep = get_default(defaults, key, NULL))`, and facet/split selectors with `facet_check(data)`, so 50+-level columns (IDs, gene names) are not offered.
 - [ ] Uniform helpers reused rather than hand-rolled controls (see `uniform-helpers.md`).
 - [ ] Non-obvious inputs wrapped in `tipify(..., placement = "top", options = list(container = "body"))`.
 - [ ] Input labels capitalised, concise, loosely matching the upstream parameter names.
@@ -57,10 +58,13 @@ Audit against this before opening a PR.
 - [ ] Expressions passed downstream for evaluation go through `validate_expression(expr_text, col_names)`.
 - [ ] Function names from a dropdown or text box go through `safe_resolve_adj_fxn(fn_name)`.
 
-All three share one whitelist: comparisons (`<` `>` `<=` `>=` `==` `!=`), logical
-operators (`&` `&&` `|` `||` `!`), `%in%`, `c()`, `is.na()`, `is.null()`, arithmetic
-(`-` `+` `*` `/` `:` `%%`), grouping parentheses, column names, and literals. Anything
-else — `system()`, `file.remove()`, `library()` — is rejected with a warning.
+All three share one allowlist (`R/parse_utils.R`): comparisons (`<` `>` `<=` `>=` `==`
+`!=`), logical operators (`&` `&&` `|` `||` `!` `xor`), `%in%`, `c()`, `is.na()`,
+`is.null()`, arithmetic (`-` `+` `*` `/` `:` `%%`), `abs()`, `round()`, the string helpers
+`grepl()`, `startsWith()`, `endsWith()`, `substr()`, `nchar()`, `toupper()`, `tolower()`,
+`trimws()`, grouping parentheses, column names, and literals. Anything else — `system()`,
+`file.remove()`, `library()` — is rejected with a warning. Never add a second copy of
+this list or widen it with anything impure.
 `safe_resolve_adj_fxn()` additionally allows only `log2`, `log`, `log10`, `neg_log10`,
 `log1p`, `as.factor`, `abs`, `sqrt`.
 

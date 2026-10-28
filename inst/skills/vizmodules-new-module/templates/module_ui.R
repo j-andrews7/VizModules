@@ -79,6 +79,13 @@
     num.choices <- c("", names(data)[vapply(data, is.numeric, logical(1))])
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     group_facet_choices <- setdiff(cat.choices, cat.choices[2])
+    # [T] A group/colour/fill selector leaves out categorical columns with 50+ levels
+    # (IDs, gene names), which would ask for one colour per row. A column named in
+    # `defaults` is kept regardless.
+    group.choices <- setdiff(
+        discrete_choices(data, keep = get_default(defaults, "group.by", NULL)),
+        cat.choices[2]
+    )
 
     # [T] Pulls upstream parameter documentation for the tooltips. List the argument
     # names of <PLOTFN> that you expose; documentParameters$<arg> is then the tip text.
@@ -109,10 +116,10 @@
             ), documentParameters$y, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("group.by"), "Group By",
                 selected = get_default(
-                    defaults, "group.by", cat.choices[3],
-                    function(x) x %in% c("", group_facet_choices)
+                    defaults, "group.by", c(group.choices, "")[1],
+                    function(x) x %in% c("", group.choices)
                 ),
-                choices = c("", group_facet_choices)
+                choices = c("", group.choices)
             ), documentParameters$group_by, placement = "top", options = list(container = "body"))
         ),
         "Facet" = tagList(
@@ -121,7 +128,7 @@
                     defaults, "facet.by", "",
                     function(x) x %in% c(group_facet_choices, "")
                 ),
-                choices = c(intersect(group_facet_choices, .facet_check(data)), "")
+                choices = c(intersect(group_facet_choices, facet_check(data)), "")
             ), documentParameters$facet_by, placement = "top", options = list(container = "body")),
             tipify(viz_select_input(ns("facet.scale"), "Facet Scale",
                 selected = get_default(
@@ -142,7 +149,7 @@
                 value = get_default(defaults, "facet.by.row", TRUE, is.logical),
                 status = "success"
             ), documentParameters$facet_byrow, placement = "top", options = list(container = "body")),
-            .uniform_subplot_spacing_inputs_ui(ns, defaults)
+            uniform_subplot_spacing_inputs_ui(ns, defaults)
         ),
         "Aesthetics" = tagList(
             # [T] The colour picker is rendered server-side; this is only its slot.
@@ -152,7 +159,7 @@
                 min = 0, max = 1
             ), "Fill transparency", placement = "top", options = list(container = "body"))
         ),
-        # [T] Shared tabs. Add `"Stats" = .uniform_stats_inputs_ui(ns, defaults)` only for
+        # [T] Shared tabs. Add `"Stats" = uniform_stats_inputs_ui(ns, defaults)` only for
         # categorical-x / numeric-y plots. See references/stats-integration.md.
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),

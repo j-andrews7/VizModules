@@ -71,7 +71,8 @@ when the parameter should never move.
 
 **The key must be an input the module actually reads.** A `defaults` entry for a key no
 module exposes is a silent no-op — nothing errors, the plot just ignores it. Check the
-key against `references/../module-inventory.md` or the module's own
+key against the `vizmodules-app` skill's `references/module-inventory.md` (installed alongside
+this one by `use_vizmodules_skills()`) or the module's own
 **Plot parameters and defaults** roxygen section before relying on it.
 
 > Known trap: `main` (plot title) is **not** exposed by any module — every server passes
@@ -102,6 +103,7 @@ observeEvent(input$stat.x, {
 
 - **Manual layout edits** on a hand-rolled plotly output — two calls, `setup_manual_edits()` and `finalize_manual_edits()`. Inherited for free if you delegate to a base module. See `references/manual-edits.md`.
 - **Model-line backends** — `register_model_backend(name, backend)` adds a fitting engine to the scatter module's Model Type dropdown. See `references/model-backends.md`.
+- **Adding layers to a wrapped figure** — `dittoViz_scatterPlotServer(..., fig.fn = function(fig, input, isolate_fn) fig)` runs your function on the built figure before its axis titles become draggable annotations: add traces or annotations (loading arrows, threshold labels), or set `fig$x$layout$xaxis$title$text`. Because it runs inside the plot reactive, the additions reach the render, manual-edit persistence and the source download. Read your own inputs as `isolate_fn(input$key)`; they share the module's namespace when the wrapper uses the same `id`.
 - **Widgets** — `multiColorPicker()` and `multiDynamicInput()` are exported and usable in any Shiny app. See `references/custom-inputs.md`, which also covers styling a widget of your own: a stylesheet goes into the *host* document unscoped, so every selector must be anchored on a class you invented.
 - **Runtime show/hide** — `hide_input(session, ids)` / `show_input(session, ids)`, not `shinyjs::hide()`; the VizModules helpers reflow the grid. If your server takes `hide.inputs`, show only `setdiff(ids, hide.inputs)`, or the toggle un-hides what the app hid (`linePlotServer()` does this for its error bar controls).
 - **User-typed expressions** — `safe_eval_filter()`, `validate_expression()`, `safe_resolve_adj_fxn()`. Never `eval(parse())` on user input.

@@ -84,3 +84,45 @@ test_that(".register_multi_dynamic_input_handler parses initial and client paylo
     empty_res <- handler(list(`_prefix` = "row", rows = list()))
     expect_equal(empty_res, stats::setNames(list(), character(0)))
 })
+
+test_that("a multi-select field reports its items in the order picked, and can be pre-filled so", {
+    handler <- shiny:::inputHandlers$get("VizModules.multiDynamicInput")
+    # The client sends a multi-select's items as an array, which arrives as a list.
+    payload <- list(
+        `_prefix` = "trajectories",
+        rows = list(
+            list(fields = list(list(key = "groups", value = list("C", "A", "B")))),
+            list(fields = list(list(key = "groups", value = list())))
+        )
+    )
+    res <- handler(payload)
+    expect_identical(res$trajectories1$groups, c("C", "A", "B"))
+    expect_identical(res$trajectories2$groups, character(0))
+
+    spec <- list(groups = list(type = "select", args = list(choices = c("A", "B", "C"), multiple = TRUE)))
+    widget <- multiDynamicInput("traj", "Trajectories", row_spec = spec,
+        elements = list(t1 = list(groups = c("C", "A"))))
+    html <- as.character(widget)
+    expect_match(html, "<select[^>]*multiple", perl = TRUE)
+    initial <- regmatches(html, regexpr('data-initial="[^"]*"', html))
+    initial <- jsonlite::fromJSON(gsub("&quot;", "\"", sub('^data-initial="(.*)"$', "\\1", initial)),
+        simplifyVector = FALSE)
+    expect_equal(unlist(initial[[1]]$fields[[1]]$value), c("C", "A"))
+})
+
+test_that("updateMultiDynamicInput sends named rows as a JSON array", {
+    captured <- NULL
+    session <- list(sendInputMessage = function(inputId, message) captured <<- message)
+
+    # Row names, as the scatter module's Trajectories reset and a heatmap
+    # annotation default carry, would otherwise serialise to a JSON object,
+    # which the client cannot iterate.
+    updateMultiDynamicInput(session, "traj", elements = .trajectory_rows(list(c("A", "B"), c("B", "C"))))
+    expect_null(names(captured$value))
+    json <- jsonlite::toJSON(captured, auto_unbox = TRUE)
+    expect_match(json, '^\\{"value":\\[', perl = TRUE)
+    expect_equal(unlist(captured$value[[2]]$fields[[1]]$value), c("B", "C"))
+
+    updateMultiDynamicInput(session, "traj", clear = TRUE)
+    expect_identical(captured, list(clear = TRUE))
+})

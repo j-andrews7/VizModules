@@ -99,3 +99,47 @@
         true
     );
 })(window.jQuery);
+
+// The same gap for a value sent from the server (update_viz_select(), as Reset
+// does): the binding's receiveMessage applies it with setValue(), which fires
+// `change` only, so a "close" multi-select showed the new value while the
+// server kept the old one and the plot never redrew. Wrap receiveMessage to
+// report it.
+(function ($) {
+    if (!$ || !window.Shiny || !window.Shiny.inputBindings) {
+        return;
+    }
+
+    function patch() {
+        // The registry keeps names only in its name map; getBindings() entries
+        // carry just the binding and its priority.
+        var names = window.Shiny.inputBindings.bindingNames || {};
+        var entry = names["shinyWidgets.virtualSelectBinding"];
+        if (!entry || !entry.binding) {
+            return false;
+        }
+        var binding = entry.binding;
+        if (binding.vizReportsServerValues) {
+            return true;
+        }
+        var receive = binding.receiveMessage;
+        binding.receiveMessage = function (el, data) {
+            receive.call(this, el, data);
+            if (
+                data &&
+                Object.prototype.hasOwnProperty.call(data, "value") &&
+                el.getAttribute("data-update") !== "change"
+            ) {
+                $(el).trigger("afterClose");
+            }
+        };
+        binding.vizReportsServerValues = true;
+        return true;
+    }
+
+    // shinyWidgets' script, which registers the binding, loads before this one;
+    // fall back to DOM ready should that ever change.
+    if (!patch()) {
+        $(patch);
+    }
+})(window.jQuery);

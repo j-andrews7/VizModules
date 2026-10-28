@@ -9,7 +9,8 @@ dittoViz_scatterPlotServer(
   data,
   hide.inputs = NULL,
   hide.tabs = NULL,
-  defaults = NULL
+  defaults = NULL,
+  fig.fn = NULL
 )
 }
 \arguments{
@@ -32,6 +33,15 @@ clicked, inputs are reset to these values rather than hardcoded fallbacks. Typic
 the same list passed to the corresponding UI function. An entry may also be a
 \code{\link[shiny:reactive]{shiny::reactive()}} or \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}}, in which case the input tracks it as the
 parent app's state changes; see \code{\link[=setup_reactive_defaults]{setup_reactive_defaults()}}.}
+
+\item{fig.fn}{An optional function \verb{function(fig, input, isolate_fn)} returning the
+figure, for a wrapper module to add to or adjust the plot (extra layers, annotations,
+axis title text) before it is finalised. It runs inside the plot reactive, after the
+legend is styled and before the axis titles become draggable annotations, so whatever
+it adds reaches the rendered plot, manual-edit persistence and the source download
+alike. \code{input} is this module's input, which a wrapper sharing the module's \code{id} also
+writes its own inputs to. Read inputs as \code{isolate_fn(input$key)} so they respect the
+module's auto-update setting.}
 }
 \value{
 The \code{moduleServer} function for the scatterPlot module.

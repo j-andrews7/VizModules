@@ -59,7 +59,7 @@ output$palette.selection <- renderUI({
     if (length(groups) == 0) return(NULL)
     initial_colors <- isolate(resolve_palette(
         groups, input$palette.colours, default_palette_values,
-        .default_group_colors(defaults, "palette.colours")
+        default_group_colors(defaults, "palette.colours")
     ))
     palette_store(initial_colors)     # seed with the same colours the picker is built from
     multiColorPicker(ns("palette.colours"), label = "Plot colors", groups = groups,
