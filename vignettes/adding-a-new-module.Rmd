@@ -602,7 +602,8 @@ These exported helpers cover the repetitive parts of a module server:
 | `nz_value(x)` | "Is this input set to a non-empty string?" An input that has not reported yet is `NULL`, and `nzchar(NULL)` is `logical(0)`, which makes `if (...)` an error |
 | `blank_to_null(x)` | Turns `""`, `NA`, `NULL` and multi-value inputs into `NULL` before handing a column choice to a plotting or statistics function |
 | `na_to_null(x)` | The same for a `numericInput()` (`NA`) or `textInput()` (`""`) left empty |
-| `facet_check(data)` | The columns sensible to offer in a facet/split selector (categorical, under 50 levels) |
+| `facet_check(data, max.levels = 50)` | The columns sensible to offer in a facet/split selector (categorical, under `max.levels` levels) |
+| `discrete_choices(data, max.levels = 50, keep)` | The columns sensible to offer in a categorical colour, shape, group or fill selector: `facet_check()`'s plus logical columns, plus `keep` (pass the key's `defaults` entry so an explicit choice is always offered) |
 | `toggle_facet_title_inputs(session, faceted, hidden = hide.inputs)` | Swaps the main-title inputs (`main_title_input_ids`) for the `facet.title.*` inputs while the plot is faceted, without re-showing anything the app hid |
 | `default_group_colors(defaults, key)` | The validated, hex-normalised colour mapping in `defaults`, for seeding a `multiColorPicker()` |
 | `reset_group_colors(session, key, defaults, groups, default_palette)` | Restores a group colour picker on Reset |

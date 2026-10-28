@@ -120,12 +120,16 @@
         observeEvent(input$x.data, ignoreInit = TRUE, {
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             group_facet_choices <- setdiff(char.choices, input$x.data)
+            group.choices <- setdiff(
+                discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)),
+                input$x.data
+            )
             update_viz_select(session, "group.by",
-                choices = group_facet_choices,
-                selected = if (input$group.by %in% group_facet_choices) input$group.by else ""
+                choices = c("", group.choices),
+                selected = if (input$group.by %in% group.choices) input$group.by else ""
             )
             update_viz_select(session, "facet.by",
-                choices = c("", group_facet_choices),
+                choices = c("", intersect(group_facet_choices, facet_check(data()))),
                 selected = if (input$facet.by %in% group_facet_choices) input$facet.by else ""
             )
         })
@@ -137,14 +141,18 @@
 
             x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
+            group.choices <- setdiff(
+                discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)),
+                x_default
+            )
 
             update_viz_select(session, "x.data", selected = x_default)
             update_viz_select(session, "y.data",
                 selected = get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
             )
             update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", char.choices[3],
-                    function(x) x %in% c("", group_facet_choices))
+                selected = get_default(defaults, "group.by", c(group.choices, "")[1],
+                    function(x) x %in% c("", group.choices))
             )
             update_viz_select(session, "facet.by",
                 selected = get_default(defaults, "facet.by", "",
@@ -174,14 +182,10 @@
             # recognised and silently loses reactive-default support. Convert outside.
             isolate_fn <- setup_auto_update_logic(input, params)
 
-            group.by <- NULL
-            if (!isolate_fn(input$group.by) == "") {
-                group.by <- isolate_fn(input$group.by)
-            }
-            facet.by <- NULL
-            if (!isolate_fn(input$facet.by) == "") {
-                facet.by <- isolate_fn(input$facet.by)
-            }
+            # blank_to_null() also covers an input that has not reported yet (NULL),
+            # where `input$key == ""` would be logical(0) and break `if ()`.
+            group.by <- blank_to_null(isolate_fn(input$group.by))
+            facet.by <- blank_to_null(isolate_fn(input$facet.by))
             facet.ncol <- na_to_null(isolate_fn(input$facet.ncol))
             facet.nrow <- na_to_null(isolate_fn(input$facet.nrow))
 

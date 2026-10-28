@@ -4,19 +4,19 @@
 
 **VizModules** is an R package providing interactivity-first Shiny modules for common plot types. It ships ~17 plot modules (e.g. scatter, bar, box, dot, density, histogram, area, line, pie, radar, dumbbell, parallel coordinates, split bar, y-plot, heatmap, freqplot, figureBuilder), a reusable `dataFilter` module, and custom inputs for color selection and dynamic feature generation. Built on dittoViz and plotthis, all plots use plotly for interactive features (except for ComplexHeatmap_Heatmap module).
 
-**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.6.0.9002 (dev) | **License**: MIT
+**Stack**: R 4.6.1+, Shiny, roxygen2 | **Version**: 0.6.0 | **License**: MIT
 
 ## Repository Structure
 
 File counts below are deliberately approximate — check the directory rather than trusting a number here.
 
-- **R/** - ~85 source files: `*_module_ui.R` (UI), `*_module_server.R` (logic), `*_module_app.R` (examples), plus utils and standalone plot functions
-- **man/** - Auto-generated roxygen2 docs (~275 .Rd files). `INTERNAL_*.Rd` are gitignored by design
+- **R/** - ~90 source files: `*_module_ui.R` (UI), `*_module_server.R` (logic), `*_module_app.R` (examples), plus utils and standalone plot functions
+- **man/** - Auto-generated roxygen2 docs (~330 .Rd files). `INTERNAL_*.Rd` are gitignored by design
 - **data/** - 13 example datasets (`example_bar`, `example_composition`, `example_demographics`, `example_heatmap_column_data`, `example_heatmap_matrix`, `example_iris`, `example_markers`, `example_mtcars`, `example_population`, `example_rnaseq`, `example_sales`, `example_school_earnings`, `example_skills`)
 - **data-raw/** - `generate_example_data.R` script that builds the example datasets
 - **inst/apps/** - `module-gallery`, a thin deploy wrapper around `moduleGalleryApp()`; **inst/src/** - bundled JS/CSS assets; **inst/skills/** - agent skills shipped with the package and installed by `use_vizmodules_skills()`
 - **vignettes/** - adding-a-new-module, custom-model-lines, custom-modules, custom-shiny-inputs, data-filtering, defaults-and-hiding, quick-start, statistical-testing (all `eval = FALSE`, so `R CMD check` never runs their code)
-- **tests/testthat/** - ~22 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
+- **tests/testthat/** - ~30 test files using testthat (expression safety, plots, stats, widgets, per-plot module tests)
 - **paper.md / paper.bib** - JOSS manuscript sources
 - **.github/workflows/** - `R-CMD-check.yaml`, `pkgdown.yaml` (docs site to GitHub Pages), `draft-pdf.yaml` (JOSS paper)
 - **DESCRIPTION** - Package metadata and dependencies
@@ -58,9 +58,9 @@ R CMD check --no-build-vignettes VizModules_*.tar.gz     # Quick check
 
 ## CI/CD
 
-- **R-CMD-check.yaml** - Runs `R CMD check` on push/PR to main/master.
-- **pkgdown.yaml** - Triggers on push/PR to main/master, releases, or manual dispatch. Builds docs website and deploys to gh-pages. Uses `use-public-rspm: true` for fast binary installs on Ubuntu.
-- **draft-pdf.yaml** - Renders the JOSS paper.
+- **R-CMD-check.yaml** - Runs `R CMD check` on push to main/master and on every pull request.
+- **pkgdown.yaml** - Triggers on push/PR to devel/main, published releases, or manual dispatch. Builds docs website (plus `llms.txt`) and deploys to gh-pages on non-PR events. Uses `use-public-rspm: true` for fast binary installs on Ubuntu.
+- **draft-pdf.yaml** - Renders the JOSS paper on every push.
 
 ## Coding Conventions
 

@@ -71,7 +71,8 @@ when the parameter should never move.
 
 **The key must be an input the module actually reads.** A `defaults` entry for a key no
 module exposes is a silent no-op — nothing errors, the plot just ignores it. Check the
-key against `references/../module-inventory.md` or the module's own
+key against the `vizmodules-app` skill's `references/module-inventory.md` (installed alongside
+this one by `use_vizmodules_skills()`) or the module's own
 **Plot parameters and defaults** roxygen section before relying on it.
 
 > Known trap: `main` (plot title) is **not** exposed by any module — every server passes

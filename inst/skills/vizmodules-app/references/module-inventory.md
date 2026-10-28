@@ -105,6 +105,22 @@ Each control shows only while a side draws what it adjusts. No marginals are dra
 `split.by` plot or along an axis an `as.factor` adjustment makes categorical. Example:
 `defaults = list(marginal.x = c("density", "rug"), marginal.y = "density")`.
 
+Point size in `dittoViz_scatterPlot`: `size` (1) applies while `size.by` is unset. Once a
+numeric `size.by` column is set, `size.min` (1) and `size.max` (6) are the point sizes it maps
+onto, and `size.scale.min` / `size.scale.max` (NA = the column's own range) are the column
+values drawn at those two sizes, so the size legend can run over round numbers such as 0 to 100;
+values beyond a limit are drawn at that end's size. `plotthis_DotPlot` has the same
+`size.scale.min` / `size.scale.max` keys alongside `size.by`, `size.min` and `size.max`. Both
+draw their own circle size legend (`size.legend.x`, `size.legend.y`), since plotly drops it.
+
+Trajectories in `dittoViz_scatterPlot` (Trajectory tab): `trajectory.group.by` names the
+column whose groups a path visits, and `add.trajectory.by.groups` lists the paths as a **list
+of character vectors**, each the groups it visits in order, e.g.
+`defaults = list(trajectory.group.by = "cluster", add.trajectory.by.groups = list(c("A", "B", "C")))`.
+The paths apply while `trajectory.group.by` is its default column. The old bracketed text
+`"[A,B,C]"` is still accepted. `trajectory.arrow.size` (0.1) is the arrowhead length in inches.
+Each path runs through its groups' medians as plotted, after any adjustment.
+
 The colour key takes a **named character vector** mapping group level to colour, e.g.
 `defaults = list(palette.colours = c(Healthy = "#0072B2", Disease = "red"))`. Unnamed
 groups fall back to the stock palette; the user can still edit every colour.
