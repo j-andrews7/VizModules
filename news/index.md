@@ -2,7 +2,7 @@
 
 ## VizModules 0.6.0
 
-The one where we shore up the foundations for additional extension
+The one where we fix all the wonkiness with extending modules
 (i.e. building `sciVizModules`).
 
 ### Improved/New Functionality
@@ -13,14 +13,14 @@ The one where we shore up the foundations for additional extension
   columns with 50 or more levels (the
   [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
   cap), such as IDs or gene names, which asked for one colour, shape or
-  group per row and could bring an app down (sciVizModules#16). Numeric
-  columns stay where a selector draws them as a gradient, logical
-  columns stay, and a column named in `defaults` is always offered. This
-  covers the scatter plot’s Color By, Shape By and Trajectory Group By;
-  the yPlot’s Group, Color and Shape By; `linePlot` and the `plotthis`
-  Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar
-  Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group.
-  The new
+  group per row and would generally just break things
+  (sciVizModules#16). Numeric columns stay where a selector draws them
+  as a gradient, logical columns stay, and a column named in `defaults`
+  is always offered. This covers the scatter plot’s Color By, Shape By
+  and Trajectory Group By; the yPlot’s Group, Color and Shape By;
+  `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram
+  Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot`
+  Color By; and `radarPlot` Group. The new
   [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
   builds these choices.
 
@@ -58,11 +58,10 @@ The one where we shore up the foundations for additional extension
 - New **Marginals** tab draws the distribution of X above the plot and
   of Y to its right
   ([\#113](https://github.com/j-andrews7/VizModules/issues/113)). Each
-  side can show any of a density, a histogram and a rug, with one per
-  **Color By** group in its colour. The module gallery’s scatter plot
-  now opens on densities.
+  side can show any of a density, a histogram, and a rug plot, with one
+  per **Color By** group.
   - Marginals are drawn from the plotted values, after any adjustment.
-  - Marginals are not drawn on a split plot.
+  - Marginals are not drawn on a split plot because that’d be a mess.
 - New **Min Point Size** and **Max Point Size** inputs set the size
   range a **Size By** column maps onto
   ([\#364](https://github.com/j-andrews7/VizModules/issues/364)). They
@@ -92,8 +91,7 @@ The one where we shore up the foundations for additional extension
   module’s **Trajectories** list uses one per row
   ([\#231](https://github.com/j-andrews7/VizModules/issues/231)).
 
-- Exported many helpers, so modules in extension packages can reuse them
-  instead of keeping copies that drift
+- Exported many helpers for custom module use
   ([\#369](https://github.com/j-andrews7/VizModules/issues/369)):
 
   - Facet titles and spacing:
@@ -117,7 +115,7 @@ The one where we shore up the foundations for additional extension
     [`uniform_stats_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_stats_inputs_ui.md),
     [`reset_stats_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_stats_inputs.md),
     [`default_stat_pairs()`](https://j-andrews7.github.io/VizModules/reference/default_stat_pairs.md),
-    [`stat_bracket_headroom()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.md)
+    [`stat_bracket_headroom()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.md),
     and
     [`note_brackets_skipped()`](https://j-andrews7.github.io/VizModules/reference/note_brackets_skipped.md).
   - Module server boilerplate:
@@ -133,7 +131,7 @@ The one where we shore up the foundations for additional extension
     which keeps jitter from jumping on every rebuild.
   - Drawn values:
     [`as_plotted()`](https://j-andrews7.github.io/VizModules/reference/as_plotted.md),
-    [`adjusted_values()`](https://j-andrews7.github.io/VizModules/reference/adjusted_values.md)
+    [`adjusted_values()`](https://j-andrews7.github.io/VizModules/reference/adjusted_values.md),
     and
     [`adjustment_fn()`](https://j-andrews7.github.io/VizModules/reference/adjustment_fn.md),
     for anything drawn over an adjusted plot.

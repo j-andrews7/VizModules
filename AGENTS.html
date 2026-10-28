@@ -194,7 +194,7 @@
 <li>
 <strong>ALWAYS run <code>devtools::document()</code></strong> after changing roxygen2 comments or signatures</li>
 <li>
-<strong>Run <code>devtools::test()</code></strong> after changes to verify the testthat test suite passes; also test modules interactively via example apps</li>
+<strong>Run <code>devtools::test()</code> for affected modules</strong> after changes to verify the testthat test suite passes; also test modules interactively via example apps</li>
 <li>
 <strong>Follow namespace pattern strictly</strong> for wrapper modules (see Coding Conventions)</li>
 <li>
@@ -206,7 +206,7 @@
 <li>
 <strong>Ask user to validate</strong> - rather than trying to run apps yourself continually, just ask user to validate specific changes to save time and tokens</li>
 <li>
-<strong>Never read <code>R/dittoViz_ScatterPlot_module_server.R</code> whole</strong> - it is over 1,100 lines; search it, or read only the lines you need</li>
+<strong>Search files rather than reading them whole where possible</strong> - many are &gt;100 lines; search files, or read only the lines you need</li>
 </ol></div>
 <div class="section level2">
 <h2 id="best-practices">Best Practices<a class="anchor" aria-label="anchor" href="#best-practices"></a></h2>
@@ -217,6 +217,7 @@
 <li>The modules apply an adjustment function <em>before</em> the z-score/relative-to-max rescaling (log, then z-score); dittoViz does the reverse when given both. So never pass dittoViz both <code>*.adjustment</code> and <code>*.adj.fxn</code>: pass <code>*.adj.fxn = adjustment_fn(adjustment, fxn)</code> and no <code>*.adjustment</code>, which keeps its <code>.adj</code> columns and hover text while plotting <code><a href="reference/adjusted_values.html">adjusted_values()</a></code>.</li>
 <li>Never queue a copy of an existing layout element (a whole axis, say) through <code>plotly::layout()</code>. Queued updates are merged in at build time, after anything written straight into <code>fig$x$layout</code>, so the copy silently reverts those writes. Queue only the properties being changed.</li>
 <li>Map facet levels to panels by their strip labels (<code>.build_facet_axis_map()</code>, <code>.fit_panels()</code>), never by the order rows or axes appear in: ggplot orders facets alphabetically, and ggplotly shares axes across a row or column of panels.</li>
+<li>Use the Oxford comma in documentation and <code>NEWS.md</code> entries.</li>
 </ul><p>These instructions are a starting point, not an authority — verify against the code before relying on any specific claim here, and correct this file when you find it stale.</p>
 </div>
 </div>

@@ -214,8 +214,9 @@ packages.
     `devtools::document()`
 2.  **ALWAYS run `devtools::document()`** after changing roxygen2
     comments or signatures
-3.  **Run `devtools::test()`** after changes to verify the testthat test
-    suite passes; also test modules interactively via example apps
+3.  **Run `devtools::test()` for affected modules** after changes to
+    verify the testthat test suite passes; also test modules
+    interactively via example apps
 4.  **Follow namespace pattern strictly** for wrapper modules (see
     Coding Conventions)
 5.  **All plots must use plotly unless specifically specified
@@ -226,8 +227,8 @@ packages.
 8.  **Ask user to validate** - rather than trying to run apps yourself
     continually, just ask user to validate specific changes to save time
     and tokens
-9.  **Never read `R/dittoViz_ScatterPlot_module_server.R` whole** - it
-    is over 1,100 lines; search it, or read only the lines you need
+9.  **Search files rather than reading them whole where possible** -
+    many are \>100 lines; search files, or read only the lines you need
 
 ## Best Practices
 
@@ -274,6 +275,7 @@ packages.
   (`.build_facet_axis_map()`, `.fit_panels()`), never by the order rows
   or axes appear in: ggplot orders facets alphabetically, and ggplotly
   shares axes across a row or column of panels.
+- Use the Oxford comma in documentation and `NEWS.md` entries.
 
 These instructions are a starting point, not an authority — verify
 against the code before relying on any specific claim here, and correct

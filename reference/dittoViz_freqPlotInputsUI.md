@@ -471,49 +471,49 @@ Jared Andrews
 library(VizModules)
 dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="freqPlot-freqPlotTabsetPanel" data-tabsetid="2817">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="freqPlot-freqPlotTabsetPanel" data-tabsetid="8957">
 #>     <li class="active">
-#>       <a href="#tab-2817-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8957-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-2" data-toggle="tab" data-bs-toggle="tab" data-value="Scale">Scale</a>
+#>       <a href="#tab-8957-2" data-toggle="tab" data-bs-toggle="tab" data-value="Scale">Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-8957-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-8957-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-8957-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-8957-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-8957-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-8957-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-8957-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-8957-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8957-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8957-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2817-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8957-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2817">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2817-1">
+#>   <div class="tab-content" data-tabsetid="8957">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8957-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5813660">
@@ -577,7 +577,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Scale" id="tab-2817-2">
+#>     <div class="tab-pane" data-value="Scale" id="tab-8957-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify7217597">
@@ -614,7 +614,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-2817-3">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-8957-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9435164">
@@ -663,7 +663,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-2817-4">
+#>     <div class="tab-pane" data-value="Box" id="tab-8957-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7380915">
@@ -715,7 +715,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-2817-5">
+#>     <div class="tab-pane" data-value="Violin" id="tab-8957-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1063470">
@@ -735,7 +735,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-2817-6">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-8957-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2472191">
@@ -783,7 +783,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-2817-7">
+#>     <div class="tab-pane" data-value="Stats" id="tab-8957-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8877234">
@@ -914,7 +914,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2817-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-8957-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <span class="help-block">Faceted on the frequency variable; use "Levels To Show" to pick facets.</span>
@@ -958,7 +958,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-2817-9">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-8957-9">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8753579">
@@ -1081,7 +1081,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-2817-10">
+#>     <div class="tab-pane" data-value="Legend" id="tab-8957-10">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7151861">
@@ -1125,7 +1125,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2817-11">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8957-11">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1202,7 +1202,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2817-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8957-12">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1388,7 +1388,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2817-13">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8957-13">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6734478">
