@@ -1,8 +1,12 @@
-# VizModules 0.6.0.9002
+# VizModules 0.6.0
 
 The one where we shore up the foundations for additional extension (i.e. building `sciVizModules`).
 
 ## Improved/New Functionality
+
+### All modules
+
+* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and could bring an app down (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
 ### `DotPlot` and `scatterPlot`
 
@@ -20,10 +24,11 @@ The one where we shore up the foundations for additional extension (i.e. buildin
   * Marginals are not drawn on a split plot.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
+* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ### Helpers and exported functions
 
-* `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row.
+* `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row (#231).
 
 * Exported many helpers, so modules in extension packages can reuse them instead of keeping copies that drift (#369):
   * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
@@ -37,23 +42,24 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 
 * New `add_marginal_plots()` adds density, histogram and rug marginals to a single-panel plotly figure, given the plotted X and Y values and their groups. The scatter module's **Marginals** tab uses it (#113).
 
-* `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved.
+* `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved. The new `discrete_choices()` applies the same cap to a colour, shape, group or fill selector, adding logical columns and any column a caller names in `keep` (such as its `defaults` entry), as the built-in modules do.
 
 * `collect_source_data()` accepts a named list of statistics tables, and the source download writes each to its own `<name>_stats_<table>.csv`, for a plot with more than one table (sciVizModules' survival curve exports its per-group summary and its pairwise comparisons this way). A single table is still written to `<name>_stats_data.csv`.
-
-### Modules
-
-* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and could bring an app down (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group.
-* The AreaPlot's Facet By keeps its `facet_check()` limit when X changes.
-* The scatter plot colours groups by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
-* A plot whose annotation text is a factor (for instance a label column factored by the data filter) no longer stops with "'nzchar()' requires a character vector" when it is zoomed or resized (sciVizModules#17).
-* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ## Bug Fixes
 
 ### All modules
 
 * **Reset** now redraws the plot for a multi-select it changes, such as **Split By**, **Hover Data** or the scatter plot's marginals. The control showed the reset value, but `viz_select_input()` multi-selects only report when their dropdown closes, so the plot kept the old selection.
+* A plot whose annotation text is a factor (for instance a label column factored by the data filter) no longer stops with "'nzchar()' requires a character vector" when it is zoomed or resized (sciVizModules#17).
+
+### `AreaPlot`
+
+* **Facet By** keeps its `facet_check()` limit when X changes.
+
+### `ComplexHeatmap`
+
+* The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap` or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
 
 ### `linePlot`
 
@@ -62,6 +68,17 @@ The one where we shore up the foundations for additional extension (i.e. buildin
 ### `scatterPlot`
 
 * Trajectories now end in an arrowhead, which ggplotly dropped, and no longer stop the plot with an error while an axis adjustment is set (#231). The module now draws them itself, through the group medians of the plotted values, after any adjustment. On a split plot, each panel's path runs through that panel's own medians rather than repeating the whole data's.
+* Groups are coloured by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
+
+### Helpers and exported functions
+
+* `updateMultiDynamicInput()` now sets rows given as a named list, the shape `multiDynamicInput()` itself reports. It sent them as a JSON object the browser could not read, which emptied the input and left the server on its old value. This is what **Reset** does for the scatter plot's default trajectories and for a `ComplexHeatmap` `row_annotations` default.
+
+## Documentation
+
+* "Building Custom Modules" shows the newly exported helpers in use and adds the scatter module's `fig.fn` hook, "Adding a New Module" lists the helpers, and "Custom Shiny Inputs" covers `multiple = TRUE` select fields.
+* "Custom Model Lines" no longer suggests editing package internals to allow GAM smooth terms, which the formula allowlist does not include.
+* The bundled agent skills cover the new inputs (marginals, size scales, trajectories, `linePlot` intervals) and exported helpers. The new-module template builds its Group By choices with `discrete_choices()`, and its test template now gives `testServer()` the full set of inputs a figure needs, without which its figure test failed.
 
 # VizModules 0.5.0
 
