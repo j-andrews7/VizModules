@@ -146,7 +146,7 @@ plotthis_DensityPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     # Group By leaves out categoricals with too many levels to draw (an ID
     # column asks for one curve per row), unless the caller asked for one.
-    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
+    group.choices <- c("", discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
 
     selected <- list(
         "x", "group_by", "position", "alpha",

@@ -147,7 +147,7 @@ plotthis_AreaPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
     group_facet_choices <- setdiff(cat.choices, x.default)
     # Group By also leaves out categoricals with too many levels to draw (an ID
     # column asks for one area per row), unless the caller asked for one.
-    group.choices <- setdiff(.discrete_choices(data, keep = get_default(defaults, "group.by", NULL)), x.default)
+    group.choices <- setdiff(discrete_choices(data, keep = get_default(defaults, "group.by", NULL)), x.default)
     group.fallback <- c(group.choices, "")[1]
 
     selected <- list(

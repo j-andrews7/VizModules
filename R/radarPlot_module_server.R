@@ -121,7 +121,7 @@ radarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defa
             update_viz_select(session, "r",
                 selected = get_default(defaults, "r", numeric.data[2], function(x) x %in% numeric.data))
             # The capped Group pool the UI offers (see radarPlotInputsUI()).
-            group.choices <- .discrete_choices(data_reactive(), keep = get_default(defaults, "group", NULL))
+            group.choices <- discrete_choices(data_reactive(), keep = get_default(defaults, "group", NULL))
             update_viz_select(session, "group",
                 selected = get_default(defaults, "group", "", function(x) x == "" || x %in% group.choices))
 

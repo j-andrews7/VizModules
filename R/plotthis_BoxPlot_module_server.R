@@ -157,7 +157,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             min.y <- if (!is.null(y.range)) y.range$min else 0
 
             # Data. Group By is the capped pool the UI offers (see plotthis_BoxPlotInputsUI()).
-            group.choices <- .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
+            group.choices <- discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
             update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% group.choices)
             )

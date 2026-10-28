@@ -222,7 +222,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
     # Grouping, colour and shape choices leave out categoricals with too many
     # levels to draw (an ID column asks for one group per row), unless the
     # caller asked for one.
-    disc_for <- function(key) c("", .discrete_choices(data, keep = get_default(defaults, key, NULL)))
+    disc_for <- function(key) c("", discrete_choices(data, keep = get_default(defaults, key, NULL)))
     group.choices <- disc_for("group.by")
     color.choices <- disc_for("color.by")
     shape.choices <- disc_for("shape.by")

@@ -121,7 +121,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             group_facet_choices <- setdiff(char.choices, input$x.data)
             # The same capped pools the UI offers (see plotthis_AreaPlotInputsUI()).
             group_choices <- c("", setdiff(
-                .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), input$x.data
+                discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), input$x.data
             ))
             facet_choices <- c("", intersect(group_facet_choices, facet_check(data())))
             update_viz_select(session, "group.by", choices = group_choices,
@@ -138,7 +138,7 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             x_default <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             group_facet_choices <- setdiff(char.choices, x_default)
             group_choices <- setdiff(
-                .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), x_default
+                discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)), x_default
             )
             group_fallback <- c(group_choices, "")[1]
 

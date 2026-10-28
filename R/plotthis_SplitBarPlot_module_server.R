@@ -258,7 +258,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             )
             # The capped Fill By pool the UI offers (see plotthis_SplitBarPlotInputsUI()),
             # falling back to its first categorical column.
-            fill.disc <- .discrete_choices(data(), keep = get_default(defaults, "fill.by", NULL))
+            fill.disc <- discrete_choices(data(), keep = get_default(defaults, "fill.by", NULL))
             fill.choices <- c("", names(data())[names(data()) %in% c(num.choices, fill.disc)])
             update_viz_select(session, "fill.by",
                 selected = get_default(defaults, "fill.by", c("", fill.disc)[2], function(x) x %in% fill.choices)

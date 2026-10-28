@@ -73,7 +73,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
     # Color By leaves out categoricals with too many levels to draw (an ID
     # column asks for one colour per line), unless the caller asked for one.
     # Numeric columns stay as a continuous colour scale.
-    color.disc <- .discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
+    color.disc <- discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
     color.choices <- c("", names(data)[vapply(data, is.numeric, logical(1)) | names(data) %in% color.disc])
 
     font.choices <- .font_family_choices

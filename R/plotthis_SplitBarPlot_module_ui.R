@@ -165,7 +165,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
     # Fill By leaves out categoricals with too many levels to draw (an ID
     # column asks for one fill colour per bar), unless the caller asked for
     # one. Numeric columns stay, which plotthis draws as a gradient.
-    fill.disc <- .discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
+    fill.disc <- discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
     fill.choices <- c("", names(data)[names(data) %in% c(num.choices, fill.disc)])
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
     max.x <- max(numeric.data, na.rm = TRUE)

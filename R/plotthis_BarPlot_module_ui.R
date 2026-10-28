@@ -180,8 +180,8 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     # Group By and Fill By leave out categoricals with too many levels to draw
     # (an ID column asks for one bar segment per row), unless the caller asked
     # for one. Fill By keeps numeric columns, which plotthis draws as a gradient.
-    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
-    fill.disc <- .discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
+    group.choices <- c("", discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
+    fill.disc <- discrete_choices(data, keep = get_default(defaults, "fill.by", NULL))
     fill.choices <- c("", names(data)[names(data) %in% c(num.choices, fill.disc)])
 
     # Axis range values

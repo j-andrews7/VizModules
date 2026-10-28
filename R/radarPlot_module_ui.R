@@ -96,7 +96,7 @@ radarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns =
     all.choices <- c("", names(data))
     # Group leaves out categoricals with too many levels to draw (an ID column
     # asks for one trace per row), unless the caller asked for one.
-    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group", NULL)))
+    group.choices <- c("", discrete_choices(data, keep = get_default(defaults, "group", NULL)))
 
     font.choices <- .font_family_choices
 

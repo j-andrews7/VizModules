@@ -226,7 +226,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
     cat.choices <- c("", names(data)[vapply(data, function(x) !is.numeric(x), logical(1))])
     # Group By leaves out categoricals with too many levels to draw (an ID
     # column asks for one box per row), unless the caller asked for one.
-    group.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
+    group.choices <- c("", discrete_choices(data, keep = get_default(defaults, "group.by", NULL)))
     numeric.data <- data[, vapply(data, is.numeric, logical(1)), drop = FALSE]
 
     if (length(num.choices) >= 2) {

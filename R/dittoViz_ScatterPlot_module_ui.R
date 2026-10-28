@@ -275,10 +275,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
     # Colour and shape choices leave out categoricals with too many levels to
     # draw (an ID column asks for one colour or shape per point), unless the
     # caller asked for one. Numeric columns stay as continuous colour.
-    color.disc <- .discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
+    color.disc <- discrete_choices(data, keep = get_default(defaults, "color.by", NULL))
     color.choices <- c("", names(data)[names(data) %in% c(num.choices, color.disc)])
-    shape.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "shape.by", NULL)))
-    traj.choices <- c("", .discrete_choices(data, keep = get_default(defaults, "trajectory.group.by", NULL)))
+    shape.choices <- c("", discrete_choices(data, keep = get_default(defaults, "shape.by", NULL)))
+    traj.choices <- c("", discrete_choices(data, keep = get_default(defaults, "trajectory.group.by", NULL)))
 
     # Various other choice vectors
     adj.choices <- c("", .adjustment_choices)

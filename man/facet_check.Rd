@@ -22,9 +22,9 @@ choices for a facet/split selector. A column qualifies when it is
 categorical (character or factor) and has fewer than \code{max.levels} unique
 values. This keeps facet/split inputs from offering numeric columns or
 high-cardinality categoricals that would produce an unwieldy number of
-panels. The modules also use it to limit their categorical colour, shape
-and group selectors, where a column of IDs would otherwise ask for one
-colour or shape per row.
+panels. The modules also use it, through \code{\link[=discrete_choices]{discrete_choices()}}, to limit their
+categorical colour, shape and group selectors, where a column of IDs would
+otherwise ask for one colour or shape per row.
 }
 \details{
 Intended to populate the \code{choices} of a facet/split \code{viz_select_input()} via

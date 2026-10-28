@@ -173,6 +173,7 @@ reference:
       extra render.
     contents:
       - createModuleApp
+      - discrete_choices
       - empty_plot
       - facet_check
       - hide_input

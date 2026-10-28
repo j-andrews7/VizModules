@@ -145,7 +145,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             update_viz_select(session, "x.data",
                 selected = get_default(defaults, "x.data", num.choices[1], function(x) x %in% num.choices))
             # The capped Group By pool the UI offers (see plotthis_HistogramInputsUI()).
-            group.choices <- .discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
+            group.choices <- discrete_choices(data(), keep = get_default(defaults, "group.by", NULL))
             update_viz_select(session, "group.by",
                 selected = get_default(defaults, "group.by", "", function(x) x == "" || x %in% group.choices))
             update_viz_select(session, "facet.by",
