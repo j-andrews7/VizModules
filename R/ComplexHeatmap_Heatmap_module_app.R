@@ -64,14 +64,18 @@
 #' @author Jacob Martin, Jared Andrews
 #' @examples
 #' library(VizModules)
-#' # Launch on the bundled matrix + its per-sample metadata, so the column
-#' # annotation/split/filter features are all usable:
-#' app <- ComplexHeatmap_HeatmapApp()
-#' if (interactive()) shiny::runApp(app)
+#' if (requireNamespace("ComplexHeatmap", quietly = TRUE) &&
+#'     requireNamespace("InteractiveComplexHeatmap", quietly = TRUE) &&
+#'     requireNamespace("circlize", quietly = TRUE)) {
+#'     # Launch on the bundled matrix + its per-sample metadata, so the column
+#'     # annotation/split/filter features are all usable:
+#'     app <- ComplexHeatmap_HeatmapApp()
+#'     if (interactive()) shiny::runApp(app)
 #'
-#' # Matrix only, without the per-sample metadata:
-#' app2 <- ComplexHeatmap_HeatmapApp(data_list = list(matrix = example_heatmap_matrix))
-#' if (interactive()) shiny::runApp(app2)
+#'     # Matrix only, without the per-sample metadata:
+#'     app2 <- ComplexHeatmap_HeatmapApp(data_list = list(matrix = example_heatmap_matrix))
+#'     if (interactive()) shiny::runApp(app2)
+#' }
 ComplexHeatmap_HeatmapApp <- function(data_list = NULL, column_data = NULL, defaults = NULL,
                                       hide.inputs = NULL, hide.tabs = NULL) {
     missing_pkgs <- Filter(
