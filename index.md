@@ -273,10 +273,16 @@ modules in a single page:
 
 The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic while reusing
-the full functionality of the base modules. Many internal helpers for
-axes, faceting, and layouts are now exported to support this, along with
-the `defaults`/`hide.inputs`/`hide.tabs` controls covered in
+the full functionality of the base modules. The helpers the built-in
+modules share (axes, faceting, layouts, stats brackets, colour pickers,
+point highlighting, size legends, marginals, and the module-server
+boilerplate) are exported to support this, along with the
+`defaults`/`hide.inputs`/`hide.tabs` controls covered in
 [`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html).
+A wrapper around the scatter module can also draw its own layers,
+annotations, or axis titles onto the scatter figure through the `fig.fn`
+hook of
+[`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md).
 
 For more details, see
 [`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
@@ -319,10 +325,12 @@ following visualization functions:
 
 ### `dittoViz`
 
-- `dittoViz_scatterPlot` - x/y coordinate plots with additional color
-  and shape encodings (wraps
+- `dittoViz_scatterPlot` - x/y coordinate plots with additional color,
+  shape, and size encodings (wraps
   [`dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)).
-  Supports overlaying fit lines, including **multiple custom model
+  Supports density, histogram, and rug marginal distributions along each
+  axis, trajectories through groups’ medians, a size legend over a scale
+  you set, and overlaying fit lines, including **multiple custom model
   lines** defined interactively: add a row per model, each with its own
   R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function
   (`lm`, `glm`, `loess`, or a registered backend), line colour, and
@@ -348,7 +356,8 @@ following visualization functions:
 - `plotthis_DensityPlot` - Density plots (wraps
   [`plotthis::DensityPlot`](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)).
 - `plotthis_DotPlot` - Dot plots (wraps
-  [`plotthis::DotPlot`](https://pwwang.github.io/plotthis/reference/dotplot.html)).
+  [`plotthis::DotPlot`](https://pwwang.github.io/plotthis/reference/dotplot.html)),
+  with a size legend over a scale you set.
 - `plotthis_Histogram` - Histograms (wraps
   [`plotthis::Histogram`](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)).
 
@@ -382,7 +391,8 @@ following visualization functions:
 
 Via direct implementation with plotly.
 
-- `linePlot` - Line plots
+- `linePlot` - Line plots, with SD, SEM, 95% CI, or precomputed
+  (column-bound) intervals drawn as error bars and/or shaded ribbons
 - `piePlot` - Pie and donut plots
 - `radarPlot` - Radar plots
 - `parallelCoordinatesPlot` - Parallel coordinate plots

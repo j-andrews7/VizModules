@@ -88,6 +88,11 @@ described by an input constructor and its arguments, so any Shiny input
 that takes `inputId` as its first argument can be used. Common types
 have a short `type = "..."` alias.
 
+A `"select"` field given `multiple = TRUE` in its `args` reports a
+character vector of its items, in the order they were picked, which
+suits a field listing steps in order. Pre-fill one in `elements` with a
+character vector in the order wanted.
+
 ## Author
 
 Jacob Martin

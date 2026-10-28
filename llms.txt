@@ -273,10 +273,16 @@ modules in a single page:
 
 The modules in **VizModules** are designed to be composed and extended.
 You can build higher-level modules that add custom logic while reusing
-the full functionality of the base modules. Many internal helpers for
-axes, faceting, and layouts are now exported to support this, along with
-the `defaults`/`hide.inputs`/`hide.tabs` controls covered in
+the full functionality of the base modules. The helpers the built-in
+modules share (axes, faceting, layouts, stats brackets, colour pickers,
+point highlighting, size legends, marginals, and the module-server
+boilerplate) are exported to support this, along with the
+`defaults`/`hide.inputs`/`hide.tabs` controls covered in
 [`vignette("defaults-and-hiding", package = "VizModules")`](https://j-andrews7.github.io/VizModules/articles/defaults-and-hiding.html).
+A wrapper around the scatter module can also draw its own layers,
+annotations, or axis titles onto the scatter figure through the `fig.fn`
+hook of
+[`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md).
 
 For more details, see
 [`vignette("custom-modules", package = "VizModules")`.](https://j-andrews7.github.io/VizModules/articles/custom-modules.html)
@@ -319,10 +325,12 @@ following visualization functions:
 
 ### `dittoViz`
 
-- `dittoViz_scatterPlot` - x/y coordinate plots with additional color
-  and shape encodings (wraps
+- `dittoViz_scatterPlot` - x/y coordinate plots with additional color,
+  shape, and size encodings (wraps
   [`dittoViz::scatterPlot`](https://rdrr.io/pkg/dittoViz/man/scatterPlot.html)).
-  Supports overlaying fit lines, including **multiple custom model
+  Supports density, histogram, and rug marginal distributions along each
+  axis, trajectories through groups’ medians, a size legend over a scale
+  you set, and overlaying fit lines, including **multiple custom model
   lines** defined interactively: add a row per model, each with its own
   R model formula (e.g. `revenue ~ poly(units, 2)`), fitting function
   (`lm`, `glm`, `loess`, or a registered backend), line colour, and
@@ -348,7 +356,8 @@ following visualization functions:
 - `plotthis_DensityPlot` - Density plots (wraps
   [`plotthis::DensityPlot`](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)).
 - `plotthis_DotPlot` - Dot plots (wraps
-  [`plotthis::DotPlot`](https://pwwang.github.io/plotthis/reference/dotplot.html)).
+  [`plotthis::DotPlot`](https://pwwang.github.io/plotthis/reference/dotplot.html)),
+  with a size legend over a scale you set.
 - `plotthis_Histogram` - Histograms (wraps
   [`plotthis::Histogram`](https://pwwang.github.io/plotthis/reference/densityhistoplot.html)).
 
@@ -382,7 +391,8 @@ following visualization functions:
 
 Via direct implementation with plotly.
 
-- `linePlot` - Line plots
+- `linePlot` - Line plots, with SD, SEM, 95% CI, or precomputed
+  (column-bound) intervals drawn as error bars and/or shaded ribbons
 - `piePlot` - Pie and donut plots
 - `radarPlot` - Radar plots
 - `parallelCoordinatesPlot` - Parallel coordinate plots
@@ -892,17 +902,35 @@ extra render.
 - [`createModuleApp()`](https://j-andrews7.github.io/VizModules/reference/createModuleApp.md)
   : Create an Example Module App from Any Module Trio
 
+- [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
+  : Choices for a categorical colour, shape, group or fill selector
+
 - [`empty_plot()`](https://j-andrews7.github.io/VizModules/reference/empty_plot.md)
   : Create an empty ggplot2 plot or plotly plot with input text
+
+- [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
+  : Identify columns valid for faceting or splitting
 
 - [`hide_input()`](https://j-andrews7.github.io/VizModules/reference/hide_input.md)
   : Hide the grid cells wrapping module inputs
 
+- [`main_title_input_ids`](https://j-andrews7.github.io/VizModules/reference/main_title_input_ids.md)
+  : Input IDs that style the main plot title
+
 - [`module_tack_ui()`](https://j-andrews7.github.io/VizModules/reference/module_tack_ui.md)
   : Create standard tack UI for module inputs
 
+- [`na_to_null()`](https://j-andrews7.github.io/VizModules/reference/na_to_null.md)
+  : Convert NA or empty string to NULL
+
 - [`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md)
   : Organize arbitrary Shiny inputs into a grid layout
+
+- [`require_data_frame()`](https://j-andrews7.github.io/VizModules/reference/require_data_frame.md)
+  : Require a data frame from a module's data reactive
+
+- [`reset_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/reset_manual_edits.md)
+  : Discard every captured manual layout edit
 
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   : Set up auto-update/isolate logic for reactive contexts
@@ -917,6 +945,9 @@ extra render.
 
 - [`show_input()`](https://j-andrews7.github.io/VizModules/reference/show_input.md)
   : Show the grid cells wrapping module inputs
+
+- [`toggle_facet_title_inputs()`](https://j-andrews7.github.io/VizModules/reference/toggle_facet_title_inputs.md)
+  : Match the title inputs to whether a plot is faceted
 
 - [`toggle_input_cell()`](https://j-andrews7.github.io/VizModules/reference/toggle_input_cell.md)
   : Hide or show the grid cell wrapping a module input
@@ -942,6 +973,12 @@ Standardised input builders and reset functions shared across modules.
   : Generate uniform Lines input UI
 - [`uniform_plotly_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_plotly_inputs_ui.md)
   : Generate uniform Plotly input UI
+- [`uniform_stats_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_stats_inputs_ui.md)
+  : Generate uniform Stats input UI
+- [`uniform_subplot_spacing_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_subplot_spacing_inputs_ui.md)
+  : Generate uniform subplot spacing input UI
+- [`subplot_spacing_defaults()`](https://j-andrews7.github.io/VizModules/reference/subplot_spacing_defaults.md)
+  : Resolve the subplot spacing defaults
 - [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.md)
   : Generate uniform Annotation input UI
 - [`reset_annotation_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_annotation_inputs.md)
@@ -954,6 +991,8 @@ Standardised input builders and reset functions shared across modules.
   : Reset uniform lines inputs to defaults
 - [`reset_plotly_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_plotly_inputs.md)
   : Reset uniform Plotly inputs to defaults
+- [`reset_stats_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_stats_inputs.md)
+  : Reset uniform stats inputs to defaults
 - [`get_default()`](https://j-andrews7.github.io/VizModules/reference/get_default.md)
   : Resolve a default value from a named list
 
@@ -983,6 +1022,8 @@ configuration.
   : Build diagonal (abline) line shapes for a plotly figure
 - [`add_hlines()`](https://j-andrews7.github.io/VizModules/reference/add_hlines.md)
   : Build horizontal line shapes for a plotly figure
+- [`add_marginal_plots()`](https://j-andrews7.github.io/VizModules/reference/add_marginal_plots.md)
+  : Add marginal distribution plots to a scatter plot
 - [`add_plot_config()`](https://j-andrews7.github.io/VizModules/reference/add_plot_config.md)
   : Create default Plotly configuration
 - [`add_reference_lines()`](https://j-andrews7.github.io/VizModules/reference/add_reference_lines.md)
@@ -999,6 +1040,8 @@ configuration.
   : Apply uniform legend styling to a plotly figure
 - [`apply_legend_inputs()`](https://j-andrews7.github.io/VizModules/reference/apply_legend_inputs.md)
   : Apply the uniform Legend inputs to a plotly figure
+- [`add_size_legend()`](https://j-andrews7.github.io/VizModules/reference/add_size_legend.md)
+  : Add a point-size legend to a plotly figure
 - [`apply_plotly_newshape()`](https://j-andrews7.github.io/VizModules/reference/apply_plotly_newshape.md)
   : Apply Plotly newshape styling from uniform Plotly inputs
 - [`apply_render_margins()`](https://j-andrews7.github.io/VizModules/reference/apply_render_margins.md)
@@ -1022,6 +1065,22 @@ configuration.
 - [`heatmap_fit_width()`](https://j-andrews7.github.io/VizModules/reference/heatmap_fit_width.md)
   : Fit a hand-built InteractiveComplexHeatmap widget to its container's
   width
+
+## Point Highlighting & Labels
+
+Helpers for highlighting and labelling individual points, for modules
+that adopt uniform_annotation_inputs_ui().
+
+- [`apply_highlight_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_highlight_styling.md)
+  : Restyle highlighted points in a plotly figure
+- [`create_highlight_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_highlight_annotations.md)
+  : Create annotations for highlighted points
+- [`create_selected_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_selected_annotations.md)
+  : Create annotations for selected points
+- [`merge_annotation_sets()`](https://j-andrews7.github.io/VizModules/reference/merge_annotation_sets.md)
+  : Merge two sets of plotly point annotations
+- [`parse_highlight_values()`](https://j-andrews7.github.io/VizModules/reference/parse_highlight_values.md)
+  : Parse a highlight string into the values it names
 
 ## Manual Plot Edits
 
@@ -1056,14 +1115,30 @@ annotations.
 - [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md)
   : Apply statistical annotation shapes and annotations to a plotly
   figure
+
 - [`compute_pairwise_stats()`](https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.md)
   : Compute pairwise statistical tests between groups
+
+- [`default_stat_pairs()`](https://j-andrews7.github.io/VizModules/reference/default_stat_pairs.md)
+  :
+
+  Pick the comparisons a `defaults` list asks for from those on offer
+
 - [`create_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_stat_annotations.md)
   : Create plotly shapes and annotations for statistical test results
+
 - [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md)
   : Generate comparison pair strings from data columns
+
+- [`note_brackets_skipped()`](https://j-andrews7.github.io/VizModules/reference/note_brackets_skipped.md)
+  : Tell the user why significance brackets are missing from the plot
+
 - [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md)
   : Parse pair strings from UI into list of length-2 vectors
+
+- [`stat_bracket_headroom()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.md)
+  : Bracket headroom for a module, read straight off its Stats tab
+
 - [`stat_bracket_y_max()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_y_max.md)
   : Y-axis top needed to draw statistical annotation brackets in full
 
@@ -1071,10 +1146,23 @@ annotations.
 
 Functions for managing color palettes.
 
+- [`default_group_colors()`](https://j-andrews7.github.io/VizModules/reference/default_group_colors.md)
+  :
+
+  Extract a caller-supplied group color mapping from `defaults`
+
 - [`default_palettes()`](https://j-andrews7.github.io/VizModules/reference/default_palettes.md)
   : Color palette options for palettePicker
+
+- [`flatten_palette_options()`](https://j-andrews7.github.io/VizModules/reference/flatten_palette_options.md)
+  : Flatten nested palette options
+
+- [`reset_group_colors()`](https://j-andrews7.github.io/VizModules/reference/reset_group_colors.md)
+  : Restore a group color picker to its default mapping
+
 - [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
   : Resolve a color palette for plot groups
+
 - [`setup_group_colors()`](https://j-andrews7.github.io/VizModules/reference/setup_group_colors.md)
   : Track the group-to-color mapping a plot should draw with
 
@@ -1099,19 +1187,48 @@ General-purpose helper functions for data handling and validation.
 - [`adjust_column_values()`](https://j-andrews7.github.io/VizModules/reference/adjust_column_values.md)
   : Adjust numeric column values in a data frame using mathematical
   transformations
+
+- [`adjusted_values()`](https://j-andrews7.github.io/VizModules/reference/adjusted_values.md)
+  : Transform values the way the modules plot them
+
+- [`adjustment_fn()`](https://j-andrews7.github.io/VizModules/reference/adjustment_fn.md)
+  : The whole plotted transform as one function, for dittoViz
+
+- [`as_plotted()`](https://j-andrews7.github.io/VizModules/reference/as_plotted.md)
+  : Replace data columns with the values the modules plot for them
+
+- [`blank_to_null()`](https://j-andrews7.github.io/VizModules/reference/blank_to_null.md)
+  :
+
+  Normalize a module's "no selection" column input to `NULL`
+
+- [`error_bar_halfwidth()`](https://j-andrews7.github.io/VizModules/reference/error_bar_halfwidth.md)
+  : Half-width of a group's error bar
+
 - [`get_documentation()`](https://j-andrews7.github.io/VizModules/reference/get_documentation.md)
   : Extract parameter documentation from an R function help page
+
 - [`is_pure_type()`](https://j-andrews7.github.io/VizModules/reference/is_pure_type.md)
   : Check if column inputs contain mixed data types
+
+- [`nz_value()`](https://j-andrews7.github.io/VizModules/reference/nz_value.md)
+  : Is an input's value a usable, non-empty string?
+
 - [`parse_numeric_list()`](https://j-andrews7.github.io/VizModules/reference/parse_numeric_list.md)
   : Parse comma-separated numeric string to vector
+
 - [`safe_eval_filter()`](https://j-andrews7.github.io/VizModules/reference/safe_eval_filter.md)
   : Safely evaluate a user-provided filter expression against a data
   frame
+
 - [`safe_resolve_adj_fxn()`](https://j-andrews7.github.io/VizModules/reference/safe_resolve_adj_fxn.md)
   : Safely resolve an adjustment function name to an actual function
+
 - [`validate_expression()`](https://j-andrews7.github.io/VizModules/reference/validate_expression.md)
   : Validate a user-provided expression string for safety
+
+- [`with_stable_seed()`](https://j-andrews7.github.io/VizModules/reference/with_stable_seed.md)
+  : Evaluate a plot expression under a fixed random seed
 
 ## Example Data
 

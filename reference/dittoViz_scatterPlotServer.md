@@ -10,7 +10,8 @@ dittoViz_scatterPlotServer(
   data,
   hide.inputs = NULL,
   hide.tabs = NULL,
-  defaults = NULL
+  defaults = NULL,
+  fig.fn = NULL
 )
 ```
 
@@ -51,6 +52,19 @@ dittoViz_scatterPlotServer(
   in which case the input tracks it as the parent app's state changes;
   see
   [`setup_reactive_defaults()`](https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.md).
+
+- fig.fn:
+
+  An optional function `function(fig, input, isolate_fn)` returning the
+  figure, for a wrapper module to add to or adjust the plot (extra
+  layers, annotations, axis title text) before it is finalised. It runs
+  inside the plot reactive, after the legend is styled and before the
+  axis titles become draggable annotations, so whatever it adds reaches
+  the rendered plot, manual-edit persistence and the source download
+  alike. `input` is this module's input, which a wrapper sharing the
+  module's `id` also writes its own inputs to. Read inputs as
+  `isolate_fn(input$key)` so they respect the module's auto-update
+  setting.
 
 ## Value
 

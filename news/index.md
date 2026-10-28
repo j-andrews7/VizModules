@@ -1,5 +1,270 @@
 # Changelog
 
+## VizModules 0.6.0
+
+The one where we shore up the foundations for additional extension
+(i.e. building `sciVizModules`).
+
+### Improved/New Functionality
+
+#### All modules
+
+- Colour, shape, group and fill selectors no longer offer categorical
+  columns with 50 or more levels (the
+  [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
+  cap), such as IDs or gene names, which asked for one colour, shape or
+  group per row and could bring an app down (sciVizModules#16). Numeric
+  columns stay where a selector draws them as a gradient, logical
+  columns stay, and a column named in `defaults` is always offered. This
+  covers the scatter plot’s Color By, Shape By and Trajectory Group By;
+  the yPlot’s Group, Color and Shape By; `linePlot` and the `plotthis`
+  Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar
+  Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group.
+  The new
+  [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
+  builds these choices.
+
+#### `DotPlot` and `scatterPlot`
+
+- New **Size Scale Min** and **Size Scale Max** inputs set the **Size
+  By** values drawn at the smallest and largest sizes, so the size
+  legend can run over round numbers such as 0 to 100 rather than the
+  data’s own range
+  ([\#359](https://github.com/j-andrews7/VizModules/issues/359),
+  [\#364](https://github.com/j-andrews7/VizModules/issues/364)). Blank
+  keeps the data’s range, values beyond a limit are drawn at that end’s
+  size, and both show only while **Size By** is set.
+
+#### `linePlot`
+
+- Error intervals can now be drawn as a shaded band
+  ([\#371](https://github.com/j-andrews7/VizModules/issues/371)). The
+  new **Error Ribbon** switch (`error.ribbon` in
+  [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md))
+  draws the interval behind each line, in that line’s colour, on its own
+  or alongside the error bars. **Ribbon Opacity** sets its fill, and a
+  point without an interval leaves a gap in the band. The module
+  gallery’s line plot now opens on 95% CI ribbons.
+  - **Error Bar Type**, now **Error Type**, gained **From columns**,
+    which reads each point’s interval from the **Lower Bound** and
+    **Upper Bound** columns (`error.type = "columns"`, `error.lower`,
+    `error.upper`). It suits intervals worked out beforehand, such as a
+    model’s confidence interval, a forecast range or a min/max range.
+    Unlike SD, SEM and CI, it works with a numeric X, and its bars can
+    be asymmetric.
+
+#### `scatterPlot`
+
+- New **Marginals** tab draws the distribution of X above the plot and
+  of Y to its right
+  ([\#113](https://github.com/j-andrews7/VizModules/issues/113)). Each
+  side can show any of a density, a histogram and a rug, with one per
+  **Color By** group in its colour. The module gallery’s scatter plot
+  now opens on densities.
+  - Marginals are drawn from the plotted values, after any adjustment.
+  - Marginals are not drawn on a split plot.
+- New **Min Point Size** and **Max Point Size** inputs set the size
+  range a **Size By** column maps onto
+  ([\#364](https://github.com/j-andrews7/VizModules/issues/364)). They
+  replace **Point Size**, which a size column overrides, while one is
+  set.
+- Trajectories are now picked rather than typed
+  ([\#231](https://github.com/j-andrews7/VizModules/issues/231)). The
+  Trajectory tab’s **Trajectories** list takes one row per trajectory,
+  each choosing, in order, the **Trajectory Group By** groups its path
+  visits. In `defaults`, `add.trajectory.by.groups` takes a list of
+  character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the
+  old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults
+  to 0.1.
+- [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md)
+  takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that
+  a wrapper module uses to add layers or annotations to the scatter
+  figure, or to set axis title text, before the figure is finalised.
+  What it adds reaches the rendered plot, manual-edit persistence and
+  the source download (e.g. sciVizModules’ PCA biplot draws its loading
+  arrows and % variance axis titles this way).
+
+#### Helpers and exported functions
+
+- [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)
+  select fields can take `multiple = TRUE`, and report a character
+  vector of their items in the order they were picked. The scatter
+  module’s **Trajectories** list uses one per row
+  ([\#231](https://github.com/j-andrews7/VizModules/issues/231)).
+
+- Exported many helpers, so modules in extension packages can reuse them
+  instead of keeping copies that drift
+  ([\#369](https://github.com/j-andrews7/VizModules/issues/369)):
+
+  - Facet titles and spacing:
+    [`toggle_facet_title_inputs()`](https://j-andrews7.github.io/VizModules/reference/toggle_facet_title_inputs.md)
+    (with `main_title_input_ids`) swaps the main-title inputs for the
+    `facet.title.*` inputs while a plot is faceted, and
+    [`uniform_subplot_spacing_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_subplot_spacing_inputs_ui.md)
+    (with
+    [`subplot_spacing_defaults()`](https://j-andrews7.github.io/VizModules/reference/subplot_spacing_defaults.md))
+    provides the subplot spacing controls that
+    [`reset_plotly_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_plotly_inputs.md)
+    and
+    [`apply_facet_subplot_spacing()`](https://j-andrews7.github.io/VizModules/reference/apply_facet_subplot_spacing.md)
+    already expect.
+  - Group colours:
+    [`default_group_colors()`](https://j-andrews7.github.io/VizModules/reference/default_group_colors.md)
+    validates and hex-normalises a colour mapping in `defaults`, and
+    [`reset_group_colors()`](https://j-andrews7.github.io/VizModules/reference/reset_group_colors.md)
+    restores a group colour picker to it on Reset.
+  - Stats tab:
+    [`uniform_stats_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_stats_inputs_ui.md),
+    [`reset_stats_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_stats_inputs.md),
+    [`default_stat_pairs()`](https://j-andrews7.github.io/VizModules/reference/default_stat_pairs.md),
+    [`stat_bracket_headroom()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.md)
+    and
+    [`note_brackets_skipped()`](https://j-andrews7.github.io/VizModules/reference/note_brackets_skipped.md).
+  - Module server boilerplate:
+    [`require_data_frame()`](https://j-andrews7.github.io/VizModules/reference/require_data_frame.md),
+    [`nz_value()`](https://j-andrews7.github.io/VizModules/reference/nz_value.md),
+    [`blank_to_null()`](https://j-andrews7.github.io/VizModules/reference/blank_to_null.md),
+    [`na_to_null()`](https://j-andrews7.github.io/VizModules/reference/na_to_null.md),
+    [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md),
+    [`flatten_palette_options()`](https://j-andrews7.github.io/VizModules/reference/flatten_palette_options.md),
+    [`reset_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/reset_manual_edits.md)
+    and
+    [`with_stable_seed()`](https://j-andrews7.github.io/VizModules/reference/with_stable_seed.md),
+    which keeps jitter from jumping on every rebuild.
+  - Drawn values:
+    [`as_plotted()`](https://j-andrews7.github.io/VizModules/reference/as_plotted.md),
+    [`adjusted_values()`](https://j-andrews7.github.io/VizModules/reference/adjusted_values.md)
+    and
+    [`adjustment_fn()`](https://j-andrews7.github.io/VizModules/reference/adjustment_fn.md),
+    for anything drawn over an adjusted plot.
+  - Point highlighting and labelling:
+    [`apply_highlight_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_highlight_styling.md),
+    [`create_highlight_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_highlight_annotations.md),
+    [`create_selected_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_selected_annotations.md),
+    [`merge_annotation_sets()`](https://j-andrews7.github.io/VizModules/reference/merge_annotation_sets.md)
+    and
+    [`parse_highlight_values()`](https://j-andrews7.github.io/VizModules/reference/parse_highlight_values.md).
+  - Error intervals:
+    [`error_bar_halfwidth()`](https://j-andrews7.github.io/VizModules/reference/error_bar_halfwidth.md)
+    works out the SD, SEM or 95% CI half-width
+    [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
+    draws around a group’s mean, so a module that summarises its own
+    groups (over a numeric x, which linePlot’s own summaries do not
+    cover) can hand
+    [`linePlot()`](https://j-andrews7.github.io/VizModules/reference/linePlot.md)
+    matching bounds through `error.type = "columns"` (sciVizModules’
+    pkConcentrationTime uses it;
+    [\#371](https://github.com/j-andrews7/VizModules/issues/371)).
+  - Size legend:
+    [`add_size_legend()`](https://j-andrews7.github.io/VizModules/reference/add_size_legend.md)
+    draws the circle size legend the DotPlot and scatter modules show in
+    place of the one plotly drops (sciVizModules’ dittoDotPlot uses it).
+    It takes a `title` and rounds its labels to `digits`. Given the size
+    scale’s `limits` and `size.range`, its breaks span those limits and
+    each circle is drawn at the size the scale gives it; otherwise the
+    circles are read from the figure’s markers. `breaks` picks the
+    values to draw a circle for, such as round numbers, or leaves out
+    the lower limit of a scale starting at size 0, whose circle would be
+    empty. Its title sits just above the first circle, so a title of
+    several lines no longer runs into a small one.
+
+- New
+  [`add_marginal_plots()`](https://j-andrews7.github.io/VizModules/reference/add_marginal_plots.md)
+  adds density, histogram and rug marginals to a single-panel plotly
+  figure, given the plotted X and Y values and their groups. The scatter
+  module’s **Marginals** tab uses it
+  ([\#113](https://github.com/j-andrews7/VizModules/issues/113)).
+
+- [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
+  takes `max.levels` (default 50), so the cap on how many distinct
+  values a facet or grouping column may have can be moved. The new
+  [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
+  applies the same cap to a colour, shape, group or fill selector,
+  adding logical columns and any column a caller names in `keep` (such
+  as its `defaults` entry), as the built-in modules do.
+
+- [`collect_source_data()`](https://j-andrews7.github.io/VizModules/reference/collect_source_data.md)
+  accepts a named list of statistics tables, and the source download
+  writes each to its own `<name>_stats_<table>.csv`, for a plot with
+  more than one table (sciVizModules’ survival curve exports its
+  per-group summary and its pairwise comparisons this way). A single
+  table is still written to `<name>_stats_data.csv`.
+
+### Bug Fixes
+
+#### All modules
+
+- **Reset** now redraws the plot for a multi-select it changes, such as
+  **Split By**, **Hover Data** or the scatter plot’s marginals. The
+  control showed the reset value, but
+  [`viz_select_input()`](https://j-andrews7.github.io/VizModules/reference/viz_select_input.md)
+  multi-selects only report when their dropdown closes, so the plot kept
+  the old selection.
+- A plot whose annotation text is a factor (for instance a label column
+  factored by the data filter) no longer stops with “‘nzchar()’ requires
+  a character vector” when it is zoomed or resized (sciVizModules#17).
+
+#### `AreaPlot`
+
+- **Facet By** keeps its
+  [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
+  limit when X changes.
+
+#### `ComplexHeatmap`
+
+- The
+  [`ComplexHeatmap_HeatmapApp()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapApp.md)
+  example no longer fails where `ComplexHeatmap`,
+  `InteractiveComplexHeatmap` or `circlize` is not installed, as on
+  CRAN’s r-oldrel macOS check machines.
+
+#### `linePlot`
+
+- A line with no **Group By** now takes its colour from the **Plot
+  colors** picker, as do its error bars. It was always drawn in plotly’s
+  default blue, because plotly applies a palette only to a mapped
+  colour.
+
+#### `scatterPlot`
+
+- Trajectories now end in an arrowhead, which ggplotly dropped, and no
+  longer stop the plot with an error while an axis adjustment is set
+  ([\#231](https://github.com/j-andrews7/VizModules/issues/231)). The
+  module now draws them itself, through the group medians of the plotted
+  values, after any adjustment. On a split plot, each panel’s path runs
+  through that panel’s own medians rather than repeating the whole
+  data’s.
+- Groups are coloured by name, so a factor level with no points (left by
+  filtering the data table, or one a wrapper keeps for its colour
+  picker) no longer shifts the colours of the levels after it.
+
+#### Helpers and exported functions
+
+- [`updateMultiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/updateMultiDynamicInput.md)
+  now sets rows given as a named list, the shape
+  [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)
+  itself reports. It sent them as a JSON object the browser could not
+  read, which emptied the input and left the server on its old value.
+  This is what **Reset** does for the scatter plot’s default
+  trajectories and for a `ComplexHeatmap` `row_annotations` default.
+
+### Documentation
+
+- “Building Custom Modules” shows the newly exported helpers in use and
+  adds the scatter module’s `fig.fn` hook, “Adding a New Module” lists
+  the helpers, and “Custom Shiny Inputs” covers `multiple = TRUE` select
+  fields.
+- “Custom Model Lines” no longer suggests editing package internals to
+  allow GAM smooth terms, which the formula allowlist does not include.
+- The bundled agent skills cover the new inputs (marginals, size scales,
+  trajectories, `linePlot` intervals) and exported helpers. The
+  new-module template builds its Group By choices with
+  [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md),
+  and its test template now gives
+  [`testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html) the
+  full set of inputs a figure needs, without which its figure test
+  failed.
+
 ## VizModules 0.5.0
 
 CRAN release: 2026-09-29

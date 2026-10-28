@@ -355,7 +355,7 @@ observeEvent(input$stat.x, {
     if (length(pairs) > 0) {
         freezeReactiveValue(input, "stat.pairs")
         update_viz_select(session, "stat.pairs",
-            choices = c("", pairs), selected = .default_stat_pairs(defaults, pairs)
+            choices = c("", pairs), selected = default_stat_pairs(defaults, pairs)
         )
     }
 })
@@ -420,7 +420,7 @@ until that tab is opened):
 
 initial_colors <- isolate(resolve_palette(
     groups, input$palette.colours, default_palette_values,
-    .default_group_colors(defaults, "palette.colours")
+    default_group_colors(defaults, "palette.colours")
 ))
 palette_store(initial_colors)
 ```
@@ -483,10 +483,10 @@ y_range_store <- setup_axis_range(
         if (!isTRUE(input$stats.enabled)) {
             return(NULL)
         }
-        .stat_bracket_headroom(
+        stat_bracket_headroom(
             df = data(), x = input$x.data, y = input$y.data,
-            group.by = .blank_to_null(input$group.by),
-            facet.by = .blank_to_null(input$facet.by),
+            group.by = blank_to_null(input$group.by),
+            facet.by = blank_to_null(input$facet.by),
             per.facet = isTRUE(input$stat.per.facet),
             input = input
         )
@@ -620,13 +620,13 @@ rebuilds (e.g. when statistical brackets or reference labels appear).
 |----|----|
 | [`setup_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/setup_manual_edits.md) | Create the edit store and register the relayout/colorbar capture observers (call **once**, near the top of the server) |
 | [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md) | Tag the event source, restore captured edits, record the figure, and attach the colorbar listener (call in [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html), just before returning) |
+| [`reset_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/reset_manual_edits.md) | Discard every captured edit (call from the module’s Reset observer) |
 
-Both functions are exported, so the same two-step pattern works from a
-custom module in your own package. The supporting internals
+These functions are exported, so the same pattern works from a custom
+module in your own package. The supporting internals
 (`.capture_manual_edits()`, `.reapply_manual_edits()`,
 `.add_colorbar_listener()`) are not exported and shouldn’t need to be
-used directly (though you can always access them via `VizModules:::` if
-really necessary.
+used directly.
 
 See any module server (e.g. `dittoViz_scatterPlotServer`) for a complete
 example.
@@ -641,7 +641,7 @@ comparisons along a categorical x-axis, follow this pattern:
 ### UI
 
 Add a `"Stats"` tab to the module’s `tabsetPanel` containing
-`.uniform_stats_inputs_ui(ns, defaults)`.
+`uniform_stats_inputs_ui(ns, defaults)`.
 
 ### Server
 
@@ -661,10 +661,10 @@ Store the result: `last_stats_df(stats_df)`.
 Add an `observeEvent` to update `stat.pairs` choices when the x or
 grouping column changes, using
 [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md),
-selecting `.default_stat_pairs(defaults, pairs)` so a `stat.pairs`
+selecting `default_stat_pairs(defaults, pairs)` so a `stat.pairs`
 default is honoured.
 
-Call `.reset_stats_inputs(session, defaults, pairs)` in the reset
+Call `reset_stats_inputs(session, defaults, pairs)` in the reset
 observer, with the pairs currently on offer.
 
 ### Key helpers (all in `R/stat_helper.R`)
@@ -676,6 +676,10 @@ observer, with the pairs currently on offer.
 | [`apply_stat_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.md) | Append shapes/annotations to the plotly figure and adjust y-axes |
 | [`generate_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/generate_pair_strings.md) | Build `"A vs B"` strings for the comparison selector |
 | [`parse_pair_strings()`](https://j-andrews7.github.io/VizModules/reference/parse_pair_strings.md) | Convert selected pair strings back to list of length-2 vectors |
+| [`default_stat_pairs()`](https://j-andrews7.github.io/VizModules/reference/default_stat_pairs.md) | The comparisons a `stat.pairs` default names, from those on offer |
+| [`stat_bracket_headroom()`](https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.md) | Room the brackets need above the data, read off the Stats tab inputs (pass as `headroom` to [`setup_axis_range()`](https://j-andrews7.github.io/VizModules/reference/setup_axis_range.md)) |
+| [`note_brackets_skipped()`](https://j-andrews7.github.io/VizModules/reference/note_brackets_skipped.md) | Notify the user that brackets cannot be drawn (values along the x-axis) |
+| [`reset_stats_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_stats_inputs.md) | Reset the Stats tab to `defaults` |
 
 See the `plotthis_BoxPlotServer`, `dittoViz_yPlotServer`, or
 `dittoViz_freqPlotServer` implementations for complete integration
@@ -821,9 +825,6 @@ Inputs that are self-explanatory from their label (e.g., `"Plot Title"`,
 
 ### Reuse Uniform Input Helpers
 
-In time, these helpers will be further formalized and exported, but they
-can be used with the `VizModules:::` prefix in the meantime.
-
 Before writing custom inputs, check whether a uniform helper already
 covers your needs:
 
@@ -831,30 +832,76 @@ covers your needs:
 |----|----|
 | [`uniform_lines_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_lines_inputs_ui.md) | Horizontal, vertical, and diagonal reference line controls |
 | [`uniform_axes_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.md) | Font, axis border, gridline, tick, and facet styling |
-| `.uniform_stats_inputs_ui()` | Pairwise statistical testing and bracket annotation controls |
+| [`uniform_stats_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_stats_inputs_ui.md) | Pairwise statistical testing and bracket annotation controls |
 | [`uniform_plotly_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_plotly_inputs_ui.md) | Download buttons, margins, subplot spacing, and draw-shape styling |
+| [`uniform_subplot_spacing_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_subplot_spacing_inputs_ui.md) | Horizontal and vertical spacing between facet panels (goes on the Facet tab) |
 | [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md) | Legend visibility, font family and colour, and title and entry label font sizes |
 | [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.md) | Highlighting and labelling of individual data points |
 
 Each UI helper has a matching `reset_*_inputs()` function to call from
 the module’s `observeEvent(input$reset, ...)` block.
+[`uniform_subplot_spacing_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_subplot_spacing_inputs_ui.md)
+is covered by
+[`reset_plotly_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_plotly_inputs.md),
+and
+[`subplot_spacing_defaults()`](https://j-andrews7.github.io/VizModules/reference/subplot_spacing_defaults.md)
+resolves the values both start from.
 
 Modules that draw individual points can adopt
 [`uniform_annotation_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.md)
 to let users highlight and label points by the values of a chosen
 column. The server side needs the chosen column carried in the plot’s
 hover text (that is where the values are read back from), then
-`.apply_highlight_styling()` to restyle matching markers and
-`.create_highlight_annotations()`/`.create_selected_annotations()` to
-build the labels. Set `require.markers = TRUE` when other scatter traces
-are drawn from the same data (box or violin outlines, say) so only the
-point markers are matched. Append the resulting annotations to
-`fig$x$layout$annotations` rather than replacing them, or facet strip
-labels and statistical brackets will be lost.
+[`apply_highlight_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_highlight_styling.md)
+to restyle matching markers and
+[`create_highlight_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_highlight_annotations.md)/[`create_selected_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_selected_annotations.md)
+to build the labels
+([`parse_highlight_values()`](https://j-andrews7.github.io/VizModules/reference/parse_highlight_values.md)
+turns the typed highlight string into the values to match, and
+[`merge_annotation_sets()`](https://j-andrews7.github.io/VizModules/reference/merge_annotation_sets.md)
+combines the two sets of labels without duplicating a point). Set
+`require.markers = TRUE` when other scatter traces are drawn from the
+same data (box or violin outlines, say) so only the point markers are
+matched. Append the resulting annotations to `fig$x$layout$annotations`
+rather than replacing them, or facet strip labels and statistical
+brackets will be lost.
 
 Pass `ns` and a `defaults` list to each helper. Use the `include.*`
 arguments to opt in to optional groups (e.g., `include.fit.lines = TRUE`
 for scatter plots, `include.rotate = TRUE` for bar plots).
+
+### Small Helpers To Reduce Redundancy
+
+These exported helpers cover the repetitive parts of a module server:
+
+| Helper | Use |
+|----|----|
+| `require_data_frame(data)` | First line of the server: turns a `NULL` data reactive into a silent skip and coerces anything else to a data frame |
+| `nz_value(x)` | “Is this input set to a non-empty string?” An input that has not reported yet is `NULL`, and `nzchar(NULL)` is `logical(0)`, which makes `if (...)` an error |
+| `blank_to_null(x)` | Turns `""`, `NA`, `NULL` and multi-value inputs into `NULL` before handing a column choice to a plotting or statistics function |
+| `na_to_null(x)` | The same for a [`numericInput()`](https://rdrr.io/pkg/shiny/man/numericInput.html) (`NA`) or [`textInput()`](https://rdrr.io/pkg/shiny/man/textInput.html) (`""`) left empty |
+| `facet_check(data, max.levels = 50)` | The columns sensible to offer in a facet/split selector (categorical, under `max.levels` levels) |
+| `discrete_choices(data, max.levels = 50, keep)` | The columns sensible to offer in a categorical colour, shape, group or fill selector: [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)’s plus logical columns, plus `keep` (pass the key’s `defaults` entry so an explicit choice is always offered) |
+| `toggle_facet_title_inputs(session, faceted, hidden = hide.inputs)` | Swaps the main-title inputs (`main_title_input_ids`) for the `facet.title.*` inputs while the plot is faceted, without re-showing anything the app hid |
+| `default_group_colors(defaults, key)` | The validated, hex-normalised colour mapping in `defaults`, for seeding a [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md) |
+| `reset_group_colors(session, key, defaults, groups, default_palette)` | Restores a group colour picker on Reset |
+| `flatten_palette_options(default_palettes()$choices)` | A flat name-to-colours lookup of the palette choices |
+| `reset_manual_edits(store)` | Discards dragged legends, annotations and titles on Reset |
+| `with_stable_seed(expr)` | Builds a plot under a fixed seed, so jitter does not move on every rebuild |
+
+``` r
+
+# Jitter stays put across rebuilds:
+fig <- with_stable_seed(dittoViz::yPlot(data, var = "value", group.by = "group", plots = c("jitter", "boxplot")))
+```
+
+Anything drawn over a plot must be computed from the values the plot
+draws, after any adjustment. `as_plotted(df, cols, adjustment, adj.fxn)`
+returns the data frame with those columns adjusted,
+[`adjusted_values()`](https://j-andrews7.github.io/VizModules/reference/adjusted_values.md)
+does the same for one vector, and `adjustment_fn(adjustment, adj.fxn)`
+returns the combined function to give dittoViz as its `*.adj.fxn` (with
+no `*.adjustment`).
 
 Using the uniform helpers ensures that shared inputs behave identically
 across every module and that future changes to those helpers propagate

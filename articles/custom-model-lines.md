@@ -167,9 +167,18 @@ register_model_backend("gam", list(
 ```
 
 No `fields` needed here because GAM complexity is expressed in the
-formula itself (`s()`, `te()`, etc.). Note: you’d need to add `"s"`,
-`"te"`, etc. to the formula whitelist, `.formula_allowed_calls()` in
-`R/parse_utils.R`, for this to work.
+formula itself (`s()`, `te()`, etc.). Note, though, that typed formulas
+are checked against a fixed allowlist of operators and transforms (`~`,
+`+`, `-`, `*`, `/`, `^`, `:`, [`I()`](https://rdrr.io/r/base/AsIs.html),
+[`log()`](https://rdrr.io/r/base/Log.html),
+[`log2()`](https://rdrr.io/r/base/Log.html),
+[`log10()`](https://rdrr.io/r/base/Log.html),
+[`sqrt()`](https://rdrr.io/r/base/MathFun.html),
+[`exp()`](https://rdrr.io/r/base/Log.html),
+[`poly()`](https://rdrr.io/r/stats/poly.html)), and smooth terms such as
+`s()` and `te()` are not on it. Formulas using them are rejected, so
+this backend can currently only fit the parametric formulas the
+allowlist accepts (e.g. `y ~ poly(x, 2)`).
 
 ## Where to Register Backends
 

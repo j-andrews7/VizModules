@@ -24,8 +24,10 @@ collect_source_data(
 
   Optional. A reactive expression (e.g. a
   [`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html))
-  returning a `data.frame` of statistical test results. When `NULL` or
-  when the reactive returns `NULL`, no statistics data is included.
+  returning a `data.frame` of statistical test results, or a named list
+  of them for a plot with more than one table (a per-group summary and
+  pairwise comparisons, say). When `NULL` or when the reactive returns
+  `NULL`, no statistics data is included.
 
 - inputs_reactive:
 
@@ -49,7 +51,8 @@ A named list with elements:
 
 - stats:
 
-  A `data.frame` of statistical test results, or `NULL`.
+  A `data.frame` of statistical test results, a named list of them
+  (written to the archive as one CSV each), or `NULL`.
 
 - inputs:
 

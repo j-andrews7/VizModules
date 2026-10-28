@@ -20,8 +20,8 @@ Built on `dittoViz` \[@dittoViz\], `plotthis` \[@plotthis\], `ggplot2`
 \[@ComplexHeatmap\], `VizModules` decouples plotting logic from data,
 accepts inputs ranging from in-memory data frames to uploaded CSV, TSV,
 and Excel files, and contains a multi-pane [“Figure
-Builder”](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
-for free-form composition and vector (SVG) export of complete figures,
+Builder”](https://j-andrews7-vizmodules.share.connect.posit.cloud/) for
+free-form composition and vector (SVG) export of complete figures,
 itself a module that can be embedded in any application.
 
 ## Statement of need
@@ -167,12 +167,10 @@ wrapper modules, and authoring new modules within the package. In paired
 benchmarking, the app-building skill halved both token usage and wall
 time relative to pointing an agent at the documentation, with no loss of
 correctness. A hosted [module
-gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/) and
-[Figure Builder
-application](https://j-andrews7-vizmodulesfigbuilder.share.connect.posit.cloud/)
-let users evaluate every module and assemble multi-panel figures
-complete with automatic panel labelling and single-file SVG export
-directly in the browser.
+gallery](https://j-andrews7-vizmodules.share.connect.posit.cloud/), with
+the Figure Builder as one of its tabs, lets users evaluate every module
+and assemble multi-panel figures complete with automatic panel labelling
+and single-file SVG export directly in the browser.
 
 The package is designed as a foundational layer enabling development of
 more specialized modules. The base modules can be easily extended to

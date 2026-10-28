@@ -27,10 +27,13 @@ invalid.
 ## Details
 
 This function is used within **VizModules** lineplot functions to
-process user-supplied facet dimensions before passing to `facet_grid()`
-or `facet_wrap()`. Invalid values trigger sensible defaults rather than
-breaking the plot layout. **Valid inputs** return unchanged. **Invalid
-inputs** (NULL, NA, non-numeric, \< 1) return `NULL`.
+process user-supplied facet dimensions before passing to
+[`facet_grid()`](https://ggplot2.tidyverse.org/reference/facet_grid.html)
+or
+[`facet_wrap()`](https://ggplot2.tidyverse.org/reference/facet_wrap.html).
+Invalid values trigger sensible defaults rather than breaking the plot
+layout. **Valid inputs** return unchanged. **Invalid inputs** (NULL, NA,
+non-numeric, \< 1) return `NULL`.
 
 ## Author
 

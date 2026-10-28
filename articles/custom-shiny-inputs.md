@@ -208,6 +208,21 @@ row_spec = list(
 )
 ```
 
+A `"select"` field given `multiple = TRUE` reports a character vector of
+its items, in the order they were picked, so a row can hold an ordered
+list. The scatter module’s **Trajectories** list works this way, one row
+per trajectory, each picking the groups its path visits:
+
+``` r
+
+row_spec = list(
+    groups = list(type = "select", args = list(
+        label = "Groups, in order", choices = c("setosa", "versicolor", "virginica"), multiple = TRUE
+    ))
+)
+# elements = list(trajectories1 = list(groups = c("virginica", "setosa")))
+```
+
 ### Pre-filled Rows with `elements`
 
 To show rows on startup with specific values:
