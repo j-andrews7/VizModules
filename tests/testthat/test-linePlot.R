@@ -986,3 +986,25 @@ test_that("the linePlot module draws ribbons and intervals from columns (#371)",
         }
     )
 })
+
+test_that("the linePlot module offers the shape drawing tools its Shape inputs style (#316)", {
+    shiny::testServer(
+        linePlotServer,
+        args = list(id = "lp", data = shiny::reactive(example_sales)),
+        {
+            do.call(session$setInputs, .line_inputs(
+                shape.fill = "#FF000080", shape.line.color = "#0000FF",
+                shape.line.width = 2, shape.linetype = "dash", shape.opacity = 0.5
+            ))
+            suppressWarnings(session$flushReact())
+            fig <- generate_linePlot()
+
+            expect_true(all(c("drawrect", "drawcircle", "eraseshape") %in% unlist(fig$x$config$modeBarButtonsToAdd)))
+            newshape <- plotly::plotly_build(fig)$x$layout$newshape
+            expect_equal(newshape$fillcolor, "#FF000080")
+            expect_equal(newshape$line$color, "#0000FF")
+            expect_equal(newshape$line$dash, "dash")
+            expect_equal(newshape$opacity, 0.5)
+        }
+    )
+})

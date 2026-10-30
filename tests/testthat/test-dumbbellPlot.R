@@ -286,3 +286,27 @@ test_that("a named X palette is matched to the x variables by name", {
     expect_equal(m$colours[m$names == "women"], "#FF0000")
     expect_equal(m$colours[m$names == "men"], "#0000FF")
 })
+
+test_that("the dumbbellPlot module offers the shape drawing tools its Shape inputs style (#316)", {
+    shiny::testServer(
+        dumbbellPlotServer,
+        args = list(id = "db", data = shiny::reactive(example_school_earnings)),
+        {
+            session$setInputs(
+                x.value = c("Women", "Men"), y.value = "School", colour.by = "X variables",
+                facet.by = "", facet.scales = "fixed", auto.update = TRUE, update = 0, flip.x = FALSE, flip.y = FALSE,
+                legend.show = TRUE, shape.fill = "#FF000080", shape.line.color = "#0000FF",
+                shape.line.width = 2, shape.linetype = "dash", shape.opacity = 0.5
+            )
+            suppressWarnings(session$flushReact())
+            fig <- generate_dumbbellPlot()
+
+            expect_true(all(c("drawrect", "drawcircle", "eraseshape") %in% unlist(fig$x$config$modeBarButtonsToAdd)))
+            newshape <- plotly::plotly_build(fig)$x$layout$newshape
+            expect_equal(newshape$fillcolor, "#FF000080")
+            expect_equal(newshape$line$color, "#0000FF")
+            expect_equal(newshape$line$dash, "dash")
+            expect_equal(newshape$opacity, 0.5)
+        }
+    )
+})
