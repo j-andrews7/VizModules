@@ -242,6 +242,11 @@ parameters can be accessed via UI inputs and/or the `defaults` argument:
 The following parameters implementing new functionality or controlling
 plotly-specific features are also available:
 
+- `x.order` - Order of the X values (UI: "X Order", drag and drop,
+  default: the column's factor level order, else sorted). As a default,
+  a character vector of levels of `x.data`; levels it leaves out follow
+  in their default order. Not shown for an X with more than 20 values
+
 - `title.font.size` - Plot title font size (UI: "Title Size", default:
   26)
 
@@ -395,262 +400,270 @@ library(VizModules)
 data(mtcars)
 plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="2149">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BarPlot-BarPlotTabsetPanel" data-tabsetid="6955">
 #>     <li class="active">
-#>       <a href="#tab-2149-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6955-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6955-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-6955-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6955-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-6955-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6955-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6955-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2149-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6955-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2149">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2149-1">
+#>   <div class="tab-content" data-tabsetid="6955">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6955-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6511186">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2251154">
 #>             <label class="control-label" id="BarPlot-x.data-label" for="BarPlot-x.data">X Values</label>
 #>             <div id="BarPlot-x.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-x.data">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":[],"value":[]}},"config":{"multiple":false,"search":false,"selectedValue":null,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6511186', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2251154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5287093">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9832668">
 #>             <label class="control-label" id="BarPlot-y.data-label" for="BarPlot-y.data">Y Values</label>
 #>             <div id="BarPlot-y.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-y.data">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"mpg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5287093', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9832668', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the y-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2251154">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1090488">
 #>             <label class="control-label" id="BarPlot-group.by-label" for="BarPlot-group.by">Group By</label>
 #>             <div id="BarPlot-group.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-group.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":null,"hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2251154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1090488', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9832668">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify699456">
 #>             <label class="control-label" id="BarPlot-fill.by-label" for="BarPlot-fill.by">Fill By</label>
 #>             <div id="BarPlot-fill.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-fill.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9832668', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars.  Both categorical and numeric columns are accepted: itemize{ item `TRUE` (default) — fill by the x-axis values. item `FALSE` — solid fill (first palette colour). item A column name (character/factor) — discrete colour scale. item A column name (numeric) — continuous gradient with quantile / cutoff controls. } Ignored when `group_by` is provided (fill is determined by `group_by`).'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify699456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A variable used to fill the bars.  Both categorical and numeric columns are accepted: itemize{ item `TRUE` (default) — fill by the x-axis values. item `FALSE` — solid fill (first palette colour). item A column name (character/factor) — discrete colour scale. item A column name (numeric) — continuous gradient with quantile / cutoff controls. } Ignored when `group_by` is provided (fill is determined by `group_by`).'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="vizmodules-level-order" id="tipify7776455">
+#>             <label class="control-label" id="BarPlot-x.order-label" for="BarPlot-x.order">X Order</label>
+#>             <div id="BarPlot-x.order" style="width: 100%; font-size: 0px; min-height: 25px;" class="jqui-orderInput"></div>
+#>             <iframe srcdoc="&lt;p&gt;cant catch me&lt;/p&gt;" class="jqui_self_cleaning_script" style="width:0;height:0;border:none;display:none !important" onload="$(function(){setTimeout(function(){shinyjqui.msgCallback({&quot;ui&quot;:&quot;[id=&#39;BarPlot-x.order&#39;]&quot;,&quot;type&quot;:&quot;interaction&quot;,&quot;func&quot;:&quot;sortable&quot;,&quot;operation&quot;:&quot;enable&quot;,&quot;options&quot;:{&quot;connectWith&quot;:&quot;false&quot;,&quot;remove&quot;:&quot;function(e, ui){if(!$(e.target).children().length)$(e.target).empty();}&quot;},&quot;debug&quot;:false,&quot;_js_idx&quot;:{&quot;ui&quot;:false,&quot;type&quot;:false,&quot;func&quot;:false,&quot;operation&quot;:false,&quot;options&quot;:{&quot;connectWith&quot;:false,&quot;remove&quot;:true},&quot;debug&quot;:false}});&#10;      $(&quot;.jqui_self_cleaning_script&quot;).remove();}, 10);});"></iframe>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7776455', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Drag the X values into the order to plot them in. Not shown for an X with more than 20 values.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2149-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6955-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1090488">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6583222">
 #>             <label class="control-label" id="BarPlot-facet.by-label" for="BarPlot-facet.by">Facet By</label>
 #>             <div id="BarPlot-facet.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-facet.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1090488', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6583222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify699456">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2592028">
 #>             <label class="control-label" id="BarPlot-facet.scale-label" for="BarPlot-facet.scale">Facet Scale</label>
 #>             <div id="BarPlot-facet.scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-facet.scale">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["fixed","free","free_x","free_y"],"value":["fixed","free","free_x","free_y"]}},"config":{"multiple":false,"search":false,"selectedValue":"fixed","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify699456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2592028', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify7776455">
+#>           <div class="form-group shiny-input-container" id="tipify9183378">
 #>             <label class="control-label" id="BarPlot-facet.ncol-label" for="BarPlot-facet.ncol">Columns</label>
 #>             <input id="BarPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7776455', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9183378', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6583222">
+#>           <div class="form-group shiny-input-container" id="tipify1487104">
 #>             <label class="control-label" id="BarPlot-facet.nrow-label" for="BarPlot-facet.nrow">Rows</label>
 #>             <input id="BarPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6583222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1487104', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify2592028">
+#>           <div class="form-group shiny-input-container" id="tipify6406805">
 #>             <div class="material-switch">
 #>               <label for="BarPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="BarPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="BarPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2592028', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6406805', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9183378">
+#>           <div class="form-group shiny-input-container" id="tipify2012385">
 #>             <label class="control-label" id="BarPlot-subplot.margin.x-label" for="BarPlot-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>             <input id="BarPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9183378', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2012385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1487104">
+#>           <div class="form-group shiny-input-container" id="tipify7436213">
 #>             <label class="control-label" id="BarPlot-subplot.margin.y-label" for="BarPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
 #>             <input id="BarPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1487104', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7436213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2149-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-6955-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div id="BarPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6406805">
+#>           <div class="form-group shiny-input-container" id="tipify8476374">
 #>             <label class="control-label" id="BarPlot-alpha-label" for="BarPlot-alpha">Alpha</label>
 #>             <input id="BarPlot-alpha" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6406805', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8476374', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify2012385">
+#>           <div class="form-group shiny-input-container" id="tipify8536358">
 #>             <div class="material-switch">
 #>               <label for="BarPlot-palreverse" style="padding-right: 10px;">Reverse Palette</label>
 #>               <input id="BarPlot-palreverse" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="BarPlot-palreverse"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2012385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify7436213">
-#>             <label class="control-label" id="BarPlot-width-label" for="BarPlot-width">Width</label>
-#>             <input id="BarPlot-width" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7436213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the bar width (0–1).'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8476374">
-#>             <label class="control-label" id="BarPlot-expand-label" for="BarPlot-expand">Expand</label>
-#>             <input id="BarPlot-expand" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 1,2,3,4" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8476374', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The values to expand the x and y axes. It is like CSS padding. When a single value is provided, it is used for both axes on both sides. When two values are provided, the first value is used for the top/bottom side and the second value is used for the left/right side. When three values are provided, the first value is used for the top side, the second value is used for the left/right side, and the third value is used for the bottom side. When four values are provided, the values are used for the top, right, bottom, and left sides, respectively. You can also use a named vector to specify the values for each side. When the axis is discrete, the values will be applied as &#39;add&#39; to the &#39;expansion&#39; function. When the axis is continuous, the values will be applied as &#39;mult&#39; to the &#39;expansion&#39; function. See also url{https://ggplot2.tidyverse.org/reference/expansion.html}'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8536358">
-#>             <label class="control-label" id="BarPlot-lower.quantile-label" for="BarPlot-lower.quantile">Lower Quantile</label>
-#>             <input id="BarPlot-lower.quantile" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1" step="0.01"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8536358', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8536358', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to reverse the palette. Default is FALSE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8034125">
-#>             <label class="control-label" id="BarPlot-upper.quantile-label" for="BarPlot-upper.quantile">Upper Quantile</label>
-#>             <input id="BarPlot-upper.quantile" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
+#>             <label class="control-label" id="BarPlot-width-label" for="BarPlot-width">Width</label>
+#>             <input id="BarPlot-width" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8034125', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8034125', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the bar width (0–1).'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify238768">
-#>             <label class="control-label" id="BarPlot-lower.cutoff-label" for="BarPlot-lower.cutoff">Lower Cutoff</label>
-#>             <input id="BarPlot-lower.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-expand-label" for="BarPlot-expand">Expand</label>
+#>             <input id="BarPlot-expand" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 1,2,3,4" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify238768', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify238768', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'The values to expand the x and y axes. It is like CSS padding. When a single value is provided, it is used for both axes on both sides. When two values are provided, the first value is used for the top/bottom side and the second value is used for the left/right side. When three values are provided, the first value is used for the top side, the second value is used for the left/right side, and the third value is used for the bottom side. When four values are provided, the values are used for the top, right, bottom, and left sides, respectively. You can also use a named vector to specify the values for each side. When the axis is discrete, the values will be applied as &#39;add&#39; to the &#39;expansion&#39; function. When the axis is continuous, the values will be applied as &#39;mult&#39; to the &#39;expansion&#39; function. See also url{https://ggplot2.tidyverse.org/reference/expansion.html}'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7953777">
-#>             <label class="control-label" id="BarPlot-upper.cutoff-label" for="BarPlot-upper.cutoff">Upper Cutoff</label>
-#>             <input id="BarPlot-upper.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-lower.quantile-label" for="BarPlot-lower.quantile">Lower Quantile</label>
+#>             <input id="BarPlot-lower.quantile" type="number" class="shiny-input-number form-control" value="0" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7953777', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7953777', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});</script>
 #>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-2149-4">
-#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8865505">
-#>             <label class="control-label" id="BarPlot-y.min-label" for="BarPlot-y.min">Y-axis Min</label>
-#>             <input id="BarPlot-y.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-upper.quantile-label" for="BarPlot-upper.quantile">Upper Quantile</label>
+#>             <input id="BarPlot-upper.quantile" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8865505', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8865505', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Lower and upper quantiles for the continuous color/fill scale. The actual cutoffs are determined by these quantiles when `lower_cutoff` and `upper_cutoff` are `NULL`. Defaults: `lower_quantile = 0`, `upper_quantile = 0.99`.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6000373">
-#>             <label class="control-label" id="BarPlot-y.max-label" for="BarPlot-y.max">Y-axis Max</label>
-#>             <input id="BarPlot-y.max" type="number" class="shiny-input-number form-control" value="33.9" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-lower.cutoff-label" for="BarPlot-lower.cutoff">Lower Cutoff</label>
+#>             <input id="BarPlot-lower.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6000373', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6000373', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4327882">
+#>             <label class="control-label" id="BarPlot-upper.cutoff-label" for="BarPlot-upper.cutoff">Upper Cutoff</label>
+#>             <input id="BarPlot-upper.cutoff" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4327882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Explicit lower and upper cutoffs for the continuous color/fill scale. When `NULL` (the default), the cutoffs are determined by `lower_quantile` and `upper_quantile` via `link[stats]{quantile`}. Values outside the `[lower_cutoff, upper_cutoff]` range are clamped (winsorized) to the nearest cutoff value.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-2149-5">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6955-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4327882">
+#>           <div class="form-group shiny-input-container" id="tipify9202758">
+#>             <label class="control-label" id="BarPlot-y.min-label" for="BarPlot-y.min">Y-axis Min</label>
+#>             <input id="BarPlot-y.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9202758', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify6160144">
+#>             <label class="control-label" id="BarPlot-y.max-label" for="BarPlot-y.max">Y-axis Max</label>
+#>             <input id="BarPlot-y.max" type="number" class="shiny-input-number form-control" value="33.9" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6160144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': ''})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Legend" id="tab-6955-5">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4357182">
 #>             <div class="material-switch">
 #>               <label for="BarPlot-legend.show" style="padding-right: 10px;">Show Legend</label>
 #>               <input id="BarPlot-legend.show" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="BarPlot-legend.show"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4327882', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4357182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9202758">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8973044">
 #>             <label class="control-label" id="BarPlot-legend.font.family-label" for="BarPlot-legend.font.family">Legend Font</label>
 #>             <div id="BarPlot-legend.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-legend.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9202758', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8973044', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6160144">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7690135">
 #>             <label class="control-label" for="BarPlot-legend.font.color">Legend Font Color</label>
 #>             <input id="BarPlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6160144', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7690135', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4357182">
+#>           <div class="form-group shiny-input-container" id="tipify1281158">
 #>             <label class="control-label" id="BarPlot-legend.title.size-label" for="BarPlot-legend.title.size">Legend Title Size</label>
 #>             <input id="BarPlot-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4357182', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1281158', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8973044">
+#>           <div class="form-group shiny-input-container" id="tipify5386331">
 #>             <label class="control-label" id="BarPlot-legend.text.size-label" for="BarPlot-legend.text.size">Legend Text Size</label>
 #>             <input id="BarPlot-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8973044', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5386331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2149-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6955-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -661,73 +674,73 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify7690135">
+#>           <div class="form-group shiny-input-container" id="tipify1290163">
 #>             <label class="control-label" id="BarPlot-margin.t-label" for="BarPlot-margin.t">Margin Top</label>
 #>             <input id="BarPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7690135', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1290163', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1281158">
+#>           <div class="form-group shiny-input-container" id="tipify5109649">
 #>             <label class="control-label" id="BarPlot-margin.b-label" for="BarPlot-margin.b">Margin Bottom</label>
 #>             <input id="BarPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1281158', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5109649', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5386331">
+#>           <div class="form-group shiny-input-container" id="tipify5437927">
 #>             <label class="control-label" id="BarPlot-margin.l-label" for="BarPlot-margin.l">Margin Left</label>
 #>             <input id="BarPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5386331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1290163">
-#>             <label class="control-label" id="BarPlot-margin.r-label" for="BarPlot-margin.r">Margin Right</label>
-#>             <input id="BarPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1290163', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5109649">
-#>             <label class="control-label" for="BarPlot-shape.fill">Shape Fill</label>
-#>             <input id="BarPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5109649', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify5437927">
-#>             <label class="control-label" for="BarPlot-shape.line.color">Shape Line Color</label>
-#>             <input id="BarPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5437927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5437927', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2417761">
+#>             <label class="control-label" id="BarPlot-margin.r-label" for="BarPlot-margin.r">Margin Right</label>
+#>             <input id="BarPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2417761', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8031441">
+#>             <label class="control-label" for="BarPlot-shape.fill">Shape Fill</label>
+#>             <input id="BarPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8031441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9479137">
+#>             <label class="control-label" for="BarPlot-shape.line.color">Shape Line Color</label>
+#>             <input id="BarPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9479137', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4073614">
 #>             <label class="control-label" id="BarPlot-shape.line.width-label" for="BarPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="BarPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2417761', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4073614', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8031441">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5147446">
 #>             <label class="control-label" id="BarPlot-shape.linetype-label" for="BarPlot-shape.linetype">Shape Linetype</label>
 #>             <div id="BarPlot-shape.linetype" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="BarPlot-shape.linetype">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["solid","dot","dash","longdash","dashdot","longdashdot"],"value":["solid","dot","dash","longdash","dashdot","longdashdot"]}},"config":{"multiple":false,"search":false,"selectedValue":"solid","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8031441', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5147446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9479137">
+#>           <div class="form-group shiny-input-container" id="tipify9815418">
 #>             <label class="control-label" id="BarPlot-shape.opacity-label" for="BarPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="BarPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9479137', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2149-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6955-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -922,119 +935,119 @@ plotthis_BarPlotInputsUI("BarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2149-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6955-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4073614">
+#>           <div class="form-group shiny-input-container" id="tipify3541867">
 #>             <label class="control-label" id="BarPlot-hline.intercepts-label" for="BarPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="BarPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4073614', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5147446">
-#>             <label class="control-label" id="BarPlot-hline.colors-label" for="BarPlot-hline.colors">Y Colors</label>
-#>             <input id="BarPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5147446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9815418">
-#>             <label class="control-label" id="BarPlot-hline.widths-label" for="BarPlot-hline.widths">Y Widths</label>
-#>             <input id="BarPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9815418', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify3541867">
-#>             <label class="control-label" id="BarPlot-hline.linetypes-label" for="BarPlot-hline.linetypes">Y Line Types</label>
-#>             <input id="BarPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3541867', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3541867', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4558402">
-#>             <label class="control-label" id="BarPlot-hline.opacities-label" for="BarPlot-hline.opacities">Y Opacities (0-1)</label>
-#>             <input id="BarPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-hline.colors-label" for="BarPlot-hline.colors">Y Colors</label>
+#>             <input id="BarPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4558402', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4558402', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2200247">
-#>             <label class="control-label" id="BarPlot-vline.intercepts-label" for="BarPlot-vline.intercepts">X-intercepts</label>
-#>             <input id="BarPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-hline.widths-label" for="BarPlot-hline.widths">Y Widths</label>
+#>             <input id="BarPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2200247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2200247', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify818331">
-#>             <label class="control-label" id="BarPlot-vline.colors-label" for="BarPlot-vline.colors">X Colors</label>
-#>             <input id="BarPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-hline.linetypes-label" for="BarPlot-hline.linetypes">Y Line Types</label>
+#>             <input id="BarPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify818331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify818331', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3692361">
-#>             <label class="control-label" id="BarPlot-vline.widths-label" for="BarPlot-vline.widths">X Widths</label>
-#>             <input id="BarPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-hline.opacities-label" for="BarPlot-hline.opacities">Y Opacities (0-1)</label>
+#>             <input id="BarPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3692361', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3692361', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1266666">
-#>             <label class="control-label" id="BarPlot-vline.linetypes-label" for="BarPlot-vline.linetypes">X Line Types</label>
-#>             <input id="BarPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-vline.intercepts-label" for="BarPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="BarPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1266666', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1266666', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7398725">
-#>             <label class="control-label" id="BarPlot-vline.opacities-label" for="BarPlot-vline.opacities">X Opacities (0-1)</label>
-#>             <input id="BarPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-vline.colors-label" for="BarPlot-vline.colors">X Colors</label>
+#>             <input id="BarPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7398725', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7398725', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9558662">
-#>             <label class="control-label" id="BarPlot-abline.slopes-label" for="BarPlot-abline.slopes">Ab Slopes</label>
-#>             <input id="BarPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-vline.widths-label" for="BarPlot-vline.widths">X Widths</label>
+#>             <input id="BarPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9558662', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9558662', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6686745">
-#>             <label class="control-label" id="BarPlot-abline.intercepts-label" for="BarPlot-abline.intercepts">Ab Y-intercepts</label>
-#>             <input id="BarPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-vline.linetypes-label" for="BarPlot-vline.linetypes">X Line Types</label>
+#>             <input id="BarPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6686745', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6686745', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4680894">
-#>             <label class="control-label" id="BarPlot-abline.colors-label" for="BarPlot-abline.colors">Ab Colors</label>
-#>             <input id="BarPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-vline.opacities-label" for="BarPlot-vline.opacities">X Opacities (0-1)</label>
+#>             <input id="BarPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4680894', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4680894', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5381924">
-#>             <label class="control-label" id="BarPlot-abline.widths-label" for="BarPlot-abline.widths">Ab Widths</label>
-#>             <input id="BarPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-abline.slopes-label" for="BarPlot-abline.slopes">Ab Slopes</label>
+#>             <input id="BarPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5381924', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5381924', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3309537">
-#>             <label class="control-label" id="BarPlot-abline.linetypes-label" for="BarPlot-abline.linetypes">Ab Line Types</label>
-#>             <input id="BarPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="BarPlot-abline.intercepts-label" for="BarPlot-abline.intercepts">Ab Y-intercepts</label>
+#>             <input id="BarPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3309537', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3309537', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6286821">
+#>             <label class="control-label" id="BarPlot-abline.colors-label" for="BarPlot-abline.colors">Ab Colors</label>
+#>             <input id="BarPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6286821', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify4525525">
+#>             <label class="control-label" id="BarPlot-abline.widths-label" for="BarPlot-abline.widths">Ab Widths</label>
+#>             <input id="BarPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4525525', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify8880151">
+#>             <label class="control-label" id="BarPlot-abline.linetypes-label" for="BarPlot-abline.linetypes">Ab Line Types</label>
+#>             <input id="BarPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8880151', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify7842018">
 #>             <label class="control-label" id="BarPlot-abline.opacities-label" for="BarPlot-abline.opacities">Ab Opacities (0-1)</label>
 #>             <input id="BarPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6286821', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7842018', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>

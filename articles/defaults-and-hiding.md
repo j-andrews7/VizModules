@@ -68,7 +68,16 @@ its built-in default rather than erroring. This means a typo in a key is
 silent; double-check key names against the help page if a default
 appears to have no effect.
 
-### Reactive defaults: driving inputs from app state
+### Category order
+
+The `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot` modules take an
+`x.order` default, a character vector of the x-axis categories in the
+order to draw them,
+e.g. `list(x.data = "department", x.order = c("Sales", "HR"))`.
+Categories it leaves out follow in their default order. Users can change
+the order by dragging in the **X Order** (or **Group Order**) control,
+which **Reset** restores to `x.order`. \### Reactive defaults: driving
+inputs from app state
 
 Sometimes a parameter needs to *follow* your app rather than be fixed
 once. A common case is a colour mapping that should track a column the

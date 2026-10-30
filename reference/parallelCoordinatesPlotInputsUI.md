@@ -151,76 +151,76 @@ Jacob Martin, Jared Andrews
 library(VizModules)
 parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="9748">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="parcoords-parallelCoordinatesPlotTabsetPanel" data-tabsetid="3542">
 #>     <li class="active">
-#>       <a href="#tab-9748-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-3542-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9748-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-3542-2" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9748-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
+#>       <a href="#tab-3542-3" data-toggle="tab" data-bs-toggle="tab" data-value="Labels">Labels</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9748-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title">Title</a>
+#>       <a href="#tab-3542-4" data-toggle="tab" data-bs-toggle="tab" data-value="Title">Title</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9748-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-3542-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9748">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9748-1">
+#>   <div class="tab-content" data-tabsetid="3542">
+#>     <div class="tab-pane active" data-value="Data" id="tab-3542-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify7784543">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3789607">
 #>             <label class="control-label" id="parcoords-dimensions-label" for="parcoords-dimensions">Dimensions</label>
 #>             <div id="parcoords-dimensions" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="close">
 #>               <script type="application/json" data-for="parcoords-dimensions">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":true,"search":true,"selectedValue":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"hideClearButton":false,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":true,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":false,"disableOptionGroupCheckbox":false,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7784543', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character vector of column names to use as dimensions (axes). Must contain at least two columns. Non-numeric columns are mapped to integers.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character vector of column names to use as dimensions (axes). Must contain at least two columns. Non-numeric columns are mapped to integers.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6390610">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3595307">
 #>             <label class="control-label" id="parcoords-color.by-label" for="parcoords-color.by">Color By</label>
 #>             <div id="parcoords-color.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="parcoords-color.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["","mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6390610', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character, column name to color lines by. Numeric columns use a continuous colorscale (`color.scale`); categorical columns use a discrete palette (`palette.selection`) and are displayed with category names on the colorbar. Default: NULL.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Optional character, column name to color lines by. Numeric columns use a continuous colorscale (`color.scale`); categorical columns use a discrete palette (`palette.selection`) and are displayed with category names on the colorbar. Default: NULL.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9748-2">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3542-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify3789607">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8442314">
 #>             <label class="control-label" id="parcoords-color.scale-label" for="parcoords-color.scale">Color Scale</label>
 #>             <div id="parcoords-color.scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="parcoords-color.scale">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Blackbody","Bluered","Blues","Cividis","Earth","Electric","Greens","Greys","Hot","Jet","Picnic","Portland","Rainbow","RdBu","Reds","Viridis","YlGnBu","YlOrRd"],"value":["Blackbody","Bluered","Blues","Cividis","Earth","Electric","Greens","Greys","Hot","Jet","Picnic","Portland","Rainbow","RdBu","Reds","Viridis","YlGnBu","YlOrRd"]}},"config":{"multiple":false,"search":true,"selectedValue":"Viridis","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3789607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, plotly colorscale name for line coloring when `color.by` is numeric. Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8442314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, plotly colorscale name for line coloring when `color.by` is numeric. Options include "Viridis", "Cividis", "Inferno", "Magma", "Plasma", "Blues", "Greens", "Reds", "Oranges", "RdBu", "RdYlBu", "Spectral", "Jet", "Hot", "Cool", "Portland". Default: "Viridis".'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div id="parcoords-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify3595307">
+#>           <div class="form-group shiny-input-container" id="tipify4567492">
 #>             <label class="control-label" id="parcoords-line.opacity-label" for="parcoords-line.opacity">Line Opacity</label>
 #>             <input class="js-range-slider" id="parcoords-line.opacity" data-skin="shiny" data-min="0" data-max="1" data-from="0.5" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3595307', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of lines between 0 and 1. Default: 0.5.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4567492', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, opacity of lines between 0 and 1. Default: 0.5.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8442314">
+#>           <div class="form-group shiny-input-container" id="tipify1790343">
 #>             <label class="control-label" id="parcoords-line.width-label" for="parcoords-line.width">Line Width</label>
 #>             <input id="parcoords-line.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0.5" step="0.5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8442314', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of lines in pixels. Default: 1.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1790343', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, width of lines in pixels. Default: 1.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4567492">
+#>           <div class="form-group shiny-input-container" id="tipify9662091">
 #>             <div class="checkbox">
 #>               <label>
 #>                 <input id="parcoords-show.colorbar" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -228,95 +228,95 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>               </label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4567492', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to show the colorbar. Default: TRUE.'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1790343">
-#>             <label class="control-label" for="parcoords-bgcolor">Background Color</label>
-#>             <input id="parcoords-bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1790343', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Labels" id="tab-9748-3">
-#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9662091">
-#>             <label class="control-label" id="parcoords-label.font.size-label" for="parcoords-label.font.size">Label Size</label>
-#>             <input id="parcoords-label.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9662091', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for dimension labels. Default: 12.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9662091', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Logical, whether to show the colorbar. Default: TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7134119">
+#>             <label class="control-label" for="parcoords-bgcolor">Background Color</label>
+#>             <input id="parcoords-bgcolor" type="text" class="form-control shiny-colour-input" data-init-value="#FFFFFF" data-show-colour="both" data-palette="square"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7134119', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for the plot background. Default: "#FFFFFF".'})}, 500)});</script>
+#>         </div>
+#>       </div>
+#>     </div>
+#>     <div class="tab-pane" data-value="Labels" id="tab-3542-3">
+#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify248861">
+#>             <label class="control-label" id="parcoords-label.font.size-label" for="parcoords-label.font.size">Label Size</label>
+#>             <input id="parcoords-label.font.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="1" step="1"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify248861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for dimension labels. Default: 12.'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6264565">
 #>             <label class="control-label" for="parcoords-label.font.color">Label Color</label>
 #>             <input id="parcoords-label.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7134119', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for dimension labels. Default: "black".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6264565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for dimension labels. Default: "black".'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify248861">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8279213">
 #>             <label class="control-label" id="parcoords-label.font.family-label" for="parcoords-label.font.family">Label Font</label>
 #>             <div id="parcoords-label.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="parcoords-label.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify248861', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for dimension labels. Default: "Arial".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8279213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for dimension labels. Default: "Arial".'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6264565">
+#>           <div class="form-group shiny-input-container" id="tipify6430690">
 #>             <label class="control-label" id="parcoords-tick.font.size-label" for="parcoords-tick.font.size">Tick Font Size</label>
 #>             <input id="parcoords-tick.font.size" type="number" class="shiny-input-number form-control" value="10" data-update-on="change" min="1" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6264565', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for axis tick labels. Default: 10.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6430690', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for axis tick labels. Default: 10.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8279213">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify7084842">
 #>             <label class="control-label" for="parcoords-tick.font.color">Tick Font Color</label>
 #>             <input id="parcoords-tick.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8279213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for axis tick labels. Default: "black".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7084842', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for axis tick labels. Default: "black".'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6430690">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8707271">
 #>             <label class="control-label" id="parcoords-tick.font.family-label" for="parcoords-tick.font.family">Tick Font</label>
 #>             <div id="parcoords-tick.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="parcoords-tick.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6430690', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for axis tick labels. Default: "Arial".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8707271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for axis tick labels. Default: "Arial".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Title" id="tab-9748-4">
+#>     <div class="tab-pane" data-value="Title" id="tab-3542-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify7084842">
+#>           <div class="form-group shiny-input-container" id="tipify2818126">
 #>             <label class="control-label" id="parcoords-title.font.size-label" for="parcoords-title.font.size">Title Size</label>
 #>             <input id="parcoords-title.font.size" type="number" class="shiny-input-number form-control" value="26" data-update-on="change" min="1" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7084842', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for plot title. Default: 16.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2818126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Numeric, font size for plot title. Default: 16.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8707271">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1732249">
 #>             <label class="control-label" id="parcoords-title.font.family-label" for="parcoords-title.font.family">Title Font</label>
 #>             <div id="parcoords-title.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="parcoords-title.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8707271', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for plot title. Default: "Arial".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1732249', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, font family for plot title. Default: "Arial".'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2818126">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify1096701">
 #>             <label class="control-label" for="parcoords-title.font.color">Title Color</label>
 #>             <input id="parcoords-title.font.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2818126', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for plot title text. Default: "black".'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1096701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Character, hex color for plot title text. Default: "black".'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9748-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-3542-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -327,32 +327,32 @@ parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1732249">
+#>           <div class="form-group shiny-input-container" id="tipify5862222">
 #>             <label class="control-label" id="parcoords-margin.t-label" for="parcoords-margin.t">Margin Top</label>
 #>             <input id="parcoords-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1732249', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1096701">
-#>             <label class="control-label" id="parcoords-margin.b-label" for="parcoords-margin.b">Margin Bottom</label>
-#>             <input id="parcoords-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1096701', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5862222">
-#>             <label class="control-label" id="parcoords-margin.l-label" for="parcoords-margin.l">Margin Left</label>
-#>             <input id="parcoords-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5862222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5862222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8507213">
+#>             <label class="control-label" id="parcoords-margin.b-label" for="parcoords-margin.b">Margin Bottom</label>
+#>             <input id="parcoords-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8507213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify9215261">
+#>             <label class="control-label" id="parcoords-margin.l-label" for="parcoords-margin.l">Margin Left</label>
+#>             <input id="parcoords-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9215261', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify6756619">
 #>             <label class="control-label" id="parcoords-margin.r-label" for="parcoords-margin.r">Margin Right</label>
 #>             <input id="parcoords-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8507213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6756619', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>

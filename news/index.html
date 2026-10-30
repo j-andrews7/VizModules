@@ -59,6 +59,12 @@
 <ul><li>Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the <code><a href="../reference/facet_check.html">facet_check()</a></code> cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in <code>defaults</code> is always offered. This covers the scatter plot’s Color By, Shape By and Trajectory Group By; the yPlot’s Group, Color and Shape By; <code>linePlot</code> and the <code>plotthis</code> Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; <code>parallelCoordinatesPlot</code> Color By; and <code>radarPlot</code> Group. The new <code><a href="../reference/discrete_choices.html">discrete_choices()</a></code> builds these choices.</li>
 </ul></div>
 <div class="section level4">
+<h4 id="barplot-boxplot-freqplot-and-yplot-0-6-0">
+<code>BarPlot</code>, <code>BoxPlot</code>, <code>freqPlot</code> and <code>yPlot</code>
+<a class="anchor" aria-label="anchor" href="#barplot-boxplot-freqplot-and-yplot-0-6-0"></a></h4>
+<ul><li>New drag-and-drop <strong>X Order</strong> (<strong>Group Order</strong> for <code>freqPlot</code> and <code>yPlot</code>) input in the Data tab sets the order of the x-axis categories, with significance brackets following it. Set it in <code>defaults</code> as <code>x.order</code>, a character vector of levels; any left out follow in their default order. It is not shown for a column with more than 20 levels, and in <code>BoxPlot</code> a <strong>Sort X By</strong> key takes precedence over it.</li>
+</ul></div>
+<div class="section level4">
 <h4 id="dotplot-and-scatterplot-0-6-0">
 <code>DotPlot</code> and <code>scatterPlot</code>
 <a class="anchor" aria-label="anchor" href="#dotplot-and-scatterplot-0-6-0"></a></h4>
@@ -88,6 +94,7 @@
 <li>
 <p>Exported many helpers for custom module use (<a href="https://github.com/j-andrews7/VizModules/issues/369" class="external-link">#369</a>):</p>
 <ul><li>Facet titles and spacing: <code><a href="../reference/toggle_facet_title_inputs.html">toggle_facet_title_inputs()</a></code> (with <code>main_title_input_ids</code>) swaps the main-title inputs for the <code>facet.title.*</code> inputs while a plot is faceted, and <code><a href="../reference/uniform_subplot_spacing_inputs_ui.html">uniform_subplot_spacing_inputs_ui()</a></code> (with <code><a href="../reference/subplot_spacing_defaults.html">subplot_spacing_defaults()</a></code>) provides the subplot spacing controls that <code><a href="../reference/reset_plotly_inputs.html">reset_plotly_inputs()</a></code> and <code><a href="../reference/apply_facet_subplot_spacing.html">apply_facet_subplot_spacing()</a></code> already expect.</li>
+<li>Group ordering: <code><a href="../reference/level_order_input.html">level_order_input()</a></code>, <code><a href="../reference/level_order_choices.html">level_order_choices()</a></code>, <code><a href="../reference/apply_level_order.html">apply_level_order()</a></code> and <code><a href="../reference/setup_level_order.html">setup_level_order()</a></code> add the same drag-and-drop category ordering to a custom module.</li>
 <li>Group colours: <code><a href="../reference/default_group_colors.html">default_group_colors()</a></code> validates and hex-normalises a colour mapping in <code>defaults</code>, and <code><a href="../reference/reset_group_colors.html">reset_group_colors()</a></code> restores a group colour picker to it on Reset.</li>
 <li>Stats tab: <code><a href="../reference/uniform_stats_inputs_ui.html">uniform_stats_inputs_ui()</a></code>, <code><a href="../reference/reset_stats_inputs.html">reset_stats_inputs()</a></code>, <code><a href="../reference/default_stat_pairs.html">default_stat_pairs()</a></code>, <code><a href="../reference/stat_bracket_headroom.html">stat_bracket_headroom()</a></code>, and <code><a href="../reference/note_brackets_skipped.html">note_brackets_skipped()</a></code>.</li>
 <li>Module server boilerplate: <code><a href="../reference/require_data_frame.html">require_data_frame()</a></code>, <code><a href="../reference/nz_value.html">nz_value()</a></code>, <code><a href="../reference/blank_to_null.html">blank_to_null()</a></code>, <code><a href="../reference/na_to_null.html">na_to_null()</a></code>, <code><a href="../reference/facet_check.html">facet_check()</a></code>, <code><a href="../reference/flatten_palette_options.html">flatten_palette_options()</a></code>, <code><a href="../reference/reset_manual_edits.html">reset_manual_edits()</a></code> and <code><a href="../reference/with_stable_seed.html">with_stable_seed()</a></code>, which keeps jitter from jumping on every rebuild.</li>
@@ -115,6 +122,11 @@
 <strong>Facet By</strong> keeps its <code><a href="../reference/facet_check.html">facet_check()</a></code> limit when X changes.</li>
 </ul></div>
 <div class="section level4">
+<h4 id="boxplot-0-6-0"><code>BoxPlot</code><a class="anchor" aria-label="anchor" href="#boxplot-0-6-0"></a></h4>
+<ul><li>
+<strong>Sort X By</strong> now works on a faceted plot, ordering every panel by one order computed over all the data, where faceting used to clear it (<a href="https://github.com/j-andrews7/VizModules/issues/372" class="external-link">#372</a>). Significance brackets are now drawn over the sorted order rather than the data’s level order, which put them over the wrong boxes.</li>
+</ul></div>
+<div class="section level4">
 <h4 id="complexheatmap-0-6-0"><code>ComplexHeatmap</code><a class="anchor" aria-label="anchor" href="#complexheatmap-0-6-0"></a></h4>
 <ul><li>The <code><a href="../reference/ComplexHeatmap_HeatmapApp.html">ComplexHeatmap_HeatmapApp()</a></code> example no longer fails where <code>ComplexHeatmap</code>, <code>InteractiveComplexHeatmap</code> or <code>circlize</code> is not installed, as on CRAN’s r-oldrel macOS check machines.</li>
 </ul></div>
@@ -135,9 +147,9 @@
 </div>
 <div class="section level3">
 <h3 id="documentation-0-6-0">Documentation<a class="anchor" aria-label="anchor" href="#documentation-0-6-0"></a></h3>
-<ul><li>“Building Custom Modules” shows the newly exported helpers in use and adds the scatter module’s <code>fig.fn</code> hook, “Adding a New Module” lists the helpers, and “Custom Shiny Inputs” covers <code>multiple = TRUE</code> select fields.</li>
+<ul><li>“Building Custom Modules” shows the newly exported helpers in use and adds the scatter module’s <code>fig.fn</code> hook, “Adding a New Module” lists the helpers, and “Custom Shiny Inputs” covers <code>multiple = TRUE</code> select fields and the category order control.</li>
 <li>“Custom Model Lines” no longer suggests editing package internals to allow GAM smooth terms, which the formula allowlist does not include.</li>
-<li>The bundled agent skills cover the new inputs (marginals, size scales, trajectories, <code>linePlot</code> intervals) and exported helpers. The new-module template builds its Group By choices with <code><a href="../reference/discrete_choices.html">discrete_choices()</a></code>, and its test template now gives <code><a href="https://rdrr.io/pkg/shiny/man/testServer.html" class="external-link">testServer()</a></code> the full set of inputs a figure needs, without which its figure test failed.</li>
+<li>The bundled agent skills cover the new inputs (marginals, size scales, trajectories, <code>linePlot</code> intervals, category order and <code>x.order</code>) and exported helpers. The new-module template builds its Group By choices with <code><a href="../reference/discrete_choices.html">discrete_choices()</a></code>, and its test template now gives <code><a href="https://rdrr.io/pkg/shiny/man/testServer.html" class="external-link">testServer()</a></code> the full set of inputs a figure needs, without which its figure test failed.</li>
 </ul></div>
 </div>
     <div class="section level2">

@@ -332,218 +332,218 @@ library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="3256">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="5755">
 #>     <li class="active">
-#>       <a href="#tab-3256-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-5755-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-5755-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-5755-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-5755-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-5755-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-5755-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-5755-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-3256-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-5755-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="3256">
-#>     <div class="tab-pane active" data-value="Data" id="tab-3256-1">
+#>   <div class="tab-content" data-tabsetid="5755">
+#>     <div class="tab-pane active" data-value="Data" id="tab-5755-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1634123">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1552946">
 #>             <label class="control-label" id="densityPlot-x.data-label" for="densityPlot-x.data">X Data</label>
 #>             <div id="densityPlot-x.data" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-x.data">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"],"value":["mpg","cyl","disp","hp","drat","wt","qsec","vs","am","gear","carb"]}},"config":{"multiple":false,"search":true,"selectedValue":"mpg","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1634123', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1552946', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to plot for the x-axis.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5138669">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5083099">
 #>             <label class="control-label" id="densityPlot-group.by-label" for="densityPlot-group.by">Group By</label>
 #>             <div id="densityPlot-group.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-group.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5138669', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5083099', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Columns to group the data for plotting For those plotting functions that do not support multiple groups, They will be concatenated into one column, using `group_by_sep` as the separator'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-3256-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-5755-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1432665">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify858705">
 #>             <label class="control-label" id="densityPlot-facet.by-label" for="densityPlot-facet.by">Facet By</label>
 #>             <div id="densityPlot-facet.by" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-facet.by">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["(none)"],"value":[""]}},"config":{"multiple":false,"search":false,"selectedValue":"","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1432665', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify858705', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the column name of the data frame to facet the plot. Otherwise, the data will be split by `split_by` and generate multiple plots and combine them into one using `patchwork::wrap_plots`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6502987">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5030267">
 #>             <label class="control-label" id="densityPlot-facet.scale-label" for="densityPlot-facet.scale">Facet Scale</label>
 #>             <div id="densityPlot-facet.scale" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-facet.scale">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["fixed","free","free_x","free_y"],"value":["fixed","free","free_x","free_y"]}},"config":{"multiple":false,"search":false,"selectedValue":"fixed","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6502987', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5030267', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Whether to scale the axes of facets. Default is "fixed" Other options are "free", "free_x", "free_y". See `ggplot2::facet_wrap`'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1552946">
+#>           <div class="form-group shiny-input-container" id="tipify385719">
 #>             <label class="control-label" id="densityPlot-facet.ncol-label" for="densityPlot-facet.ncol">Columns</label>
 #>             <input id="densityPlot-facet.ncol" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1552946', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify385719', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of columns in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5083099">
+#>           <div class="form-group shiny-input-container" id="tipify8240328">
 #>             <label class="control-label" id="densityPlot-facet.nrow-label" for="densityPlot-facet.nrow">Rows</label>
 #>             <input id="densityPlot-facet.nrow" type="number" class="shiny-input-number form-control" data-update-on="change" min="0" max="20"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5083099', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8240328', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the number of rows in the facet. When facet_by is a single column and facet_wrap is used.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify858705">
+#>           <div class="form-group shiny-input-container" id="tipify2859856">
 #>             <div class="material-switch">
 #>               <label for="densityPlot-facet.by.row" style="padding-right: 10px;">Facet by Row</label>
 #>               <input id="densityPlot-facet.by.row" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="densityPlot-facet.by.row"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify858705', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2859856', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value indicating whether to fill the plots by row. Default is TRUE.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5030267">
+#>           <div class="form-group shiny-input-container" id="tipify2467509">
 #>             <label class="control-label" id="densityPlot-subplot.margin.x-label" for="densityPlot-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>             <input id="densityPlot-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.03" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5030267', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2467509', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify385719">
+#>           <div class="form-group shiny-input-container" id="tipify3979936">
 #>             <label class="control-label" id="densityPlot-subplot.margin.y-label" for="densityPlot-subplot.margin.y">Subplot Spacing (Vertical)</label>
 #>             <input id="densityPlot-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify385719', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3979936', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-3256-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5755-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8240328">
+#>           <div class="form-group shiny-input-container" id="tipify6320929">
 #>             <label class="control-label" id="densityPlot-plot.alpha-label" for="densityPlot-plot.alpha">Plot Alpha</label>
 #>             <input id="densityPlot-plot.alpha" type="number" class="shiny-input-number form-control" value="0.5" data-update-on="change" min="0" max="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8240328', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6320929', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the transparency of the plot.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div id="densityPlot-palette.selection" class="shiny-html-output"></div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2859856">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9485788">
 #>             <label class="control-label" id="densityPlot-position-label" for="densityPlot-position">Position</label>
 #>             <div id="densityPlot-position" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-position">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["identity","stack","dodge","fill"],"value":["identity","stack","dodge","fill"]}},"config":{"multiple":false,"search":false,"selectedValue":"identity","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2859856', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the position adjustment for the bars or density curves. Default: `"identity"`, which shows the actual count / density per group (unlike `ggplot2`&#39;s default `"stack"`). Other options: `"stack"`, `"dodge"`, `"fill"`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9485788', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A character string specifying the position adjustment for the bars or density curves. Default: `"identity"`, which shows the actual count / density per group (unlike `ggplot2`&#39;s default `"stack"`). Other options: `"stack"`, `"dodge"`, `"fill"`.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-3256-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-5755-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify2467509">
+#>           <div class="form-group shiny-input-container" id="tipify3401193">
 #>             <div class="material-switch">
 #>               <label for="densityPlot-add.bars" style="padding-right: 10px;">Add Rug Plot</label>
 #>               <input id="densityPlot-add.bars" type="checkbox"/>
 #>               <label class="switch label-success bg-success" for="densityPlot-add.bars"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2467509', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If `TRUE`, a data-distribution rug is drawn along the y = 0 axis using `geom_linerange()`. Each group&#39;s bars are vertically offset to avoid overlap.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3401193', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A logical value. If `TRUE`, a data-distribution rug is drawn along the y = 0 axis using `geom_linerange()`. Each group&#39;s bars are vertically offset to avoid overlap.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify3979936">
+#>           <div class="form-group shiny-input-container" id="tipify6273660">
 #>             <label class="control-label" id="densityPlot-bar.height-label" for="densityPlot-bar.height">Rug Bar Height</label>
 #>             <input id="densityPlot-bar.height" type="number" class="shiny-input-number form-control" value="0.04" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3979936', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height (in data units, relative to the maximum y) of the rug bars added by `add_bars`. The actual pixel height scales with `max_y`. Default: `0.025`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6273660', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value specifying the height (in data units, relative to the maximum y) of the rug bars added by `add_bars`. The actual pixel height scales with `max_y`. Default: `0.025`.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6320929">
+#>           <div class="form-group shiny-input-container" id="tipify8249154">
 #>             <label class="control-label" id="densityPlot-bar.alpha-label" for="densityPlot-bar.alpha">Rug Bar Alpha</label>
 #>             <input class="js-range-slider" id="densityPlot-bar.alpha" data-skin="shiny" data-min="0" data-max="1" data-from="1" data-step="0.05" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6320929', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value in verb{[0, 1]} for the transparency of the rug bars. Default: `1`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8249154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value in verb{[0, 1]} for the transparency of the rug bars. Default: `1`.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9485788">
+#>           <div class="form-group shiny-input-container" id="tipify1451154">
 #>             <label class="control-label" id="densityPlot-bar.width-label" for="densityPlot-bar.width">Rug Bar Width</label>
 #>             <input id="densityPlot-bar.width" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" step="0.05"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9485788', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value passed as the `linewidth` aesthetic of `geom_linerange()`. Controls the thickness of each rug tick. Default: `0.1`.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1451154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'A numeric value passed as the `linewidth` aesthetic of `geom_linerange()`. Controls the thickness of each rug tick. Default: `0.1`.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-3256-5">
+#>     <div class="tab-pane" data-value="Legend" id="tab-5755-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify3401193">
+#>           <div class="form-group shiny-input-container" id="tipify9671391">
 #>             <div class="material-switch">
 #>               <label for="densityPlot-legend.show" style="padding-right: 10px;">Show Legend</label>
 #>               <input id="densityPlot-legend.show" type="checkbox" checked="checked"/>
 #>               <label class="switch label-success bg-success" for="densityPlot-legend.show"></label>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3401193', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9671391', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify6273660">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify860390">
 #>             <label class="control-label" id="densityPlot-legend.font.family-label" for="densityPlot-legend.font.family">Legend Font</label>
 #>             <div id="densityPlot-legend.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-legend.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6273660', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify860390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8249154">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2404613">
 #>             <label class="control-label" for="densityPlot-legend.font.color">Legend Font Color</label>
 #>             <input id="densityPlot-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8249154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2404613', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify1451154">
+#>           <div class="form-group shiny-input-container" id="tipify6388837">
 #>             <label class="control-label" id="densityPlot-legend.title.size-label" for="densityPlot-legend.title.size">Legend Title Size</label>
 #>             <input id="densityPlot-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1451154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6388837', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9671391">
+#>           <div class="form-group shiny-input-container" id="tipify5033951">
 #>             <label class="control-label" id="densityPlot-legend.text.size-label" for="densityPlot-legend.text.size">Legend Text Size</label>
 #>             <input id="densityPlot-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9671391', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5033951', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-3256-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-5755-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -554,73 +554,73 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify860390">
+#>           <div class="form-group shiny-input-container" id="tipify2505233">
 #>             <label class="control-label" id="densityPlot-margin.t-label" for="densityPlot-margin.t">Margin Top</label>
 #>             <input id="densityPlot-margin.t" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify860390', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2505233', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Top margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify2404613">
+#>           <div class="form-group shiny-input-container" id="tipify9790337">
 #>             <label class="control-label" id="densityPlot-margin.b-label" for="densityPlot-margin.b">Margin Bottom</label>
 #>             <input id="densityPlot-margin.b" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2404613', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6388837">
-#>             <label class="control-label" id="densityPlot-margin.l-label" for="densityPlot-margin.l">Margin Left</label>
-#>             <input id="densityPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6388837', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5033951">
-#>             <label class="control-label" id="densityPlot-margin.r-label" for="densityPlot-margin.r">Margin Right</label>
-#>             <input id="densityPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5033951', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2505233">
-#>             <label class="control-label" for="densityPlot-shape.fill">Shape Fill</label>
-#>             <input id="densityPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2505233', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify9790337">
-#>             <label class="control-label" for="densityPlot-shape.line.color">Shape Line Color</label>
-#>             <input id="densityPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9790337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9790337', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Bottom margin of the plot in pixels'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6565796">
+#>             <label class="control-label" id="densityPlot-margin.l-label" for="densityPlot-margin.l">Margin Left</label>
+#>             <input id="densityPlot-margin.l" type="number" class="shiny-input-number form-control" value="70" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6565796', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Left margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify898489">
+#>             <label class="control-label" id="densityPlot-margin.r-label" for="densityPlot-margin.r">Margin Right</label>
+#>             <input id="densityPlot-margin.r" type="number" class="shiny-input-number form-control" value="90" data-update-on="change" min="0" step="5"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify898489', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Right margin of the plot in pixels'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6305429">
+#>             <label class="control-label" for="densityPlot-shape.fill">Shape Fill</label>
+#>             <input id="densityPlot-shape.fill" type="text" class="form-control shiny-colour-input" data-init-value="rgba(0, 0, 0, 0)" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6305429', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Interior fill color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify8767676">
+#>             <label class="control-label" for="densityPlot-shape.line.color">Shape Line Color</label>
+#>             <input id="densityPlot-shape.line.color" type="text" class="form-control shiny-colour-input" data-init-value="black" data-show-colour="both" data-palette="square" data-allow-alpha="true"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8767676', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline color for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify9302815">
 #>             <label class="control-label" id="densityPlot-shape.line.width-label" for="densityPlot-shape.line.width">Shape Line Width</label>
 #>             <input id="densityPlot-shape.line.width" type="number" class="shiny-input-number form-control" value="4" data-update-on="change" min="0" step="0.25"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6565796', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9302815', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Outline width for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify898489">
+#>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify4194859">
 #>             <label class="control-label" id="densityPlot-shape.linetype-label" for="densityPlot-shape.linetype">Shape Linetype</label>
 #>             <div id="densityPlot-shape.linetype" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>               <script type="application/json" data-for="densityPlot-shape.linetype">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["solid","dot","dash","longdash","dashdot","longdashdot"],"value":["solid","dot","dash","longdash","dashdot","longdashdot"]}},"config":{"multiple":false,"search":false,"selectedValue":"solid","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>             </div>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify898489', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4194859', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line dash style for shapes drawn on the plot using Plotly&#39;s drawing tools'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6305429">
+#>           <div class="form-group shiny-input-container" id="tipify4955599">
 #>             <label class="control-label" id="densityPlot-shape.opacity-label" for="densityPlot-shape.opacity">Shape Opacity</label>
 #>             <input id="densityPlot-shape.opacity" type="number" class="shiny-input-number form-control" value="1" data-update-on="change" min="0" max="1" step="0.01"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6305429', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4955599', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of shapes drawn on the plot, where 0 is fully transparent and 1 is fully opaque'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-3256-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-5755-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -815,119 +815,119 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-3256-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-5755-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify8767676">
+#>           <div class="form-group shiny-input-container" id="tipify3527047">
 #>             <label class="control-label" id="densityPlot-hline.intercepts-label" for="densityPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="densityPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8767676', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9302815">
-#>             <label class="control-label" id="densityPlot-hline.colors-label" for="densityPlot-hline.colors">Y Colors</label>
-#>             <input id="densityPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9302815', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4194859">
-#>             <label class="control-label" id="densityPlot-hline.widths-label" for="densityPlot-hline.widths">Y Widths</label>
-#>             <input id="densityPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4194859', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify4955599">
-#>             <label class="control-label" id="densityPlot-hline.linetypes-label" for="densityPlot-hline.linetypes">Y Line Types</label>
-#>             <input id="densityPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4955599', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify3527047">
-#>             <label class="control-label" id="densityPlot-hline.opacities-label" for="densityPlot-hline.opacities">Y Opacities (0-1)</label>
-#>             <input id="densityPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3527047', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3527047', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2487349">
-#>             <label class="control-label" id="densityPlot-vline.intercepts-label" for="densityPlot-vline.intercepts">X-intercepts</label>
-#>             <input id="densityPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-hline.colors-label" for="densityPlot-hline.colors">Y Colors</label>
+#>             <input id="densityPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2487349', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2487349', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9587279">
-#>             <label class="control-label" id="densityPlot-vline.colors-label" for="densityPlot-vline.colors">X Colors</label>
-#>             <input id="densityPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-hline.widths-label" for="densityPlot-hline.widths">Y Widths</label>
+#>             <input id="densityPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9587279', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9587279', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3599601">
-#>             <label class="control-label" id="densityPlot-vline.widths-label" for="densityPlot-vline.widths">X Widths</label>
-#>             <input id="densityPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-hline.linetypes-label" for="densityPlot-hline.linetypes">Y Line Types</label>
+#>             <input id="densityPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3599601', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3599601', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1989863">
-#>             <label class="control-label" id="densityPlot-vline.linetypes-label" for="densityPlot-vline.linetypes">X Line Types</label>
-#>             <input id="densityPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-hline.opacities-label" for="densityPlot-hline.opacities">Y Opacities (0-1)</label>
+#>             <input id="densityPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1989863', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1989863', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7262853">
-#>             <label class="control-label" id="densityPlot-vline.opacities-label" for="densityPlot-vline.opacities">X Opacities (0-1)</label>
-#>             <input id="densityPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-vline.intercepts-label" for="densityPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="densityPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7262853', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7262853', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1681325">
-#>             <label class="control-label" id="densityPlot-abline.slopes-label" for="densityPlot-abline.slopes">Ab Slopes</label>
-#>             <input id="densityPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-vline.colors-label" for="densityPlot-vline.colors">X Colors</label>
+#>             <input id="densityPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1681325', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1681325', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2264814">
-#>             <label class="control-label" id="densityPlot-abline.intercepts-label" for="densityPlot-abline.intercepts">Ab Y-intercepts</label>
-#>             <input id="densityPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-vline.widths-label" for="densityPlot-vline.widths">X Widths</label>
+#>             <input id="densityPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2264814', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2264814', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8455400">
-#>             <label class="control-label" id="densityPlot-abline.colors-label" for="densityPlot-abline.colors">Ab Colors</label>
-#>             <input id="densityPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-vline.linetypes-label" for="densityPlot-vline.linetypes">X Line Types</label>
+#>             <input id="densityPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8455400', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8455400', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3458536">
-#>             <label class="control-label" id="densityPlot-abline.widths-label" for="densityPlot-abline.widths">Ab Widths</label>
-#>             <input id="densityPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-vline.opacities-label" for="densityPlot-vline.opacities">X Opacities (0-1)</label>
+#>             <input id="densityPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3458536', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3458536', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify673199">
-#>             <label class="control-label" id="densityPlot-abline.linetypes-label" for="densityPlot-abline.linetypes">Ab Line Types</label>
-#>             <input id="densityPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="densityPlot-abline.slopes-label" for="densityPlot-abline.slopes">Ab Slopes</label>
+#>             <input id="densityPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify673199', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify673199', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify270195">
+#>             <label class="control-label" id="densityPlot-abline.intercepts-label" for="densityPlot-abline.intercepts">Ab Y-intercepts</label>
+#>             <input id="densityPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify270195', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify1180446">
+#>             <label class="control-label" id="densityPlot-abline.colors-label" for="densityPlot-abline.colors">Ab Colors</label>
+#>             <input id="densityPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1180446', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify136954">
+#>             <label class="control-label" id="densityPlot-abline.widths-label" for="densityPlot-abline.widths">Ab Widths</label>
+#>             <input id="densityPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify136954', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify7357293">
+#>             <label class="control-label" id="densityPlot-abline.linetypes-label" for="densityPlot-abline.linetypes">Ab Line Types</label>
+#>             <input id="densityPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7357293', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify9239607">
 #>             <label class="control-label" id="densityPlot-abline.opacities-label" for="densityPlot-abline.opacities">Ab Opacities (0-1)</label>
 #>             <input id="densityPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify270195', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9239607', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>

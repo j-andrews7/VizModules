@@ -144,8 +144,17 @@ erroring. This means a typo in a key is silent; double-check key names
 against the help page if a default appears to have no effect.</p>
 </div>
 <div class="section level3">
-<h3 id="reactive-defaults-driving-inputs-from-app-state">Reactive defaults: driving inputs from app state<a class="anchor" aria-label="anchor" href="#reactive-defaults-driving-inputs-from-app-state"></a>
+<h3 id="category-order">Category order<a class="anchor" aria-label="anchor" href="#category-order"></a>
 </h3>
+<p>The <code>BarPlot</code>, <code>BoxPlot</code>, <code>freqPlot</code>
+and <code>yPlot</code> modules take an <code>x.order</code> default, a
+character vector of the x-axis categories in the order to draw them,
+e.g. <code>list(x.data = "department", x.order = c("Sales", "HR"))</code>.
+Categories it leaves out follow in their default order. Users can change
+the order by dragging in the <strong>X Order</strong> (or <strong>Group
+Order</strong>) control, which <strong>Reset</strong> restores to
+<code>x.order</code>. ### Reactive defaults: driving inputs from app
+state</p>
 <p>Sometimes a parameter needs to <em>follow</em> your app rather than
 be fixed once. A common case is a colour mapping that should track a
 column the user has selected elsewhere in the app. For this, any

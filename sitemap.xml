@@ -40,6 +40,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_highlight_styling.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_legend_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_legend_styling.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/apply_level_order.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_plotly_newshape.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_render_margins.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_stat_annotations.html</loc></url>
@@ -116,6 +117,8 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/hide_input.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/index.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/is_pure_type.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/level_order_choices.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/level_order_input.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/linePlot.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/linePlotApp.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/linePlotInputsUI.html</loc></url>
@@ -201,6 +204,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_axis_range.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_group_colors.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/setup_level_order.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_manual_edits.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/show_input.html</loc></url>

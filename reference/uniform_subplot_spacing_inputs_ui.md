@@ -38,14 +38,14 @@ Jared Andrews
 
 ``` r
 uniform_subplot_spacing_inputs_ui(shiny::NS("spacing"), defaults = list(subplot.margin = 0.05))
-#> <div class="form-group shiny-input-container" id="tipify7279052">
+#> <div class="form-group shiny-input-container" id="tipify2433926">
 #>   <label class="control-label" id="spacing-subplot.margin.x-label" for="spacing-subplot.margin.x">Subplot Spacing (Horizontal)</label>
 #>   <input id="spacing-subplot.margin.x" type="number" class="shiny-input-number form-control" value="0.05" data-update-on="change" min="0" max="1" step="0.01"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7279052', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify5457234">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2433926', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Horizontal spacing between facet panel columns as a fraction of the plot area (e.g. 0.03). Only applies when faceting is active.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify2829591">
 #>   <label class="control-label" id="spacing-subplot.margin.y-label" for="spacing-subplot.margin.y">Subplot Spacing (Vertical)</label>
 #>   <input id="spacing-subplot.margin.y" type="number" class="shiny-input-number form-control" value="0.05" data-update-on="change" min="0" max="1" step="0.01"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5457234', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2829591', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Vertical spacing between facet panel rows as a fraction of the plot area (e.g. 0.1). Only applies when faceting is active.'})}, 500)});</script>
 ```

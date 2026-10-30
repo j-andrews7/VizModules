@@ -313,6 +313,51 @@ does it for you by collecting `fields` from all registered backends.
 - [`build_model_row_spec()`](https://j-andrews7.github.io/VizModules/reference/build_model_row_spec.md)
   — auto-build a row_spec from registered model backends
 
+## Category order controls
+
+[`level_order_input()`](https://j-andrews7.github.io/VizModules/reference/level_order_input.md)
+is a drag-and-drop list of a categorical column’s levels, built on
+[`shinyjqui::orderInput()`](https://yang-tang.github.io/shinyjqui/reference/orderInput.html),
+that sets the order they are plotted in. The `BarPlot`, `BoxPlot`,
+`freqPlot` and `yPlot` modules use it for their x-axis; the same three
+helpers add it to a custom module:
+
+``` r
+
+ui <- fluidPage(
+    selectInput("x", "X", c("department", "job_level")),
+    level_order_input("x.order", "X Order",
+        items = level_order_choices(example_demographics, "department")
+    ),
+    plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+    data <- reactive(example_demographics)
+    # Refills the control when the column or data changes, and holds the order to draw.
+    x.order <- setup_level_order(input, session, data, reactive(input$x))
+
+    output$plot <- renderPlot({
+        df <- apply_level_order(data(), input$x, x.order())
+        boxplot(df$salary ~ df[[input$x]], xlab = input$x)
+    })
+}
+
+shinyApp(ui, server)
+```
+
+- [`level_order_choices()`](https://j-andrews7.github.io/VizModules/reference/level_order_choices.md)
+  — the levels of a column in drawing order, optionally reordered;
+  `NULL` for a numeric column or one with more than `max.levels` (20)
+  levels, which hides the control
+- [`setup_level_order()`](https://j-andrews7.github.io/VizModules/reference/setup_level_order.md)
+  — keeps the control in step with its column, restores
+  `defaults$x.order` on Reset, and returns the order to draw (`NULL` for
+  the default)
+- [`apply_level_order()`](https://j-andrews7.github.io/VizModules/reference/apply_level_order.md)
+  — re-levels the column, so the plot, its statistics and their brackets
+  all take the new order
+
 ## Writing Your Own Custom Input
 
 Both widgets above follow the same shape, and it is the one to copy if

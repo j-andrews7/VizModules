@@ -265,6 +265,14 @@ Reusable custom Shiny inputs for use in module UIs.
   : Update a multiColorPicker input on the client
 - [`updateMultiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/updateMultiDynamicInput.md)
   : Update a multiDynamicInput input on the client
+- [`level_order_input()`](https://j-andrews7.github.io/VizModules/reference/level_order_input.md)
+  : Drag-and-drop control for the order of a categorical axis
+- [`level_order_choices()`](https://j-andrews7.github.io/VizModules/reference/level_order_choices.md)
+  : The levels a categorical column is plotted in, optionally reordered
+- [`apply_level_order()`](https://j-andrews7.github.io/VizModules/reference/apply_level_order.md)
+  : Reorder the levels of a categorical column
+- [`setup_level_order()`](https://j-andrews7.github.io/VizModules/reference/setup_level_order.md)
+  : Keep a level-order control in step with its column
 
 ## UI Helpers
 

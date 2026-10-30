@@ -24,6 +24,16 @@ The one where we fix all the wonkiness with extending modules
   [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
   builds these choices.
 
+#### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
+
+- New drag-and-drop **X Order** (**Group Order** for `freqPlot` and
+  `yPlot`) input in the Data tab sets the order of the x-axis
+  categories, with significance brackets following it. Set it in
+  `defaults` as `x.order`, a character vector of levels; any left out
+  follow in their default order. It is not shown for a column with more
+  than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence
+  over it.
+
 #### `DotPlot` and `scatterPlot`
 
 - New **Size Scale Min** and **Size Scale Max** inputs set the **Size
@@ -106,6 +116,13 @@ The one where we fix all the wonkiness with extending modules
     and
     [`apply_facet_subplot_spacing()`](https://j-andrews7.github.io/VizModules/reference/apply_facet_subplot_spacing.md)
     already expect.
+  - Group ordering:
+    [`level_order_input()`](https://j-andrews7.github.io/VizModules/reference/level_order_input.md),
+    [`level_order_choices()`](https://j-andrews7.github.io/VizModules/reference/level_order_choices.md),
+    [`apply_level_order()`](https://j-andrews7.github.io/VizModules/reference/apply_level_order.md)
+    and
+    [`setup_level_order()`](https://j-andrews7.github.io/VizModules/reference/setup_level_order.md)
+    add the same drag-and-drop category ordering to a custom module.
   - Group colours:
     [`default_group_colors()`](https://j-andrews7.github.io/VizModules/reference/default_group_colors.md)
     validates and hex-normalises a colour mapping in `defaults`, and
@@ -208,6 +225,14 @@ The one where we fix all the wonkiness with extending modules
   [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
   limit when X changes.
 
+#### `BoxPlot`
+
+- **Sort X By** now works on a faceted plot, ordering every panel by one
+  order computed over all the data, where faceting used to clear it
+  ([\#372](https://github.com/j-andrews7/VizModules/issues/372)).
+  Significance brackets are now drawn over the sorted order rather than
+  the data’s level order, which put them over the wrong boxes.
+
 #### `ComplexHeatmap`
 
 - The
@@ -251,12 +276,13 @@ The one where we fix all the wonkiness with extending modules
 - “Building Custom Modules” shows the newly exported helpers in use and
   adds the scatter module’s `fig.fn` hook, “Adding a New Module” lists
   the helpers, and “Custom Shiny Inputs” covers `multiple = TRUE` select
-  fields.
+  fields and the category order control.
 - “Custom Model Lines” no longer suggests editing package internals to
   allow GAM smooth terms, which the formula allowlist does not include.
 - The bundled agent skills cover the new inputs (marginals, size scales,
-  trajectories, `linePlot` intervals) and exported helpers. The
-  new-module template builds its Group By choices with
+  trajectories, `linePlot` intervals, category order and `x.order`) and
+  exported helpers. The new-module template builds its Group By choices
+  with
   [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md),
   and its test template now gives
   [`testServer()`](https://rdrr.io/pkg/shiny/man/testServer.html) the
