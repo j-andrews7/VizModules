@@ -241,6 +241,13 @@ The one where we fix all the wonkiness with extending modules
   `InteractiveComplexHeatmap` or `circlize` is not installed, as on
   CRAN’s r-oldrel macOS check machines.
 
+#### `dumbbellPlot` and `linePlot`
+
+- The plotly toolbar now has the shape drawing tools. Both modules
+  already had the **Shape** styling inputs, but no way to draw a shape
+  for them to style
+  ([\#316](https://github.com/j-andrews7/VizModules/issues/316)).
+
 #### `linePlot`
 
 - A line with no **Group By** now takes its colour from the **Plot
