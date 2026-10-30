@@ -131,6 +131,14 @@ All in `R/stat_helper.R`, all exported:
 first factor level at `x = 1`), which is what building the figure with `ggplot2` +
 `ggplotly()` gives you. A figure built another way will place brackets wrongly.
 
+It also takes the x order from the factor levels of the frame it is given. So set any
+reordering — a dragged `x.order` (`apply_level_order()`), a sort key — **on the frame**,
+once, and hand that same frame to the plot, `compute_pairwise_stats()`,
+`create_stat_annotations()` and the headroom. Passing the plot function its own sort
+argument instead (plotthis's `sort_x`) reorders the drawing but not the brackets, which
+then sit over the wrong boxes (#372). `.box_ordered_data()` in the BoxPlot server is the
+worked example.
+
 `plotthis_BoxPlotServer`, `dittoViz_yPlotServer`, and `dittoViz_freqPlotServer` are the
 complete worked examples.
 

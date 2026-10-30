@@ -24,6 +24,7 @@ export(apply_facet_subplot_spacing)
 export(apply_highlight_styling)
 export(apply_legend_inputs)
 export(apply_legend_styling)
+export(apply_level_order)
 export(apply_plotly_newshape)
 export(apply_render_margins)
 export(apply_stat_annotations)
@@ -85,6 +86,8 @@ export(get_model_backend)
 export(heatmap_fit_width)
 export(hide_input)
 export(is_pure_type)
+export(level_order_choices)
+export(level_order_input)
 export(linePlot)
 export(linePlotApp)
 export(linePlotInputsUI)
@@ -169,6 +172,7 @@ export(safe_resolve_adj_fxn)
 export(setup_auto_update_logic)
 export(setup_axis_range)
 export(setup_group_colors)
+export(setup_level_order)
 export(setup_manual_edits)
 export(setup_reactive_defaults)
 export(show_input)
@@ -232,6 +236,7 @@ importFrom(ggplot2,
 )
 importFrom(htmltools,
   attachDependencies,
+  div,
   htmlDependency
 )
 importFrom(htmlwidgets,
@@ -294,7 +299,11 @@ importFrom(shinyWidgets,
   materialSwitch,
   updateMaterialSwitch
 )
-importFrom(shinyjqui,jqui_resizable)
+importFrom(shinyjqui,
+  jqui_resizable,
+  orderInput,
+  updateOrderInput
+)
 importFrom(shinyjs,
   delay,
   hide,

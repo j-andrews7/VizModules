@@ -124,7 +124,8 @@ The following \code{\link[plotthis:BoxPlot]{plotthis::BoxPlot()}} parameters can
 \item \code{y} - Y-axis variable (UI: "Y data", default: 2nd numeric variable)
 \item \code{group_by} - Grouping variable (UI: "Group by", default: "")
 \item \code{flip} - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-\item \code{sort_x} - Sort X-axis by statistic (UI: "Sort X by", default: "")
+\item \code{sort_x} - Sort X-axis by statistic (UI: "Sort X by", default: ""). An expression evaluated once per x
+group over all the data, e.g. \code{mean(salary)}; a faceted plot shares the one order across its panels
 \item \code{y_max} - Maximum Y-axis value (UI: "Max Value of Y Axis", default: calculated)
 \item \code{y_min} - Minimum Y-axis value (UI: "Min Value of Y Axis", default: calculated)
 \item \code{add_point} - Add jitter points (UI: "Add Jitter Points", default: FALSE)
@@ -180,6 +181,9 @@ data, and the Y axis min/max are not applied.
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
 \item \code{boxplot.width} - Width of boxplot (UI: "Boxplot Width", default: 0.8)
+\item \code{x.order} - Order of the X groups (UI: "X Order", drag and drop, default: the column's factor level order,
+else sorted). As a default, a character vector of levels of \code{x.data}; levels it leaves out follow in their
+default order. Ignored while \code{sort_x} is set, and not shown for an X with more than 20 groups
 \item \code{show.outliers} - Show outlier points (UI: "Show Outliers", default: TRUE)
 \item \code{axis.title.font.size} - Axis title font size (UI: "Axis title size", default: 18)
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)

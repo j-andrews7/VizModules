@@ -54,6 +54,27 @@ plotthis_BoxPlotServer("b", data = reactive(example_rnaseq),
 There is no `manual.colors` argument — a fixed colour list would hard-override the picker,
 so the colours could not be edited. Use `defaults = list(color.panel = ...)` instead.
 
+## Seeding the category order
+
+`plotthis_BarPlot`, `plotthis_BoxPlot`, `dittoViz_yPlot` and `dittoViz_freqPlot` take an
+`x.order` entry, the x-axis categories in the order to draw them:
+
+```r
+plotthis_BoxPlotApp(defaults = list(x.data = "department", y.data = "salary", x.order = c("Sales", "HR")))
+```
+
+- Only the levels to move need naming; the rest follow in their default order. Levels the
+  column lacks are ignored, so one order can serve several datasets.
+- It applies to the column the module opens on. Switching to another column starts that
+  one from `x.order` too (ignoring levels it lacks); new data for the same column keeps the
+  order the user dragged into.
+- Reset restores `x.order`. Like any other entry it may be a `reactive()`.
+- It is a no-op for a numeric column, or one with more than 20 levels, where the control
+  is not shown.
+- Rather than reorder factor levels in your data and hope the module keeps them, use
+  `x.order`: it is what the stats brackets and the **Sort X By** precedence on
+  `plotthis_BoxPlot` are wired to.
+
 ## Reactive defaults — the parent-to-child channel
 
 Any single entry may be a `reactive()` or `reactiveVal()`, so the control follows app

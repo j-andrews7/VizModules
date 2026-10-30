@@ -49,6 +49,7 @@ would otherwise cost an extra render. Use them instead of reading the raw input.
 | `setup_auto_update_logic(input, params)` | Returns `isolate_fn`. First line of the generate reactive. | — |
 | `setup_group_colors(input, key, groups, default_palette, defaults, params)` | A `renderUI()`-rebuilt colour picker | `isolate_fn(palette_store())` |
 | `setup_axis_range(input, session, min_key, max_key, headroom, params)` | Axis limits the module computes | `isolate_fn(y_range_store())` |
+| `setup_level_order(input, session, data, column, defaults)` | A `level_order_input()` drag-and-drop category order | `apply_level_order(data(), col, isolate_fn(x_order()))` |
 | `setup_manual_edits(input, session, plot_source)` | Capture dragged legend/annotations/titles | — |
 | `finalize_manual_edits(fig, plot_source, store, session)` | Restore them; last call in `renderPlotly()` | — |
 
@@ -105,6 +106,7 @@ the axis onto the brackets.
 - `add_reference_lines()`, `add_plot_config()`, `apply_render_margins()`, `apply_title_layout()`, `apply_legend_styling()`, `apply_legend_inputs()`, `add_size_legend()` (the circle size legend plotly drops when marker size encodes a column; give it the `limits` and `size.range` of the plot's `ggplot2::scale_size()` so its circles match the points, and `breaks` to choose the values shown), `add_marginal_plots()` (density/histogram/rug marginals for a single-panel figure, given the plotted X and Y values and their groups), `apply_plotly_newshape()`, `axis_titles_as_annotations()`, `create_axis_styles()`, `create_ggplot_axis_style()`, `apply_subplot_axis_styling()`, `apply_facet_subplot_spacing()`, `apply_axis_title_to_annotations()`.
 - `collect_source_data()` / `create_source_download_handler()` — the Source Download button's backing.
 - `hide_input()` / `show_input()` — reflow-aware show/hide.
+- `level_order_input()` / `level_order_choices()` / `setup_level_order()` / `apply_level_order()` — the drag-and-drop **X Order** control. A module with a categorical x axis should offer it as `x.order` at the end of its Data tab, as BarPlot, BoxPlot, yPlot and freqPlot do; see the custom-module skill's `references/custom-inputs.md` for the wiring.
 - `empty_plot()` — placeholder when there is nothing to draw.
 
 ## Annotating individual points

@@ -96,7 +96,8 @@
 #' - `y` - Y-axis variable (UI: "Y data", default: 2nd numeric variable)
 #' - `group_by` - Grouping variable (UI: "Group by", default: "")
 #' - `flip` - Flip/swap the x and y axes (UI: "Rotate (swap X/Y)", default: FALSE)
-#' - `sort_x` - Sort X-axis by statistic (UI: "Sort X by", default: "")
+#' - `sort_x` - Sort X-axis by statistic (UI: "Sort X by", default: ""). An expression evaluated once per x
+#'   group over all the data, e.g. `mean(salary)`; a faceted plot shares the one order across its panels
 #' - `y_max` - Maximum Y-axis value (UI: "Max Value of Y Axis", default: calculated)
 #' - `y_min` - Minimum Y-axis value (UI: "Min Value of Y Axis", default: calculated)
 #' - `add_point` - Add jitter points (UI: "Add Jitter Points", default: FALSE)
@@ -146,6 +147,9 @@
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #'
 #' - `boxplot.width` - Width of boxplot (UI: "Boxplot Width", default: 0.8)
+#' - `x.order` - Order of the X groups (UI: "X Order", drag and drop, default: the column's factor level order,
+#'   else sorted). As a default, a character vector of levels of `x.data`; levels it leaves out follow in their
+#'   default order. Ignored while `sort_x` is set, and not shown for an X with more than 20 groups
 #' - `show.outliers` - Show outlier points (UI: "Show Outliers", default: TRUE)
 #' - `axis.title.font.size` - Axis title font size (UI: "Axis title size", default: 18)
 #' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
@@ -290,7 +294,18 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 "Toggle whether outlier points beyond the whiskers are displayed on the boxplot",
                 placement = "top", options = list(container = "body")
             ),
-            uiOutput(ns("palette.selection"))
+            uiOutput(ns("palette.selection")),
+            level_order_input(ns("x.order"), "X Order",
+                items = level_order_choices(
+                    data,
+                    get_default(defaults, "x.data", cat.choices[2], function(x) x %in% cat.choices),
+                    get_default(defaults, "x.order", NULL, is.character)
+                ),
+                tooltip = paste(
+                    "Drag the X groups into the order to plot them in. Ignored while 'Sort X By' is set.",
+                    "Not shown for an X with more than 20 groups."
+                )
+            )
         ),
         "Adjustments" = tagList(
             tipify(numericInput(ns("boxplot.width"), "Boxplot Width", min = 0, max = 1,

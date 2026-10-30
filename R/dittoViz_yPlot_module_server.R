@@ -231,6 +231,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             default_palette_values, defaults, params
         )
 
+        # The dragged Group Order the plot draws, NULL for the default one.
+        x_order <- setup_level_order(input, session, data, reactive(input$group.by), defaults)
+
         output$palette.selection <- renderUI({
             groups <- palette_groups()
             if (length(groups) == 0) {
@@ -410,7 +413,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 return(NULL)
             }
             ctx <- .yplot_stat_context(
-                data(), input$var, input$var.adjustment, input$var.adj.fxn,
+                apply_level_order(data(), xvar, x_order()), input$var, input$var.adjustment, input$var.adj.fxn,
                 split.by = input$split.by, per.facet = input$stat.per.facet
             )
             if (is.null(ctx)) {
@@ -607,8 +610,12 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             boxgap <- .box_num(isolate_fn(input$boxgap), 0.3)
             boxgroupgap <- .box_num(isolate_fn(input$boxgroupgap), 0.2)
 
+            # The dragged Group Order is set on the frame as factor levels, which
+            # dittoViz keeps and the stats and brackets below read.
+            plot.df <- apply_level_order(data(), isolate_fn(input$group.by), isolate_fn(x_order()))
+
             p <- with_stable_seed(yPlot(
-                data_frame = data(),
+                data_frame = plot.df,
                 var = y.vars,
                 multivar.aes = multivar.aes,
                 multivar.split.dir = isolate_fn(input$multivar.split.dir),
@@ -741,7 +748,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # are measured against (NULL when the adjustment leaves them non-numeric).
             stats.ctx <- if (isTRUE(isolate_fn(input$stats.enabled)) && stats.supported) {
                 .yplot_stat_context(
-                    data(), y.vars, var.adjustment, var.adj.fxn.name,
+                    plot.df, y.vars, var.adjustment, var.adj.fxn.name,
                     split.by = split.by, per.facet = isolate_fn(input$stat.per.facet)
                 )
             }

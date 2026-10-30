@@ -126,6 +126,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # The comparisons on offer for the current x and group.by.
         pair_choices <- function() generate_pair_strings(data(), input$x.data, input$group.by)
 
+        # The dragged x order the plot draws, NULL for the default one.
+        x_order <- setup_level_order(input, session, data, reactive(input$x.data), defaults)
+
         # Update stat comparison pairs when x or group.by changes, selecting any
         # that defaults$stat.pairs names (all pairs are tested when none are).
         observeEvent(c(input$x.data, input$group.by), {
@@ -247,7 +250,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
 
             stat_bracket_headroom(
-                df = data(), x = input$x.data, y = input$y.data,
+                # Measured against the x order drawn, which sets which brackets
+                # can share a level.
+                df = .box_ordered_data(data(), input$x.data, input$sort_x, x_order())$data,
+                x = input$x.data, y = input$y.data,
                 # A numeric group.by is a fill gradient, not a nested grouping,
                 # exactly as the render treats it.
                 group.by = blank_to_null(input$group.by, data(), numeric_is_null = TRUE),
@@ -294,11 +300,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         observeEvent(input$facet.by, {
             toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
-            # Sorting x is not applied to a faceted plot, so clear it rather than
-            # leave a key on screen that does nothing.
-            if (nz_value(input$facet.by)) {
-                updateTextInput(session, "sort_x", value = "")
-            }
         })
 
         generate_BoxPlot <- reactive({
@@ -318,26 +319,21 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 group.by <- isolate_fn(input$group.by)
             }
 
-            # plotthis evaluates sort_x with rlang::parse_expr() inside summarise(),
-            # so the typed text is code, and it has to clear the same AST check as
-            # every other user expression before it gets anywhere near that. Sorting
-            # is not applied while faceted (see the facet.by observer above).
-            sort.x <- NULL
-            sort.text <- isolate_fn(input$sort_x)
-            if (is.null(facet.by) && nz_value(sort.text) && nzchar(trimws(sort.text))) {
-                sort.x <- suppressWarnings(
-                    .validate_expression_with(sort.text, names(data()), .sort_allowed_calls())
+            # The x order -- Sort X By when set, else the dragged X Order -- is set
+            # on the frame itself, so the plot, the tests and the brackets all
+            # read the same one. Faceted, every panel shares it.
+            x.col <- isolate_fn(input$x.data)
+            ordered <- .box_ordered_data(data(), x.col, isolate_fn(input$sort_x), isolate_fn(x_order()))
+            if (!ordered$sort.ok) {
+                showNotification(
+                    paste0(
+                        "'Sort X By' was ignored. Use data columns with basic math and ",
+                        "summary functions only (e.g. 'mean(", isolate_fn(input$y.data), ")')."
+                    ),
+                    type = "warning"
                 )
-                if (is.null(sort.x)) {
-                    showNotification(
-                        paste0(
-                            "'Sort X By' was ignored. Use data columns with basic math and ",
-                            "summary functions only (e.g. 'mean(", isolate_fn(input$y.data), ")')."
-                        ),
-                        type = "warning"
-                    )
-                }
             }
+            df <- ordered$data
             highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
 
             # Convert NA to NULL for facet.ncol and facet.nrow
@@ -360,15 +356,14 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
             # A numeric group.by is not a nesting (the UI only offers categorical
             # columns, but a default can name one); ignore it, as the stats do.
-            if (!is.null(group.by) && is.numeric(data()[[group.by]])) {
+            if (!is.null(group.by) && is.numeric(df[[group.by]])) {
                 group.by <- NULL
             }
             p <- BoxPlot(
-                data = data(),
-                x = isolate_fn(input$x.data),
+                data = df,
+                x = x.col,
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$rotate),
-                sort_x = sort.x,
                 theme = "theme_this",
                 theme_args = theme_args,
                 y_max = y.limits$max,
@@ -424,7 +419,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             if (isolate_fn(input$stats.enabled)) {
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
                 stats_df <- compute_pairwise_stats(
-                    df = data(), x = isolate_fn(input$x.data),
+                    df = df, x = x.col,
                     y = isolate_fn(input$y.data), pairs = stat_pairs,
                     test = isolate_fn(input$stat.test),
                     p.adjust.method = isolate_fn(input$stat.p.adjust),
@@ -442,8 +437,8 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     note_brackets_skipped(session)
                 } else {
                     stat_result <- create_stat_annotations(
-                        stats_df = stats_df, fig = fig, df = data(),
-                        x = isolate_fn(input$x.data), y = isolate_fn(input$y.data),
+                        stats_df = stats_df, fig = fig, df = df,
+                        x = x.col, y = isolate_fn(input$y.data),
                         display = isolate_fn(input$stat.display),
                         hide.ns = isolate_fn(input$stat.hide.ns),
                         sig.threshold = isolate_fn(input$stat.sig.threshold),
@@ -580,4 +575,74 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 #' @keywords internal
 .box_free_y <- function(facet.by, facet.scale) {
     nz_value(facet.by) && isTRUE(facet.scale %in% c("free", "free_y"))
+}
+
+
+#' The box plot's data with its x levels in the order drawn
+#'
+#' A Sort X By key wins over the dragged X Order. Either way the order is set on
+#' the frame as factor levels, which plotthis keeps, and which the tests and
+#' brackets read, so all three agree. The key is evaluated once per x level over
+#' all the data, as [plotthis::BoxPlot()]'s `sort_x` does, so a faceted plot
+#' shares one order across its panels.
+#'
+#' @param df The module's data.
+#' @param x The x column.
+#' @param sort.text The Sort X By text.
+#' @param x.order The dragged order, or `NULL`.
+#'
+#' @return `list(data, sort.ok)`; `sort.ok` is `FALSE` when a non-blank key was
+#'   rejected or could not be evaluated, and was therefore ignored.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_box_ordered_data
+#' @keywords internal
+.box_ordered_data <- function(df, x, sort.text, x.order = NULL) {
+    sort.levels <- NULL
+    sort.ok <- TRUE
+    if (nz_value(sort.text) && nzchar(trimws(sort.text))) {
+        # The typed text is code, so it has to clear the same AST check as every
+        # other user expression before it is evaluated.
+        sort.x <- suppressWarnings(.validate_expression_with(sort.text, names(df), .sort_allowed_calls()))
+        sort.levels <- .box_sort_levels(df, x, sort.x)
+        sort.ok <- !is.null(sort.levels)
+    }
+    list(data = apply_level_order(df, x, sort.levels %__% x.order), sort.ok = sort.ok)
+}
+
+
+#' The x levels ordered by a sort key
+#'
+#' Mirrors [plotthis::BoxPlot()]'s `sort_x`: the key is summarised per x level
+#' and the levels are arranged by it, ascending, ties kept in their default order.
+#'
+#' @param df The module's data.
+#' @param x The x column.
+#' @param sort.x A validated sort expression, or `NULL`.
+#'
+#' @return A character vector of levels, or `NULL` when there is no key or it
+#'   does not give one value per level.
+#'
+#' @importFrom dplyr summarise group_by across all_of
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_box_sort_levels
+#' @keywords internal
+.box_sort_levels <- function(df, x, sort.x) {
+    if (is.null(sort.x) || is.null(df) || !nz_value(x) || !x %in% names(df)) {
+        return(NULL)
+    }
+    expr <- str2lang(sort.x)
+    summ <- tryCatch(
+        suppressWarnings(summarise(
+            group_by(df, across(all_of(x))),
+            .sort_x = !!expr, .groups = "drop"
+        )),
+        error = function(e) NULL
+    )
+    if (is.null(summ) || anyDuplicated(summ[[x]]) || !is.atomic(summ$.sort_x)) {
+        return(NULL)
+    }
+    lv <- as.character(summ[[x]][order(summ$.sort_x, method = "radix")])
+    lv[!is.na(lv)]
 }

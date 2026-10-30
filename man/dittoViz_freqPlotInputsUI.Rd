@@ -76,7 +76,7 @@ summarises internally; use the Source Download button for the table)
 \item \code{color.panel} - Managed internally via the palette selection UI
 \item \code{y.breaks} - Custom continuous-axis breaks (not implemented)
 \item \code{x.labels} - Override group labels (not implemented)
-\item \code{x.reorder} - Reorder x-axis groups (not implemented)
+\item \code{x.reorder} - Reorder x-axis groups (use \code{x.order}, the "Group Order" input, instead)
 \item \code{x.labels.rotate} - Rotate group labels (handled by the Axes tab tick-angle controls)
 \item \code{var.labels.rename} - Rename facet labels (not implemented)
 \item \code{var.labels.reorder} - Reorder facet labels (not implemented)
@@ -142,6 +142,10 @@ categorical variable that is constant within each sample)
 The following parameters implementing new functionality or controlling plotly-specific
 features are also available:
 \itemize{
+\item \code{x.order} - Order of the \code{group.by} groups along the x-axis (UI: "Group Order", drag and drop,
+default: the column's factor level order, else sorted). As a default, a character vector of
+levels of \code{group.by}; levels it leaves out follow in their default order. Not shown for a
+\code{group.by} with more than 20 groups
 \item \code{boxmode} - Always "overlay": the boxes carry explicit x positions matching
 ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{boxgap} - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)

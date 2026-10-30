@@ -8,6 +8,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
+### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
+
+* New drag-and-drop **X Order** (**Group Order** for `freqPlot` and `yPlot`) input in the Data tab sets the order of the x-axis categories, with significance brackets following it. Set it in `defaults` as `x.order`, a character vector of levels; any left out follow in their default order. It is not shown for a column with more than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence over it.
+
 ### `DotPlot` and `scatterPlot`
 
 * New **Size Scale Min** and **Size Scale Max** inputs set the **Size By** values drawn at the smallest and largest sizes, so the size legend can run over round numbers such as 0 to 100 rather than the data's own range (#359, #364). Blank keeps the data's range, values beyond a limit are drawn at that end's size, and both show only while **Size By** is set.
@@ -32,6 +36,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * Exported many helpers for custom module use (#369):
   * Facet titles and spacing: `toggle_facet_title_inputs()` (with `main_title_input_ids`) swaps the main-title inputs for the `facet.title.*` inputs while a plot is faceted, and `uniform_subplot_spacing_inputs_ui()` (with `subplot_spacing_defaults()`) provides the subplot spacing controls that `reset_plotly_inputs()` and `apply_facet_subplot_spacing()` already expect.
+  * Group ordering: `level_order_input()`, `level_order_choices()`, `apply_level_order()` and `setup_level_order()` add the same drag-and-drop category ordering to a custom module.
   * Group colours: `default_group_colors()` validates and hex-normalises a colour mapping in `defaults`, and `reset_group_colors()` restores a group colour picker to it on Reset.
   * Stats tab: `uniform_stats_inputs_ui()`, `reset_stats_inputs()`, `default_stat_pairs()`, `stat_bracket_headroom()`, and `note_brackets_skipped()`.
   * Module server boilerplate: `require_data_frame()`, `nz_value()`, `blank_to_null()`, `na_to_null()`, `facet_check()`, `flatten_palette_options()`, `reset_manual_edits()` and `with_stable_seed()`, which keeps jitter from jumping on every rebuild.
@@ -57,6 +62,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * **Facet By** keeps its `facet_check()` limit when X changes.
 
+### `BoxPlot`
+
+* **Sort X By** now works on a faceted plot, ordering every panel by one order computed over all the data, where faceting used to clear it (#372). Significance brackets are now drawn over the sorted order rather than the data's level order, which put them over the wrong boxes.
+
 ### `ComplexHeatmap`
 
 * The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap` or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
@@ -76,9 +85,9 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ## Documentation
 
-* "Building Custom Modules" shows the newly exported helpers in use and adds the scatter module's `fig.fn` hook, "Adding a New Module" lists the helpers, and "Custom Shiny Inputs" covers `multiple = TRUE` select fields.
+* "Building Custom Modules" shows the newly exported helpers in use and adds the scatter module's `fig.fn` hook, "Adding a New Module" lists the helpers, and "Custom Shiny Inputs" covers `multiple = TRUE` select fields and the category order control.
 * "Custom Model Lines" no longer suggests editing package internals to allow GAM smooth terms, which the formula allowlist does not include.
-* The bundled agent skills cover the new inputs (marginals, size scales, trajectories, `linePlot` intervals) and exported helpers. The new-module template builds its Group By choices with `discrete_choices()`, and its test template now gives `testServer()` the full set of inputs a figure needs, without which its figure test failed.
+* The bundled agent skills cover the new inputs (marginals, size scales, trajectories, `linePlot` intervals, category order and `x.order`) and exported helpers. The new-module template builds its Group By choices with `discrete_choices()`, and its test template now gives `testServer()` the full set of inputs a figure needs, without which its figure test failed.
 
 # VizModules 0.5.0
 

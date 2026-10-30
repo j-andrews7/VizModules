@@ -165,6 +165,10 @@ reference:
       - multiDynamicInput
       - updateMultiColorPicker
       - updateMultiDynamicInput
+      - level_order_input
+      - level_order_choices
+      - apply_level_order
+      - setup_level_order
 
   - title: "UI Helpers"
     desc: >

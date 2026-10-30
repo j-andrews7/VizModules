@@ -99,6 +99,9 @@
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #'
+#' - `x.order` - Order of the X values (UI: "X Order", drag and drop, default: the column's factor level order,
+#'   else sorted). As a default, a character vector of levels of `x.data`; levels it leaves out follow in their
+#'   default order. Not shown for an X with more than 20 values
 #' - `title.font.size` - Plot title font size (UI: "Title Size", default: 26)
 #' - `title.font.family` - Font family for title text (UI: "Title Font", default: "Arial")
 #' - `title.font.color` - Color for plot title (UI: "Title Color", default: "#000000")
@@ -224,7 +227,15 @@ plotthis_BarPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
         tipify(viz_select_input(ns("fill.by"), "Fill By",
         selected = get_default(defaults, "fill.by", "", function(x) x %in% fill.choices),
             choices = fill.choices),
-            documentParameters$fill_by, placement = "top", options = list(container = "body"))
+            documentParameters$fill_by, placement = "top", options = list(container = "body")),
+        level_order_input(ns("x.order"), "X Order",
+            items = level_order_choices(
+                data,
+                get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices),
+                get_default(defaults, "x.order", NULL, is.character)
+            ),
+            tooltip = "Drag the X values into the order to plot them in. Not shown for an X with more than 20 values."
+        )
     ),
 
     "Facet" = tagList(

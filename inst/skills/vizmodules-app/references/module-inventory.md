@@ -29,6 +29,15 @@ uniform across modules** — check the row before writing a key.
 | `ComplexHeatmap_Heatmap` | `ComplexHeatmap::Heatmap` | `matrix.cols` `rowname.col` `row_filter` `column_filter` `row_annotations` `column_annotations` `column_key` `row_split_by` `row_split_cols` `column_split_by` `column_split_cols` | `low_color`/`mid_color`/`high_color` | — |
 | `dittoViz_freqPlot` | `dittoViz::freqPlot` | `var` `sample.by` `group.by` `color.by` `vars.use` `plots` `scale` `max.normalize` `y.min` `y.max` | `palette.colours` | **yes** |
 
+**Category order.** `plotthis_BarPlot`, `plotthis_BoxPlot`, `dittoViz_yPlot` and
+`dittoViz_freqPlot` also take `x.order`: a character vector of the x-axis categories (the
+levels of `x.data`, or of `group.by` on the dittoViz two) in the order to draw them. Levels it
+leaves out follow in their default order, and levels the column lacks are ignored. The user
+reorders them by dragging in the Data tab's **X Order** / **Group Order** control, which is
+not shown for a column with more than 20 levels. On `plotthis_BoxPlot` a **Sort X By**
+(`sort_x`) key such as `"median(salary)"` takes precedence over `x.order`; it orders a
+faceted plot too, with one order shared by every panel.
+
 `ComplexHeatmap_Heatmap` is the odd one out: its output is **not** plotly. It renders
 through `InteractiveComplexHeatmap`, so plotly-specific advice does not apply to it — or
 through `ComplexHeatmap_HeatmapStaticOutputUI()`, a plain `plotOutput()` of the same heatmap

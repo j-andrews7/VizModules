@@ -685,3 +685,25 @@ test_that("the Legend tab hides the legend and sets its font (#360, #362)", {
         )
     }
 })
+
+test_that("the Group Order input sets the x order of the yPlot and its brackets", {
+    levels_rev <- rev(levels(example_demographics$job_level))
+    shiny::testServer(
+        dittoViz_yPlotServer,
+        args = list(id = "yplot", data = shiny::reactive(example_demographics)),
+        {
+            .yplot_settle(session, .yplot_inputs(stats.enabled = TRUE))
+            session$setInputs(x.order = levels_rev)
+            fig <- suppressWarnings(generate_yPlot())
+            expect_equal(.panel_x_orders(fig)[[1]], levels_rev)
+            expect_brackets_within_axes(fig, min.count = 3)
+            # The tests are drawn between the groups they compare.
+            stats_df <- last_stats_df()
+            pos <- function(g) match(g, levels_rev)
+            expected <- lapply(seq_len(nrow(stats_df)), function(i) {
+                as.numeric(sort(c(pos(stats_df$group1[i]), pos(stats_df$group2[i]))))
+            })
+            expect_setequal(.bracket_spans(fig), expected)
+        }
+    )
+})

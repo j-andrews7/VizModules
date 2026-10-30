@@ -606,3 +606,22 @@ test_that("a named palette reaches the fill for every plot type", {
         expect_setequal(fills, unname(pal))
     }
 })
+
+test_that("the Group Order input sets the x order of every freqPlot panel", {
+    df <- .freq_fixture()
+    shiny::testServer(
+        dittoViz_freqPlotServer,
+        args = list(id = "freq", data = shiny::reactive(df)),
+        {
+            do.call(session$setInputs, .freq_inputs())
+            session$flushReact()
+            default <- level_order_choices(df, "condition")
+            session$setInputs(x.order = rev(default))
+            orders <- .panel_x_orders(suppressWarnings(generate_freqPlot()))
+            expect_gt(length(orders), 0)
+            for (o in orders) {
+                expect_equal(o, rev(default))
+            }
+        }
+    )
+})

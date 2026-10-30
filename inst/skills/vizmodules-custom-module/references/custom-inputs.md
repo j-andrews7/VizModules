@@ -1,6 +1,6 @@
-# `multiColorPicker()` and `multiDynamicInput()`
+# `multiColorPicker()`, `multiDynamicInput()` and `level_order_input()`
 
-Both are exported and work in any Shiny app, not just inside a module.
+All three are exported and work in any Shiny app, not just inside a module.
 
 ## `multiColorPicker()`
 
@@ -78,6 +78,51 @@ updateMultiDynamicInput(session, inputId, elements = NULL, clear = FALSE)
 A field may carry a `backend = "<name>"` tag, which hides it unless that model type is
 selected. You rarely write those by hand — `build_model_row_spec()` assembles them from
 the registered model backends.
+
+## `level_order_input()`
+
+A drag-and-drop list of a categorical column's levels (a `shinyjqui::orderInput()`) that
+sets the order they are plotted in — the **X Order** / **Group Order** control of the
+BarPlot, BoxPlot, yPlot and freqPlot modules. It comes with three server-side helpers:
+
+```r
+level_order_input(inputId, label = "X Order", items = NULL, tooltip = NULL, width = "100%")
+level_order_choices(data, column, order = NULL, max.levels = 20)   # items, in drawing order
+setup_level_order(input, session, data, column, defaults = NULL,
+                  inputId = "x.order", max.levels = 20)            # returns a reactiveVal
+apply_level_order(data, column, order)                              # re-levels the column
+```
+
+```r
+# UI
+level_order_input(ns("x.order"), "X Order",
+    items = level_order_choices(data, x.default, get_default(defaults, "x.order", NULL, is.character)))
+
+# Server
+x_order <- setup_level_order(input, session, data, reactive(input$x.data), defaults)
+generate_plot <- reactive({
+    df <- apply_level_order(data(), isolate_fn(input$x.data), isolate_fn(x_order()))
+    # hand df to the plot, the stats AND the brackets
+})
+```
+
+- **Read the store, not `input$x.order`.** `setup_level_order()` refills the control when
+  the column or data changes, restores `defaults$x.order` on `input$reset` (and follows it
+  if it is a `reactive()`), and changes the store only when the order to draw does — so
+  the control reporting its initial value, or echoing an update, costs no extra render.
+  The store holds `NULL` for the default order, which `apply_level_order()` treats as a
+  no-op.
+- **Order the frame, not the plot.** `apply_level_order()` sets factor levels, which
+  plotthis, dittoViz, `compute_pairwise_stats()`, `create_stat_annotations()` and
+  `stat_bracket_headroom()` all read. Give every one of them the same re-levelled frame,
+  or the brackets land over the wrong categories.
+- A column the control cannot order — numeric, or with more than `max.levels` levels —
+  empties it, and an empty control hides its `organize_inputs()` grid cell.
+- It takes one `organize_inputs()` cell at full width (a tagList would be split).
+- Do not pass `orderInput()` a `placeholder`: shinyjqui builds its CSS selector from the
+  raw id, which a module's dotted, namespaced id breaks.
+- A wrapped base module that already has the control (BoxPlot, BarPlot, yPlot, freqPlot)
+  needs nothing from you; set `x.order` through `defaults`.
 
 ## Styling, if you write an input of your own
 

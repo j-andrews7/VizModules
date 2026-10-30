@@ -36,6 +36,7 @@ Audit against this before opening a PR.
 - [ ] `finalize_manual_edits()` is the last thing `renderPlotly()` does.
 - [ ] `freezeReactiveValue()` immediately before every `update*Input()` on the module's own inputs, inside the same `if` branch.
 - [ ] `renderUI()`-rebuilt inputs use a server-side store (`setup_group_colors()`, `setup_axis_range()`), not a freeze.
+- [ ] A categorical x axis offers an `x.order` `level_order_input()` wired with `setup_level_order()`, and the re-levelled frame from `apply_level_order()` feeds the plot, the stats and the brackets alike.
 - [ ] No catch-all `tryCatch()` around `renderPlotly()`.
 - [ ] `hide.inputs` / `hide.tabs` applied inside `observeEvent(data(), delay(100, ...))`, not once at init.
 - [ ] A reset observer that covers every input, calling each `reset_*_inputs()` counterpart you used.

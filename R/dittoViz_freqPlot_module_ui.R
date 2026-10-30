@@ -237,7 +237,7 @@
 #' - `color.panel` - Managed internally via the palette selection UI
 #' - `y.breaks` - Custom continuous-axis breaks (not implemented)
 #' - `x.labels` - Override group labels (not implemented)
-#' - `x.reorder` - Reorder x-axis groups (not implemented)
+#' - `x.reorder` - Reorder x-axis groups (use `x.order`, the "Group Order" input, instead)
 #' - `x.labels.rotate` - Rotate group labels (handled by the Axes tab tick-angle controls)
 #' - `var.labels.rename` - Rename facet labels (not implemented)
 #' - `var.labels.reorder` - Reorder facet labels (not implemented)
@@ -297,6 +297,10 @@
 #' The following parameters implementing new functionality or controlling plotly-specific
 #' features are also available:
 #'
+#' - `x.order` - Order of the `group.by` groups along the x-axis (UI: "Group Order", drag and drop,
+#'   default: the column's factor level order, else sorted). As a default, a character vector of
+#'   levels of `group.by`; levels it leaves out follow in their default order. Not shown for a
+#'   `group.by` with more than 20 groups
 #' - `boxmode` - Always "overlay": the boxes carry explicit x positions matching
 #'   ggplot's dodge, so plotly.js is not asked to dodge them
 #' - `boxgap` - Boxplot position dodge (UI: "Boxplot Position Dodge", default: 0.3)
@@ -521,7 +525,14 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 placement = "top", options = list(container = "body")
             ),
             helpText("Order not currently respected"),
-            uiOutput(ns("palette.selection"))
+            uiOutput(ns("palette.selection")),
+            level_order_input(ns("x.order"), "Group Order",
+                items = level_order_choices(data, group.default, get_default(defaults, "x.order", NULL, is.character)),
+                tooltip = paste(
+                    "Drag the Group By groups into the order to plot them along the x-axis.",
+                    "Not shown for a Group By with more than 20 groups."
+                )
+            )
         ),
         "Scale" = tagList(
             tipify(

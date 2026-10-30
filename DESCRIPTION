@@ -34,7 +34,7 @@ Imports:
     readxl,
     shinyjs,
     scales,
-    shinyjqui,
+    shinyjqui (>= 0.4.0),
     ggplot2,
     htmltools,
     jsonlite,

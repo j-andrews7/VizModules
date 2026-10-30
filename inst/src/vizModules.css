@@ -34,6 +34,21 @@
   box-sizing: border-box;
 }
 
+/* The drag-to-order control built by level_order_input() lists a column's
+ * levels as a row of buttons, so it gets a row of its own. With nothing to
+ * order (a numeric column, or too many levels to drag) the server empties it,
+ * and the empty control takes its cell off screen rather than leave a bare
+ * label. An inline display set by hide_input() still wins over both.
+ */
+.vizmodules-input-cell:has(.vizmodules-level-order) {
+  flex-basis: 100%;
+  max-width: 100%;
+}
+
+.vizmodules-input-cell:has(.jqui-orderInput:empty) {
+  display: none;
+}
+
 /* A module's control tabset carries seven tabs (Data, Facet, Aesthetics,
  * Legend, Plotly, Axes, Lines), which do not fit one row in a narrow sidebar.
  * Both Bootstrap 3 (floats) and Bootstrap 5 (.nav sets flex-wrap: wrap) already

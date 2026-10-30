@@ -80,7 +80,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             df <- data()
             req(df)
             .freq_summary(
-                df,
+                apply_level_order(df, input$group.by, x_order()),
                 var = input$var %__% "",
                 sample.by = blank_to_null(input$sample.by),
                 group.by = input$group.by %__% "",
@@ -287,6 +287,9 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             input, "palette.colours", palette_groups,
             default_palette_values, defaults, params
         )
+
+        # The dragged Group Order the plot draws, NULL for the default one.
+        x_order <- setup_level_order(input, session, data, reactive(input$group.by), defaults)
 
         output$palette.selection <- renderUI({
             groups <- palette_groups()
@@ -521,6 +524,9 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
             df <- data()
             req(df, var.col %in% names(df), group.col %in% names(df))
+            # The dragged Group Order is set on the frame as factor levels, which
+            # freqPlot() keeps through its summary, so the stats read it too.
+            df <- apply_level_order(df, group.col, isolate_fn(x_order()))
 
             # The frame the plot is drawn from, recomputed here from isolated values
             # so an "Auto Update" pause holds this build too.

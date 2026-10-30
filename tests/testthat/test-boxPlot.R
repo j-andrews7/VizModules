@@ -73,6 +73,64 @@ test_that("Sort X By never evaluates code", {
     )
 })
 
+test_that("Sort X By orders every facet panel by one global order (#372)", {
+    cleared <- FALSE
+    local_mocked_bindings(updateTextInput = function(session, inputId, ...) {
+        if (identical(inputId, "sort_x")) cleared <<- TRUE
+        invisible(NULL)
+    })
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics)),
+        {
+            do.call(session$setInputs, .box_inputs(sort_x = "median(salary)"))
+            suppressWarnings(session$flushReact())
+            session$setInputs(facet.by = "gender")
+            suppressWarnings(session$flushReact())
+            # Faceting used to clear the sort key.
+            expect_false(cleared)
+
+            medians <- tapply(example_demographics$salary, example_demographics$department, median)
+            orders <- .panel_x_orders(suppressWarnings(generate_BoxPlot()))
+            expect_gt(length(orders), 0)
+            for (o in orders) {
+                expect_equal(o, names(sort(medians)))
+            }
+        }
+    )
+})
+
+test_that("the X Order input sets the x order, and Sort X By wins over it", {
+    dept <- rev(levels(example_demographics$department))
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics)),
+        {
+            suppressWarnings(do.call(session$setInputs, .box_inputs()))
+            session$setInputs(x.order = dept)
+            expect_equal(.box_x_order(suppressWarnings(generate_BoxPlot())), dept)
+
+            session$setInputs(sort_x = "median(salary)")
+            medians <- tapply(example_demographics$salary, example_demographics$department, median)
+            expect_equal(.box_x_order(suppressWarnings(generate_BoxPlot())), names(sort(medians)))
+        }
+    )
+})
+
+test_that(".box_ordered_data rejects a bad sort key and falls back to the X Order", {
+    df <- example_demographics
+    out <- .box_ordered_data(df, "department", "system('echo')", c("Sales", "HR"))
+    expect_false(out$sort.ok)
+    expect_equal(head(levels(out$data$department), 2), c("Sales", "HR"))
+
+    out <- .box_ordered_data(df, "department", "", NULL)
+    expect_true(out$sort.ok)
+    expect_identical(out$data, df)
+
+    # A key that gives more than one value per category cannot order them.
+    expect_null(.box_sort_levels(df, "department", "salary"))
+})
+
 test_that("turning statistics off drops them from the source download", {
     shiny::testServer(
         plotthis_BoxPlotServer,
@@ -305,4 +363,48 @@ test_that("BoxPlot Group By leaves out categoricals with too many levels", {
     # An explicit default naming the wide column is honoured.
     html <- as.character(plotthis_BoxPlotInputsUI("box", df, defaults = list(group.by = "id")))
     expect_true("id" %in% .select_choices(html, "box-group.by"))
+})
+
+test_that("significance brackets follow the sorted x order, faceted or not (#372)", {
+    set.seed(11)
+    df <- data.frame(
+        grp = rep(c("A", "B", "C"), each = 20, times = 2),
+        panel = rep(c("p1", "p2"), each = 60),
+        value = rep(c(a <- rnorm(20, 10), a, rnorm(20, 50)), 2),
+        stringsAsFactors = FALSE
+    )
+    for (facet in c("", "panel")) {
+        # Sorted C, B, A: C is compared with both others, so it is at one end of
+        # every significant bracket. In the unsorted order it would be at 3.
+        out <- .box_stats_figure(df, .box_inputs(
+            x.data = "grp", y.data = "value", facet.by = facet, sort_x = "-median(value)",
+            stats.enabled = TRUE, stat.hide.ns = TRUE, y.min = NA
+        ))
+        for (o in .panel_x_orders(out$fig)) {
+            expect_equal(o, c("C", "A", "B"), info = facet)
+        }
+        expect_brackets_within_axes(out$fig, min.count = 2)
+        spans <- .bracket_spans(out$fig)
+        expect_gte(length(spans), 2)
+        for (s in spans) {
+            expect_equal(s[1], 1, info = facet)
+        }
+    }
+})
+
+test_that("the X Order input sets the x order of the BarPlot", {
+    shiny::testServer(
+        plotthis_BarPlotServer,
+        args = list(id = "bar", data = shiny::reactive(example_bar)),
+        {
+            suppressWarnings(do.call(session$setInputs, .box_inputs(
+                x.data = "Group", y.data = "Values", fill.by = "", width = 0.9, alpha = 1,
+                expand = "", palreverse = FALSE, lower.quantile = 0, upper.quantile = 1,
+                lower.cutoff = NA, upper.cutoff = NA
+            )))
+            groups <- rev(sort(unique(example_bar$Group)))
+            session$setInputs(x.order = groups)
+            expect_equal(.panel_x_orders(suppressWarnings(generate_BarPlot()))[[1]], groups)
+        }
+    )
 })

@@ -130,6 +130,9 @@ The following \code{\link[plotthis:BarPlot]{plotthis::BarPlot()}} parameters can
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
+\item \code{x.order} - Order of the X values (UI: "X Order", drag and drop, default: the column's factor level order,
+else sorted). As a default, a character vector of levels of \code{x.data}; levels it leaves out follow in their
+default order. Not shown for an X with more than 20 values
 \item \code{title.font.size} - Plot title font size (UI: "Title Size", default: 26)
 \item \code{title.font.family} - Font family for title text (UI: "Title Font", default: "Arial")
 \item \code{title.font.color} - Color for plot title (UI: "Title Color", default: "#000000")

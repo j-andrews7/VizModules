@@ -119,6 +119,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             default_palette_values, defaults, params
         )
 
+        # The dragged x order the plot draws, NULL for the default one.
+        x_order <- setup_level_order(input, session, data, reactive(input$x.data), defaults)
+
         output$palette.selection <- renderUI({
             if (fill_numeric()) {
                 palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
@@ -360,7 +363,7 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             theme_args <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
 
             p <- BarPlot(
-                data(),
+                apply_level_order(data(), isolate_fn(input$x.data), isolate_fn(x_order())),
                 x = isolate_fn(input$x.data),
                 y = isolate_fn(input$y.data),
                 flip = isolate_fn(input$rotate),
