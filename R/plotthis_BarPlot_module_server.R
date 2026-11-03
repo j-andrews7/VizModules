@@ -279,7 +279,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
-        })
+            # Just after setup_axis_range()'s observer and before the render, so the
+            # plot draws once with the new column's limits rather than the old ones.
+        }, priority = 999)
 
 
         observeEvent(input$facet.by, {

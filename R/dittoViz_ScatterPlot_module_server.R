@@ -605,7 +605,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # that side so it regenerates for the new variable (position still persists).
             # Runs before finalize_manual_edits() in the same render pass.
             cur_by <- list(x = isolate_fn(input$x.by), y = isolate_fn(input$y.by))
-            prev_by <- last_axis_by()
+            # Isolated: the write below must not invalidate this reactive.
+            prev_by <- isolate(last_axis_by())
             if (!identical(cur_by, prev_by)) {
                 if (is.null(prev_by) || !identical(cur_by$x, prev_by$x)) {
                     reset_axis_title_text(edit_store, "axis:x")

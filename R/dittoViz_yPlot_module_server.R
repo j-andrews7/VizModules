@@ -456,7 +456,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
-        })
+            # Just after setup_axis_range()'s observer and before the render, so the
+            # plot draws once with the new column's limits rather than the old ones.
+        }, priority = 999)
 
         # Mirrors the facet.cols resolution in generate_yPlot(): several Y variables
         # split into panels of their own even with no split.by set.
@@ -580,7 +582,8 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 multivar.aes = if (multivar) multivar.aes else NULL,
                 ridge = "ridgeplot" %in% isolate_fn(input$plots)
             )
-            if (!identical(axis_vars, last_axis_vars())) {
+            # Isolated: the write below must not invalidate this reactive.
+            if (!identical(axis_vars, isolate(last_axis_vars()))) {
                 reset_axis_title_text(edit_store)
                 last_axis_vars(axis_vars)
             }

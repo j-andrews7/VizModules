@@ -370,7 +370,10 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                     updateNumericInput(session, "y.max", value = y_range$max)
                     updateNumericInput(session, "y.min", value = y_range$min)
                 }
-            }
+            },
+            # Just after setup_axis_range()'s observer and before the render, so the
+            # plot draws once with the new limits rather than the old ones.
+            priority = 999
         )
 
         # ---- Reset ---------------------------------------------------------------
@@ -572,7 +575,8 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 max.normalize = max.normalize,
                 ridge = "ridgeplot" %in% isolate_fn(input$plots)
             )
-            if (!identical(axis_vars, last_axis_vars())) {
+            # Isolated: the write below must not invalidate this reactive.
+            if (!identical(axis_vars, isolate(last_axis_vars()))) {
                 reset_axis_title_text(edit_store)
                 last_axis_vars(axis_vars)
             }

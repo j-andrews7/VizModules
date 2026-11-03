@@ -343,7 +343,8 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
             # When the x or y variable changes, drop any persisted manual title text for
             # that side so it regenerates for the new variable (position still persists).
             cur_val <- list(x = x_input, y = y_input)
-            prev_val <- last_axis_val()
+            # Isolated: the write below must not invalidate this reactive.
+            prev_val <- isolate(last_axis_val())
             if (!identical(cur_val, prev_val)) {
                 if (is.null(prev_val) || !identical(cur_val$x, prev_val$x)) {
                     reset_axis_title_text(edit_store, "axis:x")
