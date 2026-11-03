@@ -306,7 +306,10 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             }
         }, ignoreInit = FALSE)
 
-        generate_BarPlot <- reactive({
+        # The plot itself: everything that changes what is drawn. It is cached
+        # (see .cache_structure()), so it must have no side effects; the styling
+        # inputs are applied to it in generate_BarPlot().
+        base_BarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
 
             # Resolved server-side, so the echo of a limit just set costs no rebuild.
@@ -402,51 +405,19 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
             }
 
-            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.95, title_x = isolate_fn(input$axis.title.horizontal.position))
+            list(fig = .ensure_built(fig), facet.by = facet.by)
+        })
+        base_BarPlot <- .cache_structure(
+            base_BarPlot, input, session, data,
+            extra = function() list(y_range_store(), palette_groups(), palette_store(), x_order()),
+            params = params, output_id = "BarPlot"
+        )
 
-            # Apply axis styling to all subplot axes (handles faceting)
-            # Disable plotly borders since we're handling them through ggplot theme_args
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
-
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            # Add reference lines
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
-
-            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
-            fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
-
-            # Apply the uniform legend visibility and font inputs
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
-
-            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- axis_titles_as_annotations(fig)
-
-            return(fig)
+        # The plot, styled: titles, fonts, axes, reference lines and legend.
+        generate_BarPlot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_BarPlot()
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.95)
         })
 
         # Render the plot output

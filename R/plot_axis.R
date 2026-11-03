@@ -19,6 +19,9 @@
 #' call (such as a range raised by [apply_stat_annotations()]) is not reverted
 #' at build time.
 #'
+#' Axes recorded as belonging to overlay panels drawn beside the plot, such as
+#' the marginal distributions [add_marginal_plots()] adds, are left alone.
+#'
 #' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
@@ -54,6 +57,12 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
     if (length(yaxis_names) == 0) {
         yaxis_names <- "yaxis"
     }
+
+    # Axes of overlay panels drawn beside the plot (marginal distributions) keep
+    # the styling they were drawn with.
+    overlay <- fig$x$.vizmodules_overlay_axes
+    xaxis_names <- setdiff(xaxis_names, overlay)
+    yaxis_names <- setdiff(yaxis_names, overlay)
 
     # Build a list of layout updates. Only the styling is queued: plotly_build()
     # merges queued updates recursively into the existing axis, so its other

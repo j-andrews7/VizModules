@@ -117,11 +117,7 @@ add_hlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetype
 
     # Extract unique axis pairs from traces
     # Each trace has xaxis (e.g., "x", "x2") and yaxis (e.g., "y", "y2") attributes
-    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
-        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
-        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
-        list(x = xaxis, y = yaxis)
-    }))
+    axis_pairs <- .reference_axis_pairs(fig)
 
     # If no traces found, default to main axes
     if (length(axis_pairs) == 0) {
@@ -188,11 +184,7 @@ add_vlines <- function(fig, intercepts, colors = "#000000", widths = 1, linetype
     opacities <- recycle_line_style(opacities, n, 1)
 
     # Extract unique axis pairs from traces
-    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
-        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
-        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
-        list(x = xaxis, y = yaxis)
-    }))
+    axis_pairs <- .reference_axis_pairs(fig)
 
     # If no traces found, default to main axes
     if (length(axis_pairs) == 0) {
@@ -268,11 +260,7 @@ add_ablines <- function(fig, slopes, intercepts, colors = "#000000", widths = 1,
     opacities <- recycle_line_style(opacities, n, 1)
 
     # Extract unique axis pairs from traces
-    axis_pairs <- unique(lapply(fig$x$data, function(tr) {
-        xaxis <- if (is.null(tr$xaxis)) "x" else tr$xaxis
-        yaxis <- if (is.null(tr$yaxis)) "y" else tr$yaxis
-        list(x = xaxis, y = yaxis)
-    }))
+    axis_pairs <- .reference_axis_pairs(fig)
 
     # If no traces found, default to main axes
     if (length(axis_pairs) == 0) {
@@ -480,4 +468,28 @@ apply_plotly_newshape <- function(fig, input, isolate_fn = isolate) {
             opacity = isolate_fn(input$shape.opacity)
         )
     )
+}
+
+
+#' The axis pairs reference lines are drawn on
+#'
+#' One per panel the figure's traces are drawn on, skipping overlay panels
+#' drawn beside the plot (marginal distributions; see [add_marginal_plots()]),
+#' whose axes measure something else.
+#'
+#' @param fig A plotly figure.
+#' @return A list of `list(x = , y = )` axis references, such as `list(x = "x2", y = "y2")`.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_reference_axis_pairs
+#' @keywords internal
+.reference_axis_pairs <- function(fig) {
+    overlay <- fig$x$.vizmodules_overlay_axes
+    pairs <- lapply(fig$x$data, function(tr) {
+        list(x = tr$xaxis %||% "x", y = tr$yaxis %||% "y")
+    })
+    pairs <- Filter(function(p) {
+        !any(.axis_layout_name(c(p$x, p$y)) %in% overlay)
+    }, pairs)
+    unique(pairs)
 }

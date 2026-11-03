@@ -43,7 +43,7 @@
 #' @return `NULL` when `defaults` holds no reactive entries, in which case
 #'   modules behave exactly as they did before. Otherwise a list with two
 #'   functions, `has(key)` and `get(key)`, for [setup_auto_update_logic()] to
-#'   read.
+#'   read, and `keys`, the input ids the store backs.
 #'
 #' @seealso [setup_auto_update_logic()], [get_default()]
 #'
@@ -111,7 +111,8 @@ setup_reactive_defaults <- function(defaults, input, session) {
 
     list(
         has = function(key) key %in% keys,
-        get = function(key) store[[key]]
+        get = function(key) store[[key]],
+        keys = keys
     )
 }
 

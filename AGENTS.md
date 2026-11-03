@@ -106,7 +106,7 @@ You do not need to specifically lint.
 ### Dependencies
 DESCRIPTION is the source of truth; this is a summary.
 
-**Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (>= 0.13.0), R (>= 4.5) | **Imports**: colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, zip | **Suggests**: drc, withr, ComplexHeatmap, InteractiveComplexHeatmap, circlize, grid, svglite, knitr, rmarkdown, testthat (>= 3.0.0)
+**Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (>= 0.13.0), R (>= 4.5) | **Imports**: colourpicker, dplyr, DT, readxl, shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets, htmlwidgets, rlang, zip | **Suggests**: drc, withr, ComplexHeatmap, InteractiveComplexHeatmap, circlize, grid, svglite, knitr, rmarkdown, testthat (>= 3.0.0)
 
 Anything in Suggests must be reached through `requireNamespace(..., quietly = TRUE)` with a working fallback, and any `@examples` touching one must be wrapped in that check — a check machine may not have the Bioconductor packages.
 
