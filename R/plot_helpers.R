@@ -562,6 +562,34 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 }
 
 
+#' Build a plotly figure unless it is already built
+#'
+#' [plotly::plotly_build()] is idempotent, but not free: every call re-runs its
+#' verification passes over all traces, and the post-processing helpers each
+#' need a built figure to read. A figure built here is marked, and building it
+#' again is skipped while nothing has been queued on it since (no `layout()`
+#' updates in `layoutAttrs`, no unevaluated traces in `attrs`). Direct writes to
+#' `fig$x$data` or `fig$x$layout` need no build, so they keep the mark.
+#'
+#' @param fig A plotly figure object.
+#' @return The built figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_ensure_built
+.ensure_built <- function(fig) {
+    x <- fig$x
+    queued <- length(x$layoutAttrs) > 0 ||
+        !all(vapply(x$attrs, inherits, logical(1), what = "plotly_eval"))
+    if (isTRUE(x$.vizmodules_built) && !queued) {
+        return(fig)
+    }
+    fig <- plotly::plotly_build(fig)
+    fig$x$.vizmodules_built <- TRUE
+    fig
+}
+
+
 #' Forward colorbar drag events to a Shiny input
 #'
 #' Continuous-colour legends (colorbars) live on a trace's marker, so dragging

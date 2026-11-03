@@ -132,8 +132,8 @@ axis_titles_as_annotations <- function(fig) {
     }
 
     # Build so that titles set via layout() (held in layoutAttrs) are
-    # consolidated into fig$x$layout. Idempotent for already-built figures.
-    fig <- plotly::plotly_build(fig)
+    # consolidated into fig$x$layout. Skipped when nothing is queued.
+    fig <- .ensure_built(fig)
 
     if (is.null(fig$x) || is.null(fig$x$layout)) {
         return(fig)

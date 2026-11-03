@@ -139,7 +139,7 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
     # does not hide one, and ggplotly draws each on a dummy trace of its own.
     draws_colorbar <- function(x) is.list(x) && (!is.null(x$colorbar) || isTRUE(x$showscale))
 
-    fig <- plotly::plotly_build(fig)
+    fig <- .ensure_built(fig)
 
     traces <- fig$x$data
     if (!is.null(traces) && length(traces) > 0L) {
@@ -391,7 +391,7 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
     # instead would defer the annotations into layoutAttrs, which any later
     # plotly_build() call (e.g. apply_legend_styling(),
     # axis_titles_as_annotations()) re-merges, duplicating every annotation.
-    fig <- plotly::plotly_build(fig)
+    fig <- .ensure_built(fig)
 
     # Size each circle as the plot sizes its break, on ggplot2's area scale
     # (scale_size(), which plotthis and dittoViz both use): from the scale's own
@@ -550,7 +550,7 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
 #' @keywords internal
 #' @rdname INTERNAL_extract_marker_sizes
 .extract_marker_sizes <- function(fig) {
-    built <- tryCatch(plotly::plotly_build(fig), error = function(e) NULL)
+    built <- tryCatch(.ensure_built(fig), error = function(e) NULL)
     if (is.null(built) || is.null(built$x$data)) {
         return(numeric(0))
     }

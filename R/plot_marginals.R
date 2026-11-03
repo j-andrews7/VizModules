@@ -85,7 +85,7 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
         return(fig)
     }
 
-    fig <- plotly::plotly_build(fig)
+    fig <- .ensure_built(fig)
 
     if (is.null(groups)) {
         groups <- factor(rep("", length(x)))
