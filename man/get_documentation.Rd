@@ -13,9 +13,9 @@ which function's documentation to parse.}
 \item{type}{The type of documentation section to extract. Currently only
 "param" is supported.}
 
-\item{selected}{A list of parameter names to extract. Note that co-documented
-parameters (e.g., \code{x.by} and \code{y.by}) should be grouped together in a vector
-within the list or an error will be thrown by \code{extract_roc_text}.}
+\item{selected}{A list of parameter names to extract. Co-documented
+parameters (e.g., \code{x.by} and \code{y.by}) can be grouped together in a vector
+within the list; each name gets the shared description.}
 
 \item{cap}{Logical; if TRUE, capitalize the first letter of each description.}
 }
@@ -25,8 +25,18 @@ their documentation strings. Returns empty strings for parameters
 not found in the documentation.
 }
 \description{
-Parses the Rd documentation for a given function and extracts
-parameter descriptions for specified parameter names.
+Reads the help page of a function and returns the descriptions of the
+parameters asked for, as plain text suitable for UI tooltips. Code is set in
+backticks and other Rd markup is reduced to its text.
+}
+\details{
+Each package's help pages are read once per R session and kept, so building
+a module's UI again (another tab, another dataset, another Figure Builder
+panel) costs nothing. A package loaded with \code{pkgload::load_all()} is read
+from its source \verb{man/} directory, so its own, current docs are used.
+}
+\examples{
+get_documentation("stats::lm", selected = list("formula", "data"), cap = TRUE)
 }
 \author{
 Jacob Martin, Jared Andrews

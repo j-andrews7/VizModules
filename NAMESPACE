@@ -264,7 +264,6 @@ importFrom(plotthis,
   SplitBarPlot
 )
 importFrom(readxl,read_excel)
-importFrom(roclang,extract_roc_text)
 importFrom(scales,
   brewer_pal,
   hue_pal,

@@ -479,7 +479,9 @@ setup_group_colors <- function(input, key, groups, default_palette = NULL,
             levels, selected, default_palette,
             default_group_colors(defaults, key)
         ))
-    })
+        # Ahead of the plot's render, so a change reaches it in the same flush
+        # rather than after it has already drawn with the previous colours.
+    }, priority = 1000)
 
     store
 }
@@ -576,7 +578,9 @@ setup_axis_range <- function(input, session, min_key = "y.min", max_key = "y.max
         if (!.same_axis_range(isolate(store()), new)) {
             store(new)
         }
-    })
+        # Ahead of the plot's render, so a new limit reaches it in the same flush
+        # rather than after it has already drawn with the previous one.
+    }, priority = 1000)
 
     store
 }
@@ -1188,53 +1192,195 @@ validate_expression <- function(expr_text, col_names) {
 
 #' Extract parameter documentation from an R function help page
 #'
-#' Parses the Rd documentation for a given function and extracts
-#' parameter descriptions for specified parameter names.
+#' Reads the help page of a function and returns the descriptions of the
+#' parameters asked for, as plain text suitable for UI tooltips. Code is set in
+#' backticks and other Rd markup is reduced to its text.
+#'
+#' Each package's help pages are read once per R session and kept, so building
+#' a module's UI again (another tab, another dataset, another Figure Builder
+#' panel) costs nothing. A package loaded with `pkgload::load_all()` is read
+#' from its source `man/` directory, so its own, current docs are used.
 #'
 #' @param package_name A string in the format "package::function" indicating
 #'   which function's documentation to parse.
 #' @param type The type of documentation section to extract. Currently only
 #'   "param" is supported.
-#' @param selected A list of parameter names to extract. Note that co-documented
-#'   parameters (e.g., `x.by` and `y.by`) should be grouped together in a vector
-#'   within the list or an error will be thrown by `extract_roc_text`.
+#' @param selected A list of parameter names to extract. Co-documented
+#'   parameters (e.g., `x.by` and `y.by`) can be grouped together in a vector
+#'   within the list; each name gets the shared description.
 #' @param cap Logical; if TRUE, capitalize the first letter of each description.
 #'
 #' @return A named list where names are parameter names and values are
 #'   their documentation strings. Returns empty strings for parameters
 #'   not found in the documentation.
 #'
-#' @importFrom roclang extract_roc_text
-#' 
 #' @author Jacob Martin, Jared Andrews
 #' @export
+#' @examples
+#' get_documentation("stats::lm", selected = list("formula", "data"), cap = TRUE)
 get_documentation <- function(package_name, type = "param", selected = NULL, cap = FALSE) {
-    docs <- lapply(selected, function(s) {
-        doc <- tryCatch(
-            extract_roc_text(package_name, type = type, select = s, capitalize = cap),
-            error = function(e) NA_character_
-        )
-
-        if (length(doc) == 0 || all(is.na(doc))) {
-            return("")
-        }
-
-        doc |>
-            gsub("\\\\n", " ", x = _) |>
-            gsub("\\\\", "", x = _) |>
-            gsub("code\\{([^}]+)\\}", "`\\1`", x = _) |>
-            gsub("\n", " ", x = _) |>
-            trimws(x = _)
-    })
+    type <- match.arg(type)
+    parts <- strsplit(package_name, "::", fixed = TRUE)[[1]]
+    params <- if (length(parts) == 2) {
+        tryCatch(.rd_params(parts[[1]], parts[[2]]), error = function(e) character(0))
+    } else {
+        character(0)
+    }
 
     # Expand co-documented parameters (e.g., c("x.by", "y.by")) into
     # separate named elements sharing the same documentation string.
     result <- list()
-    for (i in seq_along(selected)) {
-        param_names <- selected[[i]]
-        for (nm in param_names) {
-            result[[nm]] <- docs[[i]]
+    for (s in selected) {
+        found <- intersect(s, names(params))
+        doc <- if (length(found)) params[[found[[1]]]] else ""
+        if (isTRUE(cap) && nzchar(doc)) {
+            doc <- paste0(toupper(substring(doc, 1, 1)), substring(doc, 2))
+        }
+        for (nm in s) {
+            result[[nm]] <- doc
         }
     }
     result
+}
+
+# Parsed help pages, keyed by package, then by function.
+.rd_cache <- new.env(parent = emptyenv())
+
+#' Parameter descriptions from a function's help page
+#'
+#' @param pkg,fn Package and function (or any alias on its help page).
+#' @return A named character vector, one plain-text description per parameter.
+#'   Co-documented parameters each get the shared description.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_rd_params
+#' @keywords internal
+.rd_params <- function(pkg, fn) {
+    key <- paste0(pkg, "::", fn)
+    if (!is.null(.rd_cache[[key]])) {
+        return(.rd_cache[[key]])
+    }
+
+    rd <- .rd_page(pkg, fn)
+    params <- character(0)
+    if (!is.null(rd)) {
+        args <- Filter(function(x) identical(attr(x, "Rd_tag"), "\\arguments"), rd)
+        items <- if (length(args)) {
+            Filter(function(x) identical(attr(x, "Rd_tag"), "\\item"), args[[1]])
+        } else {
+            list()
+        }
+        for (it in items) {
+            if (length(it) < 2) {
+                next
+            }
+            names_txt <- .rd_text(it[[1]])
+            desc <- .rd_text(it[[2]])
+            for (nm in trimws(strsplit(names_txt, ",", fixed = TRUE)[[1]])) {
+                if (nzchar(nm)) {
+                    params[[nm]] <- desc
+                }
+            }
+        }
+    }
+
+    assign(key, params, envir = .rd_cache)
+    params
+}
+
+#' Find a function's parsed help page
+#'
+#' A package loaded with pkgload is read from its source `man/` directory (the
+#' installed copy, if any, may be out of date); any other from its installed
+#' help database, which is parsed once and kept.
+#'
+#' @param pkg,fn Package and function (or any alias on its help page).
+#' @return The parsed Rd object, or `NULL` when there is none.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_rd_page
+#' @keywords internal
+.rd_page <- function(pkg, fn) {
+    is_dev <- isNamespaceLoaded(pkg) &&
+        exists(".__DEVTOOLS__", envir = asNamespace(pkg), inherits = FALSE)
+
+    if (is_dev) {
+        # Roxygen names a page after the function it documents, so try that
+        # page before falling back to reading every page in the package.
+        man <- file.path(getNamespaceInfo(pkg, "path"), "man")
+        direct <- file.path(man, paste0(fn, ".Rd"))
+        if (file.exists(direct)) {
+            return(tools::parse_Rd(direct))
+        }
+    }
+
+    db_key <- paste0("db:", pkg)
+    db <- .rd_cache[[db_key]]
+    if (is.null(db)) {
+        db <- if (is_dev) {
+            tools::Rd_db(dir = getNamespaceInfo(pkg, "path"))
+        } else {
+            tools::Rd_db(pkg)
+        }
+        aliases <- lapply(db, function(rd) {
+            al <- Filter(function(x) identical(attr(x, "Rd_tag"), "\\alias"), rd)
+            vapply(al, .rd_text, character(1))
+        })
+        db <- list(pages = db, aliases = aliases)
+        assign(db_key, db, envir = .rd_cache)
+    }
+
+    hit <- which(vapply(db$aliases, function(a) fn %in% a, logical(1)))
+    if (length(hit)) db$pages[[hit[[1]]]] else NULL
+}
+
+#' Render an Rd fragment as plain tooltip text
+#'
+#' Code (`\code{}`, `\verb{}` and the like) is set in backticks, links and
+#' emphasis keep their text, quotes become quotes, and whitespace is collapsed.
+#'
+#' @param x An Rd fragment.
+#' @return A single string.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_rd_text
+#' @keywords internal
+.rd_text <- function(x) {
+    walk <- function(node) {
+        tag <- attr(node, "Rd_tag")
+        if (is.character(node)) {
+            return(paste(node, collapse = ""))
+        }
+        inner <- function(i = 1) if (length(node) >= i) walk(node[[i]]) else ""
+        all_kids <- function() paste(vapply(node, walk, character(1)), collapse = "")
+        if (is.null(tag)) {
+            return(all_kids())
+        }
+        switch(tag,
+            "\\code" = , "\\verb" = , "\\samp" = , "\\env" = , "\\option" = , "\\file" = ,
+            "\\command" = , "\\kbd" = paste0("`", all_kids(), "`"),
+            "\\sQuote" = paste0("'", all_kids(), "'"),
+            "\\dQuote" = paste0("\"", all_kids(), "\""),
+            "\\href" = inner(2),
+            "\\eqn" = , "\\deqn" = if (length(node) >= 2) inner(2) else inner(1),
+            "\\dots" = , "\\ldots" = "...",
+            "\\R" = "R",
+            "\\cr" = " ",
+            # A list's items follow bare \item markers; join them with "; ".
+            "\\itemize" = , "\\enumerate" = {
+                chunks <- split(seq_along(node), cumsum(vapply(node, function(k) {
+                    identical(attr(k, "Rd_tag"), "\\item")
+                }, logical(1))))
+                items <- vapply(chunks, function(i) {
+                    trimws(paste(vapply(node[i], walk, character(1)), collapse = ""))
+                }, character(1))
+                paste0(" ", paste(items[nzchar(items)], collapse = "; "), " ")
+            },
+            "\\item" = "",
+            "COMMENT" = , "\\Sexpr" = , "USERMACRO" = , "\\figure" = "",
+            all_kids()
+        )
+    }
+    out <- walk(x)
+    trimws(gsub("[[:space:]]+", " ", out))
 }

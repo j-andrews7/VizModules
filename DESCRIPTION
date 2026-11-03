@@ -27,7 +27,6 @@ Depends:
     shinyBS,
     plotthis (>= 0.13.0)
 Imports:
-    roclang,
     colourpicker,
     dplyr,
     DT,

@@ -1105,6 +1105,34 @@ test_that("get_documentation returns the selected parameter docs, capitalised on
     expect_equal(first_char, toupper(first_char))
 })
 
+test_that("get_documentation shares co-documented text and blanks unknown parameters", {
+    result <- VizModules::get_documentation(
+        "plotthis::BarPlot",
+        selected = list(c("y_min", "y_max"), "no_such_param")
+    )
+    expect_named(result, c("y_min", "y_max", "no_such_param"))
+    expect_true(nzchar(result$y_min))
+    expect_identical(result$y_min, result$y_max)
+    expect_identical(result$no_such_param, "")
+
+    expect_identical(VizModules::get_documentation("nonsense", selected = "x"), list(x = ""))
+})
+
+test_that("get_documentation reduces Rd markup to plain text", {
+    result <- VizModules::get_documentation("plotthis::BarPlot", selected = list("fill_by", "lower_cutoff"))
+    for (doc in result) {
+        expect_false(grepl("\\\\|itemize|link\\[", doc))
+        expect_false(grepl("[[:space:]]{2}", doc))
+    }
+    # Code is set in backticks.
+    expect_match(result$lower_cutoff, "`NULL`", fixed = TRUE)
+})
+
+test_that("get_documentation reads a package's own help pages", {
+    result <- VizModules::get_documentation("VizModules::linePlot", selected = list("error.ribbon"))
+    expect_true(nzchar(result$error.ribbon))
+})
+
 # ─── create_axis_styles ────────────────────────────────────────────────────
 
 # Every input create_axis_styles() reads, overridable per test.
