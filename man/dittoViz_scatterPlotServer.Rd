@@ -36,12 +36,14 @@ parent app's state changes; see \code{\link[=setup_reactive_defaults]{setup_reac
 
 \item{fig.fn}{An optional function \verb{function(fig, input, isolate_fn)} returning the
 figure, for a wrapper module to add to or adjust the plot (extra layers, annotations,
-axis title text) before it is finalised. It runs inside the plot reactive, after the
-legend is styled and before the axis titles become draggable annotations, so whatever
-it adds reaches the rendered plot, manual-edit persistence and the source download
-alike. \code{input} is this module's input, which a wrapper sharing the module's \code{id} also
-writes its own inputs to. Read inputs as \code{isolate_fn(input$key)} so they respect the
-module's auto-update setting.}
+axis title text) before it is finalised. It runs in the figure's styling step (see
+\code{\link[=apply_uniform_styling]{apply_uniform_styling()}}), after the legend is styled and before the axis titles
+become draggable annotations, so whatever it adds reaches the rendered plot,
+manual-edit persistence and the source download alike. It sees the finished plot,
+marginal distributions included. That step is not cached, so it can read any
+reactive value. \code{input} is this module's input, which a wrapper sharing the module's
+\code{id} also writes its own inputs to. Read inputs as \code{isolate_fn(input$key)} so they
+respect the module's auto-update setting.}
 }
 \value{
 The \code{moduleServer} function for the scatterPlot module.

@@ -17,12 +17,14 @@
 #'   parent app's state changes; see [setup_reactive_defaults()].
 #' @param fig.fn An optional function `function(fig, input, isolate_fn)` returning the
 #'   figure, for a wrapper module to add to or adjust the plot (extra layers, annotations,
-#'   axis title text) before it is finalised. It runs inside the plot reactive, after the
-#'   legend is styled and before the axis titles become draggable annotations, so whatever
-#'   it adds reaches the rendered plot, manual-edit persistence and the source download
-#'   alike. `input` is this module's input, which a wrapper sharing the module's `id` also
-#'   writes its own inputs to. Read inputs as `isolate_fn(input$key)` so they respect the
-#'   module's auto-update setting.
+#'   axis title text) before it is finalised. It runs in the figure's styling step (see
+#'   [apply_uniform_styling()]), after the legend is styled and before the axis titles
+#'   become draggable annotations, so whatever it adds reaches the rendered plot,
+#'   manual-edit persistence and the source download alike. It sees the finished plot,
+#'   marginal distributions included. That step is not cached, so it can read any
+#'   reactive value. `input` is this module's input, which a wrapper sharing the module's
+#'   `id` also writes its own inputs to. Read inputs as `isolate_fn(input$key)` so they
+#'   respect the module's auto-update setting.
 #' @return The `moduleServer` function for the scatterPlot module.
 #'
 #' @import shiny

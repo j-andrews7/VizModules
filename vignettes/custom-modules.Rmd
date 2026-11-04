@@ -184,9 +184,11 @@ for the full semantics.
 `defaults` sets what the base module draws; to draw something *more*, such as loading
 arrows on a PCA biplot, a threshold label, or axis titles your wrapper works out, pass
 `dittoViz_scatterPlotServer()` a `fig.fn`. It is a `function(fig, input, isolate_fn)` that
-receives the built plotly figure and returns it. It runs inside the module's plot reactive,
-after the legend is styled and before the axis titles become draggable annotations, so what
-it adds reaches the rendered plot, manual-edit persistence and the source download alike.
+receives the built plotly figure and returns it. It runs in the figure's styling step (see
+`apply_uniform_styling()`), after the legend is styled and before the axis titles become
+draggable annotations, so what it adds reaches the rendered plot, manual-edit persistence and
+the source download alike. The plot underneath is cached, but this step is not, so `fig.fn`
+can read any of your wrapper's reactives as well as its inputs.
 
 ```{r fig-fn}
 cutoffScatterInputsUI <- function(id, data, defaults = NULL) {

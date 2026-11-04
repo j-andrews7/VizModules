@@ -192,7 +192,13 @@ for (id in names(modules)) {
     try(app$get_screenshot(shot, selector = ".plotly.html-widget"), silent = TRUE)
 
     app$run_js(hook)
-    changes <- list(cosmetic = list("title.font.size", 22), margin = list("margin.r", 120))
+    # The first change after startup can overlap the browser finishing its own
+    # startup work, so the cosmetic change is timed twice; cosmetic2 is the
+    # steady-state figure.
+    changes <- list(
+        cosmetic = list("title.font.size", 22), cosmetic2 = list("title.font.size", 24),
+        margin = list("margin.r", 120)
+    )
     if (!is.null(m$map)) changes$mapping <- m$map
     for (nm in names(changes)) {
         res <- measure_change(app, changes[[nm]][[1]], changes[[nm]][[2]], totals)
