@@ -132,8 +132,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         # variable (its dragged position still persists).
         last_axis_vars <- reactiveVal(NULL)
 
-        # Store last computed stats table for download
-        last_stats_df <- reactiveVal(NULL)
 
         # Points gathered from box/lasso selections, accumulated across selections
         selected.data <- reactiveVal()
@@ -470,9 +468,15 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         })
 
         # Generate yPlot reactive
-        generate_yPlot <- reactive({
-            req(input$var)
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # The plot itself: everything that changes what is drawn, with the stats
+        # table, any notes raised along the way and what the axis titles say. It is
+        # cached (see .cached_structure()), so it reads every input through
+        # isolate_fn and has no side effects; the styling inputs are applied in
+        # generate_yPlot().
+        draw_yPlot <- function(isolate_fn) {
+            req(isolate_fn(input$var))
+            notes <- list()
+            stats_df <- NULL
 
             # Resolved server-side, so they already clear any significance brackets.
             y.limits <- isolate_fn(y_range_store())
@@ -566,27 +570,20 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # When an adjustment is active the axis title is regenerated to reflect it, so
             # flag its side for finalize_manual_edits() to skip persisting the text. The
             # continuous var lands on the x-axis for ridgeplots, otherwise the y-axis.
-            regen_keys_rv(if (adjustment.active) {
+            regen_keys <- if (adjustment.active) {
                 if ("ridgeplot" %in% isolate_fn(input$plots)) "axis:x" else "axis:y"
             } else {
                 character(0)
-            })
+            }
 
-            # If a variable feeding an axis title (or the ridge orientation that swaps
-            # which axis it lands on) changed, drop any persisted manual title text so the
-            # title regenerates for the new variable. Runs before finalize_manual_edits()
-            # in the same render pass, so the cleared store is what gets re-applied.
+            # The variables feeding the axis titles (and the ridge orientation that
+            # swaps which axis it lands on); see generate_yPlot().
             axis_vars <- list(
                 var = y.vars,
                 group.by = isolate_fn(input$group.by),
                 multivar.aes = if (multivar) multivar.aes else NULL,
                 ridge = "ridgeplot" %in% isolate_fn(input$plots)
             )
-            # Isolated: the write below must not invalidate this reactive.
-            if (!identical(axis_vars, isolate(last_axis_vars()))) {
-                reset_axis_title_text(edit_store)
-                last_axis_vars(axis_vars)
-            }
 
             # Draw axis borders at the ggplot level
             additional_theme <- create_ggplot_axis_style(input, isolate_fn = isolate_fn)
@@ -692,11 +689,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 )
 
             }
-            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
-            
-            
-
-
             # Put the boxes back on the coordinates ggplot dodged them to, which is
             # where the jitter and violin traces already are. The dodge width has to
             # be the one yPlot() built the ggplot with: boxplot.position.dodge and
@@ -706,38 +698,6 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig,
                 dodge.width = 1 - boxgap,
                 box.width = 1 - boxgroupgap
-            )
-
-            # Apply axis styling (borders handled at the ggplot level via theme_style above)
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
-
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-
-            # Apply axis title font to shared facet annotation titles
-            if (faceted) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            # Add reference lines
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
             )
 
             # Statistical annotations. With several Y variables the tests are run per
@@ -772,19 +732,13 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     per.facet = stats.ctx$per.facet,
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
-
-                last_stats_df(stats_df)
-            } else {
-                # Nothing was tested for this figure, so the source download must
-                # not ship the table from an earlier one.
-                last_stats_df(NULL)
             }
 
             # dittoViz lays the whole figure out horizontally once a ridge plot is in
             # it, so the values run along the x-axis and there is no room above them
             # for brackets. The tests above still reach the source download.
             if (!is.null(stats.ctx) && "ridgeplot" %in% isolate_fn(input$plots)) {
-                note_brackets_skipped(session)
+                notes <- c(notes, list(.brackets_skipped_note()))
             } else if (!is.null(stats.ctx)) {
                 stat_result <- create_stat_annotations(
                     stats_df = stats_df, fig = fig, df = stats.ctx$df,
@@ -850,9 +804,10 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                     color = isolate_fn(input$annotation.color)
                 )
 
-                if (!is.null(selected.data())) {
+                selected <- isolate_fn(selected.data())
+                if (!is.null(selected)) {
                     annos <- create_selected_annotations(
-                        selected_data = selected.data(),
+                        selected_data = selected,
                         fig = fig,
                         annotate.by = annotate.by,
                         annotation_params = annotation_params,
@@ -880,17 +835,43 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
             }
 
-            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.cols)
-            fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
+            # Nothing was tested when stats are off, so the source download gets no
+            # table from an earlier figure.
+            list(
+                fig = .ensure_built(fig), facet.by = facet.cols, stats = stats_df, notes = notes,
+                axis_vars = axis_vars, regen_keys = regen_keys
+            )
+        }
+        base_yPlot <- .cached_structure(
+            draw_yPlot, input, session, data, params = params,
+            extra = function() list(y_range_store(), palette_store(), x_order(), selected.data())
+        )
+        notify <- .structure_notifier(session)
 
-            # Apply the uniform legend visibility and font inputs
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
+        # The stats table behind the brackets drawn, for the source download.
+        last_stats_df <- reactive(base_yPlot()$stats)
 
-            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- axis_titles_as_annotations(fig)
+        # The plot, styled: titles, fonts, axes, reference lines and legend.
+        generate_yPlot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_yPlot()
+            notify(base)
 
-            return(fig)
+            # Axis sides whose title text is regenerated rather than persisted, read
+            # at render. The reads are isolated: the writes must not invalidate this.
+            if (!identical(base$regen_keys, isolate(regen_keys_rv()))) {
+                regen_keys_rv(base$regen_keys)
+            }
+            # If a variable feeding an axis title changed, drop any persisted manual
+            # title text so the title regenerates for the new variable. Runs before
+            # finalize_manual_edits() in the same render pass, so the cleared store is
+            # what gets re-applied.
+            if (!identical(base$axis_vars, isolate(last_axis_vars()))) {
+                reset_axis_title_text(edit_store)
+                last_axis_vars(base$axis_vars)
+            }
+
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.98)
         })
 
         # Render the plot output

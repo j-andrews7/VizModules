@@ -40,6 +40,13 @@
             keep = "legend.show",
             structural = list(jitter.size = 2)
         ),
+        yplot = list(
+            server = dittoViz_yPlotServer, data = example_demographics, builder = "yPlot",
+            base = "base_yPlot", generate = "generate_yPlot",
+            inputs = .yplot_inputs(stats.enabled = TRUE, annotate.by = "employee_id", highlight.points = "E042"),
+            keep = "legend.show",
+            structural = list(jitter.size = 2)
+        ),
         area = list(
             server = plotthis_AreaPlotServer, data = example_population, builder = "AreaPlot",
             base = "base_AreaPlot", generate = "generate_AreaPlot",
