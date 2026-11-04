@@ -142,6 +142,27 @@ test_that("significance brackets stay within the axis they are drawn on", {
     expect_brackets_within_axes(out$fig, min.count = 3)
 })
 
+test_that("the statistics follow the plot drawn, including one served from the cache", {
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics)),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .box_inputs(stats.enabled = TRUE))
+                session$setInputs(stat.pairs = "")
+            })
+            salary <- last_stats_df()
+            suppressWarnings(session$setInputs(y.data = "age"))
+            age <- last_stats_df()
+            expect_false(isTRUE(all.equal(salary, age)))
+
+            # Back to salary: drawn from the cache, and its statistics come with it.
+            suppressWarnings(session$setInputs(y.data = "salary"))
+            expect_equal(last_stats_df(), salary)
+        }
+    )
+})
+
 test_that("a rotated box plot tests but draws no brackets over its values", {
     out <- .box_stats_figure(example_demographics, .box_inputs(stats.enabled = TRUE, rotate = TRUE))
     built <- plotly::plotly_build(out$fig)
