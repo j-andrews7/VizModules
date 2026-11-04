@@ -24,6 +24,15 @@
             ),
             structural = list(alpha = 0.5)
         ),
+        box = list(
+            server = plotthis_BoxPlotServer, data = example_demographics, builder = "BoxPlot",
+            base = "base_BoxPlot", generate = "generate_BoxPlot",
+            inputs = .box_inputs(
+                x.data = "job_level", add.points = TRUE, pt.alpha = 0.35,
+                stats.enabled = TRUE, stat.display = "symbol"
+            ),
+            structural = list(pt.alpha = 0.7)
+        ),
         area = list(
             server = plotthis_AreaPlotServer, data = example_population, builder = "AreaPlot",
             base = "base_AreaPlot", generate = "generate_AreaPlot",
@@ -117,6 +126,9 @@
         base <- function() suppressWarnings(get(case$base, envir = env)())
         styled <- function() suppressWarnings(get(case$generate, envir = env)())
         draws_so_far <- function() draws
+        suppressWarnings(do.call(session$setInputs, case$inputs))
+        # A browser re-sends an input the server froze while updating it (the
+        # stat pairs, say); the mock session does not, so send them all again.
         suppressWarnings(do.call(session$setInputs, case$inputs))
         set <- function(...) suppressWarnings(do.call(session$setInputs, c(...)))
         eval(code, list(base = base, styled = styled, draws = draws_so_far, set = set), caller)

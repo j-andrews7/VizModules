@@ -201,10 +201,9 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         })
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cache_structure()), so it must have no side effects; the styling
-        # inputs are applied to it in generate_Histogram().
-        base_Histogram <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # has no side effects; the styling inputs are applied in generate_Histogram().
+        draw_Histogram <- function(isolate_fn) {
 
             facet.by <- NULL
             if (nz_value(isolate_fn(input$facet.by))) {
@@ -294,11 +293,10 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
                 )
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
-        })
-        base_Histogram <- .cache_structure(
-            base_Histogram, input, session, data,
-            extra = function() list(palette_groups(), palette_store()),
-            params = params, output_id = "histogramPlot"
+        }
+        base_Histogram <- .cached_structure(
+            draw_Histogram, input, session, data, params = params,
+            extra = function() list(palette_groups(), palette_store())
         )
 
         # The plot, styled: titles, fonts, axes, reference lines and legend.

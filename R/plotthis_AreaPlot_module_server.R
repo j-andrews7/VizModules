@@ -189,10 +189,9 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         })
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cache_structure()), so it must have no side effects; the styling
-        # inputs are applied to it in generate_AreaPlot().
-        base_AreaPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # has no side effects; the styling inputs are applied in generate_AreaPlot().
+        draw_AreaPlot <- function(isolate_fn) {
 
             group.by <- NULL
             if (nz_value(isolate_fn(input$group.by))) {
@@ -256,11 +255,10 @@ plotthis_AreaPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 )
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
-        })
-        base_AreaPlot <- .cache_structure(
-            base_AreaPlot, input, session, data,
-            extra = function() list(palette_groups(), palette_store()),
-            params = params, output_id = "AreaPlot"
+        }
+        base_AreaPlot <- .cached_structure(
+            draw_AreaPlot, input, session, data, params = params,
+            extra = function() list(palette_groups(), palette_store())
         )
 
         # The plot, styled: titles, fonts, axes, reference lines and legend.

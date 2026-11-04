@@ -103,11 +103,10 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 
 #' Input ids that only style a figure
 #'
-#' The ids [apply_uniform_styling()] reads. They are left out of the structure
-#' step's cache key, so changing one re-uses the cached plot. A module whose
-#' structure step also reads one of them (`legend.show`, where it decides
-#' whether a legend is drawn at all) keeps it in the key; see
-#' [.cache_structure()].
+#' The ids [apply_uniform_styling()] reads. The cached plot step keys its cache
+#' only on the inputs it reads itself (see [.cached_structure()]), so changing
+#' one of these re-uses the cached plot, unless a module's plot step reads it
+#' too (DotPlot draws its size legend in the legend fonts, for instance).
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_style_input_ids
@@ -133,101 +132,127 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 )
 
 
-#' Cache a module's structure step
+#' A module's cached plot step
 #'
-#' Wraps the reactive that draws a module's plot (everything before
-#' [apply_uniform_styling()]) in [shiny::bindCache()], keyed on the data and
-#' every input except the styling ones, so returning to settings already drawn
-#' (toggling an option back, Reset, a second Figure Builder panel) re-uses the
-#' figure instead of rebuilding it. The cache is the session's, and the key
-#' includes the module's namespace, so modules never see each other's entries.
+#' Draws a module's plot (everything before [apply_uniform_styling()]) and keeps
+#' it in the session's cache, keyed on the data, the module's other reactive
+#' values the step reads (`extra`), and the inputs the step reads, so a styling
+#' change never redraws the plot and going back to settings already drawn
+#' (toggling an option back, Reset) re-uses the figure.
 #'
-#' The key is deliberately broad: every input not known to be styling or
-#' bookkeeping is in it, so an input the structure step reads can never be left
-#' out (that would show a stale plot); an input that does not affect it costs at
-#' most a cache miss. Store-backed values the step reads (axis-limit and colour
-#' stores, reactive defaults, the selection) go in `extra`.
+#' The inputs in the key are exactly those the step reads through the
+#' `isolate_fn` it is given: every `isolate_fn(input$<key>)` read is recorded,
+#' and the set only grows. So an input the step reads is always in the key (a
+#' stale plot otherwise), while inputs it never reads (the styling ones, widget
+#' bookkeeping, an input frozen by an update the step does not care about) are
+#' never in it. An entry stored before the set grew has a key of a different
+#' shape from every later one, so it can never be served for settings it was
+#' not drawn with.
 #'
-#' Set `options(VizModules.cache = FALSE)` to turn caching off.
+#' On a miss the step is evaluated reactively, so it depends on what it reads in
+#' the usual way; on a hit the key's reads stand in for it. Errors are not
+#' cached. The key includes the module's namespace, so modules sharing a session
+#' never see each other's entries. Set `options(VizModules.cache = FALSE)` to
+#' turn caching off.
 #'
-#' @param r The reactive drawing the plot. It must have no side effects, since a
-#'   cache hit skips it: anything it used to write elsewhere must be part of the
-#'   value it returns.
+#' @param build A function of `isolate_fn` that draws the plot and returns a
+#'   list with at least `fig`. Every input it reads must go through
+#'   `isolate_fn(input$<key>)`, and it must have no side effects, since a cache
+#'   hit skips it: anything it used to write elsewhere belongs in the value.
 #' @param input,session The module's `input` and `session`.
 #' @param data The module's `data` reactive.
-#' @param extra A function of no arguments returning the other reactive values
-#'   `r` reads, or `NULL`.
 #' @param params The reactive-defaults store from [setup_reactive_defaults()], or
 #'   `NULL`.
-#' @param keep Styling ids that `r` reads after all, and so belong in the key.
-#' @param output_id The plot's output id, whose resize reports are left out.
+#' @param extra A function of no arguments returning the module's other reactive
+#'   values `build` reads (axis-limit and colour stores, the selection, ...), or
+#'   `NULL`.
 #'
-#' @return The cached reactive (or `r` itself when caching is off).
+#' @return A reactive returning `build`'s value.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_cache_structure
+#' @rdname INTERNAL_cached_structure
 #' @keywords internal
-.cache_structure <- function(r, input, session, data, extra = NULL, params = NULL,
-                             keep = character(0), output_id = NULL) {
-    if (isFALSE(getOption("VizModules.cache", TRUE))) {
-        return(r)
-    }
-
-    # Hashed once per change of the data rather than on every key evaluation.
-    data_hash <- reactive(rlang::hash(data()))
-    exclude <- setdiff(.style_input_ids, keep)
+.cached_structure <- function(build, input, session, data, params = NULL, extra = NULL) {
     id <- session$ns("structure")
+    tracked <- character(0)
+    track <- function(key) {
+        if (!key %in% tracked) {
+            tracked <<- c(tracked, key)
+        }
+    }
+    # Hashed once per change of the data rather than on every lookup.
+    data_hash <- reactive(rlang::hash(data()))
 
-    bindCache(
-        r,
-        .structure_cache_key(input, id, exclude, output_id, params),
-        data_hash(),
-        # Read like the step reads them: isolated while Auto Update is off.
-        if (is.null(extra)) NULL else if (isTRUE(input$auto.update)) extra() else isolate(extra()),
-        cache = "session"
-    )
+    reactive({
+        isolate_fn <- setup_auto_update_logic(input, params, track = track)
+        if (isFALSE(getOption("VizModules.cache", TRUE))) {
+            return(build(isolate_fn))
+        }
+
+        # Read the key the way the step reads its inputs: isolated while Auto
+        # Update is off, through the reactive-defaults store where one backs them.
+        make_key <- function(ids) {
+            values <- lapply(ids, function(key) {
+                if (!is.null(params) && params$has(key)) {
+                    isolate_fn(params$get(key))
+                } else {
+                    isolate_fn(input[[key]])
+                }
+            })
+            rlang::hash(list(id, ids, values, data_hash(), if (is.null(extra)) NULL else isolate_fn(extra())))
+        }
+
+        cache <- session$cache
+        before <- sort(tracked)
+        key <- make_key(before)
+        if (cache$exists(key)) {
+            return(cache$get(key))
+        }
+        value <- build(isolate_fn)
+        # A build that read inputs outside the key depends on them too, so file
+        # it under the key of everything it read; a module recreated under this
+        # id (whose set of reads grows the same way) can then never be served it
+        # for settings it was not drawn with.
+        after <- sort(tracked)
+        cache$set(if (identical(after, before)) key else make_key(after), value)
+        value
+    })
 }
 
 
-#' The structure step's cache key
+#' A notification raised while drawing a plot
 #'
-#' Every module input except the styling ones and the bookkeeping that never
-#' changes what is drawn: shinyjqui's widget state, the plot's resize reports,
-#' the dragged colorbar position (applied at render time), and the Reset and
-#' Update buttons. With Auto Update off, the inputs are read isolated and only
-#' the Update button invalidates the key, matching the plot.
+#' The structure step is cached, so it cannot show notifications itself (a cache
+#' hit would skip them). It returns them instead, built with this, and
+#' [.show_structure_notes()] shows them whenever the step's value changes.
 #'
-#' @inheritParams .cache_structure
-#' @param id The module's cache namespace.
-#' @param exclude Input ids left out of the key.
-#'
-#' @return A list for [shiny::bindCache()] to hash.
+#' @param message The notification text.
+#' @param id An id, namespaced on display, so a repeat replaces the last one.
+#' @param type Passed to [shiny::showNotification()].
+#' @return A list.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_structure_cache_key
+#' @rdname INTERNAL_structure_note
 #' @keywords internal
-.structure_cache_key <- function(input, id, exclude, output_id = NULL, params = NULL) {
-    read_inputs <- function() {
-        vals <- reactiveValuesToList(input)
-        nms <- names(vals)
-        noise <- grepl("__shinyjquiBookmarkState__", nms, fixed = TRUE) |
-            nms %in% c("reset", "update", "colorbar.move")
-        if (!is.null(output_id)) {
-            noise <- noise | nms %in% paste0(output_id, c("_size", "_is_resizing"))
-        }
-        keep <- !noise & !(nms %in% exclude)
-        vals <- vals[keep]
-        if (!is.null(params)) {
-            for (key in params$keys) {
-                vals[[key]] <- params$get(key)
-            }
-        }
-        vals[order(names(vals))]
-    }
+.structure_note <- function(message, id, type = "message") {
+    list(message = message, id = id, type = type)
+}
 
-    auto <- isTRUE(input$auto.update)
-    list(
-        id = id,
-        inputs = if (auto) read_inputs() else list(input$update, isolate(read_inputs()))
-    )
+
+#' Show the notifications a structure step returned
+#'
+#' @param base The cached structure reactive, whose value has a `notes` list of
+#'   [.structure_note()]s.
+#' @param session The module's session.
+#' @return The observer, invisibly.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_show_structure_notes
+#' @keywords internal
+.show_structure_notes <- function(base, session) {
+    invisible(observeEvent(base(), {
+        for (note in base()$notes) {
+            showNotification(note$message, id = session$ns(note$id), type = note$type, session = session)
+        }
+    }))
 }

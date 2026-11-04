@@ -361,10 +361,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         }, ignoreInit = FALSE)
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cache_structure()), so it must have no side effects; the styling
-        # inputs are applied to it in generate_SplitBarPlot().
-        base_SplitBarPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # has no side effects; the styling inputs are applied in generate_SplitBarPlot().
+        draw_SplitBarPlot <- function(isolate_fn) {
 
             # Null Values:
             facet.by <- NULL
@@ -542,11 +541,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 )
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
-        })
-        base_SplitBarPlot <- .cache_structure(
-            base_SplitBarPlot, input, session, data,
-            extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric()),
-            params = params, output_id = "SplitBarPlot"
+        }
+        base_SplitBarPlot <- .cached_structure(
+            draw_SplitBarPlot, input, session, data, params = params,
+            extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric())
         )
 
         # The plot, styled: titles, fonts, axes, reference lines and legend.

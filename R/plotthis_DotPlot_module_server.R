@@ -183,10 +183,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         }, ignoreInit = FALSE)
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cache_structure()), so it must have no side effects; the styling
-        # inputs are applied to it in generate_DotPlot().
-        base_DotPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # has no side effects; the styling inputs are applied in generate_DotPlot().
+        draw_DotPlot <- function(isolate_fn) {
 
             # Null Values:
             facet.by <- NULL
@@ -289,13 +288,9 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             )
 
             list(fig = .ensure_built(fig), facet.by = facet.by)
-        })
-        # The size legend is drawn here, in the legend's fonts, and only when the
-        # legend is shown, so those inputs change what this step draws.
-        base_DotPlot <- .cache_structure(
-            base_DotPlot, input, session, data,
-            params = params, output_id = "DotPlot",
-            keep = c("legend.show", "legend.title.size", "legend.text.size", "legend.font.family", "legend.font.color")
+        }
+        base_DotPlot <- .cached_structure(
+            draw_DotPlot, input, session, data, params = params
         )
 
         # The plot, styled: titles, fonts, axes, reference lines and legend.

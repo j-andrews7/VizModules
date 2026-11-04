@@ -718,11 +718,16 @@ blank_to_null <- function(value, df = NULL, numeric_is_null = FALSE) {
 #'   or `NULL`. When supplied, an `input$<key>` read whose `key` is backed by the
 #'   store resolves from the store instead of the client input, so a parameter
 #'   driven by the parent app updates in a single render.
-#' @return A function that wraps reactive expressions. With `params = NULL` this is
-#'   `identity` if auto-update is enabled (expressions will be reactive), or `isolate`
-#'   if auto-update is disabled (expressions will not trigger reactivity). With a
-#'   store supplied it is a wrapper with the same isolation semantics that additionally
-#'   redirects store-backed `input$<key>` reads.
+#' @param track Optional function, or `NULL`. When supplied, it is called with the
+#'   id of every `input$<key>` read through the returned wrapper, so a caller can
+#'   tell which inputs an expression depends on (the modules' cached plot step
+#'   keys its cache on them).
+#' @return A function that wraps reactive expressions. With `params` and `track`
+#'   both `NULL` this is `identity` if auto-update is enabled (expressions will be
+#'   reactive), or `isolate` if auto-update is disabled (expressions will not
+#'   trigger reactivity). Otherwise it is a wrapper with the same isolation
+#'   semantics that additionally redirects store-backed `input$<key>` reads and
+#'   reports the ids read to `track`.
 #'
 #' @seealso [setup_reactive_defaults()]
 #'
@@ -774,7 +779,7 @@ blank_to_null <- function(value, df = NULL, numeric_is_null = FALSE) {
 #'
 #'     shinyApp(ui, server)
 #' }
-setup_auto_update_logic <- function(input, params = NULL) {
+setup_auto_update_logic <- function(input, params = NULL, track = NULL) {
     auto_update <- input$auto.update
     req(!is.null(auto_update))
 
@@ -783,14 +788,17 @@ setup_auto_update_logic <- function(input, params = NULL) {
         input$update
     }
 
-    if (is.null(params)) {
+    if (is.null(params) && is.null(track)) {
         return(if (auto_update) identity else isolate)
     }
 
     function(x) {
         key <- .input_key(substitute(x))
+        if (!is.null(key) && !is.null(track)) {
+            track(key)
+        }
 
-        if (!is.null(key) && params$has(key)) {
+        if (!is.null(key) && !is.null(params) && params$has(key)) {
             if (auto_update) params$get(key) else isolate(params$get(key))
         } else if (auto_update) {
             x
