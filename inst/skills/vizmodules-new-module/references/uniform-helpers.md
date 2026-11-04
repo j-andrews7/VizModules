@@ -51,7 +51,7 @@ would otherwise cost an extra render. Use them instead of reading the raw input.
 | `setup_axis_range(input, session, min_key, max_key, headroom, params)` | Axis limits the module computes | `isolate_fn(y_range_store())` |
 | `setup_level_order(input, session, data, column, defaults)` | A `level_order_input()` drag-and-drop category order | `apply_level_order(data(), col, isolate_fn(x_order()))` |
 | `setup_manual_edits(input, session, plot_source)` | Capture dragged legend/annotations/titles | — |
-| `finalize_manual_edits(fig, plot_source, store, session)` | Restore them; last call in `renderPlotly()` | — |
+| `finalize_manual_edits(fig, plot_source, store, session)` | Restore them, and send only the layout when only it changed; last call in `renderPlotly()` | — |
 
 `setup_reactive_defaults()` returns `NULL` when no entry is reactive, in which case
 `isolate_fn` is the plain `isolate()` it has always been — so wiring it up costs nothing

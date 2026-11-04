@@ -250,7 +250,8 @@ customPlotServer <- function(id, data_reactive) {
         output$plot <- renderPlotly({
             # 2. Create your plotly object with your plotting function
             fig <- build_my_plotly_figure(data_reactive(), input)
-            # 3. Restore + capture edits on every render, then return the figure.
+            # 3. Restore + capture edits on every render. Last: when only the
+            #    layout changed, it sends just that and ends the render.
             finalize_manual_edits(fig, plot_source, edit_store, session)
         })
     })

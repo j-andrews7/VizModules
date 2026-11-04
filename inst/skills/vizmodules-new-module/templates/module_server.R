@@ -261,9 +261,8 @@
             req(input$x.data, input$y.data)
 
             fig <- apply_render_margins(generate_<OUTPUTID>(), input)
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
-
-            return(fig)
+            # Last: when only the layout changed, it sends just that and ends the render.
+            finalize_manual_edits(fig, plot_source, edit_store, session)
         })
 
         # ---- Source data download -------------------------------------------------
