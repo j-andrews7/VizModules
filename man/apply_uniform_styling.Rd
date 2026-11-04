@@ -61,12 +61,17 @@ styling and get no reference lines.
 }
 \examples{
 fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+# The uniform inputs, as a module's `input` would hold them.
 input <- list(
     title.font.size = 20, title.font.family = "Arial", title.font.color = "#000000",
     axis.title.horizontal.position = 0.5, axis.title.font.size = 16,
-    axis.tickfont.size = 12, show.grid.x = TRUE, show.grid.y = FALSE,
+    axis.title.font.family = "Arial", axis.title.font.color = "#000000",
+    axis.tickfont.size = 12, axis.tickfont.family = "Arial", axis.tickfont.color = "#000000",
+    axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
+    axis.tickcolor = "#000000", axis.ticklen = 5, axis.tickwidth = 1,
+    show.grid.x = TRUE, show.grid.y = FALSE, grid.color = "#CCCCCC",
     hline.intercepts = "20", hline.colors = "#D55E00",
-    download.format = "svg", legend.text.size = 12
+    download.format = "svg", legend.text.size = 12, legend.title.size = 14
 )
 apply_uniform_styling(fig, input, isolate_fn = identity)
 }

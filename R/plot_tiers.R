@@ -43,12 +43,17 @@
 #' @export
 #' @examples
 #' fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+#' # The uniform inputs, as a module's `input` would hold them.
 #' input <- list(
 #'     title.font.size = 20, title.font.family = "Arial", title.font.color = "#000000",
 #'     axis.title.horizontal.position = 0.5, axis.title.font.size = 16,
-#'     axis.tickfont.size = 12, show.grid.x = TRUE, show.grid.y = FALSE,
+#'     axis.title.font.family = "Arial", axis.title.font.color = "#000000",
+#'     axis.tickfont.size = 12, axis.tickfont.family = "Arial", axis.tickfont.color = "#000000",
+#'     axis.tickangle.x = 0, axis.tickangle.y = 0, axis.ticks = "outside",
+#'     axis.tickcolor = "#000000", axis.ticklen = 5, axis.tickwidth = 1,
+#'     show.grid.x = TRUE, show.grid.y = FALSE, grid.color = "#CCCCCC",
 #'     hline.intercepts = "20", hline.colors = "#D55E00",
-#'     download.format = "svg", legend.text.size = 12
+#'     download.format = "svg", legend.text.size = 12, legend.title.size = 14
 #' )
 #' apply_uniform_styling(fig, input, isolate_fn = identity)
 apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = NULL,
@@ -249,7 +254,8 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #'
 #' The structure step is cached, so it cannot show notifications itself (a cache
 #' hit would skip them). It returns them instead, built with this, and
-#' [.show_structure_notes()] shows them whenever the step's value changes.
+#' the function [.structure_notifier()] returns shows them the first time the
+#' styling step sees each build.
 #'
 #' @param message The notification text.
 #' @param id An id, namespaced on display, so a repeat replaces the last one.
