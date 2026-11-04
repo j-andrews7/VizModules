@@ -33,6 +33,13 @@
             ),
             structural = list(pt.alpha = 0.7)
         ),
+        freq = list(
+            server = dittoViz_freqPlotServer, data = example_composition, builder = "freqPlot",
+            base = "base_freqPlot", generate = "generate_freqPlot",
+            inputs = .freq_inputs(stats.enabled = TRUE),
+            keep = "legend.show",
+            structural = list(jitter.size = 2)
+        ),
         area = list(
             server = plotthis_AreaPlotServer, data = example_population, builder = "AreaPlot",
             base = "base_AreaPlot", generate = "generate_AreaPlot",
@@ -113,7 +120,10 @@
     draws <- 0
     real <- get(case$builder, envir = asNamespace("VizModules"))
     mock <- list(function(...) {
-        draws <<- draws + 1
+        # freqPlot(data.only = TRUE) only summarises the data; it draws nothing.
+        if (!isTRUE(list(...)[["data.only"]])) {
+            draws <<- draws + 1
+        }
         real(...)
     })
     names(mock) <- case$builder
@@ -127,9 +137,10 @@
         styled <- function() suppressWarnings(get(case$generate, envir = env)())
         draws_so_far <- function() draws
         suppressWarnings(do.call(session$setInputs, case$inputs))
-        # A browser re-sends an input the server froze while updating it (the
-        # stat pairs, say); the mock session does not, so send them all again.
-        suppressWarnings(do.call(session$setInputs, case$inputs))
+        # A browser re-sends the inputs the server froze while updating them (the
+        # stat pairs, the facet scale, ...); the mock session does not, so do that.
+        frozen <- intersect(names(case$inputs), c("stat.pairs", "facet.scale", "vars.use"))
+        suppressWarnings(do.call(session$setInputs, case$inputs[frozen]))
         set <- function(...) suppressWarnings(do.call(session$setInputs, c(...)))
         eval(code, list(base = base, styled = styled, draws = draws_so_far, set = set), caller)
     })

@@ -476,7 +476,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             draw_BoxPlot, input, session, data, params = params,
             extra = function() list(y_range_store(), palette_groups(), palette_store(), x_order())
         )
-        .show_structure_notes(base_BoxPlot, session)
+        notify <- .structure_notifier(session)
 
         # The stats table behind the brackets drawn, for the source download.
         last_stats_df <- reactive(base_BoxPlot()$stats)
@@ -485,6 +485,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         generate_BoxPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
             base <- base_BoxPlot()
+            notify(base)
             apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.95)
         })
 

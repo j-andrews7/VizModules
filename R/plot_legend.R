@@ -495,7 +495,10 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
             x = x_pos + 0.02, y = min(start.y + gap / 2, 1),
             xref = "paper", yref = "paper",
             text = title, showarrow = FALSE,
-            xanchor = "center", yanchor = "bottom", font = title_font
+            xanchor = "center", yanchor = "bottom", font = title_font,
+            # Tagged so facet-title styling (apply_axis_title_to_annotations())
+            # does not take these centred paper annotations for strip labels.
+            annotationType = "legend"
         )
     )
     for (i in seq_along(size.values)) {
@@ -508,7 +511,8 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
                 "<span style='font-size:", size.values[i],
                 "px; color:#000000;'>&#9679;</span>"
             ),
-            showarrow = FALSE, xanchor = "center", yanchor = "middle"
+            showarrow = FALSE, xanchor = "center", yanchor = "middle",
+            annotationType = "legend"
         )
 
         # Label annotation. Offset from the circle by a fixed pixel distance
@@ -520,7 +524,7 @@ add_size_legend <- function(fig, data, size.by, gap = 0.05, size.values = NULL, 
             x = x_pos, y = yc, xref = "paper", yref = "paper",
             text = labels[i], showarrow = FALSE,
             xanchor = "left", yanchor = "middle", xshift = label_xshift,
-            font = label_font
+            font = label_font, annotationType = "legend"
         )
     }
 

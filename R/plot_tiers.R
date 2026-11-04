@@ -167,13 +167,20 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #'   values `build` reads (axis-limit and colour stores, the selection, ...), or
 #'   `NULL`.
 #'
-#' @return A reactive returning `build`'s value.
+#' @return A reactive returning `build`'s value, with `.build` added: a number
+#'   unique to each time the plot was drawn, kept with the value in the cache.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_cached_structure
 #' @keywords internal
 .cached_structure <- function(build, input, session, data, params = NULL, extra = NULL) {
     id <- session$ns("structure")
+    builds <- 0L
+    numbered <- function(value) {
+        builds <<- builds + 1L
+        value$.build <- builds
+        value
+    }
     tracked <- character(0)
     track <- function(key) {
         if (!key %in% tracked) {
@@ -186,7 +193,7 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     reactive({
         isolate_fn <- setup_auto_update_logic(input, params, track = track)
         if (isFALSE(getOption("VizModules.cache", TRUE))) {
-            return(build(isolate_fn))
+            return(numbered(build(isolate_fn)))
         }
 
         # Read the key the way the step reads its inputs: isolated while Auto
@@ -208,7 +215,7 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
         if (cache$exists(key)) {
             return(cache$get(key))
         }
-        value <- build(isolate_fn)
+        value <- numbered(build(isolate_fn))
         # A build that read inputs outside the key depends on them too, so file
         # it under the key of everything it read; a module recreated under this
         # id (whose set of reads grows the same way) can then never be served it
@@ -241,18 +248,30 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 
 #' Show the notifications a structure step returned
 #'
-#' @param base The cached structure reactive, whose value has a `notes` list of
-#'   [.structure_note()]s.
+#' Returns a function for the module's styling step to call with the cached
+#' step's value; it shows that value's notes the first time it sees each build,
+#' so restyling a plot does not repeat them but drawing (or restoring) one does.
+#' It is called from the styling step rather than an observer so the cached step
+#' is only evaluated when the plot is, never eagerly (an input frozen by an
+#' update mid-flush would otherwise stop it).
+#'
 #' @param session The module's session.
-#' @return The observer, invisibly.
+#' @return A function of the cached step's value, whose `notes` is a list of
+#'   [.structure_note()]s.
 #'
 #' @author Jared Andrews
-#' @rdname INTERNAL_show_structure_notes
+#' @rdname INTERNAL_structure_notifier
 #' @keywords internal
-.show_structure_notes <- function(base, session) {
-    invisible(observeEvent(base(), {
-        for (note in base()$notes) {
+.structure_notifier <- function(session) {
+    shown <- NULL
+    function(value) {
+        if (identical(value$.build, shown)) {
+            return(invisible())
+        }
+        shown <<- value$.build
+        for (note in value$notes) {
             showNotification(note$message, id = session$ns(note$id), type = note$type, session = session)
         }
-    }))
+        invisible()
+    }
 }
