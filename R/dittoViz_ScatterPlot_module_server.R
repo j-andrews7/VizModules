@@ -267,7 +267,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         edit_store <- setup_manual_edits(input, session, plot_source)
 
         # Axis side(s) whose title is regenerated (not persisted) because a data
-        # adjustment is active; set inside generate_scatterPlot() and read at render.
+        # adjustment is active; set in generate_scatterPlot() and read at render.
         regen_keys_rv <- reactiveVal(character(0))
 
         # x/y variables at the last build; when one changes we drop any persisted
@@ -508,8 +508,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         }, ignoreNULL = FALSE)
 
         # Reactive expression to generate the plot (used by both output and download)
-        generate_scatterPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # The plot itself: everything that changes what is drawn, with any notes
+        # raised along the way and what the axis titles say. It is cached (see
+        # .cached_structure()), so it reads every input through isolate_fn and has
+        # no side effects; the styling inputs, and a wrapper's fig.fn, are applied
+        # in generate_scatterPlot().
+        draw_scatterPlot <- function(isolate_fn) {
+            notes <- list()
 
             # Change textInputs and selectInputs to NULL if empty
             null.na.inputs <- list(
@@ -596,26 +601,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # Flag axis sides whose title is adjustment-derived so finalize_manual_edits()
             # regenerates rather than persists their text. adjusted_axis_label() returns the
             # base unchanged when no adjustment, so a difference means an adjustment is active.
-            regen_keys_rv(c(
+            regen_keys <- c(
                 if (!identical(x_axis_label, isolate_fn(input$x.by))) "axis:x",
                 if (!identical(y_axis_label, isolate_fn(input$y.by))) "axis:y"
-            ))
+            )
 
-            # When the x or y variable changes, drop any persisted manual title text for
-            # that side so it regenerates for the new variable (position still persists).
-            # Runs before finalize_manual_edits() in the same render pass.
+            # The variables the axis titles name; see generate_scatterPlot().
             cur_by <- list(x = isolate_fn(input$x.by), y = isolate_fn(input$y.by))
-            # Isolated: the write below must not invalidate this reactive.
-            prev_by <- isolate(last_axis_by())
-            if (!identical(cur_by, prev_by)) {
-                if (is.null(prev_by) || !identical(cur_by$x, prev_by$x)) {
-                    reset_axis_title_text(edit_store, "axis:x")
-                }
-                if (is.null(prev_by) || !identical(cur_by$y, prev_by$y)) {
-                    reset_axis_title_text(edit_store, "axis:y")
-                }
-                last_axis_by(cur_by)
-            }
 
             # Reflect any applied color data adjustments in the color.by legend title so it
             # accurately describes the values displayed (e.g. "z-score(log2(units))"). Only
@@ -715,12 +707,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 NULL
             }
 
-            if (!is.null(null.na.inputs$split.by)) {
-                config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = TRUE)
-            } else {
-                config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE)
-            }
-            fig <- do.call(config, c(list(p = p$plot), config_list))
+            fig <- p$plot
 
             if (!is.null(null.na.inputs$split.by) && any(nzchar(null.na.inputs$split.by))) {
                 fig <- apply_facet_subplot_spacing(
@@ -749,26 +736,6 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     }
                 }
             }
-
-            # Add reference lines
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
 
 
             # Apply highlight styling to specified points
@@ -809,10 +776,11 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 color = isolate_fn(input$annotation.color)
             )
 
-            if (!is.null(null.na.inputs$annotate.by) && !is.null(selected.data())) {
+            selected <- isolate_fn(selected.data())
+            if (!is.null(null.na.inputs$annotate.by) && !is.null(selected)) {
                 # Create annotations for selected points using helper function
                 annos <- create_selected_annotations(
-                    selected_data = selected.data(),
+                    selected_data = selected,
                     fig = fig,
                     annotate.by = isolate_fn(input$annotate.by),
                     annotation_params = annotation_params,
@@ -849,20 +817,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 }
             }
 
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
             fig <- fig |> layout(annotations = annos)
-            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
 
-            # Apply axis styling to all subplot axes (handles faceting/split.by)
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = TRUE)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling =  TRUE)
-
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(null.na.inputs$split.by) && any(nzchar(null.na.inputs$split.by))) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
 
             if (isolate_fn(input$webgl)) {
                 # Fix hover data issue with toWebGL() when there are layers without proper text attributes
@@ -892,13 +848,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 isTRUE(isolate_fn(input$custom.model.enable))
             numeric.xy <- is.numeric(plot_data[[x.plot]]) && is.numeric(plot_data[[y.plot]])
             if (want.fits && !numeric.xy) {
-                showNotification(
+                notes <- c(notes, list(.structure_note(
                     paste(
                         "Fit lines need a numeric X and Y axis, so none are drawn while",
                         "an axis adjustment makes one categorical."
                     ),
-                    id = session$ns("fit-lines-skipped"), type = "message"
-                )
+                    id = "fit-lines-skipped"
+                )))
             }
             fit_df <- if (numeric.xy) {
                 plot_data[is.finite(plot_data[[x.plot]]) & is.finite(plot_data[[y.plot]]), , drop = FALSE]
@@ -986,15 +942,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                                 backend       = backend
                             )
                         } else {
-                            showNotification(
+                            notes <- c(notes, list(.structure_note(
                                 paste0(
                                     "Model '", row_name, "' was rejected. Use only ",
                                     "data columns and basic math/transform terms ",
                                     "(e.g. '", isolate_fn(input$y.by), " ~ poly(",
                                     isolate_fn(input$x.by), ", 2)')."
                                 ),
-                                type = "warning"
-                            )
+                                id = paste0("model-rejected-", row_name), type = "warning"
+                            )))
                         }
                     }
                 }
@@ -1011,13 +967,13 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             traj.group <- null.na.inputs$trajectory.group.by
             if (length(trajectories) > 0 && !is.null(traj.group) && traj.group %in% names(plot_data)) {
                 if (!numeric.xy) {
-                    showNotification(
+                    notes <- c(notes, list(.structure_note(
                         paste(
                             "Trajectories need a numeric X and Y axis, so none are drawn while",
                             "an axis adjustment makes one categorical."
                         ),
-                        id = session$ns("trajectories-skipped"), type = "message"
-                    )
+                        id = "trajectories-skipped"
+                    )))
                 } else {
                     fig <- .add_trajectory_arrows(
                         fig,
@@ -1051,20 +1007,10 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 font.color = isolate_fn(input$legend.font.color)
             )
 
-            # Apply the uniform legend visibility and font inputs
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
-
-            # A wrapper's additions, before the axis titles become annotations so any
-            # title text it sets is the one made draggable.
-            if (!is.null(fig.fn)) {
-                fig <- fig.fn(fig, input, isolate_fn)
-            }
-
-            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- axis_titles_as_annotations(fig)
 
             # Marginal distributions go on last: the helpers above treat any extra axis
-            # as a facet panel, so none of them may see the marginals' axes. They are
+            # as a facet panel, so none of them may see the marginals' axes (those
+            # applied afterwards, in apply_uniform_styling(), skip them). They are
             # drawn from the plotted values, like the fit lines, and are not drawn on a
             # split plot or along an axis an adjustment has made categorical.
             marginal.top <- intersect(.marginal_types, isolate_fn(input$marginal.x))
@@ -1084,7 +1030,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     skip.note <- "Marginal plots need a numeric axis, so none are drawn along a categorical one."
                 }
                 if (!is.null(skip.note)) {
-                    showNotification(skip.note, id = session$ns("marginals-skipped"), type = "message")
+                    notes <- c(notes, list(.structure_note(skip.note, id = "marginals-skipped")))
                 }
 
                 # Groups as plotted, which also catches a numeric column an adjustment made
@@ -1126,7 +1072,48 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 )
             }
 
-            fig
+            list(
+                fig = .ensure_built(fig), split.by = null.na.inputs$split.by, notes = notes,
+                axis_by = cur_by, regen_keys = regen_keys
+            )
+        }
+        base_scatterPlot <- .cached_structure(
+            draw_scatterPlot, input, session, data, params = params,
+            extra = function() list(color.panel(), color_levels(), selected.data())
+        )
+        notify <- .structure_notifier(session)
+
+        # The plot, styled: titles, fonts, axes, reference lines and legend, then a
+        # wrapper's additions.
+        generate_scatterPlot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_scatterPlot()
+            notify(base)
+
+            # Axis sides whose title text is regenerated rather than persisted, read
+            # at render. The reads are isolated: the writes must not invalidate this.
+            if (!identical(base$regen_keys, isolate(regen_keys_rv()))) {
+                regen_keys_rv(base$regen_keys)
+            }
+            # When the x or y variable changes, drop any persisted manual title text
+            # for that side so it regenerates for the new variable (position still
+            # persists). Runs before finalize_manual_edits() in the same render pass.
+            cur_by <- base$axis_by
+            prev_by <- isolate(last_axis_by())
+            if (!identical(cur_by, prev_by)) {
+                if (is.null(prev_by) || !identical(cur_by$x, prev_by$x)) {
+                    reset_axis_title_text(edit_store, "axis:x")
+                }
+                if (is.null(prev_by) || !identical(cur_by$y, prev_by$y)) {
+                    reset_axis_title_text(edit_store, "axis:y")
+                }
+                last_axis_by(cur_by)
+            }
+
+            apply_uniform_styling(
+                base$fig, input, isolate_fn,
+                facet.by = base$split.by, title_y = 0.98, fig.fn = fig.fn
+            )
         })
 
         # Render the plot output

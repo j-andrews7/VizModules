@@ -10,7 +10,8 @@ apply_uniform_styling(
   isolate_fn = isolate,
   facet.by = NULL,
   title_y = 0.95,
-  include.modebar.buttons = TRUE
+  include.modebar.buttons = TRUE,
+  fig.fn = NULL
 )
 }
 \arguments{
@@ -30,6 +31,11 @@ main title (see \code{\link[=add_plot_config]{add_plot_config()}}).}
 \item{title_y}{Vertical position of the main title, in paper coordinates.}
 
 \item{include.modebar.buttons}{Passed to \code{\link[=add_plot_config]{add_plot_config()}}.}
+
+\item{fig.fn}{Optional \verb{function(fig, input, isolate_fn)} returning the figure,
+run after the legend is styled and before the axis titles become draggable
+annotations, so any axis title text it sets is the one made draggable. Read
+inputs in it as \code{isolate_fn(input$key)}.}
 }
 \value{
 The styled plotly figure.

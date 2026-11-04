@@ -28,6 +28,10 @@
 #'   main title (see [add_plot_config()]).
 #' @param title_y Vertical position of the main title, in paper coordinates.
 #' @param include.modebar.buttons Passed to [add_plot_config()].
+#' @param fig.fn Optional `function(fig, input, isolate_fn)` returning the figure,
+#'   run after the legend is styled and before the axis titles become draggable
+#'   annotations, so any axis title text it sets is the one made draggable. Read
+#'   inputs in it as `isolate_fn(input$key)`.
 #'
 #' @return The styled plotly figure.
 #'
@@ -48,7 +52,7 @@
 #' )
 #' apply_uniform_styling(fig, input, isolate_fn = identity)
 apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = NULL,
-                                  title_y = 0.95, include.modebar.buttons = TRUE) {
+                                  title_y = 0.95, include.modebar.buttons = TRUE, fig.fn = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -95,6 +99,12 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     fig <- do.call(plotly::config, c(list(p = fig), config_list))
     fig <- apply_plotly_newshape(fig, input, isolate_fn)
     fig <- apply_legend_inputs(fig, input, isolate_fn)
+
+    # A wrapper's additions, before the axis titles become annotations so any
+    # title text it sets is the one made draggable.
+    if (!is.null(fig.fn)) {
+        fig <- fig.fn(fig, input, isolate_fn)
+    }
 
     # Make single-panel x/y axis titles draggable (matches faceted behaviour)
     axis_titles_as_annotations(fig)

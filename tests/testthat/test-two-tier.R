@@ -47,6 +47,17 @@
             keep = "legend.show",
             structural = list(jitter.size = 2)
         ),
+        scatter = list(
+            server = dittoViz_scatterPlotServer, data = example_sales, builder = "scatterPlot",
+            base = "base_scatterPlot", generate = "generate_scatterPlot",
+            inputs = .scatter_inputs(
+                color.by = "product_line", linear.model = TRUE,
+                marginal.x = "density", marginal.y = "density",
+                annotate.by = "sale_id", highlight.points = "Sale_352"
+            ),
+            keep = "legend.show",
+            structural = list(opacity = 0.5)
+        ),
         area = list(
             server = plotthis_AreaPlotServer, data = example_population, builder = "AreaPlot",
             base = "base_AreaPlot", generate = "generate_AreaPlot",
