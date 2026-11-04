@@ -58,6 +58,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         if (is.null(defaults[["margin.r"]])) defaults[["margin.r"]] <- 140
         # Reset functionality
         observeEvent(input$reset, {
+            updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             palette_names <- names(flatten_palette_options(default_palettes()[["choices"]]))
@@ -286,6 +287,11 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 font.family = isolate_fn(input$legend.font.family),
                 font.color = isolate_fn(input$legend.font.color)
             )
+
+            # Many points draw far faster with WebGL (see .auto_webgl()).
+            if (!isFALSE(isolate_fn(input$webgl))) {
+                fig <- .auto_webgl(fig)
+            }
 
             list(fig = .ensure_built(fig), facet.by = facet.by)
         }

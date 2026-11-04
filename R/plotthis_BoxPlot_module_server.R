@@ -144,6 +144,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # Reset functionality
         observeEvent(input$reset, {
+            updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
@@ -466,6 +467,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             # Hide jitter points from legend if they are shown
             if (isolate_fn(input$add.points)) {
                 fig <- .hide_jitter_from_legend(fig)
+            }
+
+            # Many points draw far faster with WebGL (see .auto_webgl()).
+            if (!isFALSE(isolate_fn(input$webgl))) {
+                fig <- .auto_webgl(fig)
             }
 
             # Nothing was tested when stats are off, so the source download gets no

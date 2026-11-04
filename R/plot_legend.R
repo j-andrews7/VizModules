@@ -240,7 +240,8 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
     stopifnot("plotly" %in% class(fig))
     for (i in seq_along(fig$x$data)) {
         fig_data <- fig$x$data[[i]]
-        if (!is.null(fig_data$type) && fig_data$type == "scatter" && !is.null(fig_data$mode) && fig_data$mode == "markers") {
+        # Points drawn with WebGL (see .auto_webgl()) are scattergl traces.
+        if (isTRUE(fig_data$type %in% c("scatter", "scattergl")) && identical(fig_data$mode, "markers")) {
             fig_data$showlegend <- FALSE
         }
         fig$x$data[[i]] <- fig_data

@@ -297,6 +297,8 @@
 #' The following parameters implementing new functionality or controlling plotly-specific
 #' features are also available:
 #'
+#' - `webgl` - Draw the points with WebGL once there are 5,000 or more, as set by the
+#'   `VizModules.webgl.threshold` option (UI: "Plot with WebGL", default: TRUE)
 #' - `x.order` - Order of the `group.by` groups along the x-axis (UI: "Group Order", drag and drop,
 #'   default: the column's factor level order, else sorted). As a default, a character vector of
 #'   levels of `group.by`; levels it leaves out follow in their default order. Not shown for a
@@ -593,6 +595,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 documentParameters$jitter.color,
                 placement = "top", options = list(container = "body")
             ),
+            .webgl_input(ns, defaults),
             tipify(
                 numericInput(ns("hover.round.digits"), "Hover Round Digits",
                     value = get_default(defaults, "hover.round.digits", 5, is.numeric),

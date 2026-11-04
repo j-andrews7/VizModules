@@ -375,6 +375,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
 
         # ---- Reset ---------------------------------------------------------------
         observeEvent(input$reset, {
+            updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             df <- data()
             choices <- c("", names(df))
             cat.choices <- facet_check(df)
@@ -783,6 +784,11 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # Appended rather than set, so facet strip labels and stat brackets survive
             if (!is.null(annos) && length(annos) > 0) {
                 fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
+            }
+
+            # Many points draw far faster with WebGL (see .auto_webgl()).
+            if (!isFALSE(isolate_fn(input$webgl))) {
+                fig <- .auto_webgl(fig)
             }
 
             # Nothing was tested when stats are off, so the source download gets no

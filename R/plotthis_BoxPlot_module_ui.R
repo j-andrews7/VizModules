@@ -146,6 +146,8 @@
 #' @section Parameters controlling additional functionality:
 #' The following parameters implementing new functionality or controlling plotly-specific features are also available:
 #'
+#' - `webgl` - Draw the points with WebGL once there are 5,000 or more, as set by the
+#'   `VizModules.webgl.threshold` option (UI: "Plot with WebGL", default: TRUE)
 #' - `boxplot.width` - Width of boxplot (UI: "Boxplot Width", default: 0.8)
 #' - `x.order` - Order of the X groups (UI: "X Order", drag and drop, default: the column's factor level order,
 #'   else sorted). As a default, a character vector of levels of `x.data`; levels it leaves out follow in their
@@ -341,6 +343,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
+            .webgl_input(ns, defaults),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
                 value = get_default(defaults, "jitter.width", 0.3, is.numeric), step = 0.05),
                 documentParameters$jitter_width,

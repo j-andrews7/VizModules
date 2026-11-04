@@ -262,6 +262,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
 
         # Reset functionality
         observeEvent(input$reset, {
+            updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             choices <- c("", names(data()))
@@ -833,6 +834,11 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
             # Appended rather than set, so facet strip labels and stat brackets survive
             if (!is.null(annos) && length(annos) > 0) {
                 fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
+            }
+
+            # Many points draw far faster with WebGL (see .auto_webgl()).
+            if (!isFALSE(isolate_fn(input$webgl))) {
+                fig <- .auto_webgl(fig)
             }
 
             # Nothing was tested when stats are off, so the source download gets no

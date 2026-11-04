@@ -590,6 +590,69 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 }
 
 
+#' How many points a plot draws before its point layers switch to WebGL
+#'
+#' Set with `options(VizModules.webgl.threshold = n)`; 5000 by default.
+#'
+#' @return A single number.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_webgl_threshold
+.webgl_threshold <- function() {
+    threshold <- getOption("VizModules.webgl.threshold", 5000)
+    if (!is.numeric(threshold) || length(threshold) != 1 || is.na(threshold)) 5000 else threshold
+}
+
+
+#' Draw a figure's point layers with WebGL
+#'
+#' SVG slows down badly with many points, where WebGL does not. This switches the
+#' figure's point traces (`scatter` traces drawn as markers only: jitter, the
+#' points of a scatter plot) to `scattergl` once, together, they hold at least
+#' `threshold` points. Lines, filled areas, boxes, and violins stay SVG, so they
+#' stay vector in SVG downloads; only the switched points become an embedded
+#' image there. Unlike [plotly::toWebGL()], which switches every trace.
+#'
+#' @param fig A plotly figure, built or as [plotly::ggplotly()] returns it.
+#' @param threshold Point count at and above which the points switch.
+#'
+#' @return The figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_auto_webgl
+.auto_webgl <- function(fig, threshold = .webgl_threshold()) {
+    traces <- fig$x$data
+    if (!length(traces)) {
+        return(fig)
+    }
+    is_points <- vapply(traces, function(tr) {
+        mode <- tr$mode %||% ""
+        identical(tr$type %||% "scatter", "scatter") && grepl("markers", mode, fixed = TRUE) &&
+            !grepl("lines", mode, fixed = TRUE) && (is.null(tr$fill) || identical(tr$fill, "none"))
+    }, logical(1))
+    if (!any(is_points)) {
+        return(fig)
+    }
+    n_points <- sum(vapply(traces[is_points], function(tr) length(tr$x %||% tr$y), numeric(1)))
+    if (n_points < threshold) {
+        return(fig)
+    }
+    for (i in which(is_points)) {
+        fig$x$data[[i]]$type <- "scattergl"
+        # ggplotly sets it; scattergl has no such attribute and plotly warns.
+        fig$x$data[[i]]$hoveron <- NULL
+        # A WebGL layer whose hover text is a single string (a background or
+        # "others" layer) has nothing to show and breaks hovering on the rest.
+        if (length(fig$x$data[[i]]$text) == 1) {
+            fig$x$data[[i]]$hoverinfo <- "skip"
+        }
+    }
+    fig
+}
+
+
 #' Forward colorbar drag events to a Shiny input
 #'
 #' Continuous-colour legends (colorbars) live on a trace's marker, so dragging
