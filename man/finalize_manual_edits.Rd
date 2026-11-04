@@ -49,8 +49,14 @@ It performs four jobs:
 \item restores any manually repositioned legend, annotations, axis titles,
 and colorbar captured so far;
 \item records the figure so future relayout events can be matched to stable
-annotation keys (surviving re-ordering on rebuild); and
-\item attaches the JavaScript listener that forwards colorbar drags.
+annotation keys (surviving re-ordering on rebuild);
+\item attaches the JavaScript listener that forwards colorbar drags; and
+\item has the figure re-rendered in place: a \code{layout.transition} makes the plotly
+widget update its graph with \code{Plotly.react()} instead of purging and
+recreating it, which is faster and keeps the user's zoom and toggled legend
+entries whenever \code{layout.uirevision} is unchanged (the cached modules set
+it per build of the plot, so styling changes keep the view). A small script
+clears the previous render's event listeners first, which purging used to.
 }
 
 Restored edits are applied under \code{\link[shiny:isolate]{shiny::isolate()}} so re-applying

@@ -179,6 +179,8 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #'
 #' @return A reactive returning `build`'s value, with `.build` added: a number
 #'   unique to each time the plot was drawn, kept with the value in the cache.
+#'   The figure's `layout.uirevision` is set from it, so a styling change keeps
+#'   the user's zoom while a different plot resets it.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_cached_structure
@@ -189,6 +191,12 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     numbered <- function(value) {
         builds <<- builds + 1L
         value$.build <- builds
+        # The view (zoom, pan, legend toggles) survives re-renders of the same
+        # build, i.e. styling changes, but not a new or different plot; see
+        # finalize_manual_edits().
+        if (inherits(value$fig, "plotly")) {
+            value$fig$x$layout$uirevision <- paste0(id, "-", builds)
+        }
         value
     }
     tracked <- character(0)

@@ -735,8 +735,14 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' 2. restores any manually repositioned legend, annotations, axis titles,
 #'   and colorbar captured so far;
 #' 3. records the figure so future relayout events can be matched to stable
-#'   annotation keys (surviving re-ordering on rebuild); and
-#' 4. attaches the JavaScript listener that forwards colorbar drags.
+#'   annotation keys (surviving re-ordering on rebuild);
+#' 4. attaches the JavaScript listener that forwards colorbar drags; and
+#' 5. has the figure re-rendered in place: a `layout.transition` makes the plotly
+#'   widget update its graph with `Plotly.react()` instead of purging and
+#'   recreating it, which is faster and keeps the user's zoom and toggled legend
+#'   entries whenever `layout.uirevision` is unchanged (the cached modules set
+#'   it per build of the plot, so styling changes keep the view). A small script
+#'   clears the previous render's event listeners first, which purging used to.
 #'
 #' Restored edits are applied under [shiny::isolate()] so re-applying
 #' them never triggers an additional re-render.
@@ -775,8 +781,37 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 
     fig$x$source <- plot_source
     fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)), regen_keys)
+    fig <- .update_in_place(fig)
     store$rendered_fig(fig)
     .add_colorbar_listener(fig, session$ns("colorbar.move"))
+}
+
+
+#' Have a plotly figure re-rendered in place
+#'
+#' Sets a zero-length `layout.transition`, which makes the plotly widget update
+#' an existing graph with `Plotly.react()` rather than purging and recreating
+#' it, and attaches `plotlyUpdate.js`, which clears the previous render's event
+#' listeners first (the widget re-attaches its own on every render).
+#'
+#' @param fig A plotly figure.
+#' @return The figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_update_in_place
+.update_in_place <- function(fig) {
+    if (is.null(fig$x$layout$transition)) {
+        fig$x$layout$transition <- list(duration = 0)
+    }
+    fig$dependencies <- c(fig$dependencies, list(htmlDependency(
+        name = "vizmodules-plotly-update",
+        version = as.character(utils::packageVersion("VizModules")),
+        src = "src",
+        package = "VizModules",
+        script = "plotlyUpdate.js"
+    )))
+    fig
 }
 
 
