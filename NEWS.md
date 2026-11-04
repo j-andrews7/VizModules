@@ -6,11 +6,23 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### All modules
 
+* Plots respond much faster. Changing an input that only styles the plot (titles, fonts, ticks, gridlines, reference lines, the legend's fonts, the download format) now restyles it without redrawing it, which takes a 20,000-point scatter plot from about 4.5 s to 1 s, and going back to settings already drawn, such as toggling an option back or pressing **Reset**, re-uses the plot drawn for them. A plot is drawn once at startup, where some modules drew it up to 12 times, and once when a column changes rather than twice. Settings panels build in about a third of the time.
+  * Plots now update in place instead of being torn down and redrawn, which is faster and keeps your zoom, pan, and hidden legend entries across a styling change. Changing what is plotted still resets the view.
+  * Under the hood, each module draws its plot in a cached step keyed on the data and the inputs it reads, and applies the styling inputs to it in a second step; the adding-a-new-module vignette describes the pattern.
+
 * Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
 ### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
 
 * New drag-and-drop **X Order** (**Group Order** for `freqPlot` and `yPlot`) input in the Data tab sets the order of the x-axis categories, with significance brackets following it. Set it in `defaults` as `x.order`, a character vector of levels; any left out follow in their default order. It is not shown for a column with more than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence over it.
+
+### `BoxPlot`, `DotPlot`, `freqPlot` and `yPlot`
+
+* New **Plot with WebGL** toggle, on by default, draws the points with WebGL once a plot has 5,000 or more of them (`options(VizModules.webgl.threshold = )`), so tens of thousands of jitter points draw several times faster. Boxes, violins, and lines stay SVG. WebGL points are an embedded image in SVG downloads, so turn it off for a fully vector file.
+
+### `dataFilter`
+
+* Sorting the data table no longer reorders or redraws the plots fed by it: `dataFilterServer()` only passes on a change to which rows are shown, and keeps them in their original order. A table's first report of its rows no longer redraws them either.
 
 ### `DotPlot` and `scatterPlot`
 
@@ -31,6 +43,11 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 * `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ### Helpers and exported functions
+
+* New `apply_uniform_styling()` applies the uniform styling inputs (titles, axes, reference lines, the modebar, shape drawing, and the legend) to a module's figure in one call, the second of the modules' two steps. A wrapper's `fig.fn` can run in it.
+* `setup_auto_update_logic()` takes a `track` function, called with the id of every input read through the wrapper it returns. The modules' cached plot step keys its cache on those ids.
+* `get_documentation()` reads each package's help pages once per session from the Rd database, rather than re-parsing them through roxygen2 for every parameter, which took most of the time a module's settings panel took to build. Rd markup becomes plain text, and co-documented parameters (`y_min` and `y_max`, say) now get their description. The roclang dependency is gone.
+* `dittoViz_scatterPlotServer()`'s `fig.fn` now runs in the figure's styling step, still after the legend is styled and before the axis titles become annotations. The plot under it is cached but this step is not, so `fig.fn` can read any of a wrapper's reactives.
 
 * `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row (#231).
 
