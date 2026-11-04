@@ -145,7 +145,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             } else {
                 update_viz_select(session, "color.by", choices = c("", group.choices), selected = color.current)
             }
-        }, ignoreNULL = TRUE)
+        }, ignoreNULL = TRUE, priority = 998)
 
         # The facets are the levels of `var`, so its levels are what can be chosen.
         observeEvent(input$var, ignoreInit = TRUE, {
@@ -161,7 +161,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             # plot renders once now and again when that echo lands.
             freezeReactiveValue(input, "vars.use")
             update_viz_select(session, "vars.use", choices = lvls, selected = keep)
-        })
+        }, priority = 998)
 
         observeEvent(c(input$group.by, input$color.by, input$var), ignoreInit = TRUE, {
             df <- data()
@@ -178,7 +178,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 freezeReactiveValue(input, "sample.by")
             }
             update_viz_select(session, "sample.by", choices = c("", sample.choices), selected = keep)
-        })
+        }, priority = 998)
 
         # Only the sample and color columns are carried in freqPlot()'s hover text,
         # and the annotations are parsed back out of it, so only those can be labelled.
@@ -194,7 +194,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 freezeReactiveValue(input, "annotate.by")
             }
             update_viz_select(session, "annotate.by", choices = c("", annotate.choices), selected = keep)
-        })
+        }, priority = 998)
 
         # Comparisons are between the x-axis groups. Those are the summary's
         # `grouping` column, but its levels are exactly the levels of `group.by` in
@@ -220,7 +220,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 choices = c("", pair_strings),
                 selected = default_stat_pairs(defaults, pair_strings)
             )
-        })
+        }, priority = 998)
 
         # Selections are held as trace/point indices, which only describe the layout
         # they were made on, so they are dropped when that layout changes.

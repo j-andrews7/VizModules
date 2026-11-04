@@ -131,6 +131,17 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Track initialization
         initialized <- reactiveVal(FALSE)
 
+        # What the plot actually draws with. The limits are pushed into the x.min and
+        # x.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the plot draws once with new limits, and the echo
+        # of a limit just set costs no rebuild.
+        x_range_store <- setup_axis_range(input, session, min_key = "x.min", max_key = "x.max", params = params)
+        set_x_limits <- function(limits) {
+            x_range_store(list(min = limits$min, max = limits$max))
+            updateNumericInput(session, "x.max", value = limits$max)
+            updateNumericInput(session, "x.min", value = limits$min)
+        }
+
         # What the plot actually colours by. The picker is rebuilt whenever the group
         # set changes and is re-seeded from this same resolution, so the value it
         # then reports resolves to the palette already in use. A reactiveVal only
@@ -196,13 +207,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 if (!is.null(input$x.data) && input$x.data != "") {
                     limits <- x_limits(axis_range())
                     if (!is.null(limits)) {
-                        updateNumericInput(session, "x.max", value = limits$max)
-                        updateNumericInput(session, "x.min", value = limits$min)
+                        set_x_limits(limits)
                         initialized(TRUE)
                     }
                 }
             }
-        })
+            # Just after setup_axis_range()'s observer and before the render.
+        }, priority = 999)
 
         # Auto-update x-axis range when relevant inputs change
         observe({
@@ -220,14 +231,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!is.null(input$auto.update) && input$auto.update) {
                 limits <- x_limits(x_range)
                 if (!is.null(limits)) {
-                    updateNumericInput(session, "x.max", value = limits$max)
-                    updateNumericInput(session, "x.min", value = limits$min)
+                    set_x_limits(limits)
                 }
             }
             if (!is.null(x_range)) {
                 updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
-        })
+        }, priority = 999)
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -307,8 +317,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "x.max", value = get_default(defaults, "x.max", max.x, is.numeric))
-            updateNumericInput(session, "x.min", value = get_default(defaults, "x.min", min.x, is.numeric))
+            set_x_limits(list(
+                min = get_default(defaults, "x.min", min.x, is.numeric),
+                max = get_default(defaults, "x.max", max.x, is.numeric)
+            ))
             updateNumericInput(session, "axis.title.font.size",
                 value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
@@ -338,11 +350,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             x_range <- axis_range()
             limits <- x_limits(x_range)
             if (!is.null(limits)) {
-                updateNumericInput(session, "x.max", value = limits$max)
-                updateNumericInput(session, "x.min", value = limits$min)
+                set_x_limits(limits)
                 updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
-        })
+        }, priority = 999)
 
 
         observeEvent(input$facet.by, {
@@ -364,6 +375,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # (see .cached_structure()), so it reads every input through isolate_fn and
         # has no side effects; the styling inputs are applied in generate_SplitBarPlot().
         draw_SplitBarPlot <- function(isolate_fn) {
+            # Resolved server-side, so the echo of a limit just set costs no rebuild.
+            x.limits <- isolate_fn(x_range_store())
 
             # Null Values:
             facet.by <- NULL
@@ -430,8 +443,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palcolor = palcolor_arg,
                 palette = palette_arg,
                 palreverse = isolate_fn(input$palreverse),
-                x_min = isolate_fn(input$x.min),
-                x_max = isolate_fn(input$x.max),
+                x_min = x.limits$min,
+                x_max = x.limits$max,
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha_by = alpha.by,
@@ -544,7 +557,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         }
         base_SplitBarPlot <- .cached_structure(
             draw_SplitBarPlot, input, session, data, params = params,
-            extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric())
+            extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric(), x_range_store())
         )
 
         # The plot, styled: titles, fonts, axes, reference lines and legend.

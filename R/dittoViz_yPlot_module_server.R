@@ -115,7 +115,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 choices = c("", pair_strings),
                 selected = default_stat_pairs(defaults, pair_strings)
             )
-        })
+        }, priority = 998)
 
         ns <- session$ns
 

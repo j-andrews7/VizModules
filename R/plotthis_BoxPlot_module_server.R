@@ -140,7 +140,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 choices = c("", pair_strings),
                 selected = default_stat_pairs(defaults, pair_strings)
             )
-        })
+        }, priority = 998)
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -297,7 +297,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     update_viz_select(session, "facet.scale", selected = "free_x")
                 }
             },
-            ignoreInit = FALSE
+            ignoreInit = FALSE, priority = 998
         )
 
         observeEvent(input$facet.by, {

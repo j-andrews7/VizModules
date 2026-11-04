@@ -68,8 +68,11 @@ tracer <- sprintf('
     ns <- asNamespace("VizModules")
     env <- if (exists(fname, envir = ns, inherits = FALSE)) ns else parent.env(ns)
     if (!exists(fname, envir = env, inherits = FALSE)) return(invisible())
+    # freqPlot(data.only = TRUE) only summarises the data, so it is not a build.
     suppressMessages(trace(fname, where = env, print = FALSE,
-        exit = bquote(message("STAGE build ", .(fname)))))
+        exit = bquote(if (!isTRUE(get0("data.only", envir = environment(), inherits = FALSE))) {
+            message("STAGE build ", .(fname))
+        })))
 }
 for (f in c(%s)) .vm_trace(f)
 suppressMessages(trace("toJSON", where = asNamespace("htmlwidgets"), print = FALSE,
