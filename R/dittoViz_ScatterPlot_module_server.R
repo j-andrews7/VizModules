@@ -1074,6 +1074,20 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 )
             }
 
+            # Colour and shape each get a legend section, rather than ggplotly's one
+            # entry per combination. Last, so the size legend and the marginals see
+            # only the plot's own traces.
+            fig <- .ensure_built(fig)
+            color.plot <- p$cols_used$color.by
+            shape.plot <- p$cols_used$shape.by
+            if (!is.null(color.plot) && !is.null(shape.plot) && !is.numeric(plot_data[[color.plot]])) {
+                fig <- .split_color_shape_legend(
+                    fig,
+                    color.levels = levels(droplevels(as.factor(plot_data[[color.plot]]))),
+                    shape.levels = levels(droplevels(as.factor(plot_data[[shape.plot]])))
+                )
+            }
+
             list(
                 fig = .ensure_built(fig), split.by = null.na.inputs$split.by, notes = notes,
                 axis_by = cur_by, regen_keys = regen_keys

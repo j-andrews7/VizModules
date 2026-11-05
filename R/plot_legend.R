@@ -31,17 +31,20 @@
 #' controls functional for both categorical and continuous legends.
 #'
 #' @param fig A plotly figure object.
-#' @param title.size Numeric font size for the legend (or colorbar) title, or
-#'   `NULL` to leave unchanged.
+#' @param title.size Numeric font size for the legend (or colorbar) title, and
+#'   for the titles of a legend's sections (`legendgrouptitle`, such as the
+#'   colour and shape sections of a scatter plot mapping both), or `NULL` to
+#'   leave unchanged.
 #' @param text.size Numeric font size for the legend entry labels (or colorbar
 #'   tick labels), or `NULL` to leave unchanged.
 #' @param position Optional length-2 vector `c(x, xanchor)` placing the legend
 #'   horizontally, e.g. `c(1.02, "left")`. `NULL` (the default) leaves the
 #'   position unchanged.
-#' @param font.family Character font family for the legend title and entry
-#'   labels (and colorbar title and ticks), or `NULL` to leave unchanged.
-#' @param font.color Character color for the legend title and entry labels (and
-#'   colorbar title and ticks), or `NULL` to leave unchanged.
+#' @param font.family Character font family for the legend title, section
+#'   titles and entry labels (and colorbar title and ticks), or `NULL` to leave
+#'   unchanged.
+#' @param font.color Character color for the legend title, section titles and
+#'   entry labels (and colorbar title and ticks), or `NULL` to leave unchanged.
 #' @param show Logical. `FALSE` hides the legend and every colorbar; `TRUE` or
 #'   `NULL` (the default) leave their visibility unchanged.
 #' @return The plotly figure with the requested legend styling applied.
@@ -100,6 +103,8 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
     }
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
+        # The titles of a legend's sections (see .split_color_shape_legend()).
+        legend_args$grouptitlefont <- title_font
     }
 
     if (!is.null(position)) {
@@ -247,6 +252,196 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
         fig$x$data[[i]] <- fig_data
     }
     fig
+}
+
+
+#' Give a plot's colour and shape their own legend sections
+#'
+#' A ggplot mapping both colour and shape to discrete columns has two legends,
+#' but [plotly::ggplotly()] merges them into one with an entry per combination,
+#' named `"(colour,shape)"` under a `"colour<br />shape"` title. This draws them
+#' as ggplot2 does instead: one legend in two titled sections, an entry per
+#' colour level and one per shape level (in black, as ggplot2 draws shape keys).
+#' Clicking an entry hides or shows every trace of its level, and
+#' double-clicking one shows only its level (`inst/src/legendSections.js`).
+#'
+#' The point traces drawn for each combination are kept, out of the legend and
+#' tagged with their levels (in `meta`). A trace drawn for a colour alone, such
+#' as a yPlot's boxes (`"(colour,1)"`, ggplot's placeholder shape for them),
+#' becomes its level's colour entry; a level without one gets a data-less
+#' legend-only trace, as does every shape level. Those are appended after the
+#' existing traces, so no trace's index (a selection's curve number) moves.
+#' Traces grouped under a colour level by name (the scatter plot's marginals)
+#' are hidden and shown with it.
+#'
+#' @param fig A built plotly figure.
+#' @param color.levels,shape.levels The colour and shape levels as plotted.
+#' @param color.title,shape.title The sections' titles. `NULL` takes each from
+#'   the legend title ggplotly wrote.
+#' @param marker.size The size, in px, of the entries' markers.
+#'
+#' @return The figure, unchanged when no trace is drawn for a combination of a
+#'   colour and a shape level.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_split_color_shape_legend
+.split_color_shape_legend <- function(fig, color.levels, shape.levels,
+                                      color.title = NULL, shape.title = NULL, marker.size = 8) {
+    traces <- fig$x$data
+    color.levels <- unique(as.character(color.levels))
+    shape.levels <- unique(as.character(shape.levels))
+    if (!length(traces) || !length(color.levels) || !length(shape.levels)) {
+        return(fig)
+    }
+
+    # The colour level a "(colour,...)" name starts with, and the rest. Longest
+    # first, so a level that is a prefix of another (or holds a comma) is not
+    # taken for it.
+    by_length <- color.levels[order(-nchar(color.levels))]
+    parse_name <- function(name) {
+        if (!is.character(name) || length(name) != 1L || !startsWith(name, "(") || !endsWith(name, ")")) {
+            return(NULL)
+        }
+        inner <- substr(name, 2L, nchar(name) - 1L)
+        for (level in by_length) {
+            prefix <- paste0(level, ",")
+            if (startsWith(inner, prefix)) {
+                return(list(color = level, rest = substring(inner, nchar(prefix) + 1L)))
+            }
+        }
+        NULL
+    }
+    is_points <- function(tr) {
+        mode <- tr$mode %||% ""
+        isTRUE(tr$type %in% c("scatter", "scattergl")) && grepl("markers", mode, fixed = TRUE) &&
+            !grepl("lines", mode, fixed = TRUE)
+    }
+
+    tags <- vector("list", length(traces))
+    for (i in seq_along(traces)) {
+        parsed <- parse_name(traces[[i]]$name)
+        if (is.null(parsed)) {
+            next
+        }
+        tags[[i]] <- if (is_points(traces[[i]]) && parsed$rest %in% shape.levels) {
+            list(color = parsed$color, shape = parsed$rest)
+        } else {
+            list(color = parsed$color)
+        }
+    }
+    combos <- which(vapply(tags, function(t) !is.null(t$shape), logical(1)))
+    if (!length(combos)) {
+        return(fig)
+    }
+    for (i in which(vapply(tags, is.null, logical(1)))) {
+        group <- traces[[i]]$legendgroup
+        if (is.character(group) && length(group) == 1L && group %in% color.levels) {
+            tags[[i]] <- list(color = group, grouped = TRUE)
+        }
+    }
+
+    # Titles: ggplotly's "colour<br />shape".
+    parts <- strsplit(as.character(fig$x$layout$legend$title$text %||% ""), "<br\\s*/?>")[[1]]
+    color.title <- color.title %||% (if (length(parts) >= 1L) parts[1]) %||% ""
+    shape.title <- shape.title %||% (if (length(parts) >= 2L) parts[2]) %||% ""
+    if (!is.null(fig$x$layout$legend$title)) {
+        fig$x$layout$legend$title$text <- ""
+    }
+
+    color_group <- "vizmodules-color"
+    shape_group <- "vizmodules-shape"
+    # Ranks put the colour section first, each in level order.
+    color_rank <- function(level) match(level, color.levels)
+    shape_rank <- function(level) length(color.levels) + match(level, shape.levels)
+    entry_of <- setNames(rep(NA_integer_, length(color.levels)), color.levels)
+
+    for (i in which(!vapply(tags, is.null, logical(1)))) {
+        tag <- tags[[i]]
+        tr <- fig$x$data[[i]]
+        if (!is.null(tag$shape)) {
+            tr$showlegend <- FALSE
+        } else if (!isTRUE(tag$grouped)) {
+            # Drawn for a colour alone: named for it, and its first legend entry is
+            # the level's.
+            tr$name <- tag$color
+            tr$legendgroup <- color_group
+            if (is.na(entry_of[[tag$color]]) && !isFALSE(tr$showlegend)) {
+                entry_of[[tag$color]] <- i
+                tag$entry <- "color"
+                tr$legendgrouptitle <- list(text = color.title)
+                tr$legendrank <- color_rank(tag$color)
+            } else {
+                tr$showlegend <- FALSE
+            }
+        }
+        tag$grouped <- NULL
+        tr$meta <- c(if (is.list(tr$meta)) tr$meta, list(vizmodules_legend = tag))
+        fig$x$data[[i]] <- tr
+    }
+
+    # Entries for the levels no trace stands for, on the plot's first panel.
+    first <- traces[[combos[1]]]
+    entry <- function(name, group, title, rank, marker, tag) {
+        list(
+            type = "scatter", mode = "markers", x = list(NA), y = list(NA),
+            xaxis = first$xaxis %||% "x", yaxis = first$yaxis %||% "y",
+            name = name, legendgroup = group, legendgrouptitle = list(text = title),
+            legendrank = rank, showlegend = TRUE, hoverinfo = "skip",
+            marker = c(marker, list(size = marker.size)),
+            meta = list(vizmodules_legend = tag)
+        )
+    }
+    single <- function(x) if (is.character(x) && length(x) >= 1L) x[[1]] else NULL
+    combo_for <- function(field, level) {
+        combos[vapply(combos, function(i) identical(tags[[i]][[field]], level), logical(1))][1]
+    }
+    added <- list()
+    for (level in color.levels[is.na(entry_of)]) {
+        i <- combo_for("color", level)
+        if (is.na(i)) {
+            next
+        }
+        marker <- traces[[i]]$marker
+        color <- single(marker$color)
+        if (is.null(color) || identical(color, "transparent")) {
+            color <- single(marker$line$color) %||% "#000000"
+        }
+        added[[length(added) + 1L]] <- entry(
+            level, color_group, color.title, color_rank(level),
+            list(symbol = "circle", color = color, line = list(width = 0)),
+            list(entry = "color", color = level)
+        )
+    }
+    for (level in shape.levels) {
+        i <- combo_for("shape", level)
+        if (is.na(i)) {
+            next
+        }
+        marker <- traces[[i]]$marker
+        # A shape drawn without a fill (ggplot's 21-25 with no fill) keeps none.
+        fill <- if (identical(single(marker$color), "transparent")) "transparent" else "#000000"
+        added[[length(added) + 1L]] <- entry(
+            level, shape_group, shape.title, shape_rank(level),
+            list(
+                symbol = single(marker$symbol) %||% "circle", color = fill,
+                line = list(color = "#000000", width = marker$line$width %||% 1)
+            ),
+            list(entry = "shape", shape = level)
+        )
+    }
+    fig$x$data <- c(fig$x$data, added)
+
+    fig$dependencies <- c(fig$dependencies, list(htmlDependency(
+        name = "vizmodules-legend-sections",
+        version = as.character(utils::packageVersion("VizModules")),
+        src = "src",
+        package = "VizModules",
+        script = "legendSections.js"
+    )))
+    htmlwidgets::onRender(fig, htmlwidgets::JS(
+        "function(el) { if (window.VizModulesLegend) { window.VizModulesLegend.attach(el); } }"
+    ))
 }
 
 

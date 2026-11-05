@@ -841,6 +841,29 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig <- .auto_webgl(fig)
             }
 
+            # Colour and shape each get a legend section, rather than ggplotly's one
+            # entry per combination. Several Y variables can be the colour.
+            fig <- .ensure_built(fig)
+            if (!is.null(shape.by) && !isFALSE(isolate_fn(input$jitter.shape.legend.show))) {
+                color.levels <- if (multivar && identical(multivar.aes, "color")) {
+                    y.vars
+                } else {
+                    levels(droplevels(as.factor(plot.df[[color.by]])))
+                }
+                # jitter.shape.legend.size is a ggplot size (mm), converted as ggplotly does.
+                legend.size <- isolate_fn(input$jitter.shape.legend.size)
+                fig <- .split_color_shape_legend(
+                    fig,
+                    color.levels = color.levels,
+                    shape.levels = levels(droplevels(as.factor(plot.df[[shape.by]]))),
+                    marker.size = if (is.numeric(legend.size) && length(legend.size) == 1L && !is.na(legend.size)) {
+                        legend.size * 96 / 25.4
+                    } else {
+                        8
+                    }
+                )
+            }
+
             # Nothing was tested when stats are off, so the source download gets no
             # table from an earlier figure.
             list(

@@ -17,8 +17,10 @@ apply_legend_styling(
 \arguments{
 \item{fig}{A plotly figure object.}
 
-\item{title.size}{Numeric font size for the legend (or colorbar) title, or
-\code{NULL} to leave unchanged.}
+\item{title.size}{Numeric font size for the legend (or colorbar) title, and
+for the titles of a legend's sections (\code{legendgrouptitle}, such as the
+colour and shape sections of a scatter plot mapping both), or \code{NULL} to
+leave unchanged.}
 
 \item{text.size}{Numeric font size for the legend entry labels (or colorbar
 tick labels), or \code{NULL} to leave unchanged.}
@@ -27,11 +29,12 @@ tick labels), or \code{NULL} to leave unchanged.}
 horizontally, e.g. \code{c(1.02, "left")}. \code{NULL} (the default) leaves the
 position unchanged.}
 
-\item{font.family}{Character font family for the legend title and entry
-labels (and colorbar title and ticks), or \code{NULL} to leave unchanged.}
+\item{font.family}{Character font family for the legend title, section
+titles and entry labels (and colorbar title and ticks), or \code{NULL} to leave
+unchanged.}
 
-\item{font.color}{Character color for the legend title and entry labels (and
-colorbar title and ticks), or \code{NULL} to leave unchanged.}
+\item{font.color}{Character color for the legend title, section titles and
+entry labels (and colorbar title and ticks), or \code{NULL} to leave unchanged.}
 
 \item{show}{Logical. \code{FALSE} hides the legend and every colorbar; \code{TRUE} or
 \code{NULL} (the default) leave their visibility unchanged.}

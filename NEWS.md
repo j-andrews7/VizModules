@@ -103,6 +103,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 * Trajectories now end in an arrowhead, which ggplotly dropped, and no longer stop the plot with an error while an axis adjustment is set (#231). The module now draws them itself, through the group medians of the plotted values, after any adjustment. On a split plot, each panel's path runs through that panel's own medians rather than repeating the whole data's.
 * Groups are coloured by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
 
+### `scatterPlot` and `yPlot`
+
+* With both a colour and a **Shape By** column, the legend now has a section for each, as ggplot2 draws it, instead of ggplotly's one entry per combination ("(Gadgets,North)", ...). Clicking an entry hides every point of that level, and double-clicking one shows only its level. The legend's title inputs style the section titles too.
+
 ### Helpers and exported functions
 
 * `updateMultiDynamicInput()` now sets rows given as a named list, the shape `multiDynamicInput()` itself reports. It sent them as a JSON object the browser could not read, which emptied the input and left the server on its old value. This is what **Reset** does for the scatter plot's default trajectories and for a `ComplexHeatmap` `row_annotations` default.
