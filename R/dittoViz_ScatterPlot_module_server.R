@@ -193,13 +193,15 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
 
             levels <- color_levels()
 
-            # When there are no color levels, use single point color
+            # When there are no color levels, use single point color. Its picker is
+            # only drawn once the Colors tab is opened, so until then fall back to the
+            # colour that picker (and the points) start on, not the palette's first.
             if (length(levels) == 0) {
                 single_color <- isolate_fn(input$single.point.color)
                 if (!is.null(single_color) && nzchar(single_color)) {
                     return(single_color)
                 } else {
-                    return(get_default(defaults, "single.point.color", default_palette_values[1], is.character))
+                    return(get_default(defaults, "single.point.color", "#000000", is.character))
                 }
             }
 

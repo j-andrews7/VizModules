@@ -556,6 +556,26 @@ test_that("the marginals follow Color By, in the points' colours", {
     expect_identical(fit.axes, "x y")
 })
 
+test_that("a plot without colour groups draws its marginals in the points' colour", {
+    # Point color's picker is only drawn once the Colors tab is opened, so it may
+    # not have reported yet (NULL drops it from the inputs).
+    for (color.by in c("", "profit")) {
+        fig <- .scatter_figure(example_sales, .scatter_inputs(
+            color.by = color.by, single.point.color = NULL, marginal.x = "density", marginal.y = "histogram"
+        ))
+        colors <- vapply(.scatter_marginals(fig), function(tr) {
+            plotly::toRGB(tr$line$color %||% tr$marker$color)
+        }, character(1))
+        expect_length(colors, 2)
+        expect_identical(unique(colors), plotly::toRGB("#000000"))
+    }
+
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        color.by = "profit", single.point.color = "#FF0000", marginal.x = "density"
+    ))
+    expect_identical(plotly::toRGB(.scatter_marginals(fig)[[1]]$line$color), plotly::toRGB("#FF0000"))
+})
+
 test_that("the marginals are drawn from the plotted values, after an adjustment", {
     fig <- .scatter_figure(example_sales, .scatter_inputs(
         x.adj.fxn = "log10", marginal.x = "rug", marginal.rug.width = 2.5
