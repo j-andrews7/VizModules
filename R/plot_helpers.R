@@ -814,8 +814,8 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' 3. records the figure so future relayout events can be matched to stable
 #'   annotation keys (surviving re-ordering on rebuild);
 #' 4. attaches the JavaScript listener that forwards colorbar drags;
-#' 5. has the figure re-rendered in place: a `layout.transition` makes the plotly
-#'   widget update its graph with `Plotly.react()` instead of purging and
+#' 5. has the figure re-rendered in place: `layout.transition = TRUE` makes the
+#'   plotly widget update its graph with `Plotly.react()` instead of purging and
 #'   recreating it, which is faster and keeps the user's zoom and toggled legend
 #'   entries whenever `layout.uirevision` is unchanged (the cached modules set
 #'   it per build of the plot, so styling changes keep the view). A small script
@@ -1000,10 +1000,17 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 
 #' Have a plotly figure re-rendered in place
 #'
-#' Sets a zero-length `layout.transition`, which makes the plotly widget update
-#' an existing graph with `Plotly.react()` rather than purging and recreating
-#' it, and attaches `plotlyUpdate.js`, which clears the previous render's event
+#' Sets `layout.transition` to `TRUE`, which makes the plotly widget update an
+#' existing graph with `Plotly.react()` rather than purging and recreating it,
+#' and attaches `plotlyUpdate.js`, which clears the previous render's event
 #' listeners first (the widget re-attaches its own on every render).
+#'
+#' The widget only checks that `layout.transition` is set. It is `TRUE` rather
+#' than a transition such as `list(duration = 0)` because plotly.js animates any
+#' `react()` whose changes are all animatable when given one, and an animated
+#' update restyles the traces without redrawing the legend: a colour change
+#' would leave the legend showing the old colours. plotly.js ignores a
+#' transition that is not an object, so each update is drawn in full.
 #'
 #' @param fig A plotly figure.
 #' @return The figure.
@@ -1013,7 +1020,7 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 #' @rdname INTERNAL_update_in_place
 .update_in_place <- function(fig) {
     if (is.null(fig$x$layout$transition)) {
-        fig$x$layout$transition <- list(duration = 0)
+        fig$x$layout$transition <- TRUE
     }
     fig$dependencies <- c(fig$dependencies, list(htmlDependency(
         name = "vizmodules-plotly-update",

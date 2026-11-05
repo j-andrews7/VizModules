@@ -49,7 +49,7 @@ test_that("a render changing only the layout sends just the new layout", {
     expect_identical(msg$message$refresh, "mod-plot.refresh")
     layout <- jsonlite::fromJSON(msg$message$layout, simplifyVector = FALSE)
     expect_identical(layout$title$text, "B")
-    expect_identical(layout$transition$duration, 0L)
+    expect_true(layout$transition)
     expect_false(grepl(as.character(mtcars$mpg[1]), msg$message$layout, fixed = TRUE)) # no trace data
     # The figure recorded for mapping relayout events is the one now drawn.
     expect_identical(isolate(store$rendered_fig())$x$layout$title$text, "B")
@@ -64,6 +64,19 @@ test_that("a render changing only the layout sends just the new layout", {
     out <- .finalize(.layout_fig("B", y = mtcars$mpg * 2), store, session)
     expect_s3_class(out, "plotly")
     expect_length(session$messages, 2)
+})
+
+test_that("figures update in place without plotly.js animating them", {
+    # The widget only needs layout.transition set. An object would make plotly.js
+    # animate a colour-only update, which never redraws the legend.
+    fig <- .update_in_place(.layout_fig("A"))
+    expect_true(fig$x$layout$transition)
+    built <- plotly::plotly_build(fig)
+    expect_true(built$x$layout$transition)
+
+    # A transition the figure already has is its own.
+    own <- plotly::plotly_build(plotly::layout(.layout_fig("A"), transition = list(duration = 500)))
+    expect_identical(.update_in_place(own)$x$layout$transition, list(duration = 500))
 })
 
 test_that("a figure without a uirevision keeps the view until its traces change", {

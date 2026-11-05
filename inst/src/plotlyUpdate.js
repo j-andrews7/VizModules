@@ -4,7 +4,10 @@
 // unless the figure's layout has a `transition`, in which case it calls
 // Plotly.react() on the same graph div instead: faster, and the view (zoom,
 // pan, toggled legend entries) survives under a constant layout.uirevision.
-// The modules set both (see finalize_manual_edits()).
+// The modules set both (see finalize_manual_edits()). The transition is `true`,
+// not an object: given an object, plotly.js animates any update whose changes
+// are all animatable (a colour change, say), and an animated update never
+// redraws the legend.
 //
 // The one catch: the binding, and any onRender() hooks, attach their event
 // listeners on every render, and purge() was what used to clear the previous
