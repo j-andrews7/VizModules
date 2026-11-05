@@ -481,12 +481,14 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 column_gap = grid::unit(isolate_fn(input$column_gap) %||% get_default(defaults, "column_gap", 1), "mm"),
                 row_title = .heatmap_resolve_title(
                     isolate_fn(input$row_title) %||% get_default(defaults, "row_title", ""),
-                    isolate_fn(input$show_row_slice_titles) %||% get_default(defaults, "show_row_slice_titles", TRUE)
+                    isolate_fn(input$show_row_slice_titles) %||% get_default(defaults, "show_row_slice_titles", TRUE),
+                    n_slices = .heatmap_slice_count(row_res)
                 ),
                 column_title = .heatmap_resolve_title(
                     isolate_fn(input$column_title) %||% get_default(defaults, "column_title", ""),
                     isolate_fn(input$show_column_slice_titles) %||%
-                        get_default(defaults, "show_column_slice_titles", TRUE)
+                        get_default(defaults, "show_column_slice_titles", TRUE),
+                    n_slices = .heatmap_slice_count(column_res)
                 ),
                 show_row_names = isolate_fn(input$show_row_names) %||% get_default(defaults, "show_row_names", TRUE),
                 show_column_names = isolate_fn(input$show_column_names) %||% get_default(defaults, "show_column_names", TRUE),
@@ -498,6 +500,16 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                 row_title_gp = grid::gpar(fontsize = isolate_fn(input$title_fontsize) %||% get_default(defaults, "title_fontsize", 13.2)),
                 column_title_gp = grid::gpar(fontsize = isolate_fn(input$title_fontsize) %||% get_default(defaults, "title_fontsize", 13.2))
             )
+
+            # Heatmap() keeps the frame it was called from, to fill in slice-title
+            # templates. That is this reactive's frame, which reaches the whole
+            # session: InteractiveComplexHeatmap hashes the drawn heatmap on every
+            # draw (htPositionsOnDevice()), and so hashed every module's data and
+            # figures with it, which took seconds in a busy app. An empty
+            # environment keeps nothing, and no title can reach a function
+            # through it (see .heatmap_resolve_title()). Set before draw(), which
+            # copies the heatmap into its layout.
+            ht@heatmap_param$calling_env <- new.env(parent = emptyenv())
 
             # The interactive widget needs a *drawn* heatmap (HeatmapList) to
             # measure cell positions. Draw it onto a throwaway device so the

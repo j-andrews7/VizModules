@@ -114,23 +114,61 @@
 #' titles at once, so the text replaces the group names (a single string spans
 #' every slice; a `%s` in it is filled in with each group's name).
 #'
+#' Typed text is always drawn as typed. On a split axis, `Heatmap()` evaluates a
+#' single title holding `{...}` or `@{...}` as R code (with `glue::glue()` and
+#' `GetoptLong::qq()`), so such a title is passed once per slice instead, which
+#' it draws as given.
+#'
 #' @param text The title box's value. `NULL` (an input that has not reported
 #'   yet) is treated as blank.
 #' @param show_slice_titles Whether a split axis is titled with its group names
 #'   when `text` is blank. Anything but `TRUE` counts as `FALSE`.
+#' @param n_slices The number of slices the axis is split into (see
+#'   [.heatmap_slice_count()]); `1` when it is not split.
 #'
-#' @return `text` when it is non-blank; otherwise `character(0)` (group names
-#'   shown, which is also no title at all when the axis is not split) or `NULL`
-#'   (no title). Suitable for `Heatmap(row_title = , column_title = )`.
+#' @return `text` when it is non-blank (repeated once per slice when it would be
+#'   evaluated otherwise); otherwise `character(0)` (group names shown, which is
+#'   also no title at all when the axis is not split) or `NULL` (no title).
+#'   Suitable for `Heatmap(row_title = , column_title = )`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_heatmap_resolve_title
 #' @keywords internal
-.heatmap_resolve_title <- function(text, show_slice_titles = TRUE) {
+.heatmap_resolve_title <- function(text, show_slice_titles = TRUE, n_slices = 1L) {
     if (nz_value(text)) {
+        # A `%s` title is filled in with sprintf(), never evaluated.
+        if (n_slices > 1L && !grepl("%s", text, fixed = TRUE) && grepl("\\{.+\\}", text)) {
+            return(rep(text, n_slices))
+        }
         return(text)
     }
     if (isTRUE(show_slice_titles)) character(0) else NULL
+}
+
+
+#' The number of slices a resolved split divides an axis into
+#'
+#' @param res A [.heatmap_resolve_split()] result.
+#'
+#' @return An integer: `res$km` for a k-means split, the requested count for a
+#'   hierarchical one, the number of distinct value combinations for an
+#'   annotation one, and `1` when the axis is not split.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_slice_count
+#' @keywords internal
+.heatmap_slice_count <- function(res) {
+    if (isTRUE(res$km > 1L)) {
+        return(as.integer(res$km))
+    }
+    split <- res$split
+    if (is.null(split)) {
+        return(1L)
+    }
+    if (is.numeric(split) && length(split) == 1L) {
+        return(as.integer(split))
+    }
+    nrow(unique(as.data.frame(split)))
 }
 
 

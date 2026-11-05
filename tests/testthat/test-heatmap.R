@@ -141,6 +141,71 @@ test_that("the heatmap module drops the slice titles when Show Row/Column Slice 
     })
 })
 
+test_that(".heatmap_resolve_title passes a title Heatmap() would evaluate once per slice", {
+    # Heatmap() runs a single {...} or @{...} title on a split axis as R code.
+    expect_identical(.heatmap_resolve_title("{x}", TRUE, n_slices = 3), rep("{x}", 3))
+    expect_identical(.heatmap_resolve_title("@{x} genes", FALSE, n_slices = 2), rep("@{x} genes", 2))
+    # Not split, not a template, or filled in by sprintf(): never evaluated, so as typed.
+    expect_identical(.heatmap_resolve_title("{x}", TRUE, n_slices = 1), "{x}")
+    expect_identical(.heatmap_resolve_title("Samples", TRUE, n_slices = 3), "Samples")
+    expect_identical(.heatmap_resolve_title("{x} %s", TRUE, n_slices = 3), "{x} %s")
+    expect_identical(.heatmap_resolve_title("{}", TRUE, n_slices = 3), "{}")
+    expect_identical(.heatmap_resolve_title("", TRUE, n_slices = 3), character(0))
+})
+
+test_that(".heatmap_slice_count counts the slices of each kind of split", {
+    expect_identical(.heatmap_slice_count(list(km = 1L, split = NULL)), 1L)
+    expect_identical(.heatmap_slice_count(list(km = 4L, split = NULL)), 4L)
+    expect_identical(.heatmap_slice_count(list(km = 1L, split = 3L)), 3L)
+    sv <- data.frame(a = c("x", "x", "y", "y"), b = c("p", "q", "p", "p"))
+    expect_identical(.heatmap_slice_count(list(km = 1L, split = sv)), 3L)
+})
+
+test_that("the heatmap module draws typed titles as typed, never as code, and holds no session", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+    skip_if_not_installed("glue")
+
+    sample_cols <- setdiff(names(example_heatmap_matrix), c("gene", "pathway", "mean_expression"))
+    data <- shiny::reactive(list(
+        matrix = example_heatmap_matrix, column_annotations = example_heatmap_column_data
+    ))
+    flag <- "vizmodules_heatmap_title_ran"
+    withr::defer(if (exists(flag, envir = globalenv())) rm(list = flag, envir = globalenv()))
+
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = data), {
+        session$setInputs(
+            matrix.cols = sample_cols, rowname.col = "gene", column_key = "sample",
+            row_filter = "", column_filter = "", auto.update = TRUE,
+            row_split_by = "Annotation", row_split_cols = "pathway",
+            column_split_by = "K-means", column_split_n = 2,
+            row_annotations = NULL, column_annotations = NULL
+        )
+
+        # Heatmap() would keep this reactive's frame, which reaches the session, and
+        # InteractiveComplexHeatmap hashes the whole heatmap on every draw.
+        ht <- build_heatmap()
+        expect_identical(parent.env(ht@ht_list[[1]]@heatmap_param$calling_env), emptyenv())
+        expect_lt(length(serialize(ht, NULL)), 5e6)
+
+        for (title in c(
+            sprintf("{assign('%s', TRUE, envir = globalenv())}", flag),
+            sprintf("@{assign('%s', TRUE, envir = globalenv())}", flag)
+        )) {
+            session$setInputs(row_title = title, column_title = title)
+            drawn <- build_heatmap()@ht_list[[1]]
+            expect_false(exists(flag, envir = globalenv()))
+            expect_identical(unique(drawn@row_title), title)
+            expect_identical(unique(drawn@column_title), title)
+        }
+
+        # A plain title still spans the split axis.
+        session$setInputs(row_title = "Pathways")
+        expect_identical(build_heatmap()@ht_list[[1]]@row_title, "Pathways")
+    })
+})
+
 # ---- .heatmap_scale_matrix() ------------------------------------------------------------------
 
 test_that(".heatmap_scale_matrix leaves 'none' alone and z-scores rows/columns correctly", {
