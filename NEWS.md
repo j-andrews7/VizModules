@@ -88,8 +88,8 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 ### `ComplexHeatmap`
 
 * **Security:** A **Row Title** or **Column Title** containing `{...}` or `@{...}` is now drawn as typed. On a split axis, `ComplexHeatmap::Heatmap()` ran it as R code on the server.
-* The heatmap opens faster, and no longer slows down the longer an app runs. Each heatmap kept a reference to the whole Shiny session, which was pretty stupid in hindsight. It also drew the heatmap 4 to 6 times on opening, as each input and colour picker reported the value already in use; it now draws once, and only redraws when what it shows changes.
-* The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap` or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
+* The heatmap opens faster, and no longer slows down the longer an app runs. Each heatmap kept a reference to the whole Shiny session, which was pretty stupid in hindsight. It also drew the heatmap 4 to 6 times on opening, as each input and colour picker reported the value already in use.
+* The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap`, or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
 
 ### `dumbbellPlot` and `linePlot`
 
