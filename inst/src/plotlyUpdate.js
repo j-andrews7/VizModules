@@ -18,13 +18,15 @@
 // its own. plotly.js keeps its internal listeners elsewhere (_internalEv), so
 // they are untouched.
 //
-// When only the layout changed, the server sends just that, in a
-// `vizmodules-plotly-layout` message, and cancels the render (see
-// .send_layout_only()). It is applied over the traces already drawn, and kept
-// in Shiny's copy of the output's last value, which Shiny replays if the
-// output is bound again. The listeners stay: no render re-attaches them. If
-// there is no plot to update, or an error hides it until a full render clears
-// it, the message asks the server for the whole figure instead.
+// When only the layout changed, within one layout.uirevision, the server sends
+// just that, in a `vizmodules-plotly-layout` message, and cancels the render (see
+// .send_layout_only()). A new uirevision always comes as a full render: the traces
+// hold the view state it resets, such as selected points. The layout is applied
+// over the traces already drawn, and kept in Shiny's copy of the output's last
+// value, which Shiny replays if the output is bound again. The listeners stay:
+// no render re-attaches them. If there is no plot to update, or an error hides
+// it until a full render clears it, the message asks the server for the whole
+// figure instead.
 (function($) {
     if (!$ || window.__vizmodulesPlotlyUpdate) {
         return;

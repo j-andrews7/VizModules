@@ -822,11 +822,12 @@ setup_manual_edits <- function(input, session, plot_source) {
 #'   clears the previous render's event listeners first, which purging used to;
 #'   and
 #' 6. sends only the layout when nothing else changed: if the figure's traces,
-#'   config, and everything but its layout match the figure last sent to this
-#'   output, the new layout goes to the browser in a small message, applied
-#'   with `Plotly.react()` over the traces already drawn, and the render is
-#'   cancelled (`req(FALSE, cancelOutput = TRUE)`), so no code after this call
-#'   runs. A styling change then costs kilobytes rather than the whole figure.
+#'   config, `layout.uirevision`, and everything else but its layout match the
+#'   figure last sent to this output, the new layout goes to the browser in a
+#'   small message, applied with `Plotly.react()` over the traces already drawn,
+#'   and the render is cancelled (`req(FALSE, cancelOutput = TRUE)`), so no code
+#'   after this call runs. A styling change then costs kilobytes rather than the
+#'   whole figure.
 #'   Set `options(VizModules.layout.updates = FALSE)` to always send the whole
 #'   figure.
 #'
@@ -899,6 +900,12 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 #' only when the figure is sent whole, so the user's zoom survives a styling
 #' change in modules not drawn through [.cached_structure()] too.
 #'
+#' A changed `layout.uirevision` is sent whole however little else changed, such
+#' as a redraw that only adds the annotations for a selection. It means a new
+#' plot, whose view resets, and the traces in the browser hold part of that view:
+#' plotly keeps the selected points and hidden legend entries on them, so a
+#' selection would stay dimmed over an update that kept them.
+#'
 #' The browser asks for the whole figure (through the `plot.refresh` input that
 #' [setup_manual_edits()] observes) when it cannot apply the update: no plot
 #' drawn yet, or an error hiding it, which only a full render clears. The
@@ -930,8 +937,12 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
     # .cached_structure()) gets one that changes only with its traces, so a
     # styling change keeps the user's zoom there too.
     own_revision <- is.null(layout$uirevision)
+    # A new uirevision is a different plot, whose view resets. Only fresh traces do
+    # that: those in the browser hold the view state (selected points, hidden legend
+    # entries), so a redraw adding just annotations still goes out whole.
+    same_plot <- own_revision || identical(sent$layout$uirevision, layout$uirevision)
 
-    if (identical(sent$id, id) && identical(sent$rest, rest) && !.has_js(layout)) {
+    if (identical(sent$id, id) && identical(sent$rest, rest) && same_plot && !.has_js(layout)) {
         if (own_revision) layout$uirevision <- sent$revision
         changed <- !identical(sent$layout, layout)
         session$sendCustomMessage("vizmodules-plotly-layout", list(

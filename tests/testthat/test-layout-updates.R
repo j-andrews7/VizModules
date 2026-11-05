@@ -96,6 +96,28 @@ test_that("a figure without a uirevision keeps the view until its traces change"
     expect_identical(.finalize(own("A"), store, .layout_session())$x$layout$uirevision, "build-7")
 })
 
+test_that("a new uirevision is sent whole, however little else changed", {
+    session <- .layout_session()
+    store <- .layout_store()
+    fig <- function(title, revision) plotly::layout(.layout_fig(title), uirevision = revision)
+    .finalize(fig("A", "build-1"), store, session)
+
+    # The same plot restyled: its traces stay, and with them the view.
+    expect_error(.finalize(fig("B", "build-1"), store, session), class = "shiny.output.cancel")
+    expect_length(session$messages, 1)
+
+    # A redraw that only changes the layout (the annotations for a selection, say)
+    # is a new plot: the traces in the browser hold its selected points and hidden
+    # legend entries, which only fresh ones clear.
+    out <- .finalize(fig("B", "build-2"), store, session)
+    expect_s3_class(out, "plotly")
+    expect_identical(out$x$layout$uirevision, "build-2")
+    expect_length(session$messages, 1)
+
+    # And it is what the next update is compared with.
+    expect_error(.finalize(fig("C", "build-2"), store, session), class = "shiny.output.cancel")
+})
+
 test_that("the layout sent decodes as it would inside a full render", {
     session <- .layout_session()
     store <- .layout_store()

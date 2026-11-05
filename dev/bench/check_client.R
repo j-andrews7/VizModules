@@ -12,7 +12,9 @@
 #   * after a palette change, every legend swatch shows its trace's new colour;
 #   * with colour and shape both mapped, the legend has a section for each, a
 #     click on an entry hides its level's points, a double-click shows only its
-#     level, and both survive a styling change.
+#     level, and both survive a styling change;
+#   * a selection leaves nothing dimmed once its annotations are drawn: that redraw
+#     is a new plot, so the figure goes out whole, whose traces hold no selection.
 #
 # Usage (from the package root, NOT_CRAN=true):
 #   Rscript dev/bench/check_client.R [module ids...]
@@ -23,11 +25,13 @@ pkg <- normalizePath(".", winslash = "/")
 
 # map: an input change that redraws the plot; err: one that fails the render's req();
 # palette: whether the module has a palette.colours picker to recolour the groups with;
-# shape: an input change that maps shape alongside colour.
+# shape: an input change that maps shape alongside colour; annotate: the Annotate By
+# column for a selection.
 modules <- list(
     scatter = list(app = "dittoViz_scatterPlotApp", map = list("y.by", "profit"), err = "y.by",
-        shape = list("shape.by", "region")),
-    yplot = list(app = "dittoViz_yPlotApp", map = NULL, err = NULL, shape = list("shape.by", "gender")),
+        shape = list("shape.by", "region"), annotate = "sale_id"),
+    yplot = list(app = "dittoViz_yPlotApp", map = NULL, err = NULL, shape = list("shape.by", "gender"),
+        annotate = "employee_id"),
     box = list(app = "plotthis_BoxPlotApp", map = list("y.data", "age"), err = "y.data"),
     line = list(app = "linePlotApp", map = list("y.value", "profit"), err = NULL),
     area = list(app = "plotthis_AreaPlotApp", map = NULL, err = NULL, palette = TRUE),
@@ -193,6 +197,37 @@ for (id in names(modules)) {
             !identical(before_sw$legend, after_sw$legend))
     }
 
+    # Drag out a selection: its annotations are added, and nothing stays dimmed.
+    select_ok <- NA
+    if (!is.null(m$annotate)) {
+        set_input(app, "annotate.by", m$annotate)
+        annotations <- sprintf("(%s.layout.annotations || []).length", gd)
+        before_select <- app$get_js(annotations)
+        renders <- counts(app)$values
+        app$run_js(sprintf("Plotly.relayout(%s, {dragmode: 'select'});", gd))
+        Sys.sleep(1)
+        box <- jsonlite::fromJSON(app$get_js(sprintf("(function(){ var r = %s.querySelector('.nsewdrag').getBoundingClientRect();
+            return JSON.stringify({x: r.left, y: r.top, w: r.width, h: r.height}); })()", gd)))
+        cdp <- app$get_chromote_session()
+        from <- c(box$x + box$w * 0.1, box$y + box$h * 0.1)
+        to <- c(box$x + box$w * 0.9, box$y + box$h * 0.9)
+        cdp$Input$dispatchMouseEvent(type = "mouseMoved", x = from[1], y = from[2])
+        cdp$Input$dispatchMouseEvent(type = "mousePressed", x = from[1], y = from[2], button = "left", clickCount = 1)
+        for (k in 1:8) {
+            p <- from + (to - from) * k / 8
+            cdp$Input$dispatchMouseEvent(type = "mouseMoved", x = p[1], y = p[2], button = "left")
+            Sys.sleep(0.05)
+        }
+        cdp$Input$dispatchMouseEvent(type = "mouseReleased", x = to[1], y = to[2], button = "left", clickCount = 1)
+        settle(app)
+        Sys.sleep(1)
+        dimmed <- app$get_js(sprintf("%s.data.filter(function(t){
+            return t.selectedpoints !== undefined && t.selectedpoints !== null; }).length", gd))
+        added <- app$get_js(annotations) - before_select
+        select_ok <- sprintf("%s (annotations added=%d, traces still dimmed=%d, full renders=%d)",
+            added > 0 && dimmed == 0, added, dimmed, counts(app)$values - renders)
+    }
+
     # Map shape alongside colour, then click the legend's sections.
     sections_ok <- NA
     if (!is.null(m$shape)) {
@@ -225,11 +260,11 @@ for (id in names(modules)) {
     cat(sprintf(paste0(
         "CHECK %-8s 4 restyles: full renders=%d layout updates=%d title size=%s | react=%d newPlot=%d purge=%d |",
         " listeners stable=%s (%s) | zoom kept on restyle=%s, reset on mapping=%s | selection sent %s time(s) |",
-        " shown again after an error=%s | legend follows a palette change=%s | legend sections=%s\n"),
+        " shown again after an error=%s | legend follows a palette change=%s | legend sections=%s | selection=%s\n"),
         id, calls$values, calls$layouts, title_size, calls$react, calls$newPlot, calls$purge, same_listeners,
         paste(sprintf("%s:%s", names(after), unlist(after)), collapse = ","),
         isTRUE(all.equal(zoomed, restyled)), !isTRUE(all.equal(zoomed, remapped)), selected, recovered, legend_ok,
-        sections_ok
+        sections_ok, select_ok
     ))
     app$stop()
 }

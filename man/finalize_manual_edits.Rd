@@ -60,11 +60,12 @@ it per build of the plot, so styling changes keep the view). A small script
 clears the previous render's event listeners first, which purging used to;
 and
 \item sends only the layout when nothing else changed: if the figure's traces,
-config, and everything but its layout match the figure last sent to this
-output, the new layout goes to the browser in a small message, applied
-with \code{Plotly.react()} over the traces already drawn, and the render is
-cancelled (\code{req(FALSE, cancelOutput = TRUE)}), so no code after this call
-runs. A styling change then costs kilobytes rather than the whole figure.
+config, \code{layout.uirevision}, and everything else but its layout match the
+figure last sent to this output, the new layout goes to the browser in a
+small message, applied with \code{Plotly.react()} over the traces already drawn,
+and the render is cancelled (\code{req(FALSE, cancelOutput = TRUE)}), so no code
+after this call runs. A styling change then costs kilobytes rather than the
+whole figure.
 Set \code{options(VizModules.layout.updates = FALSE)} to always send the whole
 figure.
 }

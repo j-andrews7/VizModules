@@ -34,9 +34,11 @@ finalize_manual_edits(fig, plot_source, store, session, regen_keys = character(0
 (legend, annotation, and axis-title drags) plus the JavaScript-forwarded colorbar drag.
 `finalize_manual_edits()` tags the figure with the event source, restores captured edits,
 records the figure for stable annotation keying, and re-attaches the colorbar listener.
-When only the layout changed since the figure last sent, it sends the browser just the
-new layout and cancels the render, so nothing after it in `renderPlotly()` runs: make it
-the last call, and return what it returns.
+When only the layout changed since the figure last sent, with the same
+`layout.uirevision`, it sends the browser just the new layout and cancels the render, so
+nothing after it in `renderPlotly()` runs: make it the last call, and return what it
+returns. A figure with a new `layout.uirevision` is a new plot, and always goes out whole,
+which clears the selection and hidden legend entries the traces in the browser hold.
 
 The event source **must** be unique per instance — `session$ns("...")` guarantees that.
 Two instances sharing a source will capture each other's edits.
