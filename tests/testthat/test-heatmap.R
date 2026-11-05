@@ -960,6 +960,76 @@ test_that("ComplexHeatmap_HeatmapServer renders default annotations on startup w
     )
 })
 
+test_that("the heatmap is only rebuilt when what it draws changes", {
+    skip_if_not_installed("ComplexHeatmap")
+    skip_if_not_installed("InteractiveComplexHeatmap")
+    skip_if_not_installed("circlize")
+
+    ex <- .module_example("heatmap")
+    data <- shiny::reactive(ex$data_list[[1]])
+    shiny::testServer(ComplexHeatmap_HeatmapServer, args = list(data = data, defaults = ex$defaults), {
+        # What the server has before the browser reports the rest. Everything else
+        # is read from `defaults`.
+        session$setInputs(
+            matrix.cols = ex$defaults$matrix.cols, rowname.col = "gene", column_key = "sample",
+            row_filter = "", column_filter = "", auto.update = TRUE
+        )
+        first <- build_heatmap()
+        expect_s4_class(first, "HeatmapList")
+        expect_length(first@ht_list[[1]]@left_annotation@anno_list, 1)
+
+        # The browser reports the values those defaults gave: a whole number as an
+        # integer, and the annotation rows under its own keys with every field set.
+        session$setInputs(
+            scale = "Rows", row_names_fontsize = 7L, row_split_by = "Annotation", row_split_cols = "pathway",
+            column_split_by = "Annotation", column_split_cols = "condition", row_gap = 1L, title_fontsize = 13.2,
+            row_annotations = list(row_annotations1 = list(
+                column = "pathway", side = "Left", label_side = "bottom", label_size = 10L, show_legend = TRUE
+            ))
+        )
+        expect_true(identical(first, build_heatmap()))
+
+        # So does an annotation's colour picker once drawn, with the colours it was
+        # seeded with.
+        levels <- sort(unique(as.character(example_heatmap_matrix$pathway)))
+        seeded <- resolve_palette(
+            levels, NULL, flatten_palette_options(default_palettes()[["choices"]])[["dittoColors"]]
+        )
+        widget <- .heatmap_annotation_widget_id("row_ann_color", "row_annotations1")
+        do.call(session$setInputs, stats::setNames(list(seeded), widget))
+        expect_true(identical(first, build_heatmap()))
+
+        # A real change does rebuild it, and a picker's colour reaches the heatmap.
+        session$setInputs(row_names_fontsize = 8L)
+        second <- build_heatmap()
+        expect_false(identical(first, second))
+        recoloured <- seeded
+        recoloured[[1]] <- "#123456"
+        do.call(session$setInputs, stats::setNames(list(recoloured), widget))
+        third <- build_heatmap()
+        expect_false(identical(second, third))
+        expect_identical(
+            unname(third@ht_list[[1]]@left_annotation@anno_list[[1]]@color_mapping@colors[levels[1]]), "#123456FF"
+        )
+    })
+})
+
+test_that("annotation tracks hold what is drawn, however the rows were written", {
+    df <- data.frame(pathway = c("a", "b"), score = 1:2)
+    lookup <- function(row_name, col, values) list(colors = col)
+    tracks <- function(rows) .heatmap_annotation_tracks(rows, df, c("g1", "g2"), which = "row", color_lookup = lookup)
+
+    expect_identical(
+        tracks(list(r1 = list(column = "pathway", side = "Left"))),
+        tracks(list(row_annotations1 = list(
+            column = "pathway", side = "Left", label_side = "bottom", label_size = 10L, show_legend = "TRUE"
+        )))
+    )
+    expect_identical(tracks(NULL), list())
+    expect_identical(tracks(list(r1 = list(column = "absent"))), list())
+    expect_null(.heatmap_tracks_annotation(list(), "row"))
+})
+
 test_that("a floating info panel is re-parked so it cannot widen the page", {
     skip_if_not_installed("InteractiveComplexHeatmap")
 

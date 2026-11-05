@@ -250,6 +250,40 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 }
 
 
+#' A reactive that only invalidates when its value changes
+#'
+#' Reactives invalidate their readers whenever anything they read changes, even
+#' if their value comes out the same. This passes one through a
+#' [shiny::reactiveVal()], which ignores a value `identical()` to the one it holds,
+#' so an expensive reader runs only for a real change. It suits a reactive
+#' returning plain values; closures and environments never compare equal, so
+#' anything holding those always counts as a change.
+#'
+#' The value is read at `priority = 1000`, like other stores a render reads, so a
+#' change reaches its readers in the same flush. An error is held like a value and
+#' raised to the readers, so `req()` and `validate()` work through it as usual.
+#'
+#' @param x A reactive.
+#'
+#' @return A reactive returning `x`'s value.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_settled_reactive
+#' @keywords internal
+.settled_reactive <- function(x) {
+    held <- reactiveVal(NULL)
+    observe(held(tryCatch(x(), error = identity)), priority = 1000)
+    reactive({
+        value <- held()
+        req(!is.null(value))
+        if (inherits(value, "error")) {
+            stop(value)
+        }
+        value
+    })
+}
+
+
 #' A notification raised while drawing a plot
 #'
 #' The structure step is cached, so it cannot show notifications itself (a cache

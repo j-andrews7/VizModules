@@ -235,3 +235,41 @@ test_that("no styling input changes what the structure step draws", {
         })
     }
 })
+
+test_that(".settled_reactive passes on real changes only, and errors as they are", {
+    server <- function(id) {
+        moduleServer(id, function(input, output, session) {
+            source <- reactive({
+                validate(need(!identical(input$x, "bad"), "not that"))
+                list(even = as.numeric(input$x) %% 2 == 0)
+            })
+            settled <- .settled_reactive(source)
+            count <- new.env()
+            count$runs <- 0
+            reader <- reactive({
+                count$runs <- count$runs + 1
+                settled()
+            })
+        })
+    }
+    testServer(server, {
+        session$setInputs(x = 2)
+        expect_identical(reader(), list(even = TRUE))
+        expect_identical(count$runs, 1)
+
+        # Its source re-ran, but its value came out the same.
+        session$setInputs(x = 4)
+        expect_identical(reader(), list(even = TRUE))
+        expect_identical(count$runs, 1)
+
+        session$setInputs(x = 3)
+        expect_identical(reader(), list(even = FALSE))
+        expect_identical(count$runs, 2)
+
+        # A validation failure reaches the reader as itself, and clears.
+        session$setInputs(x = "bad")
+        expect_error(reader(), "not that", class = "shiny.silent.error")
+        session$setInputs(x = 5)
+        expect_identical(reader(), list(even = FALSE))
+    })
+})
