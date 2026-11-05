@@ -197,6 +197,40 @@ test_that("highlight values may contain spaces when separated by commas", {
     list(Custom = list(model_type = "lm", formula = formula, line_colour = "#FF0000", line_width = "2"))
 }
 
+test_that("fit and model lines are only listed in the legend when asked", {
+    fit_traces <- function(fig, pattern) {
+        Filter(function(tr) grepl(pattern, tr$name %||% ""), plotly::plotly_build(fig)$x$data)
+    }
+    groups <- levels(as.factor(example_sales$product_line))
+
+    # Off by default: a group's line joins the group's legend group instead, so it
+    # hides and shows with the group's entry.
+    for (inputs in list(
+        .scatter_inputs(color.by = "product_line", linear.model = TRUE),
+        .scatter_inputs(color.by = "product_line", best.fit = TRUE, model.legend.show = FALSE)
+    )) {
+        lines <- fit_traces(.scatter_figure(example_sales, inputs), "^(Linear|Best) Fit ")
+        expect_length(lines, length(groups))
+        expect_false(any(vapply(lines, function(tr) isTRUE(tr$showlegend), logical(1))))
+        expect_setequal(vapply(lines, function(tr) tr$legendgroup, ""), groups)
+    }
+    custom <- fit_traces(.scatter_figure(example_sales, .scatter_inputs(
+        custom.model.enable = TRUE, custom.models = .custom_lm("revenue ~ units")
+    )), "^Custom$")
+    expect_false(isTRUE(custom[[1]]$showlegend))
+
+    # On: one entry per line, each its own legend group, also on a split plot.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        color.by = "product_line", linear.model = TRUE, model.legend.show = TRUE,
+        custom.model.enable = TRUE, custom.models = .custom_lm("revenue ~ units"), split.by = "region"
+    ))
+    lines <- fit_traces(fig, "^Linear Fit ")
+    shown <- Filter(function(tr) isTRUE(tr$showlegend), lines)
+    expect_setequal(vapply(shown, function(tr) tr$name, ""), paste("Linear Fit", groups))
+    expect_identical(vapply(lines, function(tr) tr$legendgroup, ""), vapply(lines, function(tr) tr$name, ""))
+    expect_length(Filter(function(tr) isTRUE(tr$showlegend), fit_traces(fig, "^Custom$")), 1)
+})
+
 test_that("fit and model lines are fit to the plotted values under every axis adjustment (#365)", {
     df <- example_sales
     for (adj in list(

@@ -867,6 +867,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             # A numeric color.by is a gradient, not groups; grouping by it would fit
             # one line per distinct value.
             group_col <- blank_to_null(null.na.inputs$color.by, data(), numeric_is_null = TRUE)
+            # Whether the fit and model lines are listed in the legend (off by default).
+            lines.in.legend <- isTRUE(isolate_fn(input$model.legend.show))
 
             # Linear model fits
             if (numeric.xy && isTRUE(isolate_fn(input$linear.model))) {
@@ -880,7 +882,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     color_mapping = color_mapping,
                     line_color = isolate_fn(input$line.best.colour),
                     fit_type = "linear",
-                    line_width = 3
+                    line_width = 3,
+                    show.legend = lines.in.legend
                 )
             } else if (numeric.xy && isTRUE(isolate_fn(input$best.fit))) {
                 # LOESS smooth fit lines (only if linear model not selected)
@@ -895,7 +898,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     line_color = isolate_fn(input$line.best.colour),
                     fit_type = "loess",
                     span = isolate_fn(input$line.best.smoothness),
-                    line_width = 3
+                    line_width = 3,
+                    show.legend = lines.in.legend
                 )
             }
 
@@ -943,7 +947,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                                 split.by      = null.na.inputs$split.by,
                                 line_color    = row$line_colour %__% "#000000",
                                 line_width    = line_w,
-                                backend       = backend
+                                backend       = backend,
+                                show.legend   = lines.in.legend
                             )
                         } else {
                             notes <- c(notes, list(.structure_note(

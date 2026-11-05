@@ -40,6 +40,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
   * Marginals are not drawn on a split plot because that'd be a mess.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
+* New **Model Lines in Legend** switch in the Lines tab lists the linear model, best fit and custom model lines in the legend. It is off by default, so those lines no longer add entries such as "Linear Fit Gadgets"; while it is off, a line drawn for a **Color By** group hides and shows with that group's legend entry.
 * `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ### Helpers and exported functions

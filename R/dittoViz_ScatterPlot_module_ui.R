@@ -199,6 +199,8 @@
 #' - `line.best.smoothness` - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 #' - `line.best.colour` - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 #' - `linear.model` - Enable linear model line (UI: "Linear model line", default: FALSE)
+#' - `model.legend.show` - List the fit and model lines in the legend (UI: "Model Lines in Legend",
+#'   default: FALSE). Off, a line fit to a Color By group hides and shows with that group's entry.
 #' - `marginal.x` - Distributions of the X values drawn above the plot, any of `"density"`, `"histogram"`
 #'   and `"rug"` (UI: "Top Marginal (X)", default: none)
 #' - `marginal.y` - Distributions of the Y values drawn to the right of the plot, any of `"density"`,

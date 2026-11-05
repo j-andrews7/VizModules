@@ -236,6 +236,8 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{line.best.smoothness} - Smoothness of line of best fit (UI: "Smoothness of line of best fit:", default: 1)
 \item \code{line.best.colour} - Color of line of best fit (UI: "Line of best fit colour:", default: "#000000")
 \item \code{linear.model} - Enable linear model line (UI: "Linear model line", default: FALSE)
+\item \code{model.legend.show} - List the fit and model lines in the legend (UI: "Model Lines in Legend",
+default: FALSE). Off, a line fit to a Color By group hides and shows with that group's entry.
 \item \code{marginal.x} - Distributions of the X values drawn above the plot, any of \code{"density"}, \code{"histogram"}
 and \code{"rug"} (UI: "Top Marginal (X)", default: none)
 \item \code{marginal.y} - Distributions of the Y values drawn to the right of the plot, any of \code{"density"},
