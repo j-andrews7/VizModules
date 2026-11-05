@@ -12,11 +12,11 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
-### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
+### `BarPlot`, `BoxPlot`, `freqPlot`, and `yPlot`
 
 * New drag-and-drop **X Order** (**Group Order** for `freqPlot` and `yPlot`) input in the Data tab sets the order of the x-axis categories, with significance brackets following it. Set it in `defaults` as `x.order`, a character vector of levels; any left out follow in their default order. It is not shown for a column with more than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence over it.
 
-### `BoxPlot`, `DotPlot`, `freqPlot` and `yPlot`
+### `BoxPlot`, `DotPlot`, `freqPlot`, and `yPlot`
 
 * New **Plot with WebGL** toggle, on by default, draws the points with WebGL once a plot has 5,000 or more of them (`options(VizModules.webgl.threshold = )`), so tens of thousands of jitter points draw several times faster. Boxes, violins, and lines stay SVG. WebGL points are an embedded image in SVG downloads, so turn it off for a fully vector file.
 
@@ -40,8 +40,8 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
   * Marginals are not drawn on a split plot because that'd be a mess.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
-* New **Model Lines in Legend** switch in the Lines tab lists the linear model, best fit and custom model lines in the legend. It is off by default, so those lines no longer add entries such as "Linear Fit Gadgets"; while it is off, a line drawn for a **Color By** group hides and shows with that group's legend entry.
-* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
+* New **Model Lines in Legend** switch in the Lines tab lists the linear model, best fit, and custom model lines in the legend. It is off by default. While it is off, a line drawn for a **Color By** group hides and shows with that group's legend entry on click.
+* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence, and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ### Helpers and exported functions
 
@@ -88,7 +88,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 ### `ComplexHeatmap`
 
 * **Security:** A **Row Title** or **Column Title** containing `{...}` or `@{...}` is now drawn as typed. On a split axis, `ComplexHeatmap::Heatmap()` ran it as R code on the server.
-* The heatmap opens faster, and no longer slows down the longer an app runs. Each heatmap kept a reference to the whole Shiny session, which InteractiveComplexHeatmap hashed every time it drew one: in the module gallery, a heatmap with every other tab visited took 15 s per hash and two hashes to show. It also drew the heatmap 4 to 6 times on opening, as each input and colour picker reported the value already in use; it now draws once, and only redraws when what it shows changes.
+* The heatmap opens faster, and no longer slows down the longer an app runs. Each heatmap kept a reference to the whole Shiny session, which was pretty stupid in hindsight. It also drew the heatmap 4 to 6 times on opening, as each input and colour picker reported the value already in use; it now draws once, and only redraws when what it shows changes.
 * The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap` or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
 
 ### `dumbbellPlot` and `linePlot`
