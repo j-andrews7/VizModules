@@ -295,19 +295,21 @@ expensive part, so the modules do the two in separate steps, and a
 styling change never redraws the plot.
 
 Put everything that changes what is drawn in a function of `isolate_fn`,
-and hand it to `.cached_structure()`. It caches what the function
-returns, keyed on the data, the reactive values named in `extra`, and
-every input the function reads, so going back to settings already drawn
-(toggling an option back, Reset) re-uses the plot:
+and hand it to
+[`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md).
+It caches what the function returns, keyed on the data, the reactive
+values named in `extra`, and every input the function reads, so going
+back to settings already drawn (toggling an option back, Reset) re-uses
+the plot:
 
 ``` r
 
 draw_myPlot <- function(isolate_fn) {
     p <- MyPlotFn(data(), x = isolate_fn(input$x.data), group_by = isolate_fn(input$group.by))
     fig <- ggplotly(p)
-    list(fig = .ensure_built(fig), facet.by = NULL)
+    list(fig = fig, facet.by = NULL)
 }
-base_myPlot <- .cached_structure(
+base_myPlot <- cached_structure(
     draw_myPlot, input, session, data, params = params,
     extra = function() list(palette_store())
 )
@@ -365,7 +367,9 @@ build the parameter store:
 params <- setup_reactive_defaults(defaults, input, session)
 ```
 
-Pass that store to `.cached_structure()` and to
+Pass that store to
+[`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md)
+and to
 [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
 in your generate reactive, as above. The `isolate_fn` each gives you
 then resolves store-backed reads:

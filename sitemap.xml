@@ -48,11 +48,13 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_title_layout.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/as_plotted.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/auto_webgl.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/axis_titles_as_annotations.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/blank_to_null.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/build_facet_annotations.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/build_facet_panel_borders.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/build_model_row_spec.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/cached_structure.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/clean_facet_dim.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/collect_source_data.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/compute_pairwise_stats.html</loc></url>
@@ -209,6 +211,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_manual_edits.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/setup_reactive_defaults.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/show_input.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/split_color_shape_legend.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/stat_bracket_headroom.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/stat_bracket_y_max.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/string_to_linetypes.html</loc></url>
@@ -228,6 +231,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/use_vizmodules_skills.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/validate_expression.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/viz_select_input.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/webgl_input.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/with_stable_seed.html</loc></url>
 </urlset>
 

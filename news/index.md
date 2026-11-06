@@ -138,7 +138,28 @@ The one where we fix all the wonkiness with extending modules
   applies the uniform styling inputs (titles, axes, reference lines, the
   modebar, shape drawing, and the legend) to a module’s figure in one
   call, the second of the modules’ two steps. A wrapper’s `fig.fn` can
-  run in it.
+  run in it. Its `ggplot.axis.styling` and `legend.position` arguments
+  suit a figure not built from ggplot, and
+  [`apply_legend_inputs()`](https://j-andrews7.github.io/VizModules/reference/apply_legend_inputs.md)
+  takes a `position`.
+
+- New
+  [`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md)
+  caches a module’s plot step, keyed on the data and the inputs it
+  reads, so a custom module can split drawing from styling as the
+  built-in modules do.
+
+- New
+  [`auto_webgl()`](https://j-andrews7.github.io/VizModules/reference/auto_webgl.md)
+  and its
+  [`webgl_input()`](https://j-andrews7.github.io/VizModules/reference/webgl_input.md)
+  toggle draw a plot’s points with WebGL once there are enough of them.
+  With `overlays = TRUE`, unfilled line traces switch too, so lines
+  drawn over the points stay on top.
+
+- New
+  [`split_color_shape_legend()`](https://j-andrews7.github.io/VizModules/reference/split_color_shape_legend.md)
+  gives a ggplot’s colour and shape their own legend sections.
 
 - [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
   takes a `track` function, called with the id of every input read

@@ -410,7 +410,7 @@ styling change never redraws the plot.</p>
 <li>
 <p><label><input type="checkbox">Put everything that changes what
 is drawn in a function of <code>isolate_fn</code>, and hand it to
-<code>.cached_structure()</code>. It caches what the function returns,
+<code><a href="../reference/cached_structure.html">cached_structure()</a></code>. It caches what the function returns,
 keyed on the data, the reactive values named in <code>extra</code>, and
 every input the function reads, so going back to settings already drawn
 (toggling an option back, Reset) re-uses the plot:</label></p>
@@ -418,9 +418,9 @@ every input the function reads, so going back to settings already drawn
 <code class="sourceCode R"><span><span class="va">draw_myPlot</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">isolate_fn</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">p</span> <span class="op">&lt;-</span> <span class="fu">MyPlotFn</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="op">)</span>, x <span class="op">=</span> <span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">x.data</span><span class="op">)</span>, group_by <span class="op">=</span> <span class="fu">isolate_fn</span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">group.by</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">ggplotly</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fig <span class="op">=</span> <span class="fu">.ensure_built</span><span class="op">(</span><span class="va">fig</span><span class="op">)</span>, facet.by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>fig <span class="op">=</span> <span class="va">fig</span>, facet.by <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span>
 <span><span class="op">}</span></span>
-<span><span class="va">base_myPlot</span> <span class="op">&lt;-</span> <span class="fu">.cached_structure</span><span class="op">(</span></span>
+<span><span class="va">base_myPlot</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cached_structure.html">cached_structure</a></span><span class="op">(</span></span>
 <span>    <span class="va">draw_myPlot</span>, <span class="va">input</span>, <span class="va">session</span>, <span class="va">data</span>, params <span class="op">=</span> <span class="va">params</span>,</span>
 <span>    extra <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fu">palette_store</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -481,7 +481,7 @@ Two lines wire this up, and they are required in every new module.</p>
 </li>
 <li>
 <p><label><input type="checkbox">Pass that store to
-<code>.cached_structure()</code> and to
+<code><a href="../reference/cached_structure.html">cached_structure()</a></code> and to
 <code><a href="../reference/setup_auto_update_logic.html">setup_auto_update_logic()</a></code> in your generate reactive, as
 above. The <code>isolate_fn</code> each gives you then resolves
 store-backed reads:</label></p>

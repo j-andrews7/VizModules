@@ -293,6 +293,62 @@ customPlotServer <- function(id, data_reactive) {
 See the “Adding a New Module” vignette for the full description of these
 helpers, but this is pretty much all you need to do.
 
+## Drawing a Custom Plot Once, Styling It Often
+
+Wrapping a base module gets you this for free. A plot you draw yourself
+is rebuilt whenever anything it reads changes, so if titles, fonts, and
+gridlines are read alongside the data, changing a font redraws the plot.
+Split it in two, as the base modules do:
+[`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md)
+draws the plot and caches it, and
+[`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
+styles the cached figure.
+
+``` r
+
+customPlotServer <- function(id, data_reactive, defaults = NULL) {
+    moduleServer(id, function(input, output, session) {
+        params <- setup_reactive_defaults(defaults, input, session)
+        plot_source <- session$ns("customplot")
+        edit_store <- setup_manual_edits(input, session, plot_source)
+
+        # What is drawn: cached, keyed on the data and every input read here.
+        draw_plot <- function(isolate_fn) {
+            p <- my_plot_function(data_reactive(), x = isolate_fn(input$x.by))
+            list(fig = plotly::ggplotly(p))
+        }
+        base_plot <- cached_structure(draw_plot, input, session, data_reactive, params = params)
+
+        # How it looks: re-run for a styling change, without redrawing.
+        generate_plot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            apply_uniform_styling(base_plot()$fig, input, isolate_fn)
+        })
+
+        output$plot <- renderPlotly({
+            finalize_manual_edits(apply_render_margins(generate_plot(), input), plot_source, edit_store, session)
+        })
+    })
+}
+```
+
+The traces then stay the same across a styling change, so
+[`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md)
+sends the browser only the new layout. The cache is only as good as what
+it can see, so the draw function has three rules. Breaking one does not
+fail; it draws a stale plot:
+
+- **Read every input as `isolate_fn(input$key)`.** A wrapped read such
+  as `isolate_fn(as.numeric(input$size))`, or a bare `input$size`, never
+  reaches the cache key. Convert outside the call.
+- **Name every other reactive it reads in `extra`**: colour stores, a
+  debounced text input, a reactive argument. A reactive that only
+  derives from `data` is already covered.
+- **No side effects.** A cache hit skips the function, so it must not
+  show notifications or write
+  [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)s.
+  Return anything else you need in the list.
+
 ## Helpers for Modules in Extension Packages
 
 A module built on VizModules’ exports (in your own package, say) can

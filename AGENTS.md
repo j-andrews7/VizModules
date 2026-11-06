@@ -234,8 +234,8 @@ packages.
 
 - Avoid `sapply` usage, it is unsafe in package code.
 - A plot module draws its figure in a function of `isolate_fn` handed to
-  `.cached_structure()` (`R/plot_tiers.R`), and styles it in
-  `generate_*` with
+  [`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md)
+  (`R/plot_tiers.R`), and styles it in `generate_*` with
   [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md),
   so a styling change never redraws the plot. The cache key is built
   from the inputs the draw function reads, so read every one as

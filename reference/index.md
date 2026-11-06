@@ -342,6 +342,9 @@ extra render.
 - [`update_viz_select()`](https://j-andrews7.github.io/VizModules/reference/update_viz_select.md)
   : Update a select input created by viz_select_input
 
+- [`webgl_input()`](https://j-andrews7.github.io/VizModules/reference/webgl_input.md)
+  : The "Plot with WebGL" toggle for a module's point layers
+
 ## Uniform UI Inputs
 
 Standardised input builders and reset functions shared across modules.
@@ -433,8 +436,12 @@ configuration.
   : Apply plot title styling to a plotly figure
 - [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
   : Apply the uniform styling inputs to a module's figure
+- [`auto_webgl()`](https://j-andrews7.github.io/VizModules/reference/auto_webgl.md)
+  : Draw a figure's point layers with WebGL
 - [`axis_titles_as_annotations()`](https://j-andrews7.github.io/VizModules/reference/axis_titles_as_annotations.md)
   : Convert native cartesian axis titles to draggable annotations
+- [`cached_structure()`](https://j-andrews7.github.io/VizModules/reference/cached_structure.md)
+  : Cache a module's plot step
 - [`create_axis_styles()`](https://j-andrews7.github.io/VizModules/reference/create_axis_styles.md)
   : Create Plotly axis style list
 - [`create_ggplot_axis_style()`](https://j-andrews7.github.io/VizModules/reference/create_ggplot_axis_style.md)
@@ -443,6 +450,8 @@ configuration.
   : Convert linetype name to plotly dash style
 - [`recycle_line_style()`](https://j-andrews7.github.io/VizModules/reference/recycle_line_style.md)
   : Recycle style vector to match line count
+- [`split_color_shape_legend()`](https://j-andrews7.github.io/VizModules/reference/split_color_shape_legend.md)
+  : Give a plot's colour and shape their own legend sections
 - [`string_to_linetypes()`](https://j-andrews7.github.io/VizModules/reference/string_to_linetypes.md)
   : Parse and validate linetype string to a vector
 - [`heatmap_fit_width()`](https://j-andrews7.github.io/VizModules/reference/heatmap_fit_width.md)
