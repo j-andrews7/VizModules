@@ -26,6 +26,11 @@ captured \code{legend}, \code{annotations}, and \code{colorbar} edits.}
 \item{\code{rendered_fig}}{A \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} holding the
 most recently rendered figure, used to map relayout annotation indices to
 stable, rebuild-proof keys.}
+\item{\code{sent}}{An environment recording the figure last sent to the
+browser, so a render that changes only its layout sends just that.}
+\item{\code{refresh}}{A \code{\link[shiny:reactiveVal]{shiny::reactiveVal()}} the browser bumps, through the
+\code{plot.refresh} input, when it cannot apply a layout-only update, which
+makes the next render send the whole figure.}
 }
 }
 \description{

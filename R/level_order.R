@@ -52,8 +52,8 @@ level_order_input <- function(inputId, label = "X Order", items = NULL, tooltip 
 #' The levels a categorical column is plotted in, optionally reordered
 #'
 #' Gives the levels of `data[[column]]` that are present, in the order a plot
-#' draws them by default -- factor level order for a factor, sorted values
-#' otherwise -- with any levels named in `order` moved to the front in that order.
+#' draws them by default - factor level order for a factor, sorted values
+#' otherwise - with any levels named in `order` moved to the front in that order.
 #'
 #' @param data A data frame.
 #' @param column The name of the column.
@@ -146,8 +146,8 @@ apply_level_order <- function(data, column, order) {
 #' @details
 #' A new column starts from `defaults[[inputId]]` (levels it does not have are
 #' ignored), and new data for the same column keeps the order the user dragged
-#' the levels into. A column the control cannot order -- numeric, or with more
-#' than `max.levels` levels -- empties the control, which hides it.
+#' the levels into. A column the control cannot order - numeric, or with more
+#' than `max.levels` levels - empties the control, which hides it.
 #'
 #' The returned store, not `input[[inputId]]`, is what the plot should read. It
 #' changes only when the order to draw does, so neither the control reporting its

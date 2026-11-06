@@ -85,7 +85,7 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
         return(fig)
     }
 
-    fig <- plotly::plotly_build(fig)
+    fig <- .ensure_built(fig)
 
     if (is.null(groups)) {
         groups <- factor(rep("", length(x)))
@@ -126,6 +126,7 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
         y = .next_axis_index(layout, "y")
     )
     new.traces <- list()
+    overlay.axes <- character(0)
 
     for (side in c("top", "right")[c(length(top) > 0, length(right) > 0)]) {
         types <- if (side == "top") top else right
@@ -183,9 +184,11 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
                 list(domain = strips[[strip]], anchor = value.axis, range = count.range, fixedrange = TRUE),
                 .marginal_axis_style()
             )
+            overlay.axes <- c(overlay.axes, .axis_layout_name(count.axis))
         }
 
         main.axis <- value.letter
+        overlay.axes <- c(overlay.axes, .axis_layout_name(value.axis))
         layout[[.axis_layout_name(value.axis)]] <- c(
             list(
                 domain = if (side == "top") new.x else new.y,
@@ -198,6 +201,8 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
 
     fig$x$layout <- layout
     fig$x$data <- c(fig$x$data, new.traces)
+    # Styling applied afterwards (apply_uniform_styling()) leaves these alone.
+    fig$x$.vizmodules_overlay_axes <- unique(c(fig$x$.vizmodules_overlay_axes, overlay.axes))
     fig
 }
 

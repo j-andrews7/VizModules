@@ -114,23 +114,61 @@
 #' titles at once, so the text replaces the group names (a single string spans
 #' every slice; a `%s` in it is filled in with each group's name).
 #'
+#' Typed text is always drawn as typed. On a split axis, `Heatmap()` evaluates a
+#' single title holding `{...}` or `@{...}` as R code (with `glue::glue()` and
+#' `GetoptLong::qq()`), so such a title is passed once per slice instead, which
+#' it draws as given.
+#'
 #' @param text The title box's value. `NULL` (an input that has not reported
 #'   yet) is treated as blank.
 #' @param show_slice_titles Whether a split axis is titled with its group names
 #'   when `text` is blank. Anything but `TRUE` counts as `FALSE`.
+#' @param n_slices The number of slices the axis is split into (see
+#'   [.heatmap_slice_count()]); `1` when it is not split.
 #'
-#' @return `text` when it is non-blank; otherwise `character(0)` (group names
-#'   shown, which is also no title at all when the axis is not split) or `NULL`
-#'   (no title). Suitable for `Heatmap(row_title = , column_title = )`.
+#' @return `text` when it is non-blank (repeated once per slice when it would be
+#'   evaluated otherwise); otherwise `character(0)` (group names shown, which is
+#'   also no title at all when the axis is not split) or `NULL` (no title).
+#'   Suitable for `Heatmap(row_title = , column_title = )`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_heatmap_resolve_title
 #' @keywords internal
-.heatmap_resolve_title <- function(text, show_slice_titles = TRUE) {
+.heatmap_resolve_title <- function(text, show_slice_titles = TRUE, n_slices = 1L) {
     if (nz_value(text)) {
+        # A `%s` title is filled in with sprintf(), never evaluated.
+        if (n_slices > 1L && !grepl("%s", text, fixed = TRUE) && grepl("\\{.+\\}", text)) {
+            return(rep(text, n_slices))
+        }
         return(text)
     }
     if (isTRUE(show_slice_titles)) character(0) else NULL
+}
+
+
+#' The number of slices a resolved split divides an axis into
+#'
+#' @param res A [.heatmap_resolve_split()] result.
+#'
+#' @return An integer: `res$km` for a k-means split, the requested count for a
+#'   hierarchical one, the number of distinct value combinations for an
+#'   annotation one, and `1` when the axis is not split.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_slice_count
+#' @keywords internal
+.heatmap_slice_count <- function(res) {
+    if (isTRUE(res$km > 1L)) {
+        return(as.integer(res$km))
+    }
+    split <- res$split
+    if (is.null(split)) {
+        return(1L)
+    }
+    if (is.numeric(split) && length(split) == 1L) {
+        return(as.integer(split))
+    }
+    nrow(unique(as.data.frame(split)))
 }
 
 
@@ -535,8 +573,35 @@
 .heatmap_build_annotation <- function(rows, source_df, key_values, key_col = NULL,
                                       which = c("row", "column"), color_lookup) {
     which <- match.arg(which)
+    .heatmap_tracks_annotation(
+        .heatmap_annotation_tracks(rows, source_df, key_values, key_col, which, color_lookup),
+        which
+    )
+}
+
+
+#' Resolve `multiDynamicInput` annotation rows into the tracks they draw
+#'
+#' The tracks hold what is drawn, not how it was asked for: nothing of a row's
+#' key survives, and a label field left out is filled in here, so two sets of
+#' rows drawing the same thing compare `identical()` (rows a client reports
+#' carry every field, under keys of its own; a `defaults` entry may not).
+#'
+#' @inheritParams .heatmap_build_annotation
+#' @param color_lookup A function `function(row_name, column, values)` returning
+#'   that row's `mapping`, or `NULL` to skip it.
+#'
+#' @return A list of tracks named by column, each with `column`, `values`,
+#'   `mapping`, `side`, `size` and `show_legend`. Empty if no row is usable.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_annotation_tracks
+#' @keywords internal
+.heatmap_annotation_tracks <- function(rows, source_df, key_values, key_col = NULL,
+                                       which = c("row", "column"), color_lookup) {
+    which <- match.arg(which)
     if (is.null(rows) || length(rows) == 0 || is.null(source_df) || length(key_values) == 0) {
-        return(NULL)
+        return(list())
     }
 
     row_names <- names(rows)
@@ -549,15 +614,11 @@
     valid_sides <- if (which == "row") c("top", "bottom") else c("left", "right")
     default_side <- if (which == "row") "bottom" else "right"
 
-    values_list <- list()
-    col_list <- list()
-    name_sides <- character(0)
-    name_sizes <- numeric(0)
-    legend_flags <- logical(0)
+    tracks <- list()
     for (row_name in names(rows)) {
         r <- rows[[row_name]]
         col <- r$column
-        if (is.null(col) || !nzchar(col) || !col %in% names(source_df) || col %in% names(values_list)) {
+        if (is.null(col) || !nzchar(col) || !col %in% names(source_df) || col %in% names(tracks)) {
             next
         }
 
@@ -571,36 +632,52 @@
             next
         }
 
-        values_list[[col]] <- values
-        col_list[[col]] <- mapping
-
-        # Appended only alongside a track that was actually added, so a skipped
-        # row cannot shift every later track's label.
         side <- tolower(as.character(r$label_side %||% ""))
-        name_sides <- c(name_sides, if (length(side) == 1L && side %in% valid_sides) side else default_side)
-
         size <- suppressWarnings(as.numeric(r$label_size %||% NA))
-        name_sizes <- c(name_sizes, if (length(size) == 1L && !is.na(size) && size > 0) size else 10)
-
         # Absent (an older `defaults` entry, or a row the client has not
         # reported yet) means show it, matching ComplexHeatmap's own default.
         show <- r$show_legend
-        legend_flags <- c(legend_flags, is.null(show) || isTRUE(as.logical(show)[1L]))
+
+        # Kept per track, so a skipped row cannot shift every later track's label.
+        tracks[[col]] <- list(
+            column = col, values = values, mapping = mapping,
+            side = if (length(side) == 1L && side %in% valid_sides) side else default_side,
+            size = if (length(size) == 1L && !is.na(size) && size > 0) size else 10,
+            show_legend = is.null(show) || isTRUE(as.logical(show)[1L])
+        )
     }
 
-    if (length(values_list) == 0) {
+    tracks
+}
+
+
+#' Build a row or column HeatmapAnnotation from resolved tracks
+#'
+#' @param tracks Tracks from [.heatmap_annotation_tracks()], each `mapping` a
+#'   color mapping as from [.heatmap_annotation_col()].
+#' @param which `"row"` or `"column"`.
+#'
+#' @return A [ComplexHeatmap::rowAnnotation()]/[ComplexHeatmap::columnAnnotation()]
+#'   object, or `NULL` if there are no tracks.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_heatmap_tracks_annotation
+#' @keywords internal
+.heatmap_tracks_annotation <- function(tracks, which = c("row", "column")) {
+    which <- match.arg(which)
+    if (length(tracks) == 0) {
         return(NULL)
     }
 
-    ann_df <- as.data.frame(values_list, stringsAsFactors = FALSE, check.names = FALSE)
+    ann_df <- as.data.frame(lapply(tracks, `[[`, "values"), stringsAsFactors = FALSE, check.names = FALSE)
     rownames(ann_df) <- NULL
 
     args <- list(
         df = ann_df,
-        col = col_list,
-        annotation_name_side = name_sides,
-        annotation_name_gp = grid::gpar(fontsize = name_sizes),
-        show_legend = stats::setNames(legend_flags, names(values_list))
+        col = lapply(tracks, `[[`, "mapping"),
+        annotation_name_side = vapply(tracks, `[[`, character(1), "side", USE.NAMES = FALSE),
+        annotation_name_gp = grid::gpar(fontsize = vapply(tracks, `[[`, numeric(1), "size", USE.NAMES = FALSE)),
+        show_legend = vapply(tracks, `[[`, logical(1), "show_legend")
     )
 
     if (which == "row") {

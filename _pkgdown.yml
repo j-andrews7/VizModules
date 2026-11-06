@@ -245,6 +245,7 @@ reference:
       - apply_render_margins
       - apply_subplot_axis_styling
       - apply_title_layout
+      - apply_uniform_styling
       - axis_titles_as_annotations
       - create_axis_styles
       - create_ggplot_axis_style

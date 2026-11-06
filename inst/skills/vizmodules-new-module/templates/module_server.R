@@ -175,12 +175,18 @@
             # reset_stats_inputs(session, defaults, pair_strings)   # only if you added a Stats tab
         })
 
-        # ---- Build the figure ----------------------------------------------------
-        generate_<OUTPUTID> <- reactive({
-            # [T] MUST be the first line. Every read below has to stay in the literal
-            # isolate_fn(input$key) form -- isolate_fn(as.numeric(input$key)) cannot be
-            # recognised and silently loses reactive-default support. Convert outside.
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # ---- Draw the plot (cached) ----------------------------------------------
+        # [T] Everything that changes what is drawn. .cached_structure() hands this
+        # its isolate_fn and caches the result, keyed on the data, the reactive values
+        # named in `extra`, and every input this function reads. So:
+        #   * every read has to stay in the literal isolate_fn(input$key) form --
+        #     isolate_fn(as.numeric(input$key)) cannot be recognised, and the input
+        #     would be missing from both the cache key and reactive-default support.
+        #     Convert outside the call.
+        #   * every other reactive it reads (stores, the selection) goes in `extra`.
+        #   * no side effects (notifications, reactiveVal writes): a cache hit skips
+        #     them. Return anything else the module needs in the list instead.
+        draw_<OUTPUTID> <- function(isolate_fn) {
 
             # blank_to_null() also covers an input that has not reported yet (NULL),
             # where `input$key == ""` would be logical(0) and break `if ()`.
@@ -229,47 +235,22 @@
                     ncol = facet.ncol, nrow = facet.nrow
                 )
             }
-            fig <- apply_title_layout(fig, input, isolate_fn,
-                title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            list(fig = .ensure_built(fig), facet.by = facet.by)
+        }
+        base_<OUTPUTID> <- .cached_structure(
+            draw_<OUTPUTID>, input, session, data, params = params,
+            extra = function() list(palette_groups(), palette_store())
+        )
 
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
-
-            config_list <- add_plot_config(
-                download.format = isolate_fn(input$download.format),
-                include.modebar.buttons = TRUE, facet.by = facet.by
-            )
-            fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
-            # Make single-panel x/y axis titles draggable, matching faceted behaviour.
-            fig <- axis_titles_as_annotations(fig)
-
-            return(fig)
+        # ---- Style the plot -------------------------------------------------------
+        # [T] The uniform styling inputs (titles, fonts, axes, reference lines,
+        # modebar, legend) applied to the cached plot, so changing one never redraws
+        # it. Keep the name generate_<OUTPUTID>: the render, the source download and
+        # the tests read it.
+        generate_<OUTPUTID> <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_<OUTPUTID>()
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.98)
         })
 
         # ---- Render --------------------------------------------------------------
@@ -280,9 +261,8 @@
             req(input$x.data, input$y.data)
 
             fig <- apply_render_margins(generate_<OUTPUTID>(), input)
-            fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
-
-            return(fig)
+            # Last: when only the layout changed, it sends just that and ends the render.
+            finalize_manual_edits(fig, plot_source, edit_store, session)
         })
 
         # ---- Source data download -------------------------------------------------

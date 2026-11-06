@@ -335,54 +335,6 @@ test_that("a defaults palette seeds the picker", {
 
 # --- 6. Driving the module's own build ---------------------------------------
 
-# The plot output cannot be driven from testServer (the mock session never
-# renders the renderUI()-built colour picker and never registers plotly events),
-# but the reactive that builds the figure can, given a complete set of inputs.
-.freq_inputs <- function(...) {
-    base <- list(
-        var = "cell_type", sample.by = "sample", group.by = "condition", color.by = "",
-        vars.use = "", scale = "percent", max.normalize = FALSE,
-        plots = c("boxplot", "jitter"),
-        y.min = 0, y.max = NA, auto.update = TRUE,
-        split.adjust = "fixed", split.ncol = NA, split.nrow = NA,
-        subplot.margin.x = 30, subplot.margin.y = 30,
-        jitter.size = 1, jitter.width = 0.2, jitter.color = "#000000",
-        hover.round.digits = 5, do.raster = FALSE, raster.dpi = 600,
-        boxplot.show.outliers = FALSE, boxplot.color = "#000000", boxplot.fill = TRUE,
-        boxplot.lineweight = 0.5, boxgap = 0.3, boxgroupgap = 0.2,
-        vlnplot.lineweight = 0.5, vlnplot.scaling = "area",
-        ridgeplot.lineweight = 0.5, ridgeplot.scale = 1.25,
-        ridgeplot.ymax.expansion = NA, ridgeplot.shape = "smooth",
-        ridgeplot.bins = 30, ridgeplot.binwidth = NA,
-        stats.enabled = FALSE, stat.test = "t.test", stat.p.adjust = "none",
-        stat.display = "stars", stat.sig.threshold = 0.05, stat.hide.ns = FALSE,
-        stat.paired = FALSE, stat.pairs = "", stat.per.facet = TRUE,
-        stat.bracket.style = "bracket", stat.bracket.inset = 0.1,
-        stat.step.increase = 0.1, stat.text.bump = 0.02,
-        stat.line.color = "black", stat.line.width = 1,
-        annotate.by = "", highlight.points = "", highlight.auto.annotate = TRUE,
-        highlight.color = "#00FFF7", highlight.size = 7,
-        highlight.border.color = "#000000", highlight.border.width = 1,
-        annotation.color = "black", annotation.ax = 20, annotation.ay = -20,
-        annotation.size = 10, annotation.showarrow = TRUE,
-        annotation.arrowcolor = "black", annotation.arrowhead = 2,
-        annotation.arrowwidth = 1.5,
-        download.format = "png", legend.title.size = 14, legend.text.size = 12,
-        title.font.size = 26, title.font.family = "Arial", title.font.color = "#000000",
-        axis.title.font.size = 18, axis.title.font.color = "#000000",
-        axis.title.font.family = "Arial", axis.title.horizontal.position = 0.5,
-        axis.showline = TRUE, axis.mirror = TRUE, show.grid.x = TRUE, show.grid.y = TRUE,
-        axis.linecolor = "black", axis.linewidth = 0.5,
-        axis.tickfont.size = 12, axis.tickfont.color = "black",
-        axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0,
-        axis.ticks = "outside", axis.tickcolor = "black", axis.ticklen = 5,
-        axis.tickwidth = 1, facet.title.font.size = 14,
-        facet.title.font.color = "black", facet.title.font.family = "Arial",
-        hline.intercepts = "", vline.intercepts = "", abline.slopes = "",
-        margin.l = 80, margin.r = 80, margin.t = 80, margin.b = 80
-    )
-    utils::modifyList(base, list(...))
-}
 
 test_that("the module builds a figure over the summarised frequencies", {
     df <- .freq_fixture()

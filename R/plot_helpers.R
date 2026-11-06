@@ -562,6 +562,97 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 }
 
 
+#' Build a plotly figure unless it is already built
+#'
+#' [plotly::plotly_build()] is idempotent, but not free: every call re-runs its
+#' verification passes over all traces, and the post-processing helpers each
+#' need a built figure to read. A figure built here is marked, and building it
+#' again is skipped while nothing has been queued on it since (no `layout()`
+#' updates in `layoutAttrs`, no unevaluated traces in `attrs`). Direct writes to
+#' `fig$x$data` or `fig$x$layout` need no build, so they keep the mark.
+#'
+#' @param fig A plotly figure object.
+#' @return The built figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_ensure_built
+.ensure_built <- function(fig) {
+    x <- fig$x
+    queued <- length(x$layoutAttrs) > 0 ||
+        !all(vapply(x$attrs, inherits, logical(1), what = "plotly_eval"))
+    if (isTRUE(x$.vizmodules_built) && !queued) {
+        return(fig)
+    }
+    fig <- plotly::plotly_build(fig)
+    fig$x$.vizmodules_built <- TRUE
+    fig
+}
+
+
+#' How many points a plot draws before its point layers switch to WebGL
+#'
+#' Set with `options(VizModules.webgl.threshold = n)`; 5000 by default.
+#'
+#' @return A single number.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_webgl_threshold
+.webgl_threshold <- function() {
+    threshold <- getOption("VizModules.webgl.threshold", 5000)
+    if (!is.numeric(threshold) || length(threshold) != 1 || is.na(threshold)) 5000 else threshold
+}
+
+
+#' Draw a figure's point layers with WebGL
+#'
+#' SVG slows down badly with many points, where WebGL does not. This switches the
+#' figure's point traces (`scatter` traces drawn as markers only: jitter, the
+#' points of a scatter plot) to `scattergl` once, together, they hold at least
+#' `threshold` points. Lines, filled areas, boxes, and violins stay SVG, so they
+#' stay vector in SVG downloads; only the switched points become an embedded
+#' image there. Unlike [plotly::toWebGL()], which switches every trace.
+#'
+#' @param fig A plotly figure, built or as [plotly::ggplotly()] returns it.
+#' @param threshold Point count at and above which the points switch.
+#'
+#' @return The figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_auto_webgl
+.auto_webgl <- function(fig, threshold = .webgl_threshold()) {
+    traces <- fig$x$data
+    if (!length(traces)) {
+        return(fig)
+    }
+    is_points <- vapply(traces, function(tr) {
+        mode <- tr$mode %||% ""
+        identical(tr$type %||% "scatter", "scatter") && grepl("markers", mode, fixed = TRUE) &&
+            !grepl("lines", mode, fixed = TRUE) && (is.null(tr$fill) || identical(tr$fill, "none"))
+    }, logical(1))
+    if (!any(is_points)) {
+        return(fig)
+    }
+    n_points <- sum(vapply(traces[is_points], function(tr) length(tr$x %||% tr$y), numeric(1)))
+    if (n_points < threshold) {
+        return(fig)
+    }
+    for (i in which(is_points)) {
+        fig$x$data[[i]]$type <- "scattergl"
+        # ggplotly sets it; scattergl has no such attribute and plotly warns.
+        fig$x$data[[i]]$hoveron <- NULL
+        # A WebGL layer whose hover text is a single string (a background or
+        # "others" layer) has nothing to show and breaks hovering on the rest.
+        if (length(fig$x$data[[i]]$text) == 1) {
+            fig$x$data[[i]]$hoverinfo <- "skip"
+        }
+    }
+    fig
+}
+
+
 #' Forward colorbar drag events to a Shiny input
 #'
 #' Continuous-colour legends (colorbars) live on a trace's marker, so dragging
@@ -637,6 +728,11 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #'     \item{`rendered_fig`}{A [shiny::reactiveVal()] holding the
 #'       most recently rendered figure, used to map relayout annotation indices to
 #'       stable, rebuild-proof keys.}
+#'     \item{`sent`}{An environment recording the figure last sent to the
+#'       browser, so a render that changes only its layout sends just that.}
+#'     \item{`refresh`}{A [shiny::reactiveVal()] the browser bumps, through the
+#'       `plot.refresh` input, when it cannot apply a layout-only update, which
+#'       makes the next render send the whole figure.}
 #'   }
 #'
 #' @section Module wiring (three steps):
@@ -690,7 +786,16 @@ setup_manual_edits <- function(input, session, plot_source) {
         edits$colorbar <- cb
     })
 
-    list(edits = edits, rendered_fig = rendered_fig)
+    # The browser asks for the whole figure when it cannot apply a layout-only
+    # update (see .send_layout_only()), e.g. while an error hides the plot.
+    sent <- new.env(parent = emptyenv())
+    refresh <- reactiveVal(0)
+    observeEvent(input$plot.refresh, {
+        sent$rest <- NULL
+        refresh(isolate(refresh()) + 1)
+    })
+
+    list(edits = edits, rendered_fig = rendered_fig, sent = sent, refresh = refresh)
 }
 
 
@@ -698,17 +803,33 @@ setup_manual_edits <- function(input, session, plot_source) {
 #'
 #' Render-step companion to [setup_manual_edits()]. Call this inside
 #' your module's [plotly::renderPlotly()] on the freshly rebuilt
-#' figure, immediately before returning it.
-#' 
-#' It performs four jobs:
+#' figure, as the last step: return what it returns.
+#'
+#' It performs six jobs:
 #'
 #' 1. tags the figure with the module's plotly event `source` so its
 #'   `plotly_relayout` events are captured by `setup_manual_edits()`;
 #' 2. restores any manually repositioned legend, annotations, axis titles,
 #'   and colorbar captured so far;
 #' 3. records the figure so future relayout events can be matched to stable
-#'   annotation keys (surviving re-ordering on rebuild); and
-#' 4. attaches the JavaScript listener that forwards colorbar drags.
+#'   annotation keys (surviving re-ordering on rebuild);
+#' 4. attaches the JavaScript listener that forwards colorbar drags;
+#' 5. has the figure re-rendered in place: `layout.transition = TRUE` makes the
+#'   plotly widget update its graph with `Plotly.react()` instead of purging and
+#'   recreating it, which is faster and keeps the user's zoom and toggled legend
+#'   entries whenever `layout.uirevision` is unchanged (the cached modules set
+#'   it per build of the plot, so styling changes keep the view). A small script
+#'   clears the previous render's event listeners first, which purging used to;
+#'   and
+#' 6. sends only the layout when nothing else changed: if the figure's traces,
+#'   config, `layout.uirevision`, and everything else but its layout match the
+#'   figure last sent to this output, the new layout goes to the browser in a
+#'   small message, applied with `Plotly.react()` over the traces already drawn,
+#'   and the render is cancelled (`req(FALSE, cancelOutput = TRUE)`), so no code
+#'   after this call runs. A styling change then costs kilobytes rather than the
+#'   whole figure.
+#'   Set `options(VizModules.layout.updates = FALSE)` to always send the whole
+#'   figure.
 #'
 #' Restored edits are applied under [shiny::isolate()] so re-applying
 #' them never triggers an additional re-render.
@@ -729,7 +850,8 @@ setup_manual_edits <- function(input, session, plot_source) {
 #'   restored, the pre-existing behaviour).
 #'
 #' @return The finalized plotly figure, ready to be returned from
-#'   [plotly::renderPlotly()].
+#'   [plotly::renderPlotly()]. Inside a render, when only the layout changed,
+#'   it instead sends the layout and cancels the render.
 #'
 #' @seealso [setup_manual_edits()] for the setup-step companion.
 #' @author Jared Andrews
@@ -737,8 +859,7 @@ setup_manual_edits <- function(input, session, plot_source) {
 #' @examples
 #' \dontrun{
 #' # Inside renderPlotly(), after building `fig`:
-#' fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
-#' fig
+#' finalize_manual_edits(fig, plot_source, edit_store, session)
 #' }
 finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys = character(0)) {
     if (is.null(fig)) {
@@ -747,8 +868,179 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 
     fig$x$source <- plot_source
     fig <- .reapply_manual_edits(fig, isolate(reactiveValuesToList(store$edits)), regen_keys)
+    fig <- .update_in_place(fig)
+    fig <- .add_colorbar_listener(fig, session$ns("colorbar.move"))
+    in_render <- !is.null(getCurrentOutputInfo(session)) && is.environment(store$sent)
+    if (in_render) {
+        # Built here so the layout compared and sent is the one the widget would
+        # draw; renderPlotly() builds it again anyway, so its own hook can go.
+        fig <- .ensure_built(fig)
+        fig$preRenderHook <- NULL
+    }
     store$rendered_fig(fig)
-    .add_colorbar_listener(fig, session$ns("colorbar.move"))
+    if (in_render) .send_layout_only(fig, store, session) else fig
+}
+
+
+#' Send a figure whose traces have not changed as a layout-only update
+#'
+#' Compares the figure with the one last sent to the output being rendered. If
+#' everything but the layout is identical (traces, config, frames, event
+#' wiring, dependencies, and render hooks), the layout is sent in a
+#' `vizmodules-plotly-layout` message, which `plotlyUpdate.js` applies with
+#' `Plotly.react()` over the traces already drawn, and the render is cancelled,
+#' so the browser keeps its plot and the trace data is not sent again.
+#' Otherwise the figure is recorded and returned, to be sent whole.
+#'
+#' `identical()` compares unchanged vectors by pointer, so the comparison is cheap
+#' when the traces come from a cached figure. A layout holding JavaScript
+#' ([htmlwidgets::JS()]) is always sent whole, since only the widget evaluates it.
+#'
+#' A figure without a `layout.uirevision` of its own is given one that changes
+#' only when the figure is sent whole, so the user's zoom survives a styling
+#' change in modules not drawn through [.cached_structure()] too.
+#'
+#' A changed `layout.uirevision` is sent whole however little else changed, such
+#' as a redraw that only adds the annotations for a selection. It means a new
+#' plot, whose view resets, and the traces in the browser hold part of that view:
+#' plotly keeps the selected points and hidden legend entries on them, so a
+#' selection would stay dimmed over an update that kept them.
+#'
+#' The browser asks for the whole figure (through the `plot.refresh` input that
+#' [setup_manual_edits()] observes) when it cannot apply the update: no plot
+#' drawn yet, or an error hiding it, which only a full render clears. The
+#' message is therefore sent even when the layout is unchanged.
+#'
+#' @param fig The finalized, built figure.
+#' @param store The list returned by [setup_manual_edits()].
+#' @param session The module's `session` object.
+#'
+#' @return `fig`, when it is to be sent whole; otherwise the render is cancelled.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_send_layout_only
+.send_layout_only <- function(fig, store, session) {
+    # A session that cannot message the browser (testServer()'s) gets it whole.
+    if (isFALSE(getOption("VizModules.layout.updates")) || !is.function(session$sendCustomMessage)) {
+        return(fig)
+    }
+    # Read reactively, so the browser's request for a full render re-runs it.
+    store$refresh()
+    sent <- store$sent
+    id <- getCurrentOutputInfo(session)$name
+    rest <- fig
+    rest$x[c("layout", "layoutAttrs", "visdat", "cur_data", "attrs")] <- NULL
+    rest$preRenderHook <- NULL
+    layout <- fig$x$layout
+    # A figure with no uirevision of its own (one not drawn through
+    # .cached_structure()) gets one that changes only with its traces, so a
+    # styling change keeps the user's zoom there too.
+    own_revision <- is.null(layout$uirevision)
+    # A new uirevision is a different plot, whose view resets. Only fresh traces do
+    # that: those in the browser hold the view state (selected points, hidden legend
+    # entries), so a redraw adding just annotations still goes out whole.
+    same_plot <- own_revision || identical(sent$layout$uirevision, layout$uirevision)
+
+    if (identical(sent$id, id) && identical(sent$rest, rest) && same_plot && !.has_js(layout)) {
+        if (own_revision) layout$uirevision <- sent$revision
+        changed <- !identical(sent$layout, layout)
+        session$sendCustomMessage("vizmodules-plotly-layout", list(
+            id = id,
+            refresh = session$ns("plot.refresh"),
+            layout = if (changed) .widget_json(fig, layout)
+        ))
+        sent$layout <- layout
+        req(FALSE, cancelOutput = TRUE)
+    }
+
+    if (own_revision) {
+        sent$revision <- paste0(id, "-traces-", (sent$sends %||% 0) + 1)
+        fig$x$layout$uirevision <- sent$revision
+    }
+    sent$sends <- (sent$sends %||% 0) + 1
+    sent$id <- id
+    sent$rest <- rest
+    sent$layout <- fig$x$layout
+    fig
+}
+
+
+#' Does an object hold JavaScript for htmlwidgets to evaluate?
+#'
+#' @param x An object, typically a list.
+#' @return `TRUE` if any element is an [htmlwidgets::JS()] string.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_has_js
+.has_js <- function(x) {
+    length(rapply(list(x), function(v) TRUE, classes = "JS_EVAL", how = "unlist")) > 0
+}
+
+
+#' Serialise part of a widget as its widget would be
+#'
+#' Uses the serialiser the widget declares (plotly's, for a plotly figure), with
+#' its arguments, as htmlwidgets does for the whole payload, so the part decodes
+#' in the browser exactly as it would inside a full render.
+#'
+#' @param fig An htmlwidget, whose `x` carries the serialiser.
+#' @param value The value to serialise.
+#'
+#' @return A `json` string, embedded verbatim in a Shiny message.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_widget_json
+.widget_json <- function(fig, value) {
+    func <- attr(fig$x, "TOJSON_FUNC", exact = TRUE)
+    args <- attr(fig$x, "TOJSON_ARGS", exact = TRUE)
+    if (length(args) == 0) {
+        args <- getOption("htmlwidgets.TOJSON_ARGS")
+    }
+    if (!is.function(func)) {
+        func <- function(x, ...) {
+            jsonlite::toJSON(x, auto_unbox = TRUE, force = TRUE, null = "null", na = "null", ...)
+        }
+    }
+    res <- if (length(args) == 0) func(value) else do.call(func, c(list(x = value), args))
+    structure(res, class = "json")
+}
+
+
+#' Have a plotly figure re-rendered in place
+#'
+#' Sets `layout.transition` to `TRUE`, which makes the plotly widget update an
+#' existing graph with `Plotly.react()` rather than purging and recreating it,
+#' and attaches `plotlyUpdate.js`, which clears the previous render's event
+#' listeners first (the widget re-attaches its own on every render).
+#'
+#' The widget only checks that `layout.transition` is set. It is `TRUE` rather
+#' than a transition such as `list(duration = 0)` because plotly.js animates any
+#' `react()` whose changes are all animatable when given one, and an animated
+#' update restyles the traces without redrawing the legend: a colour change
+#' would leave the legend showing the old colours. plotly.js ignores a
+#' transition that is not an object, so each update is drawn in full.
+#'
+#' @param fig A plotly figure.
+#' @return The figure.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_update_in_place
+.update_in_place <- function(fig) {
+    if (is.null(fig$x$layout$transition)) {
+        fig$x$layout$transition <- TRUE
+    }
+    fig$dependencies <- c(fig$dependencies, list(htmlDependency(
+        name = "vizmodules-plotly-update",
+        version = as.character(utils::packageVersion("VizModules")),
+        src = "src",
+        package = "VizModules",
+        script = "plotlyUpdate.js"
+    )))
+    fig
 }
 
 

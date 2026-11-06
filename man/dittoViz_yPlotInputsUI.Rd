@@ -151,6 +151,8 @@ groups, or between the \code{color.by} levels within each group when \code{color
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
+\item \code{webgl} - Draw the points with WebGL once there are 5,000 or more, as set by the
+\code{VizModules.webgl.threshold} option (UI: "Plot with WebGL", default: TRUE)
 \item \code{x.order} - Order of the \code{group.by} groups along the x-axis (UI: "Group Order", drag and drop, default: the
 column's factor level order, else sorted). As a default, a character vector of levels of \code{group.by}; levels
 it leaves out follow in their default order. Not shown for a \code{group.by} with more than 20 groups

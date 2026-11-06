@@ -112,6 +112,43 @@ test_that("dataFilterServer renders only the requested columns hidden, with colv
     }
 })
 
+test_that("dataFilterServer passes on filters but not sorts", {
+    runs <- 0
+    shiny::testServer(
+        dataFilterServer,
+        args = list(data = shiny::reactive(iris)),
+        {
+            downstream <- shiny::reactive({
+                runs <<- runs + 1
+                session$returned()
+            })
+            n_rows <- function() nrow(isolate(downstream()))
+
+            # DT's first report lists every row: the same data as before it.
+            expect_equal(n_rows(), nrow(iris))
+            session$setInputs(table_rows_all = seq_len(nrow(iris)))
+            expect_equal(n_rows(), nrow(iris))
+            expect_equal(runs, 1)
+
+            # A sort reorders the indices without changing the rows shown.
+            session$setInputs(table_rows_all = rev(seq_len(nrow(iris))))
+            expect_equal(n_rows(), nrow(iris))
+            expect_equal(runs, 1)
+
+            # A filter changes the rows, which keep their original order.
+            session$setInputs(table_rows_all = c(10L, 3L, 7L))
+            out <- isolate(downstream())
+            expect_equal(runs, 2)
+            expect_equal(rownames(out), c("3", "7", "10"))
+
+            # Sorting the filtered rows changes nothing either.
+            session$setInputs(table_rows_all = c(3L, 7L, 10L))
+            isolate(downstream())
+            expect_equal(runs, 2)
+        }
+    )
+})
+
 test_that("dataFilterServer never applies a previous table's rows to new data", {
     data_val <- shiny::reactiveVal(iris)
 

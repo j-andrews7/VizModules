@@ -131,6 +131,17 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         # Track initialization
         initialized <- reactiveVal(FALSE)
 
+        # What the plot actually draws with. The limits are pushed into the x.min and
+        # x.max controls below, which is a client round-trip; reading the store rather
+        # than the raw inputs means the plot draws once with new limits, and the echo
+        # of a limit just set costs no rebuild.
+        x_range_store <- setup_axis_range(input, session, min_key = "x.min", max_key = "x.max", params = params)
+        set_x_limits <- function(limits) {
+            x_range_store(list(min = limits$min, max = limits$max))
+            updateNumericInput(session, "x.max", value = limits$max)
+            updateNumericInput(session, "x.min", value = limits$min)
+        }
+
         # What the plot actually colours by. The picker is rebuilt whenever the group
         # set changes and is re-seeded from this same resolution, so the value it
         # then reports resolves to the palette already in use. A reactiveVal only
@@ -196,13 +207,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 if (!is.null(input$x.data) && input$x.data != "") {
                     limits <- x_limits(axis_range())
                     if (!is.null(limits)) {
-                        updateNumericInput(session, "x.max", value = limits$max)
-                        updateNumericInput(session, "x.min", value = limits$min)
+                        set_x_limits(limits)
                         initialized(TRUE)
                     }
                 }
             }
-        })
+            # Just after setup_axis_range()'s observer and before the render.
+        }, priority = 999)
 
         # Auto-update x-axis range when relevant inputs change
         observe({
@@ -220,14 +231,13 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             if (!is.null(input$auto.update) && input$auto.update) {
                 limits <- x_limits(x_range)
                 if (!is.null(limits)) {
-                    updateNumericInput(session, "x.max", value = limits$max)
-                    updateNumericInput(session, "x.min", value = limits$min)
+                    set_x_limits(limits)
                 }
             }
             if (!is.null(x_range)) {
                 updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
-        })
+        }, priority = 999)
 
         # Reset functionality
         observeEvent(input$reset, {
@@ -307,8 +317,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 
             # Axes
             updateMaterialSwitch(session, "rotate", value = get_default(defaults, "rotate", FALSE, is.logical))
-            updateNumericInput(session, "x.max", value = get_default(defaults, "x.max", max.x, is.numeric))
-            updateNumericInput(session, "x.min", value = get_default(defaults, "x.min", min.x, is.numeric))
+            set_x_limits(list(
+                min = get_default(defaults, "x.min", min.x, is.numeric),
+                max = get_default(defaults, "x.max", max.x, is.numeric)
+            ))
             updateNumericInput(session, "axis.title.font.size",
                 value = get_default(defaults, "axis.title.font.size", 18, is.numeric)
             )
@@ -338,11 +350,10 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             x_range <- axis_range()
             limits <- x_limits(x_range)
             if (!is.null(limits)) {
-                updateNumericInput(session, "x.max", value = limits$max)
-                updateNumericInput(session, "x.min", value = limits$min)
+                set_x_limits(limits)
                 updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
             }
-        })
+        }, priority = 999)
 
 
         observeEvent(input$facet.by, {
@@ -360,8 +371,12 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
         }, ignoreInit = FALSE)
 
-        generate_SplitBarPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # The plot itself: everything that changes what is drawn. It is cached
+        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # has no side effects; the styling inputs are applied in generate_SplitBarPlot().
+        draw_SplitBarPlot <- function(isolate_fn) {
+            # Resolved server-side, so the echo of a limit just set costs no rebuild.
+            x.limits <- isolate_fn(x_range_store())
 
             # Null Values:
             facet.by <- NULL
@@ -428,8 +443,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 palcolor = palcolor_arg,
                 palette = palette_arg,
                 palreverse = isolate_fn(input$palreverse),
-                x_min = isolate_fn(input$x.min),
-                x_max = isolate_fn(input$x.max),
+                x_min = x.limits$min,
+                x_max = x.limits$max,
                 theme = "theme_this",
                 theme_args = theme_args,
                 alpha_by = alpha.by,
@@ -538,49 +553,18 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                     nrow = facet.nrow
                 )
             }
-            fig <- apply_title_layout(fig, input, isolate_fn, title_y = 0.98, title_x = isolate_fn(input$axis.title.horizontal.position))
+            list(fig = .ensure_built(fig), facet.by = facet.by)
+        }
+        base_SplitBarPlot <- .cached_structure(
+            draw_SplitBarPlot, input, session, data, params = params,
+            extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric(), x_range_store())
+        )
 
-            # Apply axis styling to all subplot axes (handles faceting)
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
-
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            # Add reference lines
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
-
-            config_list <- add_plot_config(download.format = isolate_fn(input$download.format), include.modebar.buttons = TRUE, facet.by = facet.by)
-            fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
-
-            # Apply the uniform legend visibility and font inputs
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
-
-            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- axis_titles_as_annotations(fig)
-            return(fig)
+        # The plot, styled: titles, fonts, axes, reference lines and legend.
+        generate_SplitBarPlot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_SplitBarPlot()
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.98)
         })
 
         # Render the plot output

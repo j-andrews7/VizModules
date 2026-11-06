@@ -35,9 +35,11 @@
 #'
 #' @return A `reactive` expression that evaluates to the filtered subset of
 #'   `data` based on the current DT selection/filter state. All columns are
-#'   retained, including any hidden via `hide.columns`. Pass this reactive to a
-#'   plotting module's `data` argument to keep the plot in sync with the table
-#'   filters.
+#'   retained, including any hidden via `hide.columns`, and rows keep their
+#'   original order: sorting the table changes neither the rows returned nor
+#'   their order, so it does not redraw a plot. The reactive only updates when
+#'   the set of rows shown changes. Pass this reactive to a plotting module's
+#'   `data` argument to keep the plot in sync with the table filters.
 #'
 #' @import shiny
 #'
@@ -119,27 +121,50 @@ dataFilterServer <- function(id, data, factor.char.cols = TRUE, page.length = 10
             )
         })
 
+        # The rows shown, as a set: sorted, and NULL when every row is. A sort
+        # only reorders DT's indices and its first report lists every row, so
+        # neither reaches the plots; a reactiveVal only invalidates its readers
+        # when the set really changes.
+        row_set <- reactiveVal(NULL)
+
         # When the data changes, input$table_rows_all still holds the previous
         # table's row indices until DT redraws and reports again, and applying
         # those to the new data hands the plot NA-padded or wrongly subset rows.
-        # Freezing it holds readers for this flush and makes the client resend.
+        # Show every row of the new data until DT reports, and freeze the input
+        # so nothing reads the stale indices during this flush. The first data
+        # to arrive is not a change: rows reported before it still apply.
+        data_seen <- FALSE
         observeEvent(prepared_data(), {
-            freezeReactiveValue(input, "table_rows_all")
-        }, ignoreInit = TRUE, priority = 100)
+            if (data_seen) {
+                row_set(NULL)
+                freezeReactiveValue(input, "table_rows_all")
+            }
+            data_seen <<- TRUE
+        }, priority = 100)
+
+        # Runs only when DT reports, not when the data changes (read isolated).
+        # An empty report arrives as NULL and, as before, shows every row.
+        observeEvent(input$table_rows_all, {
+            rows <- sort(unique(as.integer(unlist(input$table_rows_all))))
+            n <- tryCatch(nrow(isolate(prepared_data())), error = function(e) NA_integer_)
+            if (!is.na(n)) {
+                rows <- rows[rows >= 1 & rows <= n]
+                if (length(rows) == n) {
+                    rows <- integer(0)
+                }
+            }
+            row_set(if (length(rows)) rows else NULL)
+        }, ignoreNULL = FALSE, priority = 1000)
 
         # Return a reactive with only the filtered rows
         filtered_data <- reactive({
             d <- prepared_data()
-            rows <- input$table_rows_all
-            if (is.null(rows)) {
-                return(d)
+            rows <- row_set()
+            if (!is.null(rows)) {
+                # Indices from a larger, previous table must never pad with NAs.
+                d <- d[rows[rows <= nrow(d)], , drop = FALSE]
             }
-            # The freeze above lifts when its flush ends; anything read before DT
-            # reports again must still not be padded with NA rows by indices from
-            # a larger, previous table.
-            rows <- rows[rows <= nrow(d)]
-            d <- d[rows, , drop = FALSE]
-            droplevels(d) # Drop un unused levels so that they dont get plotted
+            droplevels(d) # Drop unused levels so that they don't get plotted
         })
 
         return(filtered_data)

@@ -130,6 +130,15 @@ default: 0.35); nudges the manual size legend (drawn when \code{size.by} is set)
 }
 }
 
+\section{Parameters controlling additional functionality}{
+
+The following parameters implementing new functionality or controlling plotly-specific features are also available:
+\itemize{
+\item \code{webgl} - Draw the points with WebGL once there are 5,000 or more, as set by the
+\code{VizModules.webgl.threshold} option (UI: "Plot with WebGL", default: TRUE)
+}
+}
+
 \examples{
 library(VizModules)
 data(mtcars)

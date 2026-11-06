@@ -6,11 +6,23 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### All modules
 
-* Colour, shape, group and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
+* Plots respond much faster. Changing an input that only styles the plot (titles, fonts, ticks, gridlines, reference lines, the legend's fonts, the download format) now restyles it without redrawing it, which takes a 20,000-point scatter plot from about 4.4 s to 0.4 s, and going back to settings already drawn, such as toggling an option back or pressing **Reset**, re-uses the plot drawn for them. A plot is drawn once at startup, where some modules drew it up to 12 times, and once when a column changes rather than twice. Settings panels build in about a third of the time.
+  * Plots now update in place wherever possible instead of being redrawn. Changing what is plotted still resets the view. This results in much snappier performance for styling changes.
+  * Under the hood, each module draws its plot in a cached step keyed on the data and the inputs it reads, and applies the styling inputs to it in a second step; the adding-a-new-module vignette describes this pattern.
 
-### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
+* Colour, shape, group, and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape, or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
+
+### `BarPlot`, `BoxPlot`, `freqPlot`, and `yPlot`
 
 * New drag-and-drop **X Order** (**Group Order** for `freqPlot` and `yPlot`) input in the Data tab sets the order of the x-axis categories, with significance brackets following it. Set it in `defaults` as `x.order`, a character vector of levels; any left out follow in their default order. It is not shown for a column with more than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence over it.
+
+### `BoxPlot`, `DotPlot`, `freqPlot`, and `yPlot`
+
+* New **Plot with WebGL** toggle, on by default, draws the points with WebGL once a plot has 5,000 or more of them (`options(VizModules.webgl.threshold = )`), so tens of thousands of jitter points draw several times faster. Boxes, violins, and lines stay SVG. WebGL points are an embedded image in SVG downloads, so turn it off for a fully vector file.
+
+### `dataFilter`
+
+* Sorting the data table no longer reorders or redraws the plots fed by it: `dataFilterServer()` only passes on a change to which rows are shown, and keeps them in their original order. A table's first report of its rows no longer redraws them either.
 
 ### `DotPlot` and `scatterPlot`
 
@@ -28,9 +40,16 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
   * Marginals are not drawn on a split plot because that'd be a mess.
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
-* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
+* New **Model Lines in Legend** switch in the Lines tab lists the linear model, best fit, and custom model lines in the legend. It is off by default. While it is off, a line drawn for a **Color By** group hides and shows with that group's legend entry on click.
+* `dittoViz_scatterPlotServer()` takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that a wrapper module uses to add layers or annotations to the scatter figure, or to set axis title text, before the figure is finalised. What it adds reaches the rendered plot, manual-edit persistence, and the source download (e.g. sciVizModules' PCA biplot draws its loading arrows and % variance axis titles this way).
 
 ### Helpers and exported functions
+
+* New `apply_uniform_styling()` applies the uniform styling inputs (titles, axes, reference lines, the modebar, shape drawing, and the legend) to a module's figure in one call, the second of the modules' two steps. A wrapper's `fig.fn` can run in it.
+* `setup_auto_update_logic()` takes a `track` function, called with the id of every input read through the wrapper it returns. The modules' cached plot step keys its cache on those ids.
+* `finalize_manual_edits()` sends the browser only the new layout when nothing else about the figure, including its `layout.uirevision`, changed since the last render, and cancels the render, so it must be the last call in `renderPlotly()`. `options(VizModules.layout.updates = FALSE)` always sends the whole figure.
+* `get_documentation()` reads each package's help pages once per session from the Rd database, rather than re-parsing them through roxygen2 for every parameter, which took most of the time a module's settings panel took to build. Rd markup becomes plain text, and co-documented parameters (`y_min` and `y_max`, say) now get their description. The roclang dependency is gone.
+* `dittoViz_scatterPlotServer()`'s `fig.fn` now runs in the figure's styling step, still after the legend is styled and before the axis titles become annotations. The plot under it is cached but this step is not, so `fig.fn` can read any of a wrapper's reactives.
 
 * `multiDynamicInput()` select fields can take `multiple = TRUE`, and report a character vector of their items in the order they were picked. The scatter module's **Trajectories** list uses one per row (#231).
 
@@ -68,7 +87,9 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### `ComplexHeatmap`
 
-* The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap` or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
+* **Security:** A **Row Title** or **Column Title** containing `{...}` or `@{...}` is now drawn as typed. On a split axis, `ComplexHeatmap::Heatmap()` ran it as R code on the server.
+* The heatmap opens faster, and no longer slows down the longer an app runs. Each heatmap kept a reference to the whole Shiny session, which was pretty stupid in hindsight. It also drew the heatmap 4 to 6 times on opening, as each input and colour picker reported the value already in use.
+* The `ComplexHeatmap_HeatmapApp()` example no longer fails where `ComplexHeatmap`, `InteractiveComplexHeatmap`, or `circlize` is not installed, as on CRAN's r-oldrel macOS check machines.
 
 ### `dumbbellPlot` and `linePlot`
 
@@ -82,6 +103,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * Trajectories now end in an arrowhead, which ggplotly dropped, and no longer stop the plot with an error while an axis adjustment is set (#231). The module now draws them itself, through the group medians of the plotted values, after any adjustment. On a split plot, each panel's path runs through that panel's own medians rather than repeating the whole data's.
 * Groups are coloured by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
+
+### `scatterPlot` and `yPlot`
+
+* With both a colour and a **Shape By** column, the legend now has a section for each, as ggplot2 draws it, instead of ggplotly's one entry per combination ("(Gadgets,North)", ...). Clicking an entry hides every point of that level, and double-clicking one shows only its level. The legend's title inputs style the section titles too.
 
 ### Helpers and exported functions
 

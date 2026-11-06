@@ -296,6 +296,9 @@
 #' @param fit_type Character. Type of fit: "linear" or "loess".
 #' @param span Numeric. Span parameter for LOESS smoothing (ignored for linear).
 #' @param line_width Numeric. Width of the fit lines.
+#' @param show.legend Logical. Whether the lines get legend entries (one per
+#'   line, not per panel). Without one, a group's line joins that group's
+#'   `legendgroup`, so it hides and shows with the group's entry.
 #'
 #' @return The modified plotly figure with fit lines added to all subplot panels.
 #'
@@ -305,7 +308,7 @@
 .add_fit_lines_to_subplots <- function(fig, df, x.col, y.col, split.by = NULL, group.col = NULL,
                                        color_mapping = NULL, line_color = "#000000",
                                        fit_type = c("linear", "loess"), span = 0.75,
-                                       line_width = 3) {
+                                       line_width = 3, show.legend = TRUE) {
     fit_type <- match.arg(fit_type)
 
     # Track which trace names we've added to avoid duplicate legend entries
@@ -343,7 +346,7 @@
         if (is.data.frame(fit_data)) {
             # Single global fit line for this panel
             trace_name <- fit_name_prefix
-            show_legend <- !trace_name %in% added_names
+            show_legend <- show.legend && !trace_name %in% added_names
 
             fig <- fig |>
                 plotly::add_lines(
@@ -375,7 +378,7 @@
                 }
 
                 trace_name <- paste(fit_name_prefix, group_name)
-                show_legend <- !trace_name %in% added_names
+                show_legend <- show.legend && !trace_name %in% added_names
 
                 fig <- fig |>
                     plotly::add_lines(
@@ -386,7 +389,7 @@
                         yaxis = pair$y,
                         line = list(color = grp_color, width = line_width),
                         name = trace_name,
-                        legendgroup = trace_name,
+                        legendgroup = if (show.legend) trace_name else group_name,
                         showlegend = show_legend,
                         inherit = FALSE
                     )
@@ -495,6 +498,8 @@
 #' @param line_color Character. Default hex color for lines with no per-model
 #'   color specified. Default `"#000000"`.
 #' @param line_width Numeric. Default line width. Default `2`.
+#' @param backend A model backend from [get_model_backend()], or `NULL`.
+#' @param show.legend Logical. Whether each model gets a legend entry.
 #'
 #' @return The modified plotly figure with custom model lines added.
 #'
@@ -505,7 +510,8 @@
                                                 split.by = NULL,
                                                 line_color = "#000000",
                                                 line_width = 2,
-                                                backend = NULL) {
+                                                backend = NULL,
+                                                show.legend = TRUE) {
     if (is.null(custom.models) || length(custom.models) == 0) return(fig)
     if (is.null(names(custom.models)) || any(!nzchar(names(custom.models)))) {
         warning("custom.models must be a named list; unnamed entries will be skipped.")
@@ -532,7 +538,7 @@
             fit_data <- .compute_custom_model_fit(model, subset_df, x.col, backend = backend)
             if (is.null(fit_data)) next
 
-            show_legend <- !model_name %in% added_names
+            show_legend <- show.legend && !model_name %in% added_names
 
             fig <- fig |>
                 plotly::add_lines(

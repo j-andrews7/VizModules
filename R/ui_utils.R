@@ -454,3 +454,33 @@ module_tack_ui <- function(ns, defaults = NULL) {
     # inserted into the Figure Builder at runtime brings the script with it.
     attachDependencies(ui, .source_export_dependency(), append = TRUE)
 }
+
+
+#' The "Plot with WebGL" toggle for a module's point layers
+#'
+#' On (the default), the plot's points switch to WebGL once there are
+#' [.webgl_threshold()] of them or more (see [.auto_webgl()]); off, they always
+#' stay SVG, so SVG downloads stay fully vector.
+#'
+#' @param ns The module's namespace function.
+#' @param defaults The module's `defaults`, whose `webgl` entry sets the value.
+#'
+#' @return A tooltipped checkbox input with id `webgl`.
+#'
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_webgl_input
+.webgl_input <- function(ns, defaults = NULL) {
+    threshold <- format(.webgl_threshold(), big.mark = ",", scientific = FALSE)
+    tipify(
+        checkboxInput(ns("webgl"), "Plot with WebGL",
+            value = get_default(defaults, "webgl", TRUE, is.logical)
+        ),
+        paste0(
+            "Draw the points with WebGL once the plot has ", threshold, " or more, which is much ",
+            "faster with large data. In SVG downloads, WebGL points are an embedded image rather ",
+            "than vector shapes; turn this off for a fully vector file."
+        ),
+        placement = "top", options = list(container = "body")
+    )
+}

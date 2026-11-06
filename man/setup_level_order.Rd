@@ -42,8 +42,8 @@ module's Reset button (\code{input$reset}) is pressed.
 \details{
 A new column starts from \code{defaults[[inputId]]} (levels it does not have are
 ignored), and new data for the same column keeps the order the user dragged
-the levels into. A column the control cannot order -- numeric, or with more
-than \code{max.levels} levels -- empties the control, which hides it.
+the levels into. A column the control cannot order - numeric, or with more
+than \code{max.levels} levels - empties the control, which hides it.
 
 The returned store, not \code{input[[inputId]]}, is what the plot should read. It
 changes only when the order to draw does, so neither the control reporting its

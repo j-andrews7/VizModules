@@ -10,7 +10,8 @@ reset_lines_inputs(session, include.fit.lines = FALSE, defaults = NULL)
 \item{session}{The Shiny session object (from \code{moduleServer}).}
 
 \item{include.fit.lines}{Logical; if TRUE, also resets the fit-line
-inputs (best.fit, line.best.smoothness, line.best.colour, linear.model).
+inputs (best.fit, line.best.smoothness, line.best.colour, linear.model,
+model.legend.show, custom.model.enable, custom.models).
 Default is FALSE.}
 
 \item{defaults}{A named list of default values to reset to, or NULL to use

@@ -63,7 +63,8 @@ reset_axes_inputs <- function(session, defaults = NULL) {
 #'
 #' @param session The Shiny session object (from `moduleServer`).
 #' @param include.fit.lines Logical; if TRUE, also resets the fit-line
-#'   inputs (best.fit, line.best.smoothness, line.best.colour, linear.model).
+#'   inputs (best.fit, line.best.smoothness, line.best.colour, linear.model,
+#'   model.legend.show, custom.model.enable, custom.models).
 #'   Default is FALSE.
 #' @param defaults A named list of default values to reset to, or NULL to use
 #'   hardcoded fallbacks. Typically the same list passed to the UI function.
@@ -104,6 +105,9 @@ reset_lines_inputs <- function(session, include.fit.lines = FALSE, defaults = NU
         updateNumericInput(session, "line.best.smoothness", value = get_default(defaults, "line.best.smoothness", 1, is.numeric))
         updateColourInput(session, "line.best.colour", value = get_default(defaults, "line.best.colour", "#000000"))
         updateMaterialSwitch(session, "linear.model", value = get_default(defaults, "linear.model", FALSE, is.logical))
+        updateMaterialSwitch(session, "model.legend.show",
+            value = get_default(defaults, "model.legend.show", FALSE, is.logical)
+        )
         updateMaterialSwitch(session, "custom.model.enable", value = get_default(defaults, "custom.model.enable", FALSE, is.logical))
         updateMultiDynamicInput(session, "custom.models", clear = TRUE)
     }

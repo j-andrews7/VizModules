@@ -51,8 +51,10 @@ get_default <- function(defaults, key, fallback, validator = NULL) {
 #'
 #' @param ns A namespace function, typically created by `NS(id)`.
 #' @param defaults A named list of default values for the inputs.
-#' @param include.fit.lines Logical; whether to include "line of best fit" and
-#'   "linear model line" inputs. Only applicable for scatter plots. Default is FALSE.
+#' @param include.fit.lines Logical; whether to include the fit and model line
+#'   inputs: "line of best fit", "linear model line", custom model lines, and
+#'   whether those lines are listed in the legend (`model.legend.show`, off by
+#'   default). Only applicable for scatter plots. Default is FALSE.
 #'
 #' @return A `tagList` containing the line input UI elements.
 #'
@@ -227,6 +229,17 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
                     status = "success"
                 ),
                 "Add a linear regression line to the scatter plot",
+                placement = "top", options = tip_opts
+            ),
+            tipify(
+                materialSwitch(ns("model.legend.show"), "Model Lines in Legend",
+                    value = get_default(defaults, "model.legend.show", FALSE, is.logical),
+                    status = "success"
+                ),
+                paste(
+                    "List the best fit, linear model and custom model lines in the legend.",
+                    "Off, a line drawn for a Color By group still hides and shows with that group."
+                ),
                 placement = "top", options = tip_opts
             ),
             tipify(

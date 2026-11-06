@@ -1,39 +1,3 @@
-# The plot output cannot be driven from testServer, but the reactive that builds
-# the figure can, given a complete set of inputs.
-.box_inputs <- function(...) {
-    base <- list(
-        x.data = "department", y.data = "salary", group.by = "", show.outliers = TRUE,
-        boxplot.width = 0.8, sort_x = "", rotate = FALSE, y.min = 0, y.max = NA,
-        auto.update = TRUE, update = 0,
-        add.points = FALSE, pt.size = 1, pt.alpha = 1, jitter.width = 0.3, pt.color = "#000000",
-        highlight = "", highlight.colour = "#000000", highlight.size = 1, highlight.alpha = 1,
-        facet.by = "", facet.scale = "fixed", facet.ncol = NA, facet.nrow = NA, facet.by.row = TRUE,
-        subplot.margin.x = 0.03, subplot.margin.y = 0.1,
-        stats.enabled = FALSE, stat.test = "wilcox.test", stat.p.adjust = "holm",
-        stat.display = "p.adj", stat.sig.threshold = 0.05, stat.hide.ns = FALSE,
-        stat.paired = FALSE, stat.pairs = "", stat.per.facet = TRUE,
-        stat.bracket.style = "capped", stat.bracket.inset = 0.025,
-        stat.step.increase = 0.06, stat.text.bump = 0.04,
-        stat.line.color = "#000000", stat.line.width = 1,
-        download.format = "svg", legend.title.size = 14, legend.text.size = 12,
-        title.font.size = 26, title.font.family = "Arial", title.font.color = "#000000",
-        axis.title.font.size = 18, axis.title.font.color = "#000000",
-        axis.title.font.family = "Arial", axis.title.horizontal.position = 0.5,
-        axis.showline = TRUE, axis.mirror = TRUE, show.grid.x = TRUE, show.grid.y = TRUE,
-        grid.color = "#CCCCCC", axis.linecolor = "black", axis.linewidth = 0.5,
-        axis.tickfont.size = 12, axis.tickfont.color = "black",
-        axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0,
-        axis.ticks = "outside", axis.tickcolor = "black", axis.ticklen = 5,
-        axis.tickwidth = 1, facet.title.font.size = 18,
-        facet.title.font.color = "#000000", facet.title.font.family = "Arial",
-        hline.intercepts = "", vline.intercepts = "", abline.slopes = "", abline.intercepts = "",
-        shape.fill = "rgba(0, 0, 0, 0)", shape.line.color = "black", shape.line.width = 4,
-        shape.linetype = "solid", shape.opacity = 1,
-        margin.l = 70, margin.r = 90, margin.t = 70, margin.b = 70
-    )
-    utils::modifyList(base, list(...))
-}
-
 # The x categories in the order the figure draws them.
 .box_x_order <- function(fig) {
     built <- plotly::plotly_build(fig)
@@ -176,6 +140,27 @@ test_that("turning statistics off drops them from the source download", {
 test_that("significance brackets stay within the axis they are drawn on", {
     out <- .box_stats_figure(example_demographics, .box_inputs(stats.enabled = TRUE))
     expect_brackets_within_axes(out$fig, min.count = 3)
+})
+
+test_that("the statistics follow the plot drawn, including one served from the cache", {
+    shiny::testServer(
+        plotthis_BoxPlotServer,
+        args = list(id = "box", data = shiny::reactive(example_demographics)),
+        {
+            suppressWarnings({
+                do.call(session$setInputs, .box_inputs(stats.enabled = TRUE))
+                session$setInputs(stat.pairs = "")
+            })
+            salary <- last_stats_df()
+            suppressWarnings(session$setInputs(y.data = "age"))
+            age <- last_stats_df()
+            expect_false(isTRUE(all.equal(salary, age)))
+
+            # Back to salary: drawn from the cache, and its statistics come with it.
+            suppressWarnings(session$setInputs(y.data = "salary"))
+            expect_equal(last_stats_df(), salary)
+        }
+    )
 })
 
 test_that("a rotated box plot tests but draws no brackets over its values", {

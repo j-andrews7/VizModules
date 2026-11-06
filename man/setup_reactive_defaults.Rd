@@ -18,7 +18,7 @@ may be a \code{reactive()}/\code{reactiveVal}.}
 \code{NULL} when \code{defaults} holds no reactive entries, in which case
 modules behave exactly as they did before. Otherwise a list with two
 functions, \code{has(key)} and \code{get(key)}, for \code{\link[=setup_auto_update_logic]{setup_auto_update_logic()}} to
-read.
+read, and \code{keys}, the input ids the store backs.
 }
 \description{
 Plot module parameters normally travel through client-side inputs: the value

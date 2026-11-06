@@ -34,23 +34,40 @@ restored, the pre-existing behaviour).}
 }
 \value{
 The finalized plotly figure, ready to be returned from
-\code{\link[plotly:renderPlotly]{plotly::renderPlotly()}}.
+\code{\link[plotly:renderPlotly]{plotly::renderPlotly()}}. Inside a render, when only the layout changed,
+it instead sends the layout and cancels the render.
 }
 \description{
 Render-step companion to \code{\link[=setup_manual_edits]{setup_manual_edits()}}. Call this inside
 your module's \code{\link[plotly:renderPlotly]{plotly::renderPlotly()}} on the freshly rebuilt
-figure, immediately before returning it.
+figure, as the last step: return what it returns.
 }
 \details{
-It performs four jobs:
+It performs six jobs:
 \enumerate{
 \item tags the figure with the module's plotly event \code{source} so its
 \code{plotly_relayout} events are captured by \code{setup_manual_edits()};
 \item restores any manually repositioned legend, annotations, axis titles,
 and colorbar captured so far;
 \item records the figure so future relayout events can be matched to stable
-annotation keys (surviving re-ordering on rebuild); and
-\item attaches the JavaScript listener that forwards colorbar drags.
+annotation keys (surviving re-ordering on rebuild);
+\item attaches the JavaScript listener that forwards colorbar drags;
+\item has the figure re-rendered in place: \code{layout.transition = TRUE} makes the
+plotly widget update its graph with \code{Plotly.react()} instead of purging and
+recreating it, which is faster and keeps the user's zoom and toggled legend
+entries whenever \code{layout.uirevision} is unchanged (the cached modules set
+it per build of the plot, so styling changes keep the view). A small script
+clears the previous render's event listeners first, which purging used to;
+and
+\item sends only the layout when nothing else changed: if the figure's traces,
+config, \code{layout.uirevision}, and everything else but its layout match the
+figure last sent to this output, the new layout goes to the browser in a
+small message, applied with \code{Plotly.react()} over the traces already drawn,
+and the render is cancelled (\code{req(FALSE, cancelOutput = TRUE)}), so no code
+after this call runs. A styling change then costs kilobytes rather than the
+whole figure.
+Set \code{options(VizModules.layout.updates = FALSE)} to always send the whole
+figure.
 }
 
 Restored edits are applied under \code{\link[shiny:isolate]{shiny::isolate()}} so re-applying
@@ -59,8 +76,7 @@ them never triggers an additional re-render.
 \examples{
 \dontrun{
 # Inside renderPlotly(), after building `fig`:
-fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
-fig
+finalize_manual_edits(fig, plot_source, edit_store, session)
 }
 }
 \seealso{

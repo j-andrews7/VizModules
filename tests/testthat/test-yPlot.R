@@ -448,55 +448,6 @@ test_that("the y.min and y.max defaults seed the Y axis limits and survive start
 
 # --- Driving the module's own build ------------------------------------------
 
-# The plot output cannot be driven from testServer, but the reactive that builds
-# the figure can, given a complete set of inputs.
-.yplot_inputs <- function(...) {
-    base <- list(
-        var = "salary", group.by = "job_level", color.by = "", shape.by = "", split.by = "",
-        plots = c("boxplot", "jitter"), var.adjustment = "", var.adj.fxn = "",
-        y.min = NA, y.max = NA, auto.update = TRUE, update = 0,
-        multivar.aes = "split", multivar.split.dir = "col",
-        split.adjust = "fixed", split.ncol = NA, split.nrow = NA,
-        subplot.margin.x = 0.03, subplot.margin.y = 0.1,
-        do.raster = FALSE, raster.dpi = 600,
-        jitter.size = 1, jitter.width = 0.2, jitter.color = "#000000",
-        jitter.shape.legend.size = 5, jitter.shape.legend.show = TRUE,
-        boxplot.show.outliers = FALSE, boxplot.color = "#000000", boxplot.fill = TRUE,
-        boxplot.lineweight = 0.5, boxgap = 0.3, boxgroupgap = 0.2,
-        vlnplot.lineweight = 0.5, vlnplot.scaling = "area",
-        ridgeplot.lineweight = 0.5, ridgeplot.scale = 1.25, ridgeplot.ymax.expansion = NA,
-        ridgeplot.shape = "smooth", ridgeplot.bins = 30, ridgeplot.binwidth = NA,
-        hover.data = "", hover.round.digits = 5,
-        stats.enabled = FALSE, stat.test = "t.test", stat.p.adjust = "none",
-        stat.display = "p.adj", stat.sig.threshold = 0.05, stat.hide.ns = FALSE,
-        stat.paired = FALSE, stat.pairs = "", stat.per.facet = TRUE,
-        stat.bracket.style = "capped", stat.bracket.inset = 0.025,
-        stat.step.increase = 0.06, stat.text.bump = 0.04,
-        stat.line.color = "#000000", stat.line.width = 1,
-        annotate.by = "", highlight.points = "", highlight.auto.annotate = TRUE,
-        highlight.color = "#00FFF7", highlight.size = 7,
-        highlight.border.color = "#000000", highlight.border.width = 1,
-        annotation.color = "black", annotation.ax = 20, annotation.ay = -20,
-        annotation.size = 10, annotation.showarrow = TRUE,
-        annotation.arrowcolor = "black", annotation.arrowhead = 2, annotation.arrowwidth = 1.5,
-        download.format = "png", legend.title.size = 14, legend.text.size = 12,
-        title.font.size = 26, title.font.family = "Arial", title.font.color = "#000000",
-        axis.title.font.size = 18, axis.title.font.color = "#000000",
-        axis.title.font.family = "Arial", axis.title.horizontal.position = 0.5,
-        axis.showline = TRUE, axis.mirror = TRUE, show.grid.x = TRUE, show.grid.y = TRUE,
-        grid.color = "#CCCCCC", axis.linecolor = "black", axis.linewidth = 0.5,
-        axis.tickfont.size = 12, axis.tickfont.color = "black",
-        axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0,
-        axis.ticks = "outside", axis.tickcolor = "black", axis.ticklen = 5,
-        axis.tickwidth = 1, facet.title.font.size = 14,
-        facet.title.font.color = "black", facet.title.font.family = "Arial",
-        hline.intercepts = "", vline.intercepts = "", abline.slopes = "", abline.intercepts = "",
-        shape.fill = "rgba(0, 0, 0, 0)", shape.line.color = "black", shape.line.width = 4,
-        shape.linetype = "solid", shape.opacity = 1,
-        margin.l = 80, margin.r = 80, margin.t = 80, margin.b = 80
-    )
-    utils::modifyList(base, list(...))
-}
 
 # Start the module on `inputs` and settle it. Selecting comparisons freezes
 # stat.pairs and repopulates it; the mock session never echoes that back, so the

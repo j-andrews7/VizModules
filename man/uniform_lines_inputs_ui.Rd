@@ -11,8 +11,10 @@ uniform_lines_inputs_ui(ns, defaults = NULL, include.fit.lines = FALSE)
 
 \item{defaults}{A named list of default values for the inputs.}
 
-\item{include.fit.lines}{Logical; whether to include "line of best fit" and
-"linear model line" inputs. Only applicable for scatter plots. Default is FALSE.}
+\item{include.fit.lines}{Logical; whether to include the fit and model line
+inputs: "line of best fit", "linear model line", custom model lines, and
+whether those lines are listed in the legend (\code{model.legend.show}, off by
+default). Only applicable for scatter plots. Default is FALSE.}
 }
 \value{
 A \code{tagList} containing the line input UI elements.

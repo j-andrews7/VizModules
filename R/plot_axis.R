@@ -19,6 +19,9 @@
 #' call (such as a range raised by [apply_stat_annotations()]) is not reverted
 #' at build time.
 #'
+#' Axes recorded as belonging to overlay panels drawn beside the plot, such as
+#' the marginal distributions [add_marginal_plots()] adds, are left alone.
+#'
 #' @importFrom utils modifyList
 #'
 #' @author Jared Andrews
@@ -54,6 +57,12 @@ apply_subplot_axis_styling <- function(fig, xaxis_style, yaxis_style) {
     if (length(yaxis_names) == 0) {
         yaxis_names <- "yaxis"
     }
+
+    # Axes of overlay panels drawn beside the plot (marginal distributions) keep
+    # the styling they were drawn with.
+    overlay <- fig$x$.vizmodules_overlay_axes
+    xaxis_names <- setdiff(xaxis_names, overlay)
+    yaxis_names <- setdiff(yaxis_names, overlay)
 
     # Build a list of layout updates. Only the styling is queued: plotly_build()
     # merges queued updates recursively into the existing axis, so its other
@@ -132,14 +141,15 @@ axis_titles_as_annotations <- function(fig) {
     }
 
     # Build so that titles set via layout() (held in layoutAttrs) are
-    # consolidated into fig$x$layout. Idempotent for already-built figures.
-    fig <- plotly::plotly_build(fig)
+    # consolidated into fig$x$layout. Skipped when nothing is queued.
+    fig <- .ensure_built(fig)
 
     if (is.null(fig$x) || is.null(fig$x$layout)) {
         return(fig)
     }
 
-    layout_names <- names(fig$x$layout)
+    # Overlay panels drawn beside the plot (marginal distributions) are not facets.
+    layout_names <- setdiff(names(fig$x$layout), fig$x$.vizmodules_overlay_axes)
 
     # Multi-panel (faceted / split) figures already render their shared axis
     # titles as draggable annotations, so leave them untouched.
@@ -182,9 +192,15 @@ axis_titles_as_annotations <- function(fig) {
 
     new_anns <- list()
 
+    # Centred on the plot panel, which overlay panels beside it can narrow.
+    centre <- function(domain) {
+        d <- suppressWarnings(as.numeric(unlist(domain)))
+        if (length(d) == 2 && all(is.finite(d))) mean(d) else 0.5
+    }
+
     if (has_x) {
         new_anns[[length(new_anns) + 1L]] <- list(
-            x = 0.5, y = -0.1, xref = "paper", yref = "paper",
+            x = centre(fig$x$layout$xaxis$domain), y = -0.1, xref = "paper", yref = "paper",
             text = x_axis$text, showarrow = FALSE, xanchor = "center",
             yanchor = "top", annotationType = "axis", font = x_axis$font
         )
@@ -192,7 +208,7 @@ axis_titles_as_annotations <- function(fig) {
 
     if (has_y) {
         new_anns[[length(new_anns) + 1L]] <- list(
-            x = -0.05, y = 0.5, xref = "paper", yref = "paper",
+            x = -0.05, y = centre(fig$x$layout$yaxis$domain), xref = "paper", yref = "paper",
             text = y_axis$text, showarrow = FALSE, xanchor = "center",
             yanchor = "middle", textangle = -90, annotationType = "axis",
             font = y_axis$font

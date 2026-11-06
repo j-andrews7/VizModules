@@ -601,16 +601,6 @@ test_that("linePlot's error bars describe the adjusted values the line is drawn 
     expect_equal(bars, as.numeric(tapply(log10(d$v), d$g, .expected_bar, type = "sem")))
 })
 
-# The inputs generate_linePlot() reads; testServer cannot drive the plot output, but the reactive
-# that builds the figure can.
-.line_inputs <- function(...) {
-    utils::modifyList(list(
-        x.value = "region", y.value = "revenue", group.by = "", order.by = FALSE,
-        error.bar = TRUE, error.bar.colour = "#000000", error.bar.width = 1,
-        auto.update = TRUE, update = 0, plot.mode = "lines", line.type = "solid",
-        facet.by = "", facet.scales = "fixed", flip.x = FALSE, flip.y = FALSE, legend.show = TRUE
-    ), list(...))
-}
 
 # The value a select is seeded with, read out of its rendered JSON config.
 .seeded_select <- function(html, id) {

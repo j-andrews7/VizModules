@@ -180,6 +180,8 @@ data, and the Y axis min/max are not applied.
 
 The following parameters implementing new functionality or controlling plotly-specific features are also available:
 \itemize{
+\item \code{webgl} - Draw the points with WebGL once there are 5,000 or more, as set by the
+\code{VizModules.webgl.threshold} option (UI: "Plot with WebGL", default: TRUE)
 \item \code{boxplot.width} - Width of boxplot (UI: "Boxplot Width", default: 0.8)
 \item \code{x.order} - Order of the X groups (UI: "X Order", drag and drop, default: the column's factor level order,
 else sorted). As a default, a character vector of levels of \code{x.data}; levels it leaves out follow in their

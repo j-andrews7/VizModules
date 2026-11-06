@@ -149,6 +149,37 @@ test_that("the panel border and axis titles move into the shrunk panel", {
     expect_equal(c(y.title$x, y.title$y), c(-0.05, 0.39))
 })
 
+test_that("styling applied after the marginals leaves their axes alone and centres the titles", {
+    # The modules style a cached figure that already has its marginals, so the
+    # titles are made into annotations after them, and the axis styling and
+    # reference lines must treat the marginal panels as overlays, not facets.
+    fig <- plotly::layout(.iris_fig(), xaxis = list(title = "Length"), yaxis = list(title = "Width"))
+    fig <- .iris_marginals(fig, top = "density", right = "density",
+        top.size = 0.2, right.size = 0.1, gap = 0.02
+    )
+    overlay <- fig$x$.vizmodules_overlay_axes
+    expect_true(length(overlay) >= 2)
+
+    fig <- apply_subplot_axis_styling(fig, list(tickfont = list(size = 31)), list(tickfont = list(size = 31)))
+    fig <- add_reference_lines(fig, hline.intercepts = "3")
+    fig <- axis_titles_as_annotations(fig)
+    built <- plotly::plotly_build(fig)$x$layout
+
+    expect_equal(built$xaxis$tickfont$size, 31)
+    for (ax in overlay) {
+        expect_false(identical(built[[ax]]$tickfont$size, 31), info = ax)
+    }
+    expect_length(built$shapes, 1)
+    expect_identical(built$shapes[[1]]$yref, "y")
+
+    titles <- Filter(function(a) identical(a$annotationType, "axis"), built$annotations)
+    expect_length(titles, 2)
+    x.title <- titles[[which(vapply(titles, function(a) is.null(a$textangle), logical(1)))]]
+    y.title <- titles[[which(vapply(titles, function(a) !is.null(a$textangle), logical(1)))]]
+    expect_equal(c(x.title$x, x.title$y), c(0.44, -0.1))
+    expect_equal(c(y.title$x, y.title$y), c(-0.05, 0.39))
+})
+
 test_that("ungrouped marginals take the single colour, and non-finite values are dropped", {
     x <- c(example_iris$Sepal.Length, NA, Inf)
     y <- c(example_iris$Sepal.Width, 1, NA)

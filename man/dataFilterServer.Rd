@@ -52,9 +52,11 @@ list, so a low cap keeps high-cardinality columns usable. Defaults to
 \value{
 A \code{reactive} expression that evaluates to the filtered subset of
 \code{data} based on the current DT selection/filter state. All columns are
-retained, including any hidden via \code{hide.columns}. Pass this reactive to a
-plotting module's \code{data} argument to keep the plot in sync with the table
-filters.
+retained, including any hidden via \code{hide.columns}, and rows keep their
+original order: sorting the table changes neither the rows returned nor
+their order, so it does not redraw a plot. The reactive only updates when
+the set of rows shown changes. Pass this reactive to a plotting module's
+\code{data} argument to keep the plot in sync with the table filters.
 }
 \description{
 Renders an interactive DT table with column-level filters and returns a

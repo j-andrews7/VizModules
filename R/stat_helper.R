@@ -1193,16 +1193,26 @@ note_brackets_skipped <- function(session = shiny::getDefaultReactiveDomain()) {
     if (is.null(session)) {
         return(invisible(NULL))
     }
-    showNotification(
+    note <- .brackets_skipped_note()
+    showNotification(note$message, id = session$ns(note$id), type = note$type, session = session)
+    invisible(NULL)
+}
+
+#' The brackets-skipped notification, for a structure step to return
+#'
+#' @return A [.structure_note()].
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_brackets_skipped_note
+#' @keywords internal
+.brackets_skipped_note <- function() {
+    .structure_note(
         paste(
             "Significance brackets are not drawn while the values run along the x-axis",
             "(rotated or ridge plots). The test results are still in the source data download."
         ),
-        id = session$ns("stat-brackets-skipped"),
-        type = "message",
-        session = session
+        id = "stat-brackets-skipped"
     )
-    invisible(NULL)
 }
 
 

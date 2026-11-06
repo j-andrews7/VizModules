@@ -100,6 +100,12 @@
 #' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
 #' - `legend.text.size` - Legend entry label font size (UI: "Legend Text Size", default: 12)
 #'
+#' @section Parameters controlling additional functionality:
+#' The following parameters implementing new functionality or controlling plotly-specific features are also available:
+#'
+#' - `webgl` - Draw the points with WebGL once there are 5,000 or more, as set by the
+#'   `VizModules.webgl.threshold` option (UI: "Plot with WebGL", default: TRUE)
+#'
 #' @param id The ID for the Shiny module.
 #' @param data The data frame used for plot generation.
 #' @param defaults A named list of default values for the inputs. An entry may also be a
@@ -248,6 +254,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$border_size,
                 placement = "top", options = list(container = "body")
             ),
+            .webgl_input(ns, defaults),
             tipify(
                 numericInput(ns("lower.quantile"), "Lower Quantile",
                     value = get_default(defaults, "lower.quantile", 0, is.numeric),

@@ -4,7 +4,7 @@
 \alias{setup_auto_update_logic}
 \title{Set up auto-update/isolate logic for reactive contexts}
 \usage{
-setup_auto_update_logic(input, params = NULL)
+setup_auto_update_logic(input, params = NULL, track = NULL)
 }
 \arguments{
 \item{input}{The Shiny input object from the module server,
@@ -14,13 +14,19 @@ should have both \code{auto.update} (boolean) and \code{update} (button) inputs.
 or \code{NULL}. When supplied, an \verb{input$<key>} read whose \code{key} is backed by the
 store resolves from the store instead of the client input, so a parameter
 driven by the parent app updates in a single render.}
+
+\item{track}{Optional function, or \code{NULL}. When supplied, it is called with the
+id of every \verb{input$<key>} read through the returned wrapper, so a caller can
+tell which inputs an expression depends on (the modules' cached plot step
+keys its cache on them).}
 }
 \value{
-A function that wraps reactive expressions. With \code{params = NULL} this is
-\code{identity} if auto-update is enabled (expressions will be reactive), or \code{isolate}
-if auto-update is disabled (expressions will not trigger reactivity). With a
-store supplied it is a wrapper with the same isolation semantics that additionally
-redirects store-backed \verb{input$<key>} reads.
+A function that wraps reactive expressions. With \code{params} and \code{track}
+both \code{NULL} this is \code{identity} if auto-update is enabled (expressions will be
+reactive), or \code{isolate} if auto-update is disabled (expressions will not
+trigger reactivity). Otherwise it is a wrapper with the same isolation
+semantics that additionally redirects store-backed \verb{input$<key>} reads and
+reports the ids read to \code{track}.
 }
 \description{
 A helper function that encapsulates the common pattern of handling auto-update

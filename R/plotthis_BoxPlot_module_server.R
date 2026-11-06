@@ -60,7 +60,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         default_palette_name <- "dittoColors"
 
         # Store last computed stats table for download
-        last_stats_df <- reactiveVal(NULL)
         palette_lookup <- flatten_palette_options(default_palettes()[["choices"]])
         default_palette_values <- palette_lookup[[default_palette_name]]
         if (is.null(default_palette_values) || length(default_palette_values) == 0) {
@@ -141,10 +140,11 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 choices = c("", pair_strings),
                 selected = default_stat_pairs(defaults, pair_strings)
             )
-        })
+        }, priority = 998)
 
         # Reset functionality
         observeEvent(input$reset, {
+            updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
             char.choices <- c("", names(data())[vapply(data(), function(x) !is.numeric(x), logical(1))])
             num.choices <- c("", names(data())[vapply(data(), is.numeric, logical(1))])
             default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
@@ -283,7 +283,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 updateNumericInput(session, "y.max", value = y_range$max)
                 updateNumericInput(session, "y.min", value = y_range$min)
             }
-        })
+            # Just after setup_axis_range()'s observer and before the render, so the
+            # plot draws once with the new column's limits rather than the old ones.
+        }, priority = 999)
 
         observeEvent(c(input$facet.by, input$x.data),
             {
@@ -295,15 +297,20 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     update_viz_select(session, "facet.scale", selected = "free_x")
                 }
             },
-            ignoreInit = FALSE
+            ignoreInit = FALSE, priority = 998
         )
 
         observeEvent(input$facet.by, {
             toggle_facet_title_inputs(session, nz_value(input$facet.by), hidden = hide.inputs)
         })
 
-        generate_BoxPlot <- reactive({
-            isolate_fn <- setup_auto_update_logic(input, params)
+        # The plot itself: everything that changes what is drawn, with the stats
+        # table and any notes raised along the way. It is cached (see
+        # .cached_structure()), so it must have no side effects; the styling
+        # inputs are applied to it in generate_BoxPlot().
+        draw_BoxPlot <- function(isolate_fn) {
+            notes <- list()
+            stats_df <- NULL
 
             # Resolved server-side, so they already clear any significance brackets.
             y.limits <- isolate_fn(y_range_store())
@@ -325,13 +332,13 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             x.col <- isolate_fn(input$x.data)
             ordered <- .box_ordered_data(data(), x.col, isolate_fn(input$sort_x), isolate_fn(x_order()))
             if (!ordered$sort.ok) {
-                showNotification(
+                notes <- c(notes, list(.structure_note(
                     paste0(
                         "'Sort X By' was ignored. Use data columns with basic math and ",
                         "summary functions only (e.g. 'mean(", isolate_fn(input$y.data), ")')."
                     ),
-                    type = "warning"
-                )
+                    id = "sort-x-ignored", type = "warning"
+                )))
             }
             df <- ordered$data
             highlight <- validate_expression(isolate_fn(input$highlight), names(data()))
@@ -407,14 +414,6 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 )
             }
 
-            fig <- apply_title_layout(
-                fig,
-                input,
-                isolate_fn,
-                title_y = 0.95,
-                title_x = isolate_fn(input$axis.title.horizontal.position)
-            )
-
             # Statistical annotations
             if (isolate_fn(input$stats.enabled)) {
                 stat_pairs <- parse_pair_strings(isolate_fn(input$stat.pairs))
@@ -429,12 +428,10 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                     sig.threshold = isolate_fn(input$stat.sig.threshold)
                 )
 
-                last_stats_df(stats_df)
-
                 if (isTRUE(isolate_fn(input$rotate))) {
                     # Rotated, the values run along the x-axis and there is no room
                     # above them for brackets. The tests still reach the source download.
-                    note_brackets_skipped(session)
+                    notes <- c(notes, list(.brackets_skipped_note()))
                 } else {
                     stat_result <- create_stat_annotations(
                         stats_df = stats_df, fig = fig, df = df,
@@ -464,64 +461,38 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                         y.max = y.limits$max
                     )
                 }
-            } else {
-                # Nothing was tested for this figure, so the source download must
-                # not ship the table from an earlier one.
-                last_stats_df(NULL)
             }
 
-
-            # Apply axis styling to all subplot axes (handles faceting)
-            xaxis_style <- create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn)
-            yaxis_style <- create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
-
-            fig <- apply_subplot_axis_styling(fig, xaxis_style, yaxis_style)
-
-            # Apply axis title font to shared facet annotation titles
-            if (!is.null(facet.by) && nzchar(facet.by)) {
-                fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
-            }
-
-            # Add reference lines
-            fig <- add_reference_lines(fig,
-                hline.intercepts = isolate_fn(input$hline.intercepts),
-                hline.colors = isolate_fn(input$hline.colors),
-                hline.widths = isolate_fn(input$hline.widths),
-                hline.linetypes = isolate_fn(input$hline.linetypes),
-                hline.opacities = isolate_fn(input$hline.opacities),
-                vline.intercepts = isolate_fn(input$vline.intercepts),
-                vline.colors = isolate_fn(input$vline.colors),
-                vline.widths = isolate_fn(input$vline.widths),
-                vline.linetypes = isolate_fn(input$vline.linetypes),
-                vline.opacities = isolate_fn(input$vline.opacities),
-                abline.slopes = isolate_fn(input$abline.slopes),
-                abline.intercepts = isolate_fn(input$abline.intercepts),
-                abline.colors = isolate_fn(input$abline.colors),
-                abline.widths = isolate_fn(input$abline.widths),
-                abline.linetypes = isolate_fn(input$abline.linetypes),
-                abline.opacities = isolate_fn(input$abline.opacities)
-            )
 
             # Hide jitter points from legend if they are shown
             if (isolate_fn(input$add.points)) {
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            config_list <- add_plot_config(
-                download.format = isolate_fn(input$download.format),
-                include.modebar.buttons = TRUE, facet.by = facet.by
-            )
+            # Many points draw far faster with WebGL (see .auto_webgl()).
+            if (!isFALSE(isolate_fn(input$webgl))) {
+                fig <- .auto_webgl(fig)
+            }
 
-            fig <- do.call(config, c(list(p = fig), config_list))
-            fig <- apply_plotly_newshape(fig, input, isolate_fn)
+            # Nothing was tested when stats are off, so the source download gets no
+            # table from an earlier figure.
+            list(fig = .ensure_built(fig), facet.by = facet.by, stats = stats_df, notes = notes)
+        }
+        base_BoxPlot <- .cached_structure(
+            draw_BoxPlot, input, session, data, params = params,
+            extra = function() list(y_range_store(), palette_groups(), palette_store(), x_order())
+        )
+        notify <- .structure_notifier(session)
 
-            # Apply the uniform legend visibility and font inputs
-            fig <- apply_legend_inputs(fig, input, isolate_fn)
+        # The stats table behind the brackets drawn, for the source download.
+        last_stats_df <- reactive(base_BoxPlot()$stats)
 
-            # Make single-panel x/y axis titles draggable (matches faceted behaviour)
-            fig <- axis_titles_as_annotations(fig)
-
-            fig
+        # The plot, styled: titles, fonts, axes, reference lines and legend.
+        generate_BoxPlot <- reactive({
+            isolate_fn <- setup_auto_update_logic(input, params)
+            base <- base_BoxPlot()
+            notify(base)
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.95)
         })
 
         # Returning all UI inputs:

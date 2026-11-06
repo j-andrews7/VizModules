@@ -175,53 +175,6 @@ test_that("highlight values may contain spaces when separated by commas", {
 
 # --- Driving the module's own build ------------------------------------------
 
-# The plot output cannot be driven from testServer, but the reactive that builds
-# the figure can, given a complete set of inputs.
-.scatter_inputs <- function(...) {
-    base <- list(
-        x.by = "units", y.by = "revenue", color.by = "", shape.by = "", size.by = "", split.by = "",
-        x.adjustment = "", y.adjustment = "", color.adjustment = "",
-        x.adj.fxn = "", y.adj.fxn = "", color.adj.fxn = "",
-        size = 1, size.min = 1, size.max = 6, size.scale.min = NA, size.scale.max = NA,
-        opacity = 1, show.others = FALSE, split.show.all.others = FALSE,
-        plot.order = "unordered", shape.panel = "16, 15, 17, 23, 25, 8",
-        min.color = "#F0E442", max.color = "#0072B2", min.value = NA, max.value = NA,
-        do.contour = FALSE, contour.color = "black", contour.linetype = "solid", do.ellipse = FALSE,
-        trajectory.group.by = "", add.trajectory.by.groups = list(), trajectory.arrow.size = 0.1,
-        split.nrow = NA, split.ncol = NA, split.adjust.scales = "fixed", multivar.split.dir = "col",
-        subplot.margin.x = 0.03, subplot.margin.y = 0.1,
-        legend.show = TRUE, legend.color.title = "make", legend.color.breaks = "",
-        legend.title.size = 14, legend.text.size = 12, size.legend.x = 1.03, size.legend.y = 0.35,
-        hover.data = "", hover.round.digits = 5, webgl = FALSE, single.point.color = "#000000",
-        linear.model = FALSE, best.fit = FALSE, line.best.smoothness = 1, line.best.colour = "#000000",
-        custom.model.enable = FALSE, custom.models = NULL,
-        marginal.x = character(0), marginal.y = character(0), marginal.x.size = 0.15, marginal.y.size = 0.15,
-        marginal.opacity = 0.5, marginal.bins = 30, marginal.binwidth = NA, marginal.density.adjust = 1,
-        marginal.rug.height = 0.3, marginal.rug.width = 1,
-        annotate.by = "", highlight.points = "", highlight.auto.annotate = TRUE,
-        highlight.color = "#00FFF7", highlight.size = 7,
-        highlight.border.color = "#000000", highlight.border.width = 1,
-        annotation.color = "black", annotation.ax = 20, annotation.ay = -20,
-        annotation.size = 10, annotation.showarrow = TRUE,
-        annotation.arrowcolor = "black", annotation.arrowhead = 2, annotation.arrowwidth = 1.5,
-        download.format = "png", auto.update = TRUE, update = 0,
-        title.font.size = 26, title.font.family = "Arial", title.font.color = "#000000",
-        axis.title.font.size = 18, axis.title.font.color = "#000000",
-        axis.title.font.family = "Arial", axis.title.horizontal.position = 0.5,
-        axis.showline = TRUE, axis.mirror = TRUE, show.grid.x = TRUE, show.grid.y = TRUE,
-        grid.color = "#CCCCCC", axis.linecolor = "black", axis.linewidth = 0.5,
-        axis.tickfont.size = 12, axis.tickfont.color = "black",
-        axis.tickfont.family = "Arial", axis.tickangle.x = 0, axis.tickangle.y = 0,
-        axis.ticks = "outside", axis.tickcolor = "black", axis.ticklen = 5,
-        axis.tickwidth = 1, facet.title.font.size = 14,
-        facet.title.font.color = "black", facet.title.font.family = "Arial",
-        hline.intercepts = "", vline.intercepts = "", abline.slopes = "", abline.intercepts = "",
-        shape.fill = "rgba(0, 0, 0, 0)", shape.line.color = "black", shape.line.width = 4,
-        shape.linetype = "solid", shape.opacity = 1,
-        margin.l = 80, margin.r = 80, margin.t = 80, margin.b = 80
-    )
-    utils::modifyList(base, list(...))
-}
 
 # Build the scatter figure for `inputs` in a fresh session.
 .scatter_figure <- function(df, inputs, defaults = NULL) {
@@ -243,6 +196,40 @@ test_that("highlight values may contain spaces when separated by commas", {
 .custom_lm <- function(formula) {
     list(Custom = list(model_type = "lm", formula = formula, line_colour = "#FF0000", line_width = "2"))
 }
+
+test_that("fit and model lines are only listed in the legend when asked", {
+    fit_traces <- function(fig, pattern) {
+        Filter(function(tr) grepl(pattern, tr$name %||% ""), plotly::plotly_build(fig)$x$data)
+    }
+    groups <- levels(as.factor(example_sales$product_line))
+
+    # Off by default: a group's line joins the group's legend group instead, so it
+    # hides and shows with the group's entry.
+    for (inputs in list(
+        .scatter_inputs(color.by = "product_line", linear.model = TRUE),
+        .scatter_inputs(color.by = "product_line", best.fit = TRUE, model.legend.show = FALSE)
+    )) {
+        lines <- fit_traces(.scatter_figure(example_sales, inputs), "^(Linear|Best) Fit ")
+        expect_length(lines, length(groups))
+        expect_false(any(vapply(lines, function(tr) isTRUE(tr$showlegend), logical(1))))
+        expect_setequal(vapply(lines, function(tr) tr$legendgroup, ""), groups)
+    }
+    custom <- fit_traces(.scatter_figure(example_sales, .scatter_inputs(
+        custom.model.enable = TRUE, custom.models = .custom_lm("revenue ~ units")
+    )), "^Custom$")
+    expect_false(isTRUE(custom[[1]]$showlegend))
+
+    # On: one entry per line, each its own legend group, also on a split plot.
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        color.by = "product_line", linear.model = TRUE, model.legend.show = TRUE,
+        custom.model.enable = TRUE, custom.models = .custom_lm("revenue ~ units"), split.by = "region"
+    ))
+    lines <- fit_traces(fig, "^Linear Fit ")
+    shown <- Filter(function(tr) isTRUE(tr$showlegend), lines)
+    expect_setequal(vapply(shown, function(tr) tr$name, ""), paste("Linear Fit", groups))
+    expect_identical(vapply(lines, function(tr) tr$legendgroup, ""), vapply(lines, function(tr) tr$name, ""))
+    expect_length(Filter(function(tr) isTRUE(tr$showlegend), fit_traces(fig, "^Custom$")), 1)
+})
 
 test_that("fit and model lines are fit to the plotted values under every axis adjustment (#365)", {
     df <- example_sales
@@ -601,6 +588,26 @@ test_that("the marginals follow Color By, in the points' colours", {
         function(tr) paste(tr$xaxis, tr$yaxis)
     )))
     expect_identical(fit.axes, "x y")
+})
+
+test_that("a plot without colour groups draws its marginals in the points' colour", {
+    # Point color's picker is only drawn once the Colors tab is opened, so it may
+    # not have reported yet (NULL drops it from the inputs).
+    for (color.by in c("", "profit")) {
+        fig <- .scatter_figure(example_sales, .scatter_inputs(
+            color.by = color.by, single.point.color = NULL, marginal.x = "density", marginal.y = "histogram"
+        ))
+        colors <- vapply(.scatter_marginals(fig), function(tr) {
+            plotly::toRGB(tr$line$color %||% tr$marker$color)
+        }, character(1))
+        expect_length(colors, 2)
+        expect_identical(unique(colors), plotly::toRGB("#000000"))
+    }
+
+    fig <- .scatter_figure(example_sales, .scatter_inputs(
+        color.by = "profit", single.point.color = "#FF0000", marginal.x = "density"
+    ))
+    expect_identical(plotly::toRGB(.scatter_marginals(fig)[[1]]$line$color), plotly::toRGB("#FF0000"))
 })
 
 test_that("the marginals are drawn from the plotted values, after an adjustment", {

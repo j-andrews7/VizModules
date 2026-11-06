@@ -29,6 +29,9 @@ title text, ...) are kept. Only the styling is queued, never a copy of the
 axis as it stands, so a property written to the figure's layout after this
 call (such as a range raised by \code{\link[=apply_stat_annotations]{apply_stat_annotations()}}) is not reverted
 at build time.
+
+Axes recorded as belonging to overlay panels drawn beside the plot, such as
+the marginal distributions \code{\link[=add_marginal_plots]{add_marginal_plots()}} adds, are left alone.
 }
 \examples{
 fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
