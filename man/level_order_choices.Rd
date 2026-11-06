@@ -25,8 +25,8 @@ numeric, or has no levels or more than \code{max.levels} of them.
 }
 \description{
 Gives the levels of \code{data[[column]]} that are present, in the order a plot
-draws them by default -- factor level order for a factor, sorted values
-otherwise -- with any levels named in \code{order} moved to the front in that order.
+draws them by default - factor level order for a factor, sorted values
+otherwise - with any levels named in \code{order} moved to the front in that order.
 }
 \examples{
 level_order_choices(example_iris, "Species")
