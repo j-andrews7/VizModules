@@ -102,16 +102,16 @@ ui.inputs.tabs <- list(
 )
 organize_inputs(ui.inputs.tabs, columns = 1)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs" data-tabsetid="1804">
+#>   <ul class="nav nav-tabs" data-tabsetid="7505">
 #>     <li class="active">
-#>       <a href="#tab-1804-1" data-toggle="tab" data-bs-toggle="tab" data-value="Personal">Personal</a>
+#>       <a href="#tab-7505-1" data-toggle="tab" data-bs-toggle="tab" data-value="Personal">Personal</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1804-2" data-toggle="tab" data-bs-toggle="tab" data-value="Settings">Settings</a>
+#>       <a href="#tab-7505-2" data-toggle="tab" data-bs-toggle="tab" data-value="Settings">Settings</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1804">
-#>     <div class="tab-pane active" data-value="Personal" id="tab-1804-1">
+#>   <div class="tab-content" data-tabsetid="7505">
+#>     <div class="tab-pane active" data-value="Personal" id="tab-7505-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -127,7 +127,7 @@ organize_inputs(ui.inputs.tabs, columns = 1)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Settings" id="tab-1804-2">
+#>     <div class="tab-pane" data-value="Settings" id="tab-7505-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">

@@ -302,31 +302,31 @@ data <- data.frame(
 )
 dumbbellPlotInputsUI("dumbbellPlot", data)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="2010">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="dumbbellPlot-dumbbellPlotTabsetPanel" data-tabsetid="8494">
 #>     <li class="active">
-#>       <a href="#tab-2010-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-8494-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-8494-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-8494-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-8494-4" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-8494-5" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-8494-6" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-2010-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-8494-7" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="2010">
-#>     <div class="tab-pane active" data-value="Data" id="tab-2010-1">
+#>   <div class="tab-content" data-tabsetid="8494">
+#>     <div class="tab-pane active" data-value="Data" id="tab-8494-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify2247655">
@@ -366,7 +366,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-2010-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-8494-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1217967">
@@ -402,7 +402,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-2010-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-8494-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div id="dumbbellPlot-palette.selection" class="shiny-html-output"></div>
@@ -423,7 +423,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-2010-4">
+#>     <div class="tab-pane" data-value="Legend" id="tab-8494-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify385265">
@@ -467,7 +467,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-2010-5">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-8494-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -544,7 +544,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-2010-6">
+#>     <div class="tab-pane" data-value="Axes" id="tab-8494-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -748,7 +748,7 @@ dumbbellPlotInputsUI("dumbbellPlot", data)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-2010-7">
+#>     <div class="tab-pane" data-value="Lines" id="tab-8494-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify990097">

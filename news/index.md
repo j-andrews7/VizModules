@@ -387,6 +387,13 @@ The one where we fix all the wonkiness with extending modules
   read, which emptied the input and left the server on its old value.
   This is what **Reset** does for the scatter plot’s default
   trajectories and for a `ComplexHeatmap` `row_annotations` default.
+- [`apply_highlight_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_highlight_styling.md),
+  [`create_highlight_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_highlight_annotations.md),
+  and
+  [`create_selected_annotations()`](https://j-andrews7.github.io/VizModules/reference/create_selected_annotations.md)
+  now find their points in a `ggplotly(tooltip = "text")` figure, whose
+  hover text breaks its lines with `<br />` and can be one string for a
+  whole trace.
 
 ### Documentation
 

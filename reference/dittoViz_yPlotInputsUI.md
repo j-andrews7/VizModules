@@ -482,49 +482,49 @@ library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="5497">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="yPlot-yPlotTabsetPanel" data-tabsetid="4157">
 #>     <li class="active">
-#>       <a href="#tab-5497-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4157-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-4157-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-4157-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-4157-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-4157-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-4157-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-4157-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4157-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-4157-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-4157-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4157-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4157-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5497-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4157-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5497">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5497-1">
+#>   <div class="tab-content" data-tabsetid="4157">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4157-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5138669">
@@ -587,7 +587,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5497-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-4157-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5030267">
@@ -623,7 +623,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-5497-3">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-4157-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2467509">
@@ -709,7 +709,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-5497-4">
+#>     <div class="tab-pane" data-value="Box" id="tab-4157-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2404613">
@@ -761,7 +761,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-5497-5">
+#>     <div class="tab-pane" data-value="Violin" id="tab-4157-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify898489">
@@ -781,7 +781,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-5497-6">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-4157-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8767676">
@@ -829,7 +829,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-5497-7">
+#>     <div class="tab-pane" data-value="Stats" id="tab-4157-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9587279">
@@ -960,7 +960,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5497-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4157-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify4052702">
@@ -1028,7 +1028,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-5497-9">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-4157-9">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify5523188">
@@ -1151,7 +1151,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-5497-10">
+#>     <div class="tab-pane" data-value="Legend" id="tab-4157-10">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5882472">
@@ -1195,7 +1195,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5497-11">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4157-11">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1272,7 +1272,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5497-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4157-12">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1458,7 +1458,7 @@ dittoViz_yPlotInputsUI("yPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5497-13">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4157-13">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2425870">
