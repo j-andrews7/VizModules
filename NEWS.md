@@ -114,6 +114,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 ### Helpers and exported functions
 
 * `updateMultiDynamicInput()` now sets rows given as a named list, the shape `multiDynamicInput()` itself reports. It sent them as a JSON object the browser could not read, which emptied the input and left the server on its old value. This is what **Reset** does for the scatter plot's default trajectories and for a `ComplexHeatmap` `row_annotations` default.
+* `apply_highlight_styling()`, `create_highlight_annotations()`, and `create_selected_annotations()` now find their points in a `ggplotly(tooltip = "text")` figure, whose hover text breaks its lines with `<br />` and can be one string for a whole trace.
 
 ## Documentation
 

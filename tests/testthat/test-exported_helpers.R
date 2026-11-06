@@ -170,3 +170,19 @@ test_that("stat_bracket_headroom clears the data and falls back to the Stats tab
     expect_gt(picked, max(df$y))
     expect_lte(picked, from_defaults)
 })
+
+test_that("a hover field is read across either kind of line break", {
+    expect_identical(.extract_annotation_from_text("sample: S1\ncondition: A", "sample"), "S1")
+    expect_identical(.extract_annotation_from_text("sample: S1<br />condition: A", "sample"), "S1")
+    expect_identical(.extract_annotation_from_text("sample: S1<br>condition: A", "condition"), "A")
+})
+
+test_that("a selection is labelled when a trace's points share one hover string", {
+    fig <- plotly::plot_ly()
+    fig$x$data <- list(list(type = "scatter", mode = "markers", x = 1:3, y = 1:3, text = "group: A"))
+    selected <- data.frame(curveNumber = 0, pointNumber = 2, x = 3, y = 3)
+    labels <- create_selected_annotations(selected, fig, "group", list(ax = 1, ay = 1), require.markers = TRUE)
+    expect_length(labels, 1)
+    expect_identical(labels[[1]]$text, "A")
+    expect_equal(labels[[1]]$x, 3)
+})

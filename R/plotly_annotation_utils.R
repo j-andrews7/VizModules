@@ -69,7 +69,8 @@
 #'
 #' @details The hover text is expected to be in the format:
 #'   "field1: value1\\nfield2: value2\\n..."
-#'   or "field1 value1\\nfield2 value2\\n..."
+#'   or "field1 value1\\nfield2 value2\\n...", with `<br />` as the line break in
+#'   the text of a [plotly::ggplotly()] figure drawn with `tooltip = "text"`.
 #'
 #' @author Jared Andrews
 #' @rdname INTERNAL_extract_annotation_from_text
@@ -79,8 +80,8 @@
         return(NULL)
     }
 
-    # Split by newlines to get individual fields
-    text_lines <- strsplit(as.character(trace_text), "\\n")[[1]]
+    # One field per line: newlines from dittoViz, <br /> from ggplotly(tooltip = "text").
+    text_lines <- strsplit(as.character(trace_text), "\\n|<br\\s*/?>")[[1]]
 
     # Find the line containing the annotation field
     anno_line <- grep(annotate.by, text_lines, value = TRUE, fixed = TRUE)
@@ -301,9 +302,10 @@ create_selected_annotations <- function(selected_data, fig, annotate.by,
             next
         }
 
-        # Extract annotation text from trace hover text
+        # Extract annotation text from trace hover text. ggplotly() keeps a single
+        # string for a trace whose points all have the same text.
         anno_text <- .extract_annotation_from_text(
-            trace$text[point_idx[1]],
+            trace$text[min(point_idx[1], length(trace$text))],
             annotate.by
         )
 
