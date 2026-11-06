@@ -471,7 +471,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
         # Generate yPlot reactive
         # The plot itself: everything that changes what is drawn, with the stats
         # table, any notes raised along the way and what the axis titles say. It is
-        # cached (see .cached_structure()), so it reads every input through
+        # cached (see cached_structure()), so it reads every input through
         # isolate_fn and has no side effects; the styling inputs are applied in
         # generate_yPlot().
         draw_yPlot <- function(isolate_fn) {
@@ -836,9 +836,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
             }
 
-            # Many points draw far faster with WebGL (see .auto_webgl()).
+            # Many points draw far faster with WebGL (see auto_webgl()).
             if (!isFALSE(isolate_fn(input$webgl))) {
-                fig <- .auto_webgl(fig)
+                fig <- auto_webgl(fig)
             }
 
             # Colour and shape each get a legend section, rather than ggplotly's one
@@ -852,7 +852,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 }
                 # jitter.shape.legend.size is a ggplot size (mm), converted as ggplotly does.
                 legend.size <- isolate_fn(input$jitter.shape.legend.size)
-                fig <- .split_color_shape_legend(
+                fig <- split_color_shape_legend(
                     fig,
                     color.levels = color.levels,
                     shape.levels = levels(droplevels(as.factor(plot.df[[shape.by]]))),
@@ -871,7 +871,7 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 axis_vars = axis_vars, regen_keys = regen_keys
             )
         }
-        base_yPlot <- .cached_structure(
+        base_yPlot <- cached_structure(
             draw_yPlot, input, session, data, params = params,
             extra = function() list(y_range_store(), palette_store(), x_order(), selected.data())
         )

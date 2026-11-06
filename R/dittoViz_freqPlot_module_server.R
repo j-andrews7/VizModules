@@ -508,7 +508,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
         # ---- Build the figure ----------------------------------------------------
         # The plot itself: everything that changes what is drawn, with the stats
         # table and any notes raised along the way. It is cached (see
-        # .cached_structure()), so it reads every input through isolate_fn and has
+        # cached_structure()), so it reads every input through isolate_fn and has
         # no side effects; the styling inputs are applied in generate_freqPlot().
         draw_freqPlot <- function(isolate_fn) {
             req(isolate_fn(input$var), isolate_fn(input$group.by))
@@ -786,16 +786,16 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
                 fig$x$layout$annotations <- c(fig$x$layout$annotations, annos)
             }
 
-            # Many points draw far faster with WebGL (see .auto_webgl()).
+            # Many points draw far faster with WebGL (see auto_webgl()).
             if (!isFALSE(isolate_fn(input$webgl))) {
-                fig <- .auto_webgl(fig)
+                fig <- auto_webgl(fig)
             }
 
             # Nothing was tested when stats are off, so the source download gets no
             # table from an earlier figure.
             list(fig = .ensure_built(fig), stats = stats_df, notes = notes, axis_vars = axis_vars)
         }
-        base_freqPlot <- .cached_structure(
+        base_freqPlot <- cached_structure(
             draw_freqPlot, input, session, data, params = params,
             extra = function() list(y_range_store(), palette_store(), x_order(), selected.data())
         )

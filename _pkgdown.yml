@@ -196,6 +196,7 @@ reference:
       - use_vizmodules_skills
       - viz_select_input
       - update_viz_select
+      - webgl_input
 
   - title: "Uniform UI Inputs"
     desc: "Standardised input builders and reset functions shared across modules."
@@ -246,11 +247,14 @@ reference:
       - apply_subplot_axis_styling
       - apply_title_layout
       - apply_uniform_styling
+      - auto_webgl
       - axis_titles_as_annotations
+      - cached_structure
       - create_axis_styles
       - create_ggplot_axis_style
       - linetype_to_dash
       - recycle_line_style
+      - split_color_shape_legend
       - string_to_linetypes
       - heatmap_fit_width
 

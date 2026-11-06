@@ -45,7 +45,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### Helpers and exported functions
 
-* New `apply_uniform_styling()` applies the uniform styling inputs (titles, axes, reference lines, the modebar, shape drawing, and the legend) to a module's figure in one call, the second of the modules' two steps. A wrapper's `fig.fn` can run in it.
+* New `apply_uniform_styling()` applies the uniform styling inputs (titles, axes, reference lines, the modebar, shape drawing, and the legend) to a module's figure in one call, the second of the modules' two steps. A wrapper's `fig.fn` can run in it. Its `ggplot.axis.styling` and `legend.position` arguments suit a figure not built from ggplot, and `apply_legend_inputs()` takes a `position`.
+* New `cached_structure()` caches a module's plot step, keyed on the data and the inputs it reads, so a custom module can split drawing from styling as the built-in modules do.
+* New `auto_webgl()` and its `webgl_input()` toggle draw a plot's points with WebGL once there are enough of them. With `overlays = TRUE`, unfilled line traces switch too, so lines drawn over the points stay on top.
+* New `split_color_shape_legend()` gives a ggplot's colour and shape their own legend sections.
 * `setup_auto_update_logic()` takes a `track` function, called with the id of every input read through the wrapper it returns. The modules' cached plot step keys its cache on those ids.
 * `finalize_manual_edits()` sends the browser only the new layout when nothing else about the figure, including its `layout.uirevision`, changed since the last render, and cancels the render, so it must be the last call in `renderPlotly()`. `options(VizModules.layout.updates = FALSE)` always sends the whole figure.
 * `get_documentation()` reads each package's help pages once per session from the Rd database, rather than re-parsing them through roxygen2 for every parameter, which took most of the time a module's settings panel took to build. Rd markup becomes plain text, and co-documented parameters (`y_min` and `y_max`, say) now get their description. The roclang dependency is gone.

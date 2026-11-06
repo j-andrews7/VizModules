@@ -411,7 +411,7 @@ dittoViz_yPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, colu
                 documentParameters$jitter.color,
                 placement = "top", options = list(container = "body")
             ),
-            .webgl_input(ns, defaults),
+            webgl_input(ns, defaults),
             tipify(viz_select_input(ns("hover.data"), "Hover Data",
                 choices = choices,
                 multiple = TRUE,

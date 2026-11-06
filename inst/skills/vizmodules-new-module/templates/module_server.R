@@ -176,7 +176,7 @@
         })
 
         # ---- Draw the plot (cached) ----------------------------------------------
-        # [T] Everything that changes what is drawn. .cached_structure() hands this
+        # [T] Everything that changes what is drawn. cached_structure() hands this
         # its isolate_fn and caches the result, keyed on the data, the reactive values
         # named in `extra`, and every input this function reads. So:
         #   * every read has to stay in the literal isolate_fn(input$key) form --
@@ -235,9 +235,9 @@
                     ncol = facet.ncol, nrow = facet.nrow
                 )
             }
-            list(fig = .ensure_built(fig), facet.by = facet.by)
+            list(fig = fig, facet.by = facet.by)
         }
-        base_<OUTPUTID> <- .cached_structure(
+        base_<OUTPUTID> <- cached_structure(
             draw_<OUTPUTID>, input, session, data, params = params,
             extra = function() list(palette_groups(), palette_store())
         )

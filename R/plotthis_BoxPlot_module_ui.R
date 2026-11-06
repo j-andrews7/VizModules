@@ -343,7 +343,7 @@ plotthis_BoxPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$pt_alpha,
                 placement = "top", options = list(container = "body")
             ),
-            .webgl_input(ns, defaults),
+            webgl_input(ns, defaults),
             tipify(numericInput(ns("jitter.width"), "Jitter Width", min = 0, max = 1,
                 value = get_default(defaults, "jitter.width", 0.3, is.numeric), step = 0.05),
                 documentParameters$jitter_width,

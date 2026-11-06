@@ -103,7 +103,7 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
     }
     if (length(title_font) > 0L) {
         legend_args$title <- list(font = title_font)
-        # The titles of a legend's sections (see .split_color_shape_legend()).
+        # The titles of a legend's sections (see split_color_shape_legend()).
         legend_args$grouptitlefont <- title_font
     }
 
@@ -194,6 +194,8 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
 #' @param input Shiny input object (or a list) containing the legend fields.
 #' @param isolate_fn Function to isolate reactive values. Defaults to
 #'   `shiny::isolate`.
+#' @param position Passed to [apply_legend_styling()]; `NULL` keeps the legend
+#'   where it is.
 #'
 #' @return The plotly figure with the legend inputs applied.
 #'
@@ -210,11 +212,12 @@ apply_legend_styling <- function(fig, title.size = NULL, text.size = NULL, posit
 #'     legend.title.size = 16, legend.text.size = 12
 #' )
 #' apply_legend_inputs(fig, legend_input, isolate_fn = identity)
-apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
+apply_legend_inputs <- function(fig, input, isolate_fn = isolate, position = NULL) {
     apply_legend_styling(
         fig,
         title.size = isolate_fn(input$legend.title.size),
         text.size = isolate_fn(input$legend.text.size),
+        position = position,
         font.family = isolate_fn(input$legend.font.family),
         font.color = isolate_fn(input$legend.font.color),
         show = isolate_fn(input$legend.show)
@@ -245,7 +248,7 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
     stopifnot("plotly" %in% class(fig))
     for (i in seq_along(fig$x$data)) {
         fig_data <- fig$x$data[[i]]
-        # Points drawn with WebGL (see .auto_webgl()) are scattergl traces.
+        # Points drawn with WebGL (see auto_webgl()) are scattergl traces.
         if (isTRUE(fig_data$type %in% c("scatter", "scattergl")) && identical(fig_data$mode, "markers")) {
             fig_data$showlegend <- FALSE
         }
@@ -283,11 +286,17 @@ apply_legend_inputs <- function(fig, input, isolate_fn = isolate) {
 #' @return The figure, unchanged when no trace is drawn for a combination of a
 #'   colour and a shape level.
 #'
+#' @seealso [apply_legend_styling()], whose title fonts style the section titles.
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_split_color_shape_legend
-.split_color_shape_legend <- function(fig, color.levels, shape.levels,
-                                      color.title = NULL, shape.title = NULL, marker.size = 8) {
+#' @export
+#' @examples
+#' d <- transform(mtcars, am = factor(am), vs = factor(vs))
+#' p <- ggplot2::ggplot(d, ggplot2::aes(wt, mpg, colour = am, shape = vs)) +
+#'     ggplot2::geom_point()
+#' fig <- plotly::plotly_build(plotly::ggplotly(p))
+#' fig <- split_color_shape_legend(fig, levels(d$am), levels(d$vs))
+split_color_shape_legend <- function(fig, color.levels, shape.levels,
+                                     color.title = NULL, shape.title = NULL, marker.size = 8) {
     traces <- fig$x$data
     color.levels <- unique(as.character(color.levels))
     shape.levels <- unique(as.character(shape.levels))

@@ -514,7 +514,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         # Reactive expression to generate the plot (used by both output and download)
         # The plot itself: everything that changes what is drawn, with any notes
         # raised along the way and what the axis titles say. It is cached (see
-        # .cached_structure()), so it reads every input through isolate_fn and has
+        # cached_structure()), so it reads every input through isolate_fn and has
         # no side effects; the styling inputs, and a wrapper's fig.fn, are applied
         # in generate_scatterPlot().
         draw_scatterPlot <- function(isolate_fn) {
@@ -1088,7 +1088,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             color.plot <- p$cols_used$color.by
             shape.plot <- p$cols_used$shape.by
             if (!is.null(color.plot) && !is.null(shape.plot) && !is.numeric(plot_data[[color.plot]])) {
-                fig <- .split_color_shape_legend(
+                fig <- split_color_shape_legend(
                     fig,
                     color.levels = levels(droplevels(as.factor(plot_data[[color.plot]]))),
                     shape.levels = levels(droplevels(as.factor(plot_data[[shape.plot]])))
@@ -1100,7 +1100,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                 axis_by = cur_by, regen_keys = regen_keys
             )
         }
-        base_scatterPlot <- .cached_structure(
+        base_scatterPlot <- cached_structure(
             draw_scatterPlot, input, session, data, params = params,
             extra = function() list(color.panel(), color_levels(), selected.data())
         )

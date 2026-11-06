@@ -372,7 +372,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         }, ignoreInit = FALSE)
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # (see cached_structure()), so it reads every input through isolate_fn and
         # has no side effects; the styling inputs are applied in generate_SplitBarPlot().
         draw_SplitBarPlot <- function(isolate_fn) {
             # Resolved server-side, so the echo of a limit just set costs no rebuild.
@@ -555,7 +555,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
         }
-        base_SplitBarPlot <- .cached_structure(
+        base_SplitBarPlot <- cached_structure(
             draw_SplitBarPlot, input, session, data, params = params,
             extra = function() list(palette_groups(), palette_store(), fill_by_is_numeric(), x_range_store())
         )

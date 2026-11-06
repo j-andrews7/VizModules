@@ -182,7 +182,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
         })
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # (see cached_structure()), so it reads every input through isolate_fn and
         # has no side effects; the styling inputs are applied in generate_DensityPlot().
         draw_DensityPlot <- function(isolate_fn) {
 
@@ -255,7 +255,7 @@ plotthis_DensityPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
         }
-        base_DensityPlot <- .cached_structure(
+        base_DensityPlot <- cached_structure(
             draw_DensityPlot, input, session, data, params = params,
             extra = function() list(palette_groups(), palette_store())
         )

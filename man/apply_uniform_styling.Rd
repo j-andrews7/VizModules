@@ -11,7 +11,9 @@ apply_uniform_styling(
   facet.by = NULL,
   title_y = 0.95,
   include.modebar.buttons = TRUE,
-  fig.fn = NULL
+  fig.fn = NULL,
+  ggplot.axis.styling = TRUE,
+  legend.position = NULL
 )
 }
 \arguments{
@@ -35,7 +37,16 @@ main title (see \code{\link[=add_plot_config]{add_plot_config()}}).}
 \item{fig.fn}{Optional \verb{function(fig, input, isolate_fn)} returning the figure,
 run after the legend is styled and before the axis titles become draggable
 annotations, so any axis title text it sets is the one made draggable. Read
-inputs in it as \code{isolate_fn(input$key)}.}
+inputs in it as \code{isolate_fn(input$key)}. It runs after any overlay panels are
+drawn, so anything it places on \code{"paper"} coordinates can land on them; use
+\code{xref = "x domain"} and \code{yref = "y domain"} to stay within the plot's panel.}
+
+\item{ggplot.axis.styling}{Passed to \code{\link[=create_axis_styles]{create_axis_styles()}}. \code{TRUE} for a figure
+whose axis lines come from its ggplot theme (see
+\code{\link[=create_ggplot_axis_style]{create_ggplot_axis_style()}}); \code{FALSE} sets them from the Axes inputs here.}
+
+\item{legend.position}{Passed to \code{\link[=apply_legend_inputs]{apply_legend_inputs()}}; \code{NULL} keeps the
+legend where it is.}
 }
 \value{
 The styled plotly figure.

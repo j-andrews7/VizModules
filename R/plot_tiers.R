@@ -31,7 +31,14 @@
 #' @param fig.fn Optional `function(fig, input, isolate_fn)` returning the figure,
 #'   run after the legend is styled and before the axis titles become draggable
 #'   annotations, so any axis title text it sets is the one made draggable. Read
-#'   inputs in it as `isolate_fn(input$key)`.
+#'   inputs in it as `isolate_fn(input$key)`. It runs after any overlay panels are
+#'   drawn, so anything it places on `"paper"` coordinates can land on them; use
+#'   `xref = "x domain"` and `yref = "y domain"` to stay within the plot's panel.
+#' @param ggplot.axis.styling Passed to [create_axis_styles()]. `TRUE` for a figure
+#'   whose axis lines come from its ggplot theme (see
+#'   [create_ggplot_axis_style()]); `FALSE` sets them from the Axes inputs here.
+#' @param legend.position Passed to [apply_legend_inputs()]; `NULL` keeps the
+#'   legend where it is.
 #'
 #' @return The styled plotly figure.
 #'
@@ -57,7 +64,8 @@
 #' )
 #' apply_uniform_styling(fig, input, isolate_fn = identity)
 apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = NULL,
-                                  title_y = 0.95, include.modebar.buttons = TRUE, fig.fn = NULL) {
+                                  title_y = 0.95, include.modebar.buttons = TRUE, fig.fn = NULL,
+                                  ggplot.axis.styling = TRUE, legend.position = NULL) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -70,8 +78,8 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 
     fig <- apply_subplot_axis_styling(
         fig,
-        create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn),
-        create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn)
+        create_axis_styles(input, axis_side = "x", isolate_fn = isolate_fn, ggplot.axis.styling = ggplot.axis.styling),
+        create_axis_styles(input, axis_side = "y", isolate_fn = isolate_fn, ggplot.axis.styling = ggplot.axis.styling)
     )
     if (faceted) {
         fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
@@ -103,7 +111,7 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     )
     fig <- do.call(plotly::config, c(list(p = fig), config_list))
     fig <- apply_plotly_newshape(fig, input, isolate_fn)
-    fig <- apply_legend_inputs(fig, input, isolate_fn)
+    fig <- apply_legend_inputs(fig, input, isolate_fn, position = legend.position)
 
     # A wrapper's additions, before the axis titles become annotations so any
     # title text it sets is the one made draggable.
@@ -119,7 +127,7 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #' Input ids that only style a figure
 #'
 #' The ids [apply_uniform_styling()] reads. The cached plot step keys its cache
-#' only on the inputs it reads itself (see [.cached_structure()]), so changing
+#' only on the inputs it reads itself (see [cached_structure()]), so changing
 #' one of these re-uses the cached plot, unless a module's plot step reads it
 #' too (DotPlot draws its size legend in the legend fonts, for instance).
 #'
@@ -147,13 +155,14 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 )
 
 
-#' A module's cached plot step
+#' Cache a module's plot step
 #'
 #' Draws a module's plot (everything before [apply_uniform_styling()]) and keeps
 #' it in the session's cache, keyed on the data, the module's other reactive
 #' values the step reads (`extra`), and the inputs the step reads, so a styling
 #' change never redraws the plot and going back to settings already drawn
-#' (toggling an option back, Reset) re-uses the figure.
+#' (toggling an option back, Reset) re-uses the figure. The figure is built here
+#' ([plotly::plotly_build()]), so the styling step does not repeat that work.
 #'
 #' The inputs in the key are exactly those the step reads through the
 #' `isolate_fn` it is given: every `isolate_fn(input$<key>)` read is recorded,
@@ -170,10 +179,22 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #' never see each other's entries. Set `options(VizModules.cache = FALSE)` to
 #' turn caching off.
 #'
+#' @section Three rules keep the cache honest:
+#'
+#' A step that breaks one of these does not fail: it draws a stale plot.
+#'
+#' * Read every input in the literal form `isolate_fn(input$key)`. A wrapped read
+#'   such as `isolate_fn(as.numeric(input$size))` cannot be recognised, and a bare
+#'   `input$size` bypasses `isolate_fn` altogether, so that input never reaches
+#'   the key. Convert outside the call.
+#' * Name every other reactive the step reads in `extra`: colour and axis-limit
+#'   stores, a debounced text input, a reactive argument. The exception is a
+#'   reactive that only derives from `data`, which the key already covers.
+#' * Give it no side effects (notifications, `reactiveVal()` writes), since a cache
+#'   hit skips them. Return anything else the module needs in the list instead.
+#'
 #' @param build A function of `isolate_fn` that draws the plot and returns a
-#'   list with at least `fig`. Every input it reads must go through
-#'   `isolate_fn(input$<key>)`, and it must have no side effects, since a cache
-#'   hit skips it: anything it used to write elsewhere belongs in the value.
+#'   list with at least `fig`. See the rules above.
 #' @param input,session The module's `input` and `session`.
 #' @param data The module's `data` reactive.
 #' @param params The reactive-defaults store from [setup_reactive_defaults()], or
@@ -187,10 +208,26 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
 #'   The figure's `layout.uirevision` is set from it, so a styling change keeps
 #'   the user's zoom while a different plot resets it.
 #'
+#' @seealso [apply_uniform_styling()] for the styling step,
+#'   [finalize_manual_edits()] for sending a restyle as a layout-only update.
 #' @author Jared Andrews
-#' @rdname INTERNAL_cached_structure
-#' @keywords internal
-.cached_structure <- function(build, input, session, data, params = NULL, extra = NULL) {
+#' @export
+#' @examples
+#' \dontrun{
+#' # Inside moduleServer(), with `params` from setup_reactive_defaults():
+#' draw_myPlot <- function(isolate_fn) {
+#'     p <- my_plot_fn(data(), x = isolate_fn(input$x.by), colors = palette_store())
+#'     list(fig = plotly::ggplotly(p))
+#' }
+#' base_myPlot <- cached_structure(draw_myPlot, input, session, data,
+#'     params = params, extra = function() list(palette_store())
+#' )
+#' generate_myPlot <- reactive({
+#'     isolate_fn <- setup_auto_update_logic(input, params)
+#'     apply_uniform_styling(base_myPlot()$fig, input, isolate_fn)
+#' })
+#' }
+cached_structure <- function(build, input, session, data, params = NULL, extra = NULL) {
     id <- session$ns("structure")
     builds <- 0L
     numbered <- function(value) {
@@ -200,6 +237,7 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
         # build, i.e. styling changes, but not a new or different plot; see
         # finalize_manual_edits().
         if (inherits(value$fig, "plotly")) {
+            value$fig <- .ensure_built(value$fig)
             value$fig$x$layout$uirevision <- paste0(id, "-", builds)
         }
         value

@@ -306,7 +306,7 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
 
         # The plot itself: everything that changes what is drawn, with the stats
         # table and any notes raised along the way. It is cached (see
-        # .cached_structure()), so it must have no side effects; the styling
+        # cached_structure()), so it must have no side effects; the styling
         # inputs are applied to it in generate_BoxPlot().
         draw_BoxPlot <- function(isolate_fn) {
             notes <- list()
@@ -469,16 +469,16 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 fig <- .hide_jitter_from_legend(fig)
             }
 
-            # Many points draw far faster with WebGL (see .auto_webgl()).
+            # Many points draw far faster with WebGL (see auto_webgl()).
             if (!isFALSE(isolate_fn(input$webgl))) {
-                fig <- .auto_webgl(fig)
+                fig <- auto_webgl(fig)
             }
 
             # Nothing was tested when stats are off, so the source download gets no
             # table from an earlier figure.
             list(fig = .ensure_built(fig), facet.by = facet.by, stats = stats_df, notes = notes)
         }
-        base_BoxPlot <- .cached_structure(
+        base_BoxPlot <- cached_structure(
             draw_BoxPlot, input, session, data, params = params,
             extra = function() list(y_range_store(), palette_groups(), palette_store(), x_order())
         )

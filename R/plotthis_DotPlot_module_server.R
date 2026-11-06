@@ -184,7 +184,7 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         }, ignoreInit = FALSE)
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # (see cached_structure()), so it reads every input through isolate_fn and
         # has no side effects; the styling inputs are applied in generate_DotPlot().
         draw_DotPlot <- function(isolate_fn) {
 
@@ -288,14 +288,14 @@ plotthis_DotPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
                 font.color = isolate_fn(input$legend.font.color)
             )
 
-            # Many points draw far faster with WebGL (see .auto_webgl()).
+            # Many points draw far faster with WebGL (see auto_webgl()).
             if (!isFALSE(isolate_fn(input$webgl))) {
-                fig <- .auto_webgl(fig)
+                fig <- auto_webgl(fig)
             }
 
             list(fig = .ensure_built(fig), facet.by = facet.by)
         }
-        base_DotPlot <- .cached_structure(
+        base_DotPlot <- cached_structure(
             draw_DotPlot, input, session, data, params = params
         )
 

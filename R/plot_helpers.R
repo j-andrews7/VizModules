@@ -614,23 +614,40 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
 #' stay vector in SVG downloads; only the switched points become an embedded
 #' image there. Unlike [plotly::toWebGL()], which switches every trace.
 #'
+#' WebGL canvases sit above SVG traces, so a line drawn over the points (an
+#' ellipse, a contour) would end up beneath them. Set `overlays = TRUE` to switch
+#' a figure's unfilled line traces with its points, which keeps their order. The
+#' points alone decide whether the threshold is reached, and filled traces stay
+#' SVG either way.
+#'
+#' Pair it with [webgl_input()]. The default threshold is 5,000 points, or
+#' `options(VizModules.webgl.threshold = n)`.
+#'
 #' @param fig A plotly figure, built or as [plotly::ggplotly()] returns it.
 #' @param threshold Point count at and above which the points switch.
+#' @param overlays Logical; also switch unfilled line traces, for lines that must
+#'   stay on top of the points.
 #'
 #' @return The figure.
 #'
+#' @seealso [webgl_input()]
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_auto_webgl
-.auto_webgl <- function(fig, threshold = .webgl_threshold()) {
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(x = rnorm(100), y = rnorm(100), type = "scatter", mode = "markers")
+#' fig <- plotly::plotly_build(fig)
+#' auto_webgl(fig, threshold = 50)$x$data[[1]]$type
+auto_webgl <- function(fig, threshold = .webgl_threshold(), overlays = FALSE) {
     traces <- fig$x$data
     if (!length(traces)) {
         return(fig)
     }
+    unfilled_scatter <- function(tr) {
+        identical(tr$type %||% "scatter", "scatter") && (is.null(tr$fill) || identical(tr$fill, "none"))
+    }
+    has_mode <- function(tr, part) grepl(part, tr$mode %||% "", fixed = TRUE)
     is_points <- vapply(traces, function(tr) {
-        mode <- tr$mode %||% ""
-        identical(tr$type %||% "scatter", "scatter") && grepl("markers", mode, fixed = TRUE) &&
-            !grepl("lines", mode, fixed = TRUE) && (is.null(tr$fill) || identical(tr$fill, "none"))
+        unfilled_scatter(tr) && has_mode(tr, "markers") && !has_mode(tr, "lines")
     }, logical(1))
     if (!any(is_points)) {
         return(fig)
@@ -639,7 +656,10 @@ add_plot_config <- function(download.format = "png", filename = as.character(Sys
     if (n_points < threshold) {
         return(fig)
     }
-    for (i in which(is_points)) {
+    is_lines <- isTRUE(overlays) & vapply(traces, function(tr) {
+        unfilled_scatter(tr) && has_mode(tr, "lines")
+    }, logical(1))
+    for (i in which(is_points | is_lines)) {
         fig$x$data[[i]]$type <- "scattergl"
         # ggplotly sets it; scattergl has no such attribute and plotly warns.
         fig$x$data[[i]]$hoveron <- NULL
@@ -898,7 +918,7 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
 #'
 #' A figure without a `layout.uirevision` of its own is given one that changes
 #' only when the figure is sent whole, so the user's zoom survives a styling
-#' change in modules not drawn through [.cached_structure()] too.
+#' change in modules not drawn through [cached_structure()] too.
 #'
 #' A changed `layout.uirevision` is sent whole however little else changed, such
 #' as a redraw that only adds the annotations for a selection. It means a new
@@ -934,7 +954,7 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
     rest$preRenderHook <- NULL
     layout <- fig$x$layout
     # A figure with no uirevision of its own (one not drawn through
-    # .cached_structure()) gets one that changes only with its traces, so a
+    # cached_structure()) gets one that changes only with its traces, so a
     # styling change keeps the user's zoom there too.
     own_revision <- is.null(layout$uirevision)
     # A new uirevision is a different plot, whose view resets. Only fresh traces do

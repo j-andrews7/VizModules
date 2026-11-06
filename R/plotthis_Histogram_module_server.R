@@ -201,7 +201,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
         })
 
         # The plot itself: everything that changes what is drawn. It is cached
-        # (see .cached_structure()), so it reads every input through isolate_fn and
+        # (see cached_structure()), so it reads every input through isolate_fn and
         # has no side effects; the styling inputs are applied in generate_Histogram().
         draw_Histogram <- function(isolate_fn) {
 
@@ -294,7 +294,7 @@ plotthis_HistogramServer <- function(id, data, hide.inputs = NULL, hide.tabs = N
             }
             list(fig = .ensure_built(fig), facet.by = facet.by)
         }
-        base_Histogram <- .cached_structure(
+        base_Histogram <- cached_structure(
             draw_Histogram, input, session, data, params = params,
             extra = function() list(palette_groups(), palette_store())
         )

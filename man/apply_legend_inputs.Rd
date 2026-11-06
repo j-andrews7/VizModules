@@ -4,7 +4,7 @@
 \alias{apply_legend_inputs}
 \title{Apply the uniform Legend inputs to a plotly figure}
 \usage{
-apply_legend_inputs(fig, input, isolate_fn = isolate)
+apply_legend_inputs(fig, input, isolate_fn = isolate, position = NULL)
 }
 \arguments{
 \item{fig}{A plotly figure object.}
@@ -13,6 +13,9 @@ apply_legend_inputs(fig, input, isolate_fn = isolate)
 
 \item{isolate_fn}{Function to isolate reactive values. Defaults to
 \code{shiny::isolate}.}
+
+\item{position}{Passed to \code{\link[=apply_legend_styling]{apply_legend_styling()}}; \code{NULL} keeps the legend
+where it is.}
 }
 \value{
 The plotly figure with the legend inputs applied.

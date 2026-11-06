@@ -254,7 +254,7 @@ plotthis_DotPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, co
                 documentParameters$border_size,
                 placement = "top", options = list(container = "body")
             ),
-            .webgl_input(ns, defaults),
+            webgl_input(ns, defaults),
             tipify(
                 numericInput(ns("lower.quantile"), "Lower Quantile",
                     value = get_default(defaults, "lower.quantile", 0, is.numeric),

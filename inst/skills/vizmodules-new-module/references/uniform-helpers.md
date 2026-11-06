@@ -52,6 +52,10 @@ would otherwise cost an extra render. Use them instead of reading the raw input.
 | `setup_level_order(input, session, data, column, defaults)` | A `level_order_input()` drag-and-drop category order | `apply_level_order(data(), col, isolate_fn(x_order()))` |
 | `setup_manual_edits(input, session, plot_source)` | Capture dragged legend/annotations/titles | — |
 | `finalize_manual_edits(fig, plot_source, store, session)` | Restore them, and send only the layout when only it changed; last call in `renderPlotly()` | — |
+| `cached_structure(build, input, session, data, params, extra)` | The plot step: draws the plot and caches it, so a styling change never redraws it | `base_<OUTPUTID>()$fig` |
+| `apply_uniform_styling(fig, input, isolate_fn, ...)` | The styling step, on that cached figure | — |
+| `auto_webgl(fig, threshold, overlays)` with `webgl_input(ns, defaults)` | Draw points with WebGL once there are enough of them, behind a toggle. `overlays = TRUE` keeps lines on top of the points | `!isFALSE(isolate_fn(input$webgl))` |
+| `split_color_shape_legend(fig, color.levels, shape.levels)` | Separate colour and shape legend sections for a built ggplotly figure | — |
 
 `setup_reactive_defaults()` returns `NULL` when no entry is reactive, in which case
 `isolate_fn` is the plain `isolate()` it has always been — so wiring it up costs nothing

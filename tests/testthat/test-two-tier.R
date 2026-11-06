@@ -273,3 +273,43 @@ test_that(".settled_reactive passes on real changes only, and errors as they are
         expect_identical(reader(), list(even = FALSE))
     })
 })
+
+test_that("cached_structure() builds the figure it caches", {
+    server <- function(id) {
+        moduleServer(id, function(input, output, session) {
+            data <- reactive(mtcars)
+            base <- cached_structure(function(isolate_fn) {
+                list(fig = plotly::plot_ly(data(), x = ~wt, y = ~mpg, type = "scatter", mode = "markers"))
+            }, input, session, data)
+        })
+    }
+    shiny::testServer(server, args = list(id = "m"), {
+        session$setInputs(auto.update = TRUE)
+        fig <- base()$fig
+        expect_length(fig$x$data, 1)
+        expect_identical(fig$x$data[[1]]$type, "scatter")
+        expect_match(fig$x$layout$uirevision, "structure", fixed = TRUE)
+    })
+})
+
+test_that("apply_uniform_styling() can style axis lines itself and place the legend", {
+    fig <- plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers")
+    input <- list(
+        axis.showline = TRUE, axis.mirror = TRUE, axis.linecolor = "#123456", axis.linewidth = 2,
+        show.grid.x = TRUE, show.grid.y = TRUE, grid.color = "#CCCCCC", axis.ticks = "outside",
+        axis.tickangle.x = 0, axis.tickangle.y = 0,
+        download.format = "svg", legend.show = TRUE
+    )
+
+    themed <- plotly::plotly_build(apply_uniform_styling(fig, input, identity))
+    expect_null(themed$x$layout$xaxis$linecolor)
+    expect_null(themed$x$layout$legend$xanchor)
+
+    styled <- plotly::plotly_build(apply_uniform_styling(
+        fig, input, identity,
+        ggplot.axis.styling = FALSE, legend.position = c(1.02, "left")
+    ))
+    expect_identical(styled$x$layout$xaxis$linecolor, "#123456")
+    expect_identical(styled$x$layout$yaxis$linewidth, 2)
+    expect_identical(styled$x$layout$legend$xanchor, "left")
+})

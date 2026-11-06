@@ -458,19 +458,24 @@ module_tack_ui <- function(ns, defaults = NULL) {
 
 #' The "Plot with WebGL" toggle for a module's point layers
 #'
-#' On (the default), the plot's points switch to WebGL once there are
-#' [.webgl_threshold()] of them or more (see [.auto_webgl()]); off, they always
-#' stay SVG, so SVG downloads stay fully vector.
+#' On (the default), the plot's points switch to WebGL once there are enough of
+#' them (see [auto_webgl()]); off, they always stay SVG, so SVG downloads stay
+#' fully vector. Read it in the module's plot step with
+#' `!isFALSE(isolate_fn(input$webgl))`, so a client that has not reported it yet
+#' counts as on.
 #'
 #' @param ns The module's namespace function.
 #' @param defaults The module's `defaults`, whose `webgl` entry sets the value.
 #'
 #' @return A tooltipped checkbox input with id `webgl`.
 #'
+#' @seealso [auto_webgl()]
 #' @author Jared Andrews
-#' @keywords internal
-#' @rdname INTERNAL_webgl_input
-.webgl_input <- function(ns, defaults = NULL) {
+#' @export
+#' @examples
+#' webgl_input(shiny::NS("plot"))
+#' webgl_input(shiny::NS("plot"), defaults = list(webgl = FALSE))
+webgl_input <- function(ns, defaults = NULL) {
     threshold <- format(.webgl_threshold(), big.mark = ",", scientific = FALSE)
     tipify(
         checkboxInput(ns("webgl"), "Plot with WebGL",

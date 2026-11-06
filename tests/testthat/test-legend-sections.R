@@ -1,4 +1,4 @@
-# .split_color_shape_legend() gives colour and shape their own legend sections,
+# split_color_shape_legend() gives colour and shape their own legend sections,
 # in place of ggplotly's entry per combination.
 
 .tag <- function(tr) tr$meta$vizmodules_legend
@@ -27,7 +27,7 @@
 }
 
 test_that("colour and shape each get a titled section, with the combinations out of the legend", {
-    fig <- .split_color_shape_legend(.combo_fig(c("1", "2", "3")), c("1", "2", "3"), c("p", "q"))
+    fig <- split_color_shape_legend(.combo_fig(c("1", "2", "3")), c("1", "2", "3"), c("p", "q"))
 
     expect_identical(.entry_names(fig, "color"), c("1", "2", "3"))
     expect_identical(.entry_names(fig, "shape"), c("p", "q"))
@@ -60,7 +60,7 @@ test_that("colour and shape each get a titled section, with the combinations out
 
 test_that("the entries are appended, so no trace's curve number moves", {
     before <- .combo_fig()
-    fig <- .split_color_shape_legend(before, c("a", "b"), c("p", "q"))
+    fig <- split_color_shape_legend(before, c("a", "b"), c("p", "q"))
     expect_length(fig$x$data, 4 + 2 + 2)
     expect_identical(
         vapply(fig$x$data[1:4], function(tr) tr$name, ""),
@@ -81,7 +81,7 @@ test_that("levels holding commas, or starting with another level, still match", 
         list(type = "scatter", mode = "markers", name = name, marker = list(color = "red", symbol = "circle"))
     }
     fig$x$data <- list(points("(a, b,North)"), points("(a,North)"), points("(a,South, East)"))
-    out <- .split_color_shape_legend(fig, c("a", "a, b"), c("North", "South, East"))
+    out <- split_color_shape_legend(fig, c("a", "a, b"), c("North", "South, East"))
     expect_identical(.tag(out$x$data[[1]]), list(color = "a, b", shape = "North"))
     expect_identical(.tag(out$x$data[[2]]), list(color = "a", shape = "North"))
     expect_identical(.tag(out$x$data[[3]]), list(color = "a", shape = "South, East"))
@@ -97,7 +97,7 @@ test_that("a trace drawn for a colour alone becomes its level's entry", {
         list(type = "box", name = "(a,1)", legendgroup = "(a,1)", showlegend = FALSE, fillcolor = "red")
     )
     fig$x$data <- c(boxes, fig$x$data)
-    out <- .split_color_shape_legend(fig, c("a", "b"), "p")
+    out <- split_color_shape_legend(fig, c("a", "b"), "p")
 
     expect_identical(.entry_names(out, "color"), c("a", "b"))
     expect_identical(vapply(.entries(out, "color"), function(tr) tr$type, ""), c("box", "box"))
@@ -112,7 +112,7 @@ test_that("traces grouped under a colour level are hidden with it, keeping their
     fig <- .combo_fig()
     fig$x$data[[5]] <- list(type = "histogram", name = "a", legendgroup = "a", showlegend = FALSE)
     fig$x$data[[6]] <- list(type = "scatter", mode = "lines", name = "Linear fit a", legendgroup = "Linear fit a")
-    out <- .split_color_shape_legend(fig, c("a", "b"), c("p", "q"))
+    out <- split_color_shape_legend(fig, c("a", "b"), c("p", "q"))
     expect_identical(.tag(out$x$data[[5]]), list(color = "a"))
     expect_identical(out$x$data[[5]]$legendgroup, "a")
     expect_null(.tag(out$x$data[[6]]))
@@ -122,15 +122,15 @@ test_that("a legend without a colour and shape combination is left alone", {
     fig <- .combo_fig()
     # Colour only, or shape only: names are bare levels.
     fig$x$data <- lapply(fig$x$data, function(tr) utils::modifyList(tr, list(name = "a")))
-    expect_identical(.split_color_shape_legend(fig, c("a", "b"), c("p", "q")), fig)
+    expect_identical(split_color_shape_legend(fig, c("a", "b"), c("p", "q")), fig)
     fig <- .combo_fig()
-    expect_identical(.split_color_shape_legend(fig, character(0), c("p", "q")), fig)
+    expect_identical(split_color_shape_legend(fig, character(0), c("p", "q")), fig)
     # The shape half of a name has to be a shape level.
-    expect_identical(.split_color_shape_legend(fig, c("a", "b"), c("r", "s")), fig)
+    expect_identical(split_color_shape_legend(fig, c("a", "b"), c("r", "s")), fig)
 })
 
 test_that("given titles replace the ones ggplotly wrote", {
-    fig <- .split_color_shape_legend(.combo_fig(), c("a", "b"), c("p", "q"), color.title = "C", shape.title = "S")
+    fig <- split_color_shape_legend(.combo_fig(), c("a", "b"), c("p", "q"), color.title = "C", shape.title = "S")
     expect_identical(.entries(fig, "color")[[1]]$legendgrouptitle$text, "C")
     expect_identical(.entries(fig, "shape")[[1]]$legendgrouptitle$text, "S")
 })

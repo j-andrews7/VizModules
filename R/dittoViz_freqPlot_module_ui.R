@@ -595,7 +595,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
                 documentParameters$jitter.color,
                 placement = "top", options = list(container = "body")
             ),
-            .webgl_input(ns, defaults),
+            webgl_input(ns, defaults),
             tipify(
                 numericInput(ns("hover.round.digits"), "Hover Round Digits",
                     value = get_default(defaults, "hover.round.digits", 5, is.numeric),
