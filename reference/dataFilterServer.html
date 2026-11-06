@@ -132,9 +132,11 @@ list, so a low cap keeps high-cardinality columns usable. Defaults to
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>A <code>reactive</code> expression that evaluates to the filtered subset of
 <code>data</code> based on the current DT selection/filter state. All columns are
-retained, including any hidden via <code>hide.columns</code>. Pass this reactive to a
-plotting module's <code>data</code> argument to keep the plot in sync with the table
-filters.</p>
+retained, including any hidden via <code>hide.columns</code>, and rows keep their
+original order: sorting the table changes neither the rows returned nor
+their order, so it does not redraw a plot. The reactive only updates when
+the set of rows shown changes. Pass this reactive to a plotting module's
+<code>data</code> argument to keep the plot in sync with the table filters.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

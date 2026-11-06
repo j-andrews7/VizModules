@@ -1058,6 +1058,8 @@ configuration.
   : Apply axis styling to all subplot axes in a plotly figure
 - [`apply_title_layout()`](https://j-andrews7.github.io/VizModules/reference/apply_title_layout.md)
   : Apply plot title styling to a plotly figure
+- [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
+  : Apply the uniform styling inputs to a module's figure
 - [`axis_titles_as_annotations()`](https://j-andrews7.github.io/VizModules/reference/axis_titles_as_annotations.md)
   : Convert native cartesian axis titles to draggable annotations
 - [`create_axis_styles()`](https://j-andrews7.github.io/VizModules/reference/create_axis_styles.md)

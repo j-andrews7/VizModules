@@ -187,11 +187,11 @@ markdown enabled. You do not need to specifically lint.
 DESCRIPTION is the source of truth; this is a summary.
 
 **Depends**: shiny, dittoViz, plotly, shinyBS, plotthis (\>= 0.13.0), R
-(\>= 4.5) \| **Imports**: roclang, colourpicker, dplyr, DT, readxl,
-shinyjs, scales, shinyjqui, ggplot2, htmltools, jsonlite, methods,
-shinyWidgets, htmlwidgets, zip \| **Suggests**: drc, withr,
-ComplexHeatmap, InteractiveComplexHeatmap, circlize, grid, svglite,
-knitr, rmarkdown, testthat (\>= 3.0.0)
+(\>= 4.5) \| **Imports**: colourpicker, dplyr, DT, readxl, shinyjs,
+scales, shinyjqui, ggplot2, htmltools, jsonlite, methods, shinyWidgets,
+htmlwidgets, rlang, zip \| **Suggests**: drc, withr, ComplexHeatmap,
+InteractiveComplexHeatmap, circlize, grid, svglite, knitr, rmarkdown,
+testthat (\>= 3.0.0)
 
 Anything in Suggests must be reached through
 [`requireNamespace(..., quietly = TRUE)`](https://rdrr.io/r/base/ns-load.html)
@@ -233,6 +233,23 @@ packages.
 ## Best Practices
 
 - Avoid `sapply` usage, it is unsafe in package code.
+- A plot module draws its figure in a function of `isolate_fn` handed to
+  `.cached_structure()` (`R/plot_tiers.R`), and styles it in
+  `generate_*` with
+  [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md),
+  so a styling change never redraws the plot. The cache key is built
+  from the inputs the draw function reads, so read every one as
+  `isolate_fn(input$key)`, name every other reactive it reads in
+  `extra`, and give it no side effects (a cache hit skips it): return
+  stats tables, notes (`.structure_note()`) and the like in its value.
+  `tests/testthat/test-two-tier.R` holds each module to this.
+- Observers that write a store the plot reads (axis limits, group
+  colours, level order) run at `priority = 1000`, those recomputing a
+  column’s limits at 999, and those freezing an input the plot reads
+  while updating it (`freezeReactiveValue()`, e.g. `stat.pairs`) at 998,
+  all ahead of the render. Then the plot draws once with the new value
+  instead of once before it and once after; a freeze only pauses the
+  readers that run after it in the flush.
 - A Shiny input that has not reported yet is `NULL`, and both
   `nzchar(NULL)` and `NULL == ""` are `logical(0)`, which makes
   `if (...)` an error rather than a `FALSE`. Use the exported

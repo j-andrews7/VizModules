@@ -9,7 +9,7 @@ through unchanged.
 ## Usage
 
 ``` r
-setup_auto_update_logic(input, params = NULL)
+setup_auto_update_logic(input, params = NULL, track = NULL)
 ```
 
 ## Arguments
@@ -27,14 +27,21 @@ setup_auto_update_logic(input, params = NULL)
   by the store resolves from the store instead of the client input, so a
   parameter driven by the parent app updates in a single render.
 
+- track:
+
+  Optional function, or `NULL`. When supplied, it is called with the id
+  of every `input$<key>` read through the returned wrapper, so a caller
+  can tell which inputs an expression depends on (the modules' cached
+  plot step keys its cache on them).
+
 ## Value
 
-A function that wraps reactive expressions. With `params = NULL` this is
-`identity` if auto-update is enabled (expressions will be reactive), or
-`isolate` if auto-update is disabled (expressions will not trigger
-reactivity). With a store supplied it is a wrapper with the same
+A function that wraps reactive expressions. With `params` and `track`
+both `NULL` this is `identity` if auto-update is enabled (expressions
+will be reactive), or `isolate` if auto-update is disabled (expressions
+will not trigger reactivity). Otherwise it is a wrapper with the same
 isolation semantics that additionally redirects store-backed
-`input$<key>` reads.
+`input$<key>` reads and reports the ids read to `track`.
 
 ## Details
 

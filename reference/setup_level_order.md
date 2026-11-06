@@ -62,8 +62,8 @@ order. Hand it to
 
 A new column starts from `defaults[[inputId]]` (levels it does not have
 are ignored), and new data for the same column keeps the order the user
-dragged the levels into. A column the control cannot order – numeric, or
-with more than `max.levels` levels – empties the control, which hides
+dragged the levels into. A column the control cannot order - numeric, or
+with more than `max.levels` levels - empties the control, which hides
 it.
 
 The returned store, not `input[[inputId]]`, is what the plot should

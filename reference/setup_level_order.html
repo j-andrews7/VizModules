@@ -115,8 +115,8 @@ e.g. <code>reactive(input$x.data)</code>.</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A new column starts from <code>defaults[[inputId]]</code> (levels it does not have are
 ignored), and new data for the same column keeps the order the user dragged
-the levels into. A column the control cannot order – numeric, or with more
-than <code>max.levels</code> levels – empties the control, which hides it.</p>
+the levels into. A column the control cannot order - numeric, or with more
+than <code>max.levels</code> levels - empties the control, which hides it.</p>
 <p>The returned store, not <code>input[[inputId]]</code>, is what the plot should read. It
 changes only when the order to draw does, so neither the control reporting its
 initial value nor its echo of an update costs an extra render. A

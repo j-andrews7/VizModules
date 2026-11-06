@@ -283,10 +283,13 @@ something <em>more</em>, such as loading arrows on a PCA biplot, a
 threshold label, or axis titles your wrapper works out, pass
 <code><a href="../reference/dittoViz_scatterPlotServer.html">dittoViz_scatterPlotServer()</a></code> a <code>fig.fn</code>. It is a
 <code>function(fig, input, isolate_fn)</code> that receives the built
-plotly figure and returns it. It runs inside the module’s plot reactive,
-after the legend is styled and before the axis titles become draggable
-annotations, so what it adds reaches the rendered plot, manual-edit
-persistence and the source download alike.</p>
+plotly figure and returns it. It runs in the figure’s styling step (see
+<code><a href="../reference/apply_uniform_styling.html">apply_uniform_styling()</a></code>), after the legend is styled and
+before the axis titles become draggable annotations, so what it adds
+reaches the rendered plot, manual-edit persistence and the source
+download alike. The plot underneath is cached, but this step is not, so
+<code>fig.fn</code> can read any of your wrapper’s reactives as well as
+its inputs.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cutoffScatterInputsUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">defaults</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">ns</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span>
@@ -347,7 +350,8 @@ server), you can add the same behaviour simply with 3 basic steps:</p>
 <span>        <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/plotly/man/plotly-shiny.html" class="external-link">renderPlotly</a></span><span class="op">(</span><span class="op">{</span></span>
 <span>            <span class="co"># 2. Create your plotly object with your plotting function</span></span>
 <span>            <span class="va">fig</span> <span class="op">&lt;-</span> <span class="fu">build_my_plotly_figure</span><span class="op">(</span><span class="fu">data_reactive</span><span class="op">(</span><span class="op">)</span>, <span class="va">input</span><span class="op">)</span></span>
-<span>            <span class="co"># 3. Restore + capture edits on every render, then return the figure.</span></span>
+<span>            <span class="co"># 3. Restore + capture edits on every render. Last: when only the</span></span>
+<span>            <span class="co">#    layout changed, it sends just that and ends the render.</span></span>
 <span>            <span class="fu"><a href="../reference/finalize_manual_edits.html">finalize_manual_edits</a></span><span class="op">(</span><span class="va">fig</span>, <span class="va">plot_source</span>, <span class="va">edit_store</span>, <span class="va">session</span><span class="op">)</span></span>
 <span>        <span class="op">}</span><span class="op">)</span></span>
 <span>    <span class="op">}</span><span class="op">)</span></span>

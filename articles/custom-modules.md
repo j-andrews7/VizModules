@@ -207,10 +207,14 @@ such as loading arrows on a PCA biplot, a threshold label, or axis
 titles your wrapper works out, pass
 [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md)
 a `fig.fn`. It is a `function(fig, input, isolate_fn)` that receives the
-built plotly figure and returns it. It runs inside the module’s plot
-reactive, after the legend is styled and before the axis titles become
-draggable annotations, so what it adds reaches the rendered plot,
-manual-edit persistence and the source download alike.
+built plotly figure and returns it. It runs in the figure’s styling step
+(see
+[`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)),
+after the legend is styled and before the axis titles become draggable
+annotations, so what it adds reaches the rendered plot, manual-edit
+persistence and the source download alike. The plot underneath is
+cached, but this step is not, so `fig.fn` can read any of your wrapper’s
+reactives as well as its inputs.
 
 ``` r
 
@@ -278,7 +282,8 @@ customPlotServer <- function(id, data_reactive) {
         output$plot <- renderPlotly({
             # 2. Create your plotly object with your plotting function
             fig <- build_my_plotly_figure(data_reactive(), input)
-            # 3. Restore + capture edits on every render, then return the figure.
+            # 3. Restore + capture edits on every render. Last: when only the
+            #    layout changed, it sends just that and ends the render.
             finalize_manual_edits(fig, plot_source, edit_store, session)
         })
     })

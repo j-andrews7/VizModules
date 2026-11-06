@@ -37,7 +37,7 @@ setup_reactive_defaults(defaults, input, session)
 behave exactly as they did before. Otherwise a list with two functions,
 `has(key)` and `get(key)`, for
 [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
-to read.
+to read, and `keys`, the input ids the store backs.
 
 ## Details
 

@@ -1,8 +1,8 @@
 # The levels a categorical column is plotted in, optionally reordered
 
 Gives the levels of `data[[column]]` that are present, in the order a
-plot draws them by default – factor level order for a factor, sorted
-values otherwise – with any levels named in `order` moved to the front
+plot draws them by default - factor level order for a factor, sorted
+values otherwise - with any levels named in `order` moved to the front
 in that order.
 
 ## Usage

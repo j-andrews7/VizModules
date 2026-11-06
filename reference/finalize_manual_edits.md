@@ -4,7 +4,7 @@ Render-step companion to
 [`setup_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/setup_manual_edits.md).
 Call this inside your module's
 [`plotly::renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html)
-on the freshly rebuilt figure, immediately before returning it.
+on the freshly rebuilt figure, as the last step: return what it returns.
 
 ## Usage
 
@@ -54,10 +54,12 @@ finalize_manual_edits(
 
 The finalized plotly figure, ready to be returned from
 [`plotly::renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html).
+Inside a render, when only the layout changed, it instead sends the
+layout and cancels the render.
 
 ## Details
 
-It performs four jobs:
+It performs six jobs:
 
 1.  tags the figure with the module's plotly event `source` so its
     `plotly_relayout` events are captured by
@@ -67,9 +69,27 @@ It performs four jobs:
     and colorbar captured so far;
 
 3.  records the figure so future relayout events can be matched to
-    stable annotation keys (surviving re-ordering on rebuild); and
+    stable annotation keys (surviving re-ordering on rebuild);
 
-4.  attaches the JavaScript listener that forwards colorbar drags.
+4.  attaches the JavaScript listener that forwards colorbar drags;
+
+5.  has the figure re-rendered in place: `layout.transition = TRUE`
+    makes the plotly widget update its graph with `Plotly.react()`
+    instead of purging and recreating it, which is faster and keeps the
+    user's zoom and toggled legend entries whenever `layout.uirevision`
+    is unchanged (the cached modules set it per build of the plot, so
+    styling changes keep the view). A small script clears the previous
+    render's event listeners first, which purging used to; and
+
+6.  sends only the layout when nothing else changed: if the figure's
+    traces, config, `layout.uirevision`, and everything else but its
+    layout match the figure last sent to this output, the new layout
+    goes to the browser in a small message, applied with
+    `Plotly.react()` over the traces already drawn, and the render is
+    cancelled (`req(FALSE, cancelOutput = TRUE)`), so no code after this
+    call runs. A styling change then costs kilobytes rather than the
+    whole figure. Set `options(VizModules.layout.updates = FALSE)` to
+    always send the whole figure.
 
 Restored edits are applied under
 [`shiny::isolate()`](https://rdrr.io/pkg/shiny/man/isolate.html) so
@@ -89,7 +109,6 @@ Jared Andrews
 ``` r
 if (FALSE) { # \dontrun{
 # Inside renderPlotly(), after building `fig`:
-fig <- finalize_manual_edits(fig, plot_source, edit_store, session)
-fig
+finalize_manual_edits(fig, plot_source, edit_store, session)
 } # }
 ```

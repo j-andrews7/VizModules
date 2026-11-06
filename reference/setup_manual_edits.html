@@ -109,6 +109,15 @@ captured <code>legend</code>, <code>annotations</code>, and <code>colorbar</code
 most recently rendered figure, used to map relayout annotation indices to
 stable, rebuild-proof keys.</p></dd>
 
+<dt><code>sent</code></dt>
+<dd><p>An environment recording the figure last sent to the
+browser, so a render that changes only its layout sends just that.</p></dd>
+
+<dt><code>refresh</code></dt>
+<dd><p>A <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html" class="external-link">shiny::reactiveVal()</a></code> the browser bumps, through the
+<code>plot.refresh</code> input, when it cannot apply a layout-only update, which
+makes the next render send the whole figure.</p></dd>
+
 
 </dl></div>
     <div class="section level2">

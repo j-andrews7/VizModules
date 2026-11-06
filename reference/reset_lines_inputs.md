@@ -21,7 +21,8 @@ reset_lines_inputs(session, include.fit.lines = FALSE, defaults = NULL)
 - include.fit.lines:
 
   Logical; if TRUE, also resets the fit-line inputs (best.fit,
-  line.best.smoothness, line.best.colour, linear.model). Default is
+  line.best.smoothness, line.best.colour, linear.model,
+  model.legend.show, custom.model.enable, custom.models). Default is
   FALSE.
 
 - defaults:

@@ -9,10 +9,26 @@ The one where we fix all the wonkiness with extending modules
 
 #### All modules
 
-- Colour, shape, group and fill selectors no longer offer categorical
+- Plots respond much faster. Changing an input that only styles the plot
+  (titles, fonts, ticks, gridlines, reference lines, the legend’s fonts,
+  the download format) now restyles it without redrawing it, which takes
+  a 20,000-point scatter plot from about 4.4 s to 0.4 s, and going back
+  to settings already drawn, such as toggling an option back or pressing
+  **Reset**, re-uses the plot drawn for them. A plot is drawn once at
+  startup, where some modules drew it up to 12 times, and once when a
+  column changes rather than twice. Settings panels build in about a
+  third of the time.
+  - Plots now update in place wherever possible instead of being
+    redrawn. Changing what is plotted still resets the view. This
+    results in much snappier performance for styling changes.
+  - Under the hood, each module draws its plot in a cached step keyed on
+    the data and the inputs it reads, and applies the styling inputs to
+    it in a second step; the adding-a-new-module vignette describes this
+    pattern.
+- Colour, shape, group, and fill selectors no longer offer categorical
   columns with 50 or more levels (the
   [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
-  cap), such as IDs or gene names, which asked for one colour, shape or
+  cap), such as IDs or gene names, which asked for one colour, shape, or
   group per row and would generally just break things
   (sciVizModules#16). Numeric columns stay where a selector draws them
   as a gradient, logical columns stay, and a column named in `defaults`
@@ -24,7 +40,7 @@ The one where we fix all the wonkiness with extending modules
   [`discrete_choices()`](https://j-andrews7.github.io/VizModules/reference/discrete_choices.md)
   builds these choices.
 
-#### `BarPlot`, `BoxPlot`, `freqPlot` and `yPlot`
+#### `BarPlot`, `BoxPlot`, `freqPlot`, and `yPlot`
 
 - New drag-and-drop **X Order** (**Group Order** for `freqPlot` and
   `yPlot`) input in the Data tab sets the order of the x-axis
@@ -33,6 +49,24 @@ The one where we fix all the wonkiness with extending modules
   follow in their default order. It is not shown for a column with more
   than 20 levels, and in `BoxPlot` a **Sort X By** key takes precedence
   over it.
+
+#### `BoxPlot`, `DotPlot`, `freqPlot`, and `yPlot`
+
+- New **Plot with WebGL** toggle, on by default, draws the points with
+  WebGL once a plot has 5,000 or more of them
+  (`options(VizModules.webgl.threshold = )`), so tens of thousands of
+  jitter points draw several times faster. Boxes, violins, and lines
+  stay SVG. WebGL points are an embedded image in SVG downloads, so turn
+  it off for a fully vector file.
+
+#### `dataFilter`
+
+- Sorting the data table no longer reorders or redraws the plots fed by
+  it:
+  [`dataFilterServer()`](https://j-andrews7.github.io/VizModules/reference/dataFilterServer.md)
+  only passes on a change to which rows are shown, and keeps them in
+  their original order. A table’s first report of its rows no longer
+  redraws them either.
 
 #### `DotPlot` and `scatterPlot`
 
@@ -85,15 +119,53 @@ The one where we fix all the wonkiness with extending modules
   character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the
   old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults
   to 0.1.
+- New **Model Lines in Legend** switch in the Lines tab lists the linear
+  model, best fit, and custom model lines in the legend. It is off by
+  default. While it is off, a line drawn for a **Color By** group hides
+  and shows with that group’s legend entry on click.
 - [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md)
   takes an optional `fig.fn`, a `function(fig, input, isolate_fn)` that
   a wrapper module uses to add layers or annotations to the scatter
   figure, or to set axis title text, before the figure is finalised.
-  What it adds reaches the rendered plot, manual-edit persistence and
+  What it adds reaches the rendered plot, manual-edit persistence, and
   the source download (e.g. sciVizModules’ PCA biplot draws its loading
   arrows and % variance axis titles this way).
 
 #### Helpers and exported functions
+
+- New
+  [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
+  applies the uniform styling inputs (titles, axes, reference lines, the
+  modebar, shape drawing, and the legend) to a module’s figure in one
+  call, the second of the modules’ two steps. A wrapper’s `fig.fn` can
+  run in it.
+
+- [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
+  takes a `track` function, called with the id of every input read
+  through the wrapper it returns. The modules’ cached plot step keys its
+  cache on those ids.
+
+- [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md)
+  sends the browser only the new layout when nothing else about the
+  figure, including its `layout.uirevision`, changed since the last
+  render, and cancels the render, so it must be the last call in
+  [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html).
+  `options(VizModules.layout.updates = FALSE)` always sends the whole
+  figure.
+
+- [`get_documentation()`](https://j-andrews7.github.io/VizModules/reference/get_documentation.md)
+  reads each package’s help pages once per session from the Rd database,
+  rather than re-parsing them through roxygen2 for every parameter,
+  which took most of the time a module’s settings panel took to build.
+  Rd markup becomes plain text, and co-documented parameters (`y_min`
+  and `y_max`, say) now get their description. The roclang dependency is
+  gone.
+
+- [`dittoViz_scatterPlotServer()`](https://j-andrews7.github.io/VizModules/reference/dittoViz_scatterPlotServer.md)’s
+  `fig.fn` now runs in the figure’s styling step, still after the legend
+  is styled and before the axis titles become annotations. The plot
+  under it is cached but this step is not, so `fig.fn` can read any of a
+  wrapper’s reactives.
 
 - [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)
   select fields can take `multiple = TRUE`, and report a character
@@ -235,10 +307,19 @@ The one where we fix all the wonkiness with extending modules
 
 #### `ComplexHeatmap`
 
+- **Security:** A **Row Title** or **Column Title** containing `{...}`
+  or `@{...}` is now drawn as typed. On a split axis,
+  [`ComplexHeatmap::Heatmap()`](https://rdrr.io/pkg/ComplexHeatmap/man/Heatmap.html)
+  ran it as R code on the server.
+- The heatmap opens faster, and no longer slows down the longer an app
+  runs. Each heatmap kept a reference to the whole Shiny session, which
+  was pretty stupid in hindsight. It also drew the heatmap 4 to 6 times
+  on opening, as each input and colour picker reported the value already
+  in use.
 - The
   [`ComplexHeatmap_HeatmapApp()`](https://j-andrews7.github.io/VizModules/reference/ComplexHeatmap_HeatmapApp.md)
   example no longer fails where `ComplexHeatmap`,
-  `InteractiveComplexHeatmap` or `circlize` is not installed, as on
+  `InteractiveComplexHeatmap`, or `circlize` is not installed, as on
   CRAN’s r-oldrel macOS check machines.
 
 #### `dumbbellPlot` and `linePlot`
@@ -267,6 +348,14 @@ The one where we fix all the wonkiness with extending modules
 - Groups are coloured by name, so a factor level with no points (left by
   filtering the data table, or one a wrapper keeps for its colour
   picker) no longer shifts the colours of the levels after it.
+
+#### `scatterPlot` and `yPlot`
+
+- With both a colour and a **Shape By** column, the legend now has a
+  section for each, as ggplot2 draws it, instead of ggplotly’s one entry
+  per combination (“(Gadgets,North)”, …). Clicking an entry hides every
+  point of that level, and double-clicking one shows only its level. The
+  legend’s title inputs style the section titles too.
 
 #### Helpers and exported functions
 

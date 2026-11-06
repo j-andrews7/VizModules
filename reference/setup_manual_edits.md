@@ -53,6 +53,19 @@ with components:
   holding the most recently rendered figure, used to map relayout
   annotation indices to stable, rebuild-proof keys.
 
+- `sent`:
+
+  An environment recording the figure last sent to the browser, so a
+  render that changes only its layout sends just that.
+
+- `refresh`:
+
+  A
+  [`shiny::reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)
+  the browser bumps, through the `plot.refresh` input, when it cannot
+  apply a layout-only update, which makes the next render send the whole
+  figure.
+
 ## Details
 
 Call `setup_manual_edits()` **once**, near the top of your module's

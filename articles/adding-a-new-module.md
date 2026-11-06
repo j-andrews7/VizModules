@@ -285,6 +285,68 @@ a data column named like one of your arguments (`y`, say) masks it.
 Resolve what the verb needs into local variables before calling it, and
 test with a data frame whose columns are literally named `x` and `y`.
 
+## Drawing the Plot Once, Styling It Often
+
+Most of a module’s inputs only style the figure: titles, fonts, ticks,
+gridlines, reference lines, the modebar and the legend. Drawing the plot
+itself (a ggplot, converted by
+[`ggplotly()`](https://rdrr.io/pkg/plotly/man/ggplotly.html)) is the
+expensive part, so the modules do the two in separate steps, and a
+styling change never redraws the plot.
+
+Put everything that changes what is drawn in a function of `isolate_fn`,
+and hand it to `.cached_structure()`. It caches what the function
+returns, keyed on the data, the reactive values named in `extra`, and
+every input the function reads, so going back to settings already drawn
+(toggling an option back, Reset) re-uses the plot:
+
+``` r
+
+draw_myPlot <- function(isolate_fn) {
+    p <- MyPlotFn(data(), x = isolate_fn(input$x.data), group_by = isolate_fn(input$group.by))
+    fig <- ggplotly(p)
+    list(fig = .ensure_built(fig), facet.by = NULL)
+}
+base_myPlot <- .cached_structure(
+    draw_myPlot, input, session, data, params = params,
+    extra = function() list(palette_store())
+)
+```
+
+Apply the uniform styling inputs to it in `generate_myPlot`, which the
+render and the source download read:
+
+``` r
+
+generate_myPlot <- reactive({
+    isolate_fn <- setup_auto_update_logic(input, params)
+    base <- base_myPlot()
+    apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by)
+})
+```
+
+Three rules keep the cache honest:
+
+- **Read every input as `isolate_fn(input$key)`.** That is how the cache
+  learns which inputs the plot depends on. A wrapped read such as
+  `isolate_fn(as.numeric(input$size))` cannot be recognised, so the
+  input would be missing from the key and the plot would go stale.
+  Convert outside the call.
+- **Name every other reactive the function reads in `extra`**:
+  axis-limit and colour stores, the selection, a debounced text input.
+- **No side effects.** A cache hit skips the function, so it must not
+  show notifications or write
+  [`reactiveVal()`](https://rdrr.io/pkg/shiny/man/reactiveVal.html)s.
+  Return anything else the module needs (a stats table, notes to show)
+  in the list; `.structure_note()` and `.structure_notifier()` show
+  notes from the styling step, and the built-in Box and yPlot modules
+  are worked examples.
+
+Anything drawn over the plot that depends on its panels (stat brackets,
+fit lines, marginal plots) belongs in the cached function. Reference
+lines and the other uniform styling are applied afterwards and skip
+marginal panels on their own.
+
 ## Supporting Reactive Defaults
 
 An entry in `defaults` may be a
@@ -303,17 +365,17 @@ build the parameter store:
 params <- setup_reactive_defaults(defaults, input, session)
 ```
 
-Pass that store to
+Pass that store to `.cached_structure()` and to
 [`setup_auto_update_logic()`](https://j-andrews7.github.io/VizModules/reference/setup_auto_update_logic.md)
-inside your generate reactive:
+in your generate reactive, as above. The `isolate_fn` each gives you
+then resolves store-backed reads:
 
 ``` r
 
-generate_myPlot <- reactive({
-    isolate_fn <- setup_auto_update_logic(input, params)
+draw_myPlot <- function(isolate_fn) {
     ...
     main = isolate_fn(input$main)
-})
+}
 ```
 
 Easy.
@@ -588,7 +650,7 @@ In your
 [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html),
 pass the freshly built figure through
 [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md)
-immediately before returning it:
+as the last step, returning what it returns:
 
 ``` r
 
@@ -608,7 +670,10 @@ drag;
 [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md)
 tags the figure with the event source, restores any captured edits,
 records the figure for stable annotation keying, and re-attaches the
-colorbar listener.
+colorbar listener. When nothing but the layout changed since the figure
+last sent, it sends the browser only the new layout and ends the render
+there, so a styling change never re-sends the plot’s data; that is why
+it must come last.
 
 Edits are matched to annotations by a content-derived key, so they
 survive even when annotations are added, removed, or reordered between
@@ -619,7 +684,7 @@ rebuilds (e.g. when statistical brackets or reference labels appear).
 | Function | Purpose |
 |----|----|
 | [`setup_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/setup_manual_edits.md) | Create the edit store and register the relayout/colorbar capture observers (call **once**, near the top of the server) |
-| [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md) | Tag the event source, restore captured edits, record the figure, and attach the colorbar listener (call in [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html), just before returning) |
+| [`finalize_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/finalize_manual_edits.md) | Tag the event source, restore captured edits, record the figure, attach the colorbar listener, and send only the layout when only it changed (the last call in [`renderPlotly()`](https://rdrr.io/pkg/plotly/man/plotly-shiny.html)) |
 | [`reset_manual_edits()`](https://j-andrews7.github.io/VizModules/reference/reset_manual_edits.md) | Discard every captured edit (call from the module’s Reset observer) |
 
 These functions are exported, so the same pattern works from a custom

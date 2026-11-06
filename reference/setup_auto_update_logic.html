@@ -65,7 +65,7 @@ expressions or passes them through unchanged.</p>
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setup_auto_update_logic</span><span class="op">(</span><span class="va">input</span>, params <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">setup_auto_update_logic</span><span class="op">(</span><span class="va">input</span>, params <span class="op">=</span> <span class="cn">NULL</span>, track <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -83,14 +83,22 @@ or <code>NULL</code>. When supplied, an <code>input$&lt;key&gt;</code> read whos
 store resolves from the store instead of the client input, so a parameter
 driven by the parent app updates in a single render.</p></dd>
 
+
+<dt id="arg-track">track<a class="anchor" aria-label="anchor" href="#arg-track"></a></dt>
+<dd><p>Optional function, or <code>NULL</code>. When supplied, it is called with the
+id of every <code>input$&lt;key&gt;</code> read through the returned wrapper, so a caller can
+tell which inputs an expression depends on (the modules' cached plot step
+keys its cache on them).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A function that wraps reactive expressions. With <code>params = NULL</code> this is
-<code>identity</code> if auto-update is enabled (expressions will be reactive), or <code>isolate</code>
-if auto-update is disabled (expressions will not trigger reactivity). With a
-store supplied it is a wrapper with the same isolation semantics that additionally
-redirects store-backed <code>input$&lt;key&gt;</code> reads.</p>
+    <p>A function that wraps reactive expressions. With <code>params</code> and <code>track</code>
+both <code>NULL</code> this is <code>identity</code> if auto-update is enabled (expressions will be
+reactive), or <code>isolate</code> if auto-update is disabled (expressions will not
+trigger reactivity). Otherwise it is a wrapper with the same isolation
+semantics that additionally redirects store-backed <code>input$&lt;key&gt;</code> reads and
+reports the ids read to <code>track</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
