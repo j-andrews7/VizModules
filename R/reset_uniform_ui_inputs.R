@@ -243,6 +243,42 @@ reset_legend_inputs <- function(session, defaults = NULL) {
 }
 
 
+#' Reset uniform Color Scale inputs to defaults
+#'
+#' Resets the colour scale inputs created by [uniform_colorscale_inputs_ui()] back
+#' to their default values. The picker goes back to the colours and preset it was
+#' built with, so the same `defaults` must reach both.
+#'
+#' @param session The Shiny session object.
+#' @param defaults A named list of default values. When provided, inputs reset
+#'   to these values rather than hardcoded fallbacks. Typically the same list
+#'   passed to the UI function.
+#'
+#' @return Called for side effects; returns `invisible(NULL)`.
+#'
+#' @importFrom shiny updateNumericInput updateTextInput
+#' @importFrom shinyWidgets updateMaterialSwitch
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' \dontrun{
+#' # Call inside a module server's observeEvent(input$reset, ...) block:
+#' reset_colorscale_inputs(session, defaults)
+#' }
+reset_colorscale_inputs <- function(session, defaults = NULL) {
+    updateMultiColorPicker(session, "colorscale.colors", reset = TRUE)
+    updateMaterialSwitch(session, "colorscale.reverse",
+        value = get_default(defaults, "colorscale.reverse", FALSE, is.logical))
+    for (id in c("colorscale.min", "colorscale.mid", "colorscale.max")) {
+        updateNumericInput(session, id, value = get_default(defaults, id, NA, is.numeric))
+    }
+    updateTextInput(session, "colorbar.title",
+        value = get_default(defaults, "colorbar.title", "Value", is.character))
+    invisible(NULL)
+}
+
+
 #' Reset uniform Annotation inputs to defaults
 #'
 #' Resets the point highlighting and annotation inputs created by

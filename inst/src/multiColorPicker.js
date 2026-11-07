@@ -342,7 +342,7 @@
         : Object.keys(value || {}).map((key) => ({ name: key, value: value[key] }));
 
       normalized.forEach((item) => {
-        const row = el.querySelector(`.mc-color-row[data-group='${item.name}']`);
+        const row = el.querySelector(`.mc-color-row[data-group="${CSS.escape(item.name)}"]`);
         if (row) setRowColor(row, item.value, false);
       });
     },

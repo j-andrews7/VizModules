@@ -45,6 +45,8 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### Helpers and exported functions
 
+* New `uniform_colorscale_inputs_ui()`, `reset_colorscale_inputs()`, and `resolve_colorscale()` give a figure with a colorbar, such as a plotly heatmap, the same controls everywhere: five colour stops with continuous presets, reverse, limits and a midpoint, and the colorbar title. A scale set on `layout.coloraxis` changes without redrawing the plot.
+* New `mark_overlay_axes()` exempts the axes of panels drawn beside a plot (annotation strips, gene tracks) from the shared styling, so a custom figure with hand-set domains can use `apply_uniform_styling()`.
 * New `apply_uniform_styling()` applies the uniform styling inputs (titles, axes, reference lines, the modebar, shape drawing, and the legend) to a module's figure in one call, the second of the modules' two steps. A wrapper's `fig.fn` can run in it. Its `ggplot.axis.styling` and `legend.position` arguments suit a figure not built from ggplot, and `apply_legend_inputs()` takes a `position`.
 * New `cached_structure()` caches a module's plot step, keyed on the data and the inputs it reads, so a custom module can split drawing from styling as the built-in modules do.
 * New `auto_webgl()` and its `webgl_input()` toggle draw a plot's points with WebGL once there are enough of them. With `overlays = TRUE`, unfilled line traces switch too, so lines drawn over the points stay on top.
@@ -113,6 +115,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 ### Helpers and exported functions
 
+* `multiColorPicker()` no longer fails to set a colour for a group name containing an apostrophe.
 * `updateMultiDynamicInput()` now sets rows given as a named list, the shape `multiDynamicInput()` itself reports. It sent them as a JSON object the browser could not read, which emptied the input and left the server on its old value. This is what **Reset** does for the scatter plot's default trajectories and for a `ComplexHeatmap` `row_annotations` default.
 * `apply_highlight_styling()`, `create_highlight_annotations()`, and `create_selected_annotations()` now find their points in a `ggplotly(tooltip = "text")` figure, whose hover text breaks its lines with `<br />` and can be one string for a whole trace.
 

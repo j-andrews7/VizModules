@@ -202,7 +202,48 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
     fig$x$layout <- layout
     fig$x$data <- c(fig$x$data, new.traces)
     # Styling applied afterwards (apply_uniform_styling()) leaves these alone.
-    fig$x$.vizmodules_overlay_axes <- unique(c(fig$x$.vizmodules_overlay_axes, overlay.axes))
+    mark_overlay_axes(fig, overlay.axes)
+}
+
+
+#' Exempt a figure's overlay axes from the shared styling
+#'
+#' Marks axes as belonging to panels drawn beside the main plot, such as marginal
+#' distributions, annotation strips, or gene tracks. [apply_uniform_styling()] then
+#' leaves them as they were drawn: the Axes tab's fonts, ticks, gridlines, and lines
+#' are not applied to them, reference lines are not drawn on them, and they do not
+#' count as facets, so the plot's own axis titles stay draggable. This is the
+#' approach for a figure built with hand-set axis domains, where only the primary
+#' `xaxis` and `yaxis` follow the Axes tab.
+#'
+#' Link an overlay panel to the plot with `matches`, as [add_marginal_plots()] does,
+#' so it zooms and pans with it.
+#'
+#' @param fig A plotly figure, already built with [plotly::plotly_build()].
+#' @param axes Character vector of layout axis names (`"xaxis2"`, `"yaxis3"`), not
+#'   trace references (`"x2"`, `"y3"`).
+#'
+#' @return The figure, with `axes` added to any axes already marked.
+#'
+#' @seealso [add_marginal_plots()], [apply_uniform_styling()]
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly()
+#' fig <- plotly::add_trace(fig, x = 1:3, y = 1:3, type = "scatter", mode = "lines")
+#' fig <- plotly::add_trace(fig,
+#'     x = 1:3, y = 3:1, type = "scatter", mode = "lines", xaxis = "x2", yaxis = "y2"
+#' )
+#' fig <- plotly::layout(fig,
+#'     xaxis = list(domain = c(0, 1)), yaxis = list(domain = c(0, 0.8)),
+#'     xaxis2 = list(domain = c(0, 1), matches = "x", anchor = "y2"),
+#'     yaxis2 = list(domain = c(0.85, 1))
+#' )
+#' fig <- plotly::plotly_build(fig)
+#' mark_overlay_axes(fig, c("xaxis2", "yaxis2"))
+mark_overlay_axes <- function(fig, axes) {
+    fig$x$.vizmodules_overlay_axes <- unique(c(fig$x$.vizmodules_overlay_axes, axes))
     fig
 }
 

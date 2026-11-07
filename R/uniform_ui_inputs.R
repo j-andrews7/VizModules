@@ -907,6 +907,97 @@ uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
 }
 
 
+#' Generate uniform Color Scale input UI
+#'
+#' Creates a standardized tagList of the inputs that set a continuous colour scale,
+#' for a plotly figure with a colorbar such as a heatmap:
+#'
+#' - `colorscale.colors` - The five colour stops, lowest value first, as a
+#'   [multiColorPicker()] (UI: "Color Scale", default: the "RdYlBu" preset). In
+#'   `defaults`, five colours, named by stop or in order
+#' - `colorscale.palette` - The preset selected, one of "RdYlBu", "Jet",
+#'   "Blue-White-Red", "Viridis", "Magma", or "Cividis". Set in `defaults` only
+#' - `colorscale.reverse` - Run the colours from high to low (UI: "Reverse Colors", default: FALSE)
+#' - `colorscale.min` - Value at the lowest colour (UI: "Scale Min", default: NA, the data's minimum)
+#' - `colorscale.mid` - Value at the middle colour (UI: "Scale Mid", default: NA, the centre of the limits)
+#' - `colorscale.max` - Value at the highest colour (UI: "Scale Max", default: NA, the data's maximum)
+#' - `colorbar.title` - Title of the colorbar (UI: "Colorbar Title", default: "Value")
+#'
+#' Pass the inputs to [resolve_colorscale()], and restore them with
+#' [reset_colorscale_inputs()]. The picker's five stops are fixed, so it needs no
+#' `renderUI()` and no [setup_group_colors()] store: read it directly, as
+#' `isolate_fn(input$colorscale.colors)`.
+#'
+#' The colorbar's fonts and visibility follow the Legend tab, through
+#' [apply_legend_styling()].
+#'
+#' @param ns A namespace function, typically created by `NS(id)`.
+#' @param defaults A named list of default values for the inputs.
+#'
+#' @return A `tagList` containing the colour scale input UI elements.
+#'
+#' @importFrom shiny numericInput tagList textInput
+#' @importFrom shinyBS tipify
+#' @importFrom shinyWidgets materialSwitch
+#'
+#' @seealso [resolve_colorscale()], [reset_colorscale_inputs()]
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' ns <- shiny::NS("plot1")
+#' uniform_colorscale_inputs_ui(ns)
+#' uniform_colorscale_inputs_ui(ns, defaults = list(
+#'     colorscale.palette = "Viridis", colorscale.min = 0, colorscale.max = 1,
+#'     colorbar.title = "Beta value"
+#' ))
+uniform_colorscale_inputs_ui <- function(ns, defaults = NULL) {
+    tip_opts <- list(container = "body")
+    limit <- function(id, label, tip) {
+        tipify(
+            numericInput(ns(id), label, value = get_default(defaults, id, NA, is.numeric)),
+            tip,
+            placement = "top", options = tip_opts
+        )
+    }
+    tagList(
+        # In a tagList of its own, or organize_inputs() cannot tell these inputs are a
+        # group, and stacks them in one cell.
+        tagList(multiColorPicker(ns("colorscale.colors"), "Color Scale",
+            groups = .colorscale_stops,
+            palette_options = .colorscale_presets,
+            selected_palette = get_default(
+                defaults, "colorscale.palette", names(.colorscale_presets)[1],
+                function(x) x %in% names(.colorscale_presets)
+            ),
+            colors = get_default(
+                defaults, "colorscale.colors", NULL,
+                function(x) is.character(x) && length(x) == length(.colorscale_stops)
+            ),
+            compact = TRUE
+        )),
+        tipify(
+            materialSwitch(ns("colorscale.reverse"), "Reverse Colors",
+                value = get_default(defaults, "colorscale.reverse", FALSE, is.logical),
+                status = "success"
+            ),
+            "Run the colors from the highest value to the lowest.",
+            placement = "top", options = tip_opts
+        ),
+        limit("colorscale.min", "Scale Min", "Value at the lowest color. Empty for the minimum of the data."),
+        limit("colorscale.mid", "Scale Mid", "Value at the middle color. Empty for the center of the limits."),
+        limit("colorscale.max", "Scale Max", "Value at the highest color. Empty for the maximum of the data."),
+        tipify(
+            textInput(ns("colorbar.title"), "Colorbar Title",
+                value = get_default(defaults, "colorbar.title", "Value", is.character)
+            ),
+            "Title of the colorbar.",
+            placement = "top", options = tip_opts
+        )
+    )
+}
+
+
 #' Generate uniform Annotation input UI
 #'
 #' Creates a standardized tagList of the point highlighting and annotation

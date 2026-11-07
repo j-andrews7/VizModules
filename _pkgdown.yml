@@ -202,6 +202,7 @@ reference:
     desc: "Standardised input builders and reset functions shared across modules."
     contents:
       - uniform_axes_inputs_ui
+      - uniform_colorscale_inputs_ui
       - uniform_legend_inputs_ui
       - uniform_lines_inputs_ui
       - uniform_plotly_inputs_ui
@@ -211,6 +212,7 @@ reference:
       - uniform_annotation_inputs_ui
       - reset_annotation_inputs
       - reset_axes_inputs
+      - reset_colorscale_inputs
       - reset_legend_inputs
       - reset_lines_inputs
       - reset_plotly_inputs
@@ -236,6 +238,7 @@ reference:
       - add_plot_config
       - add_reference_lines
       - add_vlines
+      - mark_overlay_axes
       - adjusted_axis_label
       - apply_axis_title_to_annotations
       - reset_axis_title_text
@@ -301,6 +304,7 @@ reference:
       - default_palettes
       - flatten_palette_options
       - reset_group_colors
+      - resolve_colorscale
       - resolve_palette
       - setup_group_colors
 

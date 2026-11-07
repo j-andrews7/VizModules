@@ -8,6 +8,7 @@ automatically. Each takes `ns` and a `defaults` list.
 |---|---|---|
 | `uniform_axes_inputs_ui(ns, defaults, include.rotate = FALSE, include.flip = FALSE)` | Font, axis border, gridline, tick, facet styling | `reset_axes_inputs(session, defaults)` |
 | `uniform_legend_inputs_ui(ns, defaults)` | Legend visibility, font family and colour, title and entry label font sizes (apply with `apply_legend_inputs(fig, input, isolate_fn)`) | `reset_legend_inputs(session, defaults)` |
+| `uniform_colorscale_inputs_ui(ns, defaults)` | A continuous colour scale: five stops with presets, reverse, min, mid and max, and the colorbar title (resolve with `resolve_colorscale()` and set it on `layout.coloraxis`, so a colour change is layout-only) | `reset_colorscale_inputs(session, defaults)` |
 | `uniform_lines_inputs_ui(ns, defaults, include.fit.lines = FALSE)` | Horizontal, vertical, diagonal reference lines | `reset_lines_inputs(session, include.fit.lines, defaults)` |
 | `uniform_plotly_inputs_ui(ns, defaults)` | Download buttons, margins, subplot spacing, draw-shape styling | `reset_plotly_inputs(session, defaults)` |
 | `uniform_annotation_inputs_ui(ns, defaults, choices, annotate.note)` | Highlighting and labelling individual data points | `reset_annotation_inputs(session, defaults, choices)` |
@@ -33,6 +34,7 @@ reset start from. `reset_stats_inputs()` takes the pairs currently on offer, res
 | `default_group_colors(defaults, key)` | The validated mapping to seed a `multiColorPicker()` with inside `renderUI()` |
 | `reset_group_colors(session, key, defaults, groups, default_palette)` | Restores a group colour picker on Reset |
 | `flatten_palette_options(default_palettes()$choices)` | Flat palette-name lookup |
+| `mark_overlay_axes(fig, axes)` | Exempts the axes of panels drawn beside the plot from `apply_uniform_styling()`, for a figure with hand-set domains |
 | `reset_manual_edits(store)` | Discards dragged legends/annotations/titles on Reset |
 | `with_stable_seed(expr)` | Builds a plot under a fixed seed, so jitter layers do not move on every rebuild |
 | `as_plotted(df, cols, adjustment, adj.fxn)`, `adjusted_values()`, `adjustment_fn()` | The values the plot draws, for anything drawn over it; `adjustment_fn()` is what to pass dittoViz as `*.adj.fxn` |

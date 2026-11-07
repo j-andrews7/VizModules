@@ -48,6 +48,18 @@ test_that("multiColorPicker respects selected palette and manual overrides", {
     expect_identical(initial[["C"]], "#AABBCC")
 })
 
+test_that("the widget escapes a group name it looks up by selector", {
+    js <- readLines(
+        system.file("src", "multiColorPicker.js", package = "VizModules"),
+        warn = FALSE
+    )
+
+    # A name holding a quote (Crohn's) would otherwise be an invalid selector.
+    lookups <- grep("data-group=", js, value = TRUE)
+    expect_length(lookups, 1)
+    expect_match(lookups, "CSS.escape(item.name)", fixed = TRUE)
+})
+
 test_that("the widget waits out the colour dialog but reports one-shot actions", {
     js <- readLines(
         system.file("src", "multiColorPicker.js", package = "VizModules"),
