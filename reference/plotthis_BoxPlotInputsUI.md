@@ -518,37 +518,37 @@ library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="9247">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="BoxPlot-BoxPlotTabsetPanel" data-tabsetid="6198">
 #>     <li class="active">
-#>       <a href="#tab-9247-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-6198-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-6198-2" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
+#>       <a href="#tab-6198-3" data-toggle="tab" data-bs-toggle="tab" data-value="Highlight">Highlight</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-6198-4" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-6198-5" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-6198-6" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-6198-7" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-6198-8" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-9247-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-6198-9" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="9247">
-#>     <div class="tab-pane active" data-value="Data" id="tab-9247-1">
+#>   <div class="tab-content" data-tabsetid="6198">
+#>     <div class="tab-pane active" data-value="Data" id="tab-6198-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1702637">
@@ -600,7 +600,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-9247-2">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-6198-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3293803">
@@ -681,7 +681,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Highlight" id="tab-9247-3">
+#>     <div class="tab-pane" data-value="Highlight" id="tab-6198-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4497768">
@@ -713,7 +713,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-9247-4">
+#>     <div class="tab-pane" data-value="Facet" id="tab-6198-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9528096">
@@ -773,7 +773,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-9247-5">
+#>     <div class="tab-pane" data-value="Stats" id="tab-6198-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify40820">
@@ -904,7 +904,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-9247-6">
+#>     <div class="tab-pane" data-value="Legend" id="tab-6198-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1833202">
@@ -948,7 +948,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-9247-7">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-6198-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1025,7 +1025,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-9247-8">
+#>     <div class="tab-pane" data-value="Axes" id="tab-6198-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -1220,7 +1220,7 @@ plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-9247-9">
+#>     <div class="tab-pane" data-value="Lines" id="tab-6198-9">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3961379">

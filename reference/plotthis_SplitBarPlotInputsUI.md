@@ -376,34 +376,34 @@ library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="5921">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="splitBarPlot-SplitBarPlotTabsetPanel" data-tabsetid="4109">
 #>     <li class="active">
-#>       <a href="#tab-5921-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4109-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4109-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-4109-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
+#>       <a href="#tab-4109-4" data-toggle="tab" data-bs-toggle="tab" data-value="Adjustments">Adjustments</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-4109-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4109-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4109-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-5921-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4109-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="5921">
-#>     <div class="tab-pane active" data-value="Data" id="tab-5921-1">
+#>   <div class="tab-content" data-tabsetid="4109">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4109-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1761117">
@@ -434,7 +434,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-5921-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4109-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1813332">
@@ -494,7 +494,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-5921-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-4109-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div id="splitBarPlot-palette.selection" class="shiny-html-output"></div>
@@ -596,7 +596,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Adjustments" id="tab-5921-4">
+#>     <div class="tab-pane" data-value="Adjustments" id="tab-4109-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2635015">
@@ -614,7 +614,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-5921-5">
+#>     <div class="tab-pane" data-value="Legend" id="tab-4109-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8749582">
@@ -658,7 +658,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-5921-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4109-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -735,7 +735,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-5921-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4109-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -930,7 +930,7 @@ plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-5921-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4109-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8427399">

@@ -39,7 +39,7 @@ Jared Andrews
 
 ``` r
 webgl_input(shiny::NS("plot"))
-#> <div class="form-group shiny-input-container" id="tipify2125141">
+#> <div class="form-group shiny-input-container" id="tipify5801826">
 #>   <div class="checkbox">
 #>     <label>
 #>       <input id="plot-webgl" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
@@ -47,9 +47,9 @@ webgl_input(shiny::NS("plot"))
 #>     </label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2125141', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5801826', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});</script>
 webgl_input(shiny::NS("plot"), defaults = list(webgl = FALSE))
-#> <div class="form-group shiny-input-container" id="tipify2488301">
+#> <div class="form-group shiny-input-container" id="tipify3856759">
 #>   <div class="checkbox">
 #>     <label>
 #>       <input id="plot-webgl" type="checkbox" class="shiny-input-checkbox"/>
@@ -57,5 +57,5 @@ webgl_input(shiny::NS("plot"), defaults = list(webgl = FALSE))
 #>     </label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2488301', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3856759', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});</script>
 ```

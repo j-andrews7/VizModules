@@ -130,6 +130,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/linetype_to_dash.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/list_model_backends.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/main_title_input_ids.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/mark_overlay_axes.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/merge_annotation_sets.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/model_backends.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/moduleGalleryApp.html</loc></url>
@@ -192,12 +193,14 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_annotation_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_axes_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_axis_title_text.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/reset_colorscale_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_group_colors.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_legend_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_lines_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_manual_edits.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_plotly_inputs.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/reset_stats_inputs.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/resolve_colorscale.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/resolve_column_targets.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/resolve_facet_layout.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/resolve_facet_sharing.html</loc></url>
@@ -220,6 +223,7 @@
 <url><loc>https://j-andrews7.github.io/VizModules/reference/toggle_input_cell.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_annotation_inputs_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.html</loc></url>
+<url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_colorscale_inputs_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_lines_inputs_ui.html</loc></url>
 <url><loc>https://j-andrews7.github.io/VizModules/reference/uniform_plotly_inputs_ui.html</loc></url>

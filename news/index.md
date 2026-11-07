@@ -134,6 +134,23 @@ The one where we fix all the wonkiness with extending modules
 #### Helpers and exported functions
 
 - New
+  [`uniform_colorscale_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_colorscale_inputs_ui.md),
+  [`reset_colorscale_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_colorscale_inputs.md),
+  and
+  [`resolve_colorscale()`](https://j-andrews7.github.io/VizModules/reference/resolve_colorscale.md)
+  give a figure with a colorbar, such as a plotly heatmap, the same
+  controls everywhere: five colour stops with continuous presets,
+  reverse, limits and a midpoint, and the colorbar title. A scale set on
+  `layout.coloraxis` changes without redrawing the plot.
+
+- New
+  [`mark_overlay_axes()`](https://j-andrews7.github.io/VizModules/reference/mark_overlay_axes.md)
+  exempts the axes of panels drawn beside a plot (annotation strips,
+  gene tracks) from the shared styling, so a custom figure with hand-set
+  domains can use
+  [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md).
+
+- New
   [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
   applies the uniform styling inputs (titles, axes, reference lines, the
   modebar, shape drawing, and the legend) to a module’s figure in one
@@ -380,6 +397,9 @@ The one where we fix all the wonkiness with extending modules
 
 #### Helpers and exported functions
 
+- [`multiColorPicker()`](https://j-andrews7.github.io/VizModules/reference/multiColorPicker.md)
+  no longer fails to set a colour for a group name containing an
+  apostrophe.
 - [`updateMultiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/updateMultiDynamicInput.md)
   now sets rows given as a named list, the shape
   [`multiDynamicInput()`](https://j-andrews7.github.io/VizModules/reference/multiDynamicInput.md)

@@ -351,6 +351,8 @@ Standardised input builders and reset functions shared across modules.
 
 - [`uniform_axes_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.md)
   : Generate uniform Axes input UI
+- [`uniform_colorscale_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_colorscale_inputs_ui.md)
+  : Generate uniform Color Scale input UI
 - [`uniform_legend_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_legend_inputs_ui.md)
   : Generate uniform Legend input UI
 - [`uniform_lines_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_lines_inputs_ui.md)
@@ -369,6 +371,8 @@ Standardised input builders and reset functions shared across modules.
   : Reset uniform Annotation inputs to defaults
 - [`reset_axes_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_axes_inputs.md)
   : Reset uniform axes inputs to defaults
+- [`reset_colorscale_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_colorscale_inputs.md)
+  : Reset uniform Color Scale inputs to defaults
 - [`reset_legend_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_legend_inputs.md)
   : Reset uniform Legend inputs to defaults
 - [`reset_lines_inputs()`](https://j-andrews7.github.io/VizModules/reference/reset_lines_inputs.md)
@@ -414,6 +418,8 @@ configuration.
   : Add reference lines to a plotly figure from Shiny inputs
 - [`add_vlines()`](https://j-andrews7.github.io/VizModules/reference/add_vlines.md)
   : Build vertical line shapes for a plotly figure
+- [`mark_overlay_axes()`](https://j-andrews7.github.io/VizModules/reference/mark_overlay_axes.md)
+  : Exempt a figure's overlay axes from the shared styling
 - [`adjusted_axis_label()`](https://j-andrews7.github.io/VizModules/reference/adjusted_axis_label.md)
   : Build an adjustment-aware axis label
 - [`apply_axis_title_to_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_axis_title_to_annotations.md)
@@ -551,6 +557,9 @@ Functions for managing color palettes.
 
 - [`reset_group_colors()`](https://j-andrews7.github.io/VizModules/reference/reset_group_colors.md)
   : Restore a group color picker to its default mapping
+
+- [`resolve_colorscale()`](https://j-andrews7.github.io/VizModules/reference/resolve_colorscale.md)
+  : Resolve a continuous colour scale for plotly
 
 - [`resolve_palette()`](https://j-andrews7.github.io/VizModules/reference/resolve_palette.md)
   : Resolve a color palette for plot groups

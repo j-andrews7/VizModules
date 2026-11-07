@@ -332,34 +332,34 @@ library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="7214">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="densityPlot-DensityPlotTabsetPanel" data-tabsetid="9887">
 #>     <li class="active">
-#>       <a href="#tab-7214-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-9887-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-9887-2" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
+#>       <a href="#tab-9887-3" data-toggle="tab" data-bs-toggle="tab" data-value="Aesthetics">Aesthetics</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
+#>       <a href="#tab-9887-4" data-toggle="tab" data-bs-toggle="tab" data-value="Rug">Rug</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-9887-5" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-9887-6" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-9887-7" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-7214-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-9887-8" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="7214">
-#>     <div class="tab-pane active" data-value="Data" id="tab-7214-1">
+#>   <div class="tab-content" data-tabsetid="9887">
+#>     <div class="tab-pane active" data-value="Data" id="tab-9887-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify7987365">
@@ -381,7 +381,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-7214-2">
+#>     <div class="tab-pane" data-value="Facet" id="tab-9887-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9098438">
@@ -441,7 +441,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Aesthetics" id="tab-7214-3">
+#>     <div class="tab-pane" data-value="Aesthetics" id="tab-9887-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify3712700">
@@ -464,7 +464,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Rug" id="tab-7214-4">
+#>     <div class="tab-pane" data-value="Rug" id="tab-9887-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify4785984">
@@ -499,7 +499,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-7214-5">
+#>     <div class="tab-pane" data-value="Legend" id="tab-9887-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2284658">
@@ -543,7 +543,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-7214-6">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-9887-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -620,7 +620,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-7214-7">
+#>     <div class="tab-pane" data-value="Axes" id="tab-9887-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
@@ -815,7 +815,7 @@ plotthis_DensityPlotInputsUI("densityPlot", mtcars)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-7214-8">
+#>     <div class="tab-pane" data-value="Lines" id="tab-9887-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7353102">
