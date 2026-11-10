@@ -10,6 +10,9 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
   * Plots now update in place wherever possible instead of being redrawn. Changing what is plotted still resets the view. This results in much snappier performance for styling changes.
   * Under the hood, each module draws its plot in a cached step keyed on the data and the inputs it reads, and applies the styling inputs to it in a second step; the adding-a-new-module vignette describes this pattern.
 
+* The Axes tab has new **X Axis Padding** and **Y Axis Padding** inputs that set the space between the data and the edges of the plot area, as a fraction of the data's extent at each end, so `0` makes an area or line plot fill it (#377). Blank keeps each plot's own padding, and an axis with its own limit inputs (the value axis of `BarPlot`, `BoxPlot`, `freqPlot`, `yPlot`, and `SplitBarPlot`) gets none. Changing it restyles the plot without redrawing it.
+* Tick labels no longer switch to scientific notation (`1e+05`) depending on which breaks an axis gets, and a new **Scientific Notation Ticks** switch in the Axes tab writes them as powers of ten when wanted (#379).
+
 * Colour, shape, group, and fill selectors no longer offer categorical columns with 50 or more levels (the `facet_check()` cap), such as IDs or gene names, which asked for one colour, shape, or group per row and would generally just break things (sciVizModules#16). Numeric columns stay where a selector draws them as a gradient, logical columns stay, and a column named in `defaults` is always offered. This covers the scatter plot's Color By, Shape By and Trajectory Group By; the yPlot's Group, Color and Shape By; `linePlot` and the `plotthis` Area, Bar, Box, Density and Histogram Group By; the Bar and SplitBar Fill By; `parallelCoordinatesPlot` Color By; and `radarPlot` Group. The new `discrete_choices()` builds these choices.
 
 ### `BarPlot`, `BoxPlot`, `freqPlot`, and `yPlot`
@@ -38,6 +41,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 * New **Marginals** tab draws the distribution of X above the plot and of Y to its right (#113). Each side can show any of a density, a histogram, and a rug plot, with one per **Color By** group.
   * Marginals are drawn from the plotted values, after any adjustment.
   * Marginals are not drawn on a split plot because that'd be a mess.
+  * **Show Marginal Axes** (off by default) shows the density or count axis of the density and histogram marginals (#378).
 * New **Min Point Size** and **Max Point Size** inputs set the size range a **Size By** column maps onto (#364). They replace **Point Size**, which a size column overrides, while one is set.
 * Trajectories are now picked rather than typed (#231). The Trajectory tab's **Trajectories** list takes one row per trajectory, each choosing, in order, the **Trajectory Group By** groups its path visits. In `defaults`, `add.trajectory.by.groups` takes a list of character vectors as dittoViz does, e.g. `list(c("A", "B"))`, and the old `"[A,B]"` text still works. **Trajectory Arrow Size** now defaults to 0.1.
 * New **Model Lines in Legend** switch in the Lines tab lists the linear model, best fit, and custom model lines in the legend. It is off by default. While it is off, a line drawn for a **Color By** group hides and shows with that group's legend entry on click.
@@ -69,7 +73,9 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
   * Error intervals: `error_bar_halfwidth()` works out the SD, SEM or 95% CI half-width `linePlot()` draws around a group's mean, so a module that summarises its own groups (over a numeric x, which linePlot's own summaries do not cover) can hand `linePlot()` matching bounds through `error.type = "columns"` (sciVizModules' pkConcentrationTime uses it; #371).
   * Size legend: `add_size_legend()` draws the circle size legend the DotPlot and scatter modules show in place of the one plotly drops (sciVizModules' dittoDotPlot uses it). It takes a `title` and rounds its labels to `digits`. Given the size scale's `limits` and `size.range`, its breaks span those limits and each circle is drawn at the size the scale gives it; otherwise the circles are read from the figure's markers. `breaks` picks the values to draw a circle for, such as round numbers, or leaves out the lower limit of a scale starting at size 0, whose circle would be empty. Its title sits just above the first circle, so a title of several lines no longer runs into a small one.
 
-* New `add_marginal_plots()` adds density, histogram and rug marginals to a single-panel plotly figure, given the plotted X and Y values and their groups. The scatter module's **Marginals** tab uses it (#113).
+* New `add_marginal_plots()` adds density, histogram and rug marginals to a single-panel plotly figure, given the plotted X and Y values and their groups, and with `show.axes = TRUE` shows their density or count axes. The scatter module's **Marginals** tab uses it (#113).
+
+* New `apply_axis_padding()` sets each axis' range to the extent of the data its traces draw, widened by a fraction at each end, and `apply_tick_notation()` sets whether numeric tick labels, including those ggplotly writes as fixed text, use scientific notation (#377, #379). `apply_uniform_styling()` applies both from the Axes tab, with `padding.axes` (and `include.padding` in `uniform_axes_inputs_ui()`) leaving out an axis that has its own limits.
 
 * `facet_check()` takes `max.levels` (default 50), so the cap on how many distinct values a facet or grouping column may have can be moved. The new `discrete_choices()` applies the same cap to a colour, shape, group or fill selector, adding logical columns and any column a caller names in `keep` (such as its `defaults` entry), as the built-in modules do.
 
@@ -85,6 +91,10 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 ### `AreaPlot`
 
 * **Facet By** keeps its `facet_check()` limit when X changes.
+
+### `BarPlot` and `SplitBarPlot`
+
+* The value axis now fits the bars as drawn on load and when the columns change, rather than leaving a lot of empty space due to improve pre-grouping addition & range-finding (#375). 
 
 ### `BoxPlot`
 
@@ -107,11 +117,16 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 ### `scatterPlot`
 
 * Trajectories now end in an arrowhead, which ggplotly dropped, and no longer stop the plot with an error while an axis adjustment is set (#231). The module now draws them itself, through the group medians of the plotted values, after any adjustment. On a split plot, each panel's path runs through that panel's own medians rather than repeating the whole data's.
+* With a **Size By** column, the colour and shape legend entries are now all one size, rather than each drawn at the size of its group's first point (#378).
 * Groups are coloured by name, so a factor level with no points (left by filtering the data table, or one a wrapper keeps for its colour picker) no longer shifts the colours of the levels after it.
 
 ### `scatterPlot` and `yPlot`
 
 * With both a colour and a **Shape By** column, the legend now has a section for each, as ggplot2 draws it, instead of ggplotly's one entry per combination ("(Gadgets,North)", ...). Clicking an entry hides every point of that level, and double-clicking one shows only its level. The legend's title inputs style the section titles too.
+
+### `SplitBarPlot`
+
+* The **Category Label Position** slider now runs in round steps of at most three decimals, rather than showing values with many decimals that make it look like nonsense.
 
 ### Helpers and exported functions
 

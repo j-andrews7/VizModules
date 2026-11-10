@@ -177,6 +177,12 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `axis.scientific` - Write numeric tick labels in scientific notation (UI: "Scientific Notation Ticks",
+#'   default: FALSE; when off they never switch to it). See [apply_tick_notation()]
+#' - `axis.padding.x` - Space between the data and the plot area's edges along X, as a fraction of the
+#'   data's extent at each end (UI: "X Axis Padding", default: NA = the plot's own). See [apply_axis_padding()]
+#' - `axis.padding.y` - Space between the data and the plot area's edges along Y, as a fraction of the
+#'   data's extent at each end (UI: "Y Axis Padding", default: NA = the plot's own). See [apply_axis_padding()]
 #' - `facet.title.font.size` - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 #' - `facet.title.font.color` - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 #' - `facet.title.font.family` - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
@@ -221,6 +227,9 @@
 #'   histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
 #' - `marginal.rug.width` - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
 #'   Shown while either marginal has a rug
+#' - `marginal.axes` - Show the density or count axis, with its ticks and labels, of each density and
+#'   histogram marginal (UI: "Show Marginal Axes", default: FALSE). Shown while either marginal has a
+#'   density or histogram
 #'
 #' Marginal plots show one distribution per Color By group, in the group's colour, or a single one in
 #' the Point color when the plot has no groups (including a numeric Color By). Like the fit lines, they
@@ -626,6 +635,10 @@ dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL
                 value = get_default(defaults, "marginal.rug.width", 1, is.numeric),
                 min = 0.1, step = 0.5
             ), "Line width of each rug tick, in pixels.",
+            placement = "top", options = list(container = "body")),
+            tipify(checkboxInput(ns("marginal.axes"), "Show Marginal Axes",
+                value = get_default(defaults, "marginal.axes", FALSE, is.logical)
+            ), "Show the density or count axis, with its ticks and labels, of the density and histogram marginals.",
             placement = "top", options = list(container = "body"))
         ),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),

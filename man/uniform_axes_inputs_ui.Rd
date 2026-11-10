@@ -8,7 +8,8 @@ uniform_axes_inputs_ui(
   ns,
   defaults = NULL,
   include.rotate = FALSE,
-  include.flip = FALSE
+  include.flip = FALSE,
+  include.padding = c("x", "y")
 )
 }
 \arguments{
@@ -21,6 +22,10 @@ x and y axes (e.g., horizontal bar plots). Default is FALSE.}
 
 \item{include.flip}{Logical; whether to include the "Flip" input for flipping
 the axis. Default is FALSE.}
+
+\item{include.padding}{Which of \code{"x"} and \code{"y"} get an axis padding input
+(\code{axis.padding.x}, \code{axis.padding.y}; see \code{\link[=apply_axis_padding]{apply_axis_padding()}}). Leave out
+an axis that has its own limit inputs. Default is both.}
 }
 \value{
 A \code{tagList} containing the axis input UI elements.
@@ -28,10 +33,20 @@ A \code{tagList} containing the axis input UI elements.
 \description{
 Creates a standardized tagList of axis-related inputs for use across plot modules.
 }
+\details{
+Alongside the fonts, lines, gridlines, and ticks, the inputs include
+\code{axis.scientific}, which writes numeric tick labels in scientific notation
+(off by default, so they never switch to it on their own; see
+\code{\link[=apply_tick_notation]{apply_tick_notation()}}), and \code{axis.padding.x}/\code{axis.padding.y}, the space
+between the data and the edges of the plot area as a fraction of the data's
+extent at each end (blank keeps the plot's own padding).
+}
 \examples{
 ns <- shiny::NS("plot")
 uniform_axes_inputs_ui(ns)
 uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
+# A plot with its own y-axis limit inputs: x padding only.
+uniform_axes_inputs_ui(ns, include.padding = "x")
 }
 \author{
 Jared Andrews Jacob Martin

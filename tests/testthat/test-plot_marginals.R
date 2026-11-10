@@ -197,3 +197,17 @@ test_that("marginals are WebGL-ready and add no build warnings", {
     types <- vapply(.marginal_traces_of(built), `[[`, character(1), "type")
     expect_true(all(types == "scattergl"))
 })
+
+test_that("show.axes shows the density and count axes only", {
+    bare <- .iris_marginals(top = c("density", "rug"))
+    shown <- .iris_marginals(top = c("density", "rug"), show.axes = TRUE)
+    overlay <- shown$x$.vizmodules_overlay_axes
+    expect_false(any(vapply(overlay, function(a) isTRUE(bare$x$layout[[a]]$showticklabels), logical(1))))
+
+    # One strip axis, the density's; the rug's and the value axis stay bare.
+    shows <- vapply(overlay, function(a) isTRUE(shown$x$layout[[a]]$showticklabels), logical(1))
+    expect_equal(sum(shows), 1)
+    dist_traces <- Filter(function(tr) identical(.axis_layout_name(tr$yaxis %||% "y"), overlay[shows]), shown$x$data)
+    expect_true(length(dist_traces) > 0)
+    expect_true(all(vapply(dist_traces, function(tr) identical(tr$fill, "tozeroy"), logical(1))))
+})

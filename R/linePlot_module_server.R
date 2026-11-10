@@ -427,6 +427,10 @@ linePlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL, defau
                 error.ribbon = isTRUE(isolate_fn(input$error.ribbon)),
                 error.ribbon.opacity = isolate_fn(input$error.ribbon.opacity)
             )
+            # Tick notation and the padding around the data, from the Axes tab.
+            fig <- apply_tick_notation(fig, scientific = isolate_fn(input$axis.scientific))
+            fig <- apply_axis_padding(fig, x = isolate_fn(input$axis.padding.x), y = isolate_fn(input$axis.padding.y))
+
             # Add reference lines
             fig <- add_reference_lines(fig,
                 hline.intercepts = isolate_fn(input$hline.intercepts),

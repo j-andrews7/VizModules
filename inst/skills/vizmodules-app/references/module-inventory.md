@@ -109,6 +109,7 @@ plot, with one lane per group. The other keys:
 - `marginal.density.adjust` (1): bandwidth multiplier.
 - `marginal.rug.height` (0.3): the rug's share of a side it shares with a density or histogram.
 - `marginal.rug.width` (1): line width of the rug ticks, in pixels.
+- `marginal.axes` (FALSE): show the density or count axis of each density and histogram strip.
 
 Each control shows only while a side draws what it adjusts. No marginals are drawn on a
 `split.by` plot or along an axis an `as.factor` adjustment makes categorical. Example:
@@ -158,6 +159,7 @@ the same keys in every module. Full lists are on their help pages —
 `?uniform_plotly_inputs_ui`. The ones you will reach for most:
 
 - Axes: `axis.title.font.size` (18), `title.font.size` (26), `axis.showline` (TRUE), `show.grid.x` / `show.grid.y` (TRUE), `axis.tickfont.size` (12), `axis.tickangle.x` (0)
+- Axes, padding and notation: `axis.padding.x` / `axis.padding.y` (NA = the plot's own padding; `0` makes the data fill the plot area), offered only for an axis without its own limit inputs (so x only on BarPlot, BoxPlot, freqPlot, and yPlot, y only on SplitBarPlot); `axis.scientific` (FALSE): tick labels in scientific notation
 - Legend: `legend.show` (TRUE), `legend.font.family` ("Arial"), `legend.font.color` ("#000000"), `legend.title.size` (14), `legend.text.size` (12)
 - Lines: `hline.intercepts`, `vline.intercepts`, `abline.slopes` — comma-separated strings, with matching `*.colors` / `*.widths` / `*.linetypes` / `*.opacities`
 - Plotly: `download.format`, `subplot.margin.x`, `subplot.margin.y`

@@ -181,6 +181,10 @@ ggplot's dodge, so plotly.js is not asked to dodge them
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{axis.scientific} - Write numeric tick labels in scientific notation (UI: "Scientific Notation Ticks",
+default: FALSE; when off they never switch to it). See \code{\link[=apply_tick_notation]{apply_tick_notation()}}
+\item \code{axis.padding.x} - Space between the data and the plot area's edges along X, as a fraction of the
+data's extent at each end (UI: "X Axis Padding", default: NA = the plot's own). See \code{\link[=apply_axis_padding]{apply_axis_padding()}}
 \item \code{legend.font.family} - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
 \item \code{legend.font.color} - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
 \item \code{legend.title.size} - Legend title font size (UI: "Legend Title Size", default: 14)

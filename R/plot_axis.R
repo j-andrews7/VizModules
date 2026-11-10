@@ -595,3 +595,364 @@ apply_render_margins <- function(fig, input) {
 }
 
 
+
+
+#' Set the notation of a figure's numeric tick labels
+#'
+#' Tick labels of large or small numbers can come out in scientific notation
+#' (`1e+05`) or not depending only on which breaks an axis happens to get, since
+#' a ggplot converted with [plotly::ggplotly()] carries the labels R's
+#' [format()] gave its breaks as fixed tick text. This sets the notation
+#' explicitly instead, for every x and y axis of the figure.
+#'
+#' Fixed tick text is rewritten only on axes whose labels are all numbers that
+#' match the tick positions (or are 10, 2, or e raised to them, for a log scale),
+#' so categorical axes, even ones whose categories look like numbers, and
+#' formatted labels (`"25%"`, `"$1,000"`) are left alone. With
+#' `scientific = FALSE`, only labels already in scientific notation are rewritten;
+#' with `TRUE`, every numeric label is written as a power of ten (1.5 times 10 to the 5th).
+#' Axes plotly labels itself get `exponentformat = "power"` when `scientific` is
+#' `TRUE`, and are otherwise left to plotly, whose default abbreviates large
+#' numbers (`100k`) rather than using scientific notation.
+#'
+#' Axes marked with [mark_overlay_axes()] are left alone.
+#'
+#' @param fig A plotly figure.
+#' @param scientific Logical. Whether numeric tick labels use scientific
+#'   notation. Default `FALSE`.
+#'
+#' @return The built plotly figure with its tick labels updated.
+#'
+#' @seealso [apply_uniform_styling()], which applies this from the Axes tab's
+#'   "Scientific Notation Ticks" input.
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' p <- ggplot2::ggplot(data.frame(x = c("a", "b"), y = c(1e5, 3e5)), ggplot2::aes(x, y)) +
+#'     ggplot2::geom_col()
+#' fig <- plotly::ggplotly(p)
+#' apply_tick_notation(fig)$x$layout$yaxis$ticktext
+#' apply_tick_notation(fig, scientific = TRUE)$x$layout$yaxis$ticktext
+apply_tick_notation <- function(fig, scientific = FALSE) {
+    if (is.null(fig)) {
+        return(fig)
+    }
+    scientific <- isTRUE(scientific)
+    fig <- .ensure_built(fig)
+
+    for (name in .styled_axis_names(fig)) {
+        ax <- fig$x$layout[[name]]
+        if (length(ax$ticktext)) {
+            nums <- .numeric_tick_labels(ax$ticktext, ax$tickvals)
+            if (is.null(nums)) {
+                next
+            }
+            if (scientific) {
+                fig$x$layout[[name]]$ticktext <- .power_labels(nums)
+            } else if (any(grepl("[0-9][eE][+-]?[0-9]", unlist(ax$ticktext)))) {
+                fig$x$layout[[name]]$ticktext <- format(nums, scientific = FALSE, trim = TRUE, drop0trailing = TRUE)
+            }
+        } else if (scientific && !isTRUE(ax$type %in% c("category", "multicategory", "date"))) {
+            fig$x$layout[[name]]$exponentformat <- "power"
+            fig$x$layout[[name]]$showexponent <- "all"
+        }
+    }
+    fig
+}
+
+
+#' Set the padding between a figure's data and the edges of its plot area
+#'
+#' Sets each x and y axis range to the extent of the data drawn on it, widened
+#' at each end by a fraction of that extent: `0` makes the data fill the plot
+#' area, `0.05` matches ggplot2's default expansion. The extent is read from the
+#' figure's traces as drawn: points and lines, bars from their base, error bars,
+#' and fills down to zero. A categorical axis (as [plotly::ggplotly()] draws one)
+#' spans its categories' bands, each one unit wide, so `0` puts the outer bands'
+#' edges on the plot area's.
+#'
+#' Axes that share a scale (matched axes, or the identical ranges of a faceted
+#' plot's fixed scales) get the same range, so they still line up. Reversed axes
+#' stay reversed, and log axes are padded in log units. Axes holding dates or
+#' plotly categories, or with no numeric data on them, are left alone, as are
+#' axes marked with [mark_overlay_axes()].
+#'
+#' Only what the traces draw counts. Annotations and shapes, such as
+#' significance brackets or reference lines, do not widen the range and can be
+#' cut off, so use axis limits instead on an axis that carries them.
+#'
+#' @param fig A plotly figure.
+#' @param x,y Padding for the x and y axes, as a fraction of the data's extent
+#'   added at each end. `NULL` or `NA` leaves that axis as it is.
+#' @param swap Logical. Apply `x` to the figure's y axes and `y` to its x axes,
+#'   for a plot drawn with its axes swapped (a rotated or flipped plot), so the
+#'   padding follows the variable rather than the screen direction.
+#'
+#' @return The built plotly figure with the axis ranges set.
+#'
+#' @seealso [apply_uniform_styling()], which applies this from the Axes tab's
+#'   "X Axis Padding" and "Y Axis Padding" inputs.
+#'
+#' @author Jared Andrews
+#' @export
+#' @examples
+#' fig <- plotly::plot_ly(mtcars,
+#'     x = ~wt, y = ~mpg, type = "scatter", mode = "markers"
+#' )
+#' # Points reaching the edges of the plot area.
+#' apply_axis_padding(fig, x = 0, y = 0)$x$layout$xaxis$range
+#'
+#' # A ggplot area plot with its default expansion removed along x only.
+#' df <- data.frame(year = 2000:2020, n = cumsum(c(5, rep(1, 20))))
+#' p <- ggplot2::ggplot(df, ggplot2::aes(year, n)) +
+#'     ggplot2::geom_area()
+#' apply_axis_padding(plotly::ggplotly(p), x = 0)
+apply_axis_padding <- function(fig, x = NULL, y = NULL, swap = FALSE) {
+    pad <- list(x = .padding_value(x), y = .padding_value(y))
+    if (isTRUE(swap)) {
+        pad <- list(x = pad$y, y = pad$x)
+    }
+    if (is.null(fig) || (is.null(pad$x) && is.null(pad$y))) {
+        return(fig)
+    }
+    fig <- .ensure_built(fig)
+
+    names <- .styled_axis_names(fig)
+    extents <- .axis_data_extents(fig, names)
+
+    for (letter in c("x", "y")) {
+        p <- pad[[letter]]
+        axes <- grep(paste0("^", letter, "axis[0-9]*$"), names, value = TRUE)
+        if (is.null(p) || !length(axes)) {
+            next
+        }
+        log_axis <- vapply(axes, function(a) identical(fig$x$layout[[a]]$type, "log"), logical(1))
+        keys <- vapply(axes, function(a) .shared_scale_key(fig$x$layout, a), character(1))
+
+        for (key in unique(keys)) {
+            group <- axes[keys == key]
+            ext <- unlist(extents[group], use.names = FALSE)
+            if (any(log_axis[group])) {
+                ext <- log10(ext[ext > 0])
+            }
+            ext <- ext[is.finite(ext)]
+            if (!length(ext)) {
+                next
+            }
+            lo <- min(ext)
+            hi <- max(ext)
+            if (hi - lo <= 0) {
+                lo <- lo - 0.5
+                hi <- hi + 0.5
+            }
+            span <- hi - lo
+            new_range <- c(lo - p * span, hi + p * span)
+
+            for (a in group) {
+                ax <- fig$x$layout[[a]]
+                reversed <- identical(ax$autorange, "reversed") ||
+                    (is.numeric(ax$range) && length(ax$range) == 2 && isTRUE(ax$range[1] > ax$range[2]))
+                fig$x$layout[[a]]$range <- if (reversed) rev(new_range) else new_range
+                fig$x$layout[[a]]$autorange <- FALSE
+            }
+        }
+    }
+    fig
+}
+
+
+# A padding input's value: a single finite, non-negative number, or NULL.
+.padding_value <- function(value) {
+    value <- suppressWarnings(as.numeric(value)[1])
+    if (length(value) == 0 || !is.finite(value)) {
+        return(NULL)
+    }
+    max(value, 0)
+}
+
+
+# The figure's x/y axes the Axes tab styles: those in its layout or referenced by a
+# trace, less the overlay panels' (see mark_overlay_axes()).
+.styled_axis_names <- function(fig) {
+    in_layout <- grep("^[xy]axis[0-9]*$", names(fig$x$layout), value = TRUE)
+    in_traces <- unlist(lapply(fig$x$data, function(tr) {
+        c(.axis_layout_name(tr$xaxis %||% "x"), .axis_layout_name(tr$yaxis %||% "y"))
+    }))
+    setdiff(unique(c(in_layout, in_traces)), fig$x$.vizmodules_overlay_axes)
+}
+
+
+# Tick labels as numbers, when every label is one and they label the tick positions
+# themselves (or 10, 2, or e raised to them, on a log scale); NULL otherwise, as for
+# a categorical axis whose categories merely look like numbers.
+.numeric_tick_labels <- function(ticktext, tickvals) {
+    txt <- gsub("\u2212", "-", trimws(as.character(unlist(ticktext))), fixed = TRUE)
+    nums <- suppressWarnings(as.numeric(txt))
+    vals <- suppressWarnings(as.numeric(unlist(tickvals)))
+    if (!length(nums) || anyNA(nums) || length(vals) != length(nums) || anyNA(vals)) {
+        return(NULL)
+    }
+    same <- function(a) isTRUE(all.equal(nums, a, tolerance = 1e-6, check.attributes = FALSE))
+    if (same(vals) || same(10^vals) || same(2^vals) || same(exp(vals))) nums else NULL
+}
+
+
+# Numbers as powers of ten, mantissa first: 150000 -> "1.5x10<sup>5</sup>" (with a
+# multiplication sign); zero stays "0".
+.power_labels <- function(nums) {
+    out <- format(nums, scientific = TRUE, trim = TRUE)
+    out <- sub("^(-?[0-9.]+)[eE]([+-]?)0*([0-9]+)$", "\\1\u00d710<sup>\\2\\3</sup>", out)
+    out <- sub("<sup>+", "<sup>", out, fixed = TRUE)
+    out[nums == 0] <- "0"
+    out
+}
+
+
+# Axes sharing a scale get the same key: an axis that `matches` another takes that
+# axis' key, and axes with identical fixed ranges (a faceted ggplot's fixed scales)
+# share one.
+.shared_scale_key <- function(layout, name, depth = 0L) {
+    ax <- layout[[name]]
+    if (!is.null(ax$matches) && depth < 10L) {
+        return(.shared_scale_key(layout, .axis_layout_name(ax$matches), depth + 1L))
+    }
+    if (is.numeric(ax$range) && length(ax$range) == 2 && all(is.finite(ax$range))) {
+        return(paste(substr(name, 1, 1), paste(signif(sort(ax$range), 10), collapse = ",")))
+    }
+    name
+}
+
+
+# Whether an axis is categorical as ggplotly draws one: labels that are not the
+# numbers at their positions, at consecutive whole-number positions.
+.is_band_axis <- function(ax) {
+    vals <- suppressWarnings(as.numeric(unlist(ax$tickvals)))
+    length(ax$ticktext) > 0 && length(vals) > 0 && !anyNA(vals) &&
+        is.null(.numeric_tick_labels(ax$ticktext, ax$tickvals)) &&
+        all(vals == round(vals)) && (length(vals) == 1 || all(diff(sort(vals)) == 1))
+}
+
+
+# The extent of the data drawn on each of `axes`: a named list holding, for each
+# axis padding can be computed for, a numeric vector whose range is that extent.
+.axis_data_extents <- function(fig, axes) {
+    layout <- fig$x$layout
+    ext <- list()
+    # Axes whose extent is settled (categorical bands) or cannot be computed.
+    done <- character(0)
+    bad <- character(0)
+
+    # Category axes place category i (counting from 0) at i, in categoryarray's
+    # order or else the order the traces first show them.
+    categories <- list()
+    for (a in axes) {
+        ax <- layout[[a]]
+        if (isTRUE(ax$type %in% c("multicategory", "date"))) {
+            bad <- c(bad, a)
+        } else if (identical(ax$type, "category")) {
+            categories[[a]] <- .axis_categories(fig, a)
+        } else if (.is_band_axis(ax)) {
+            ext[[a]] <- range(as.numeric(unlist(ax$tickvals))) + c(-0.5, 0.5)
+            done <- c(done, a)
+        }
+    }
+
+    add <- function(axis, v) {
+        if (!axis %in% axes || axis %in% c(done, bad)) {
+            return(invisible())
+        }
+        v <- unlist(v, use.names = FALSE)
+        if (is.null(v)) {
+            return(invisible())
+        }
+        if (axis %in% names(categories) && !is.numeric(v)) {
+            v <- match(as.character(v), categories[[axis]]) - 1
+        }
+        if (!is.numeric(v) && !is.logical(v)) {
+            # Text or dates: no padding can be computed for this axis.
+            bad <<- c(bad, axis)
+            return(invisible())
+        }
+        v <- as.numeric(v)
+        v <- v[is.finite(v)]
+        if (length(v)) {
+            ext[[axis]] <<- range(c(ext[[axis]], v))
+        }
+        invisible()
+    }
+    errors <- function(err, centre) {
+        if (is.null(err) || isFALSE(err$visible) || is.null(err$array)) {
+            return(NULL)
+        }
+        centre <- suppressWarnings(as.numeric(unlist(centre)))
+        plus <- suppressWarnings(as.numeric(unlist(err$array)))
+        minus <- if (is.null(err$arrayminus)) plus else suppressWarnings(as.numeric(unlist(err$arrayminus)))
+        if (length(plus) != length(centre) || length(minus) != length(centre)) {
+            return(NULL)
+        }
+        c(centre + plus, centre - minus)
+    }
+
+    for (tr in fig$x$data) {
+        if (isFALSE(tr$visible)) {
+            next
+        }
+        xa <- .axis_layout_name(tr$xaxis %||% "x")
+        ya <- .axis_layout_name(tr$yaxis %||% "y")
+        type <- tr$type %||% "scatter"
+
+        if (identical(type, "bar")) {
+            horizontal <- identical(tr$orientation, "h")
+            pos <- unlist(if (horizontal) tr$y else tr$x, use.names = FALSE)
+            val <- suppressWarnings(as.numeric(unlist(if (horizontal) tr$x else tr$y)))
+            base <- suppressWarnings(as.numeric(unlist(tr$base %||% 0)))
+            width <- suppressWarnings(as.numeric(unlist(tr$width %||% 0.8)))
+            pos_axis <- if (horizontal) ya else xa
+            val_axis <- if (horizontal) xa else ya
+            if (pos_axis %in% names(categories) && !is.numeric(pos)) {
+                pos <- match(as.character(pos), categories[[pos_axis]]) - 1
+            }
+            add(pos_axis, if (is.numeric(pos)) c(pos - width / 2, pos + width / 2) else pos)
+            if (length(val)) {
+                add(val_axis, c(base, base + val))
+            }
+        } else if (type %in% c("scatter", "scattergl", "box", "violin")) {
+            add(xa, tr$x)
+            add(ya, tr$y)
+            add(xa, errors(tr$error_x, tr$x))
+            add(ya, errors(tr$error_y, tr$y))
+            if (identical(tr$fill, "tozeroy")) add(ya, 0)
+            if (identical(tr$fill, "tozerox")) add(xa, 0)
+        } else {
+            # Heatmaps, histograms plotly bins itself, and the like: their extent
+            # is not in the trace, so their axes are left alone.
+            bad <- c(bad, setdiff(c(xa, ya), done))
+        }
+    }
+    ext[setdiff(names(ext), bad)]
+}
+
+
+# A category axis' categories in the order plotly places them: its categoryarray
+# when it has one, else every category in the order the axis' traces first show it
+# (or sorted, under an alphabetical categoryorder).
+.axis_categories <- function(fig, axis) {
+    ax <- fig$x$layout[[axis]]
+    if (length(ax$categoryarray) && identical(ax$categoryorder %||% "array", "array")) {
+        return(as.character(unlist(ax$categoryarray)))
+    }
+    letter <- substr(axis, 1, 1)
+    values <- lapply(fig$x$data, function(tr) {
+        if (!identical(.axis_layout_name(tr[[paste0(letter, "axis")]] %||% letter), axis)) {
+            return(NULL)
+        }
+        as.character(unlist(tr[[letter]]))
+    })
+    values <- unique(unlist(values))
+    switch(ax$categoryorder %||% "trace",
+        "category ascending" = sort(values),
+        "category descending" = sort(values, decreasing = TRUE),
+        values
+    )
+}

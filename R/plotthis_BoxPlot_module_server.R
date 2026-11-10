@@ -492,7 +492,9 @@ plotthis_BoxPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             isolate_fn <- setup_auto_update_logic(input, params)
             base <- base_BoxPlot()
             notify(base)
-            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.95)
+            apply_uniform_styling(base$fig, input, isolate_fn,
+                facet.by = base$facet.by, title_y = 0.95, padding.axes = "x"
+            )
         })
 
         # Returning all UI inputs:

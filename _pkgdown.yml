@@ -240,6 +240,7 @@ reference:
       - add_vlines
       - mark_overlay_axes
       - adjusted_axis_label
+      - apply_axis_padding
       - apply_axis_title_to_annotations
       - reset_axis_title_text
       - apply_legend_styling
@@ -248,6 +249,7 @@ reference:
       - apply_plotly_newshape
       - apply_render_margins
       - apply_subplot_axis_styling
+      - apply_tick_notation
       - apply_title_layout
       - apply_uniform_styling
       - auto_webgl

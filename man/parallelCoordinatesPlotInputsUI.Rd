@@ -50,6 +50,9 @@ The following \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}} 
 \itemize{
 \item \code{title.text} - Plot title text (plotly allows interactive editing; use \code{defaults} to set)
 }
+
+plotly draws parallel coordinates lines one pixel wide and fully opaque, with no way to
+set their width or opacity, so there are no inputs for either.
 }
 
 \section{Plot parameters and defaults}{
@@ -64,8 +67,6 @@ and/or the \code{defaults} argument:
 \item \code{color.by} - Column to color lines by (UI: "Color by", default: "")
 \item \code{color.scale} - Colorscale for lines when \code{color.by} is numeric (UI: "Color Scale", default: "Viridis")
 \item \code{palette.selection} - Discrete color palette used when \code{color.by} is categorical (UI: palette picker)
-\item \code{line.opacity} - Line opacity (UI: "Line opacity", default: 0.5)
-\item \code{line.width} - Line width (UI: "Line width", default: 1)
 \item \code{show.colorbar} - Show colorbar (UI: "Show colorbar", default: TRUE)
 \item \code{label.font.size} - Dimension label font size (UI: "Label font size", default: 12)
 \item \code{label.font.color} - Dimension label font color (UI: "Label font color", default: "black")

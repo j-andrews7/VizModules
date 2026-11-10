@@ -821,7 +821,7 @@ dittoViz_freqPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NU
             }
 
             # Always faceted, one panel per level of the frequency variable.
-            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = "label", title_y = 0.98)
+            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = "label", title_y = 0.98, padding.axes = "x")
         })
 
         # ---- Render --------------------------------------------------------------

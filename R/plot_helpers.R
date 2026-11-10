@@ -1274,6 +1274,68 @@ reset_axis_title_text <- function(store, keys = c("axis:x", "axis:y")) {
 }
 
 
+#' Value-axis limits for a bar plot, as plotthis draws it
+#'
+#' [plotthis::BarPlot()] never aggregates `y`, so how tall a bar is depends on
+#' how the rows sharing an x are placed. With `group_by` and at most five groups,
+#' its default `position = "auto"` dodges them, and every row is a bar of its
+#' own. Otherwise (no groups, more than five, or `fill_by`) the rows sharing an x
+#' stack, within each facet panel, positives upward and negatives downward. The
+#' limits follow suit, so the axis fits the bars actually drawn rather than the
+#' total of every group at an x.
+#'
+#' @param df Data frame.
+#' @param x,y Names of the category and value columns.
+#' @param group.by,fill.by,facet.by Names of the grouping, fill, and facet columns,
+#'   or `NULL`/`""` for none. `fill.by` replaces `group.by`, as in the module.
+#' @param axis_scale_factor Multiplier giving headroom above the tallest bar.
+#'
+#' @return `list(min = , max = )`, or `NULL` when the columns are missing or `y`
+#'   is not numeric.
+#'
+#' @author Jared Andrews
+#' @rdname INTERNAL_bar_range
+#' @keywords internal
+.bar_range <- function(df, x, y, group.by = NULL, fill.by = NULL, facet.by = NULL, axis_scale_factor = 1) {
+    if (is.null(df) || !nz_value(x) || !nz_value(y) || !all(c(x, y) %in% names(df)) || !is.numeric(df[[y]])) {
+        return(NULL)
+    }
+    in_df <- function(col) nz_value(col) && col %in% names(df)
+    pad_max <- function(v) v + abs(v) * (axis_scale_factor - 1)
+
+    values <- df[[y]]
+    keep <- is.finite(values)
+    if (!any(keep)) {
+        return(list(min = 0, max = 1))
+    }
+
+    # plotthis's position = "auto": dodged when grouped by at most five groups.
+    dodged <- in_df(group.by) && !in_df(fill.by) &&
+        nlevels(droplevels(as.factor(df[[group.by]][!is.na(df[[group.by]])]))) <= 5
+
+    if (dodged) {
+        heights <- values[keep]
+    } else {
+        # Stacked bars stack positives upward and negatives downward from zero,
+        # so each side sums on its own.
+        v <- values[keep]
+        keys <- list(as.character(df[[x]][keep]), v >= 0)
+        if (in_df(facet.by)) {
+            keys <- c(keys, list(as.character(df[[facet.by]][keep])))
+        }
+        heights <- as.vector(tapply(v, keys, sum))
+        heights <- heights[is.finite(heights)]
+    }
+
+    lo <- min(0, heights)
+    hi <- pad_max(max(0, heights))
+    if (!is.finite(hi) || hi <= lo) {
+        hi <- lo + 1
+    }
+    list(min = lo, max = hi)
+}
+
+
 #' Stack several data columns into dittoViz's multi-variable long format
 #'
 #' Reproduces the reshape [dittoViz::yPlot()] performs internally when it is

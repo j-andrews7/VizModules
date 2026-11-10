@@ -168,35 +168,34 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
             default.x <- get_default(defaults, "x.data", char.choices[2], function(x) x %in% char.choices)
             default.y <- get_default(defaults, "y.data", num.choices[2], function(x) x %in% num.choices)
 
-            # Limits for the columns being reset to, summed per x like the y.data
-            # observer's. That observer only recomputes them when the selection
-            # changes, which a reset to the current columns does not.
-            y.range <- .calculate_range(
-                df = data(), data_col_x = default.x, data_col_y = default.y,
-                axis_scale_factor = y_axis_scale_factor, grouping = TRUE
-            )
-            max.y <- if (!is.null(y.range)) y.range$max else 1
-            min.y <- 0
-
-            # Data
-            update_viz_select(session, "x.data", selected = default.x)
-            update_viz_select(session, "y.data", selected = default.y)
             # The capped Group By and Fill By pools the UI offers (see plotthis_BarPlotInputsUI()).
             group.choices <- c("", discrete_choices(data(), keep = get_default(defaults, "group.by", NULL)))
             fill.disc <- discrete_choices(data(), keep = get_default(defaults, "fill.by", NULL))
             fill.choices <- c("", names(data())[names(data()) %in% c(num.choices, fill.disc)])
-            update_viz_select(session, "group.by",
-                selected = get_default(defaults, "group.by", group.choices[2], function(x) x %in% group.choices)
+            default.group <- get_default(defaults, "group.by", group.choices[2], function(x) x %in% group.choices)
+            default.fill <- get_default(defaults, "fill.by", "", function(x) x %in% fill.choices)
+            default.facet <- get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
+
+            # Limits for the selection being reset to, fitted to the bars as drawn
+            # like the limits observer's. That observer only recomputes them when the
+            # selection changes, which a reset to the current one does not.
+            y.range <- .bar_range(
+                data(), default.x, default.y,
+                group.by = default.group, fill.by = default.fill, facet.by = default.facet,
+                axis_scale_factor = y_axis_scale_factor
             )
-            update_viz_select(session, "fill.by",
-                selected = get_default(defaults, "fill.by", "", function(x) x %in% fill.choices)
-            )
+            max.y <- if (!is.null(y.range)) y.range$max else 1
+            min.y <- if (!is.null(y.range)) y.range$min else 0
+
+            # Data
+            update_viz_select(session, "x.data", selected = default.x)
+            update_viz_select(session, "y.data", selected = default.y)
+            update_viz_select(session, "group.by", selected = default.group)
+            update_viz_select(session, "fill.by", selected = default.fill)
 
 
             # Facet
-            update_viz_select(session, "facet.by",
-                selected = get_default(defaults, "facet.by", "", function(x) x == "" || x %in% char.choices)
-            )
+            update_viz_select(session, "facet.by", selected = default.facet)
             update_viz_select(session, "facet.scale",
                 selected = get_default(defaults, "facet.scale", "fixed")
             )
@@ -259,18 +258,17 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         # Limits given as y.min/y.max defaults stand until x.data or y.data first
         # changes, since those are all the range depends on.
         seeded_limits <- .seed_axis_limits(defaults, "y.min", "y.max")
-        observeEvent(list(input$y.data, input$group.by, input$fill.by), {
+        observeEvent(list(input$x.data, input$y.data, input$group.by, input$fill.by, input$facet.by), {
             req(input$y.data, input$x.data)
             req(input$y.data %in% names(data()))
             req(input$x.data %in% names(data()))
 
-            # Summed per x, since bars sharing an x stack.
-            y_range <- .calculate_range(
-                df                = data(),
-                data_col_x        = input$x.data,
-                data_col_y        = input$y.data,
-                axis_scale_factor = y_axis_scale_factor,
-                grouping          = TRUE
+            # Fitted to the bars as drawn: dodged groups are one bar per row, stacked
+            # ones sum per x within each facet panel.
+            y_range <- .bar_range(
+                data(), input$x.data, input$y.data,
+                group.by = input$group.by, fill.by = input$fill.by, facet.by = input$facet.by,
+                axis_scale_factor = y_axis_scale_factor
             )
             y_range <- seeded_limits(y_range, list(input$x.data, input$y.data))
 
@@ -415,7 +413,9 @@ plotthis_BarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NUL
         generate_BarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
             base <- base_BarPlot()
-            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.95)
+            apply_uniform_styling(base$fig, input, isolate_fn,
+                facet.by = base$facet.by, title_y = 0.95, padding.axes = "x"
+            )
         })
 
         # Render the plot output

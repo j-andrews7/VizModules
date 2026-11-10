@@ -900,7 +900,9 @@ dittoViz_yPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs = NULL,
                 last_axis_vars(base$axis_vars)
             }
 
-            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.98)
+            apply_uniform_styling(base$fig, input, isolate_fn,
+                facet.by = base$facet.by, title_y = 0.98, padding.axes = "x"
+            )
         })
 
         # Render the plot output

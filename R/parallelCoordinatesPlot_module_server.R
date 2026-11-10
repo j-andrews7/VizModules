@@ -145,12 +145,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
             update_viz_select(session, "color.scale",
                 selected = get_default(defaults, "color.scale", "Viridis")
             )
-            updateSliderInput(session, "line.opacity",
-                value = get_default(defaults, "line.opacity", 0.5, is.numeric)
-            )
-            updateNumericInput(session, "line.width",
-                value = get_default(defaults, "line.width", 1, is.numeric)
-            )
             updateCheckboxInput(session, "show.colorbar",
                 value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             )
@@ -227,8 +221,6 @@ parallelCoordinatesPlotServer <- function(id, data, hide.inputs = NULL, hide.tab
                 color.by = color.by,
                 color.scale = isolate_fn(input$color.scale),
                 palette.selection = palette_selection,
-                line.opacity = isolate_fn(input$line.opacity),
-                line.width = isolate_fn(input$line.width),
                 show.colorbar = isTRUE(isolate_fn(input$show.colorbar)),
                 label.font.size = isolate_fn(input$label.font.size),
                 label.font.color = isolate_fn(input$label.font.color),

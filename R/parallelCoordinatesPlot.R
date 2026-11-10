@@ -18,8 +18,6 @@
 #'   when `color.by` is categorical. May be unnamed (colors applied in
 #'   order to the sorted unique levels) or named by level. If `NULL`, the
 #'   plotly `color.scale` is used as a fallback. Default: NULL.
-#' @param line.opacity Numeric, opacity of lines between 0 and 1. Default: 0.5.
-#' @param line.width Numeric, width of lines in pixels. Default: 1.
 #' @param show.colorbar Logical, whether to show the colorbar. Default: TRUE.
 #' @param label.font.size Numeric, font size for dimension labels. Default: 12.
 #' @param label.font.color Character, hex color for dimension labels. Default: "black".
@@ -33,6 +31,11 @@
 #' @param title.font.color Character, hex color for plot title text. Default: "black".
 #' @param bgcolor Character, hex color for the plot background. Default: "#FFFFFF".
 #'
+#' @details
+#' plotly draws a parallel coordinates trace's lines with WebGL at a fixed width
+#' of one pixel and fully opaque: its `line` takes only a colour and colour
+#' scale, so line width and opacity cannot be set.
+#'
 #' @return A plotly object representing the interactive parallel coordinates plot.
 #'
 #' @import plotly
@@ -45,8 +48,7 @@
 #'     data = mtcars,
 #'     dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
 #'     color.by = "mpg",
-#'     color.scale = "Viridis",
-#'     line.opacity = 0.6
+#'     color.scale = "Viridis"
 #' )
 parallelCoordinatesPlot <- function(
   data,
@@ -54,8 +56,6 @@ parallelCoordinatesPlot <- function(
   color.by = NULL,
   color.scale = "Viridis",
   palette.selection = NULL,
-  line.opacity = 0.5,
-  line.width = 1,
   show.colorbar = TRUE,
   label.font.size = 12,
   label.font.color = "black",
@@ -140,7 +140,6 @@ parallelCoordinatesPlot <- function(
                     colorscale = discrete_scale,
                     autocolorscale = FALSE,
                     showscale = show.colorbar,
-                    opacity = line.opacity,
                     cmin = 0.5,
                     cmax = n_lvls + 0.5,
                     colorbar = list(
@@ -156,7 +155,6 @@ parallelCoordinatesPlot <- function(
                     color = color_vals,
                     colorscale = color.scale,
                     showscale = show.colorbar,
-                    opacity = line.opacity,
                     cmin = min(color_vals, na.rm = TRUE),
                     cmax = max(color_vals, na.rm = TRUE),
                     colorbar = list(
@@ -169,7 +167,6 @@ parallelCoordinatesPlot <- function(
                 color = color_vals,
                 colorscale = color.scale,
                 showscale = show.colorbar,
-                opacity = line.opacity,
                 cmin = min(color_vals, na.rm = TRUE),
                 cmax = max(color_vals, na.rm = TRUE),
                 colorbar = list(
@@ -177,18 +174,8 @@ parallelCoordinatesPlot <- function(
                 )
             )
         }
-
-        if (isTRUE(line.width != 1)) {
-            line_spec$width <- line.width
-        }
     } else {
-        line_spec <- list(
-            color = "rgba(44, 123, 182, 0.5)",
-            opacity = line.opacity
-        )
-        if (isTRUE(line.width != 1)) {
-            line_spec$width <- line.width
-        }
+        line_spec <- list(color = "#2C7BB6")
     }
 
     fig <- plot_ly(

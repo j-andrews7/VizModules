@@ -21,7 +21,8 @@ add_marginal_plots(
   rug.size = 0.3,
   rug.length = 0.8,
   rug.width = 1,
-  gap = 0.02
+  gap = 0.02,
+  show.axes = FALSE
 )
 }
 \arguments{
@@ -61,6 +62,10 @@ or histogram, 0.1 to 0.9. A rug on its own fills the side.}
 \item{rug.width}{Line width of the rug ticks, in pixels.}
 
 \item{gap}{Paper-space gap between the main panel and the marginals.}
+
+\item{show.axes}{Logical. Whether each density or histogram strip shows its density or
+count axis, with a line, a few ticks, and their labels. The strips' value axes, which
+repeat the plot's own, and the rug strips stay bare. Default \code{FALSE}.}
 }
 \value{
 The built plotly figure with the marginals added, or \code{fig} unchanged when \code{top}

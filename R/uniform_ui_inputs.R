@@ -288,8 +288,19 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #'   x and y axes (e.g., horizontal bar plots). Default is FALSE.
 #' @param include.flip Logical; whether to include the "Flip" input for flipping
 #'   the axis. Default is FALSE.
+#' @param include.padding Which of `"x"` and `"y"` get an axis padding input
+#'   (`axis.padding.x`, `axis.padding.y`; see [apply_axis_padding()]). Leave out
+#'   an axis that has its own limit inputs. Default is both.
 #'
 #' @return A `tagList` containing the axis input UI elements.
+#'
+#' @details
+#' Alongside the fonts, lines, gridlines, and ticks, the inputs include
+#' `axis.scientific`, which writes numeric tick labels in scientific notation
+#' (off by default, so they never switch to it on their own; see
+#' [apply_tick_notation()]), and `axis.padding.x`/`axis.padding.y`, the space
+#' between the data and the edges of the plot area as a fraction of the data's
+#' extent at each end (blank keeps the plot's own padding).
 #'
 #' @importFrom shiny numericInput checkboxInput tagList
 #' @importFrom colourpicker colourInput
@@ -302,7 +313,10 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #' ns <- shiny::NS("plot")
 #' uniform_axes_inputs_ui(ns)
 #' uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
-uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE) {
+#' # A plot with its own y-axis limit inputs: x padding only.
+#' uniform_axes_inputs_ui(ns, include.padding = "x")
+uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, include.flip = FALSE,
+                                   include.padding = c("x", "y")) {
     font_choices <- .font_family_choices
 
     rotate_input <- if (include.rotate) {
@@ -436,6 +450,39 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
             min = 0,
             step = 0.1
         ),
+        tipify(
+            checkboxInput(ns("axis.scientific"), "Scientific Notation Ticks",
+                value = get_default(defaults, "axis.scientific", FALSE, is.logical)
+            ),
+            "Write numeric tick labels as powers of ten. Off, they are never in scientific notation.",
+            placement = "top", options = list(container = "body")
+        ),
+        if ("x" %in% include.padding) {
+            tipify(
+                numericInput(ns("axis.padding.x"), "X Axis Padding",
+                    value = get_default(defaults, "axis.padding.x", NA, is.numeric),
+                    min = 0, step = 0.01
+                ),
+                paste(
+                    "Space between the data and the edges of the plot area along X, as a fraction of",
+                    "the data's extent at each end. 0 fills the plot area. Leave blank for the default."
+                ),
+                placement = "top", options = list(container = "body")
+            )
+        },
+        if ("y" %in% include.padding) {
+            tipify(
+                numericInput(ns("axis.padding.y"), "Y Axis Padding",
+                    value = get_default(defaults, "axis.padding.y", NA, is.numeric),
+                    min = 0, step = 0.01
+                ),
+                paste(
+                    "Space between the data and the edges of the plot area along Y, as a fraction of",
+                    "the data's extent at each end. 0 fills the plot area. Leave blank for the default."
+                ),
+                placement = "top", options = list(container = "body")
+            )
+        },
         numericInput(ns("facet.title.font.size"), "Facet Subplot Title Size",
             value = get_default(defaults, "facet.title.font.size", 18, is.numeric),
             min = 1,

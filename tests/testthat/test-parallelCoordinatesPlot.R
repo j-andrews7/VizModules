@@ -81,16 +81,17 @@ test_that("parallelCoordinatesPlot shows or hides the colorbar", {
     }
 })
 
-test_that("parallelCoordinatesPlot styles its lines, label and tick fonts", {
+test_that("parallelCoordinatesPlot styles its label and tick fonts", {
     trace <- plotly::plotly_build(parallelCoordinatesPlot(
         data = mtcars,
         dimensions = c("mpg", "cyl", "disp"),
-        line.width = 2,
         label.font.size = 16, label.font.color = "#FF0000", label.font.family = "Courier",
         tick.font.size = 14, tick.font.color = "#0000FF", tick.font.family = "Times"
     ))$x$data[[1]]
 
-    expect_equal(trace$line$width, 2)
+    # parcoords lines take no width or opacity, so none is sent.
+    expect_null(trace$line$width)
+    expect_null(trace$line$opacity)
     expect_equal(trace$labelfont$size, 16)
     expect_equal(trace$labelfont$color, "#FF0000")
     expect_equal(trace$labelfont$family, "Courier")

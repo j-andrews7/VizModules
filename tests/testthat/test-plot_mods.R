@@ -1715,6 +1715,66 @@ test_that(".split_bar_range clears the longest bar on either side", {
     expect_null(.split_bar_range(df, "", "term"))
 })
 
+test_that(".split_bar_range stacks a category's bars within each facet panel only", {
+    df <- data.frame(term = rep(c("a", "b"), 2), panel = rep(c("p", "q"), each = 2), score = c(10, 4, 12, 3))
+    expect_equal(.split_bar_range(df, "score", "term")$max, 22)
+    expect_equal(.split_bar_range(df, "score", "term", facet_col = "panel")$max, 12)
+    expect_equal(.split_bar_range(df, "score", "term", facet_col = "")$max, 22)
+})
+
+test_that(".text_position_step gives the label slider a round step of at most three decimals", {
+    expect_equal(.text_position_step(22.8), 0.1)
+    expect_equal(.text_position_step(1500), 10)
+    expect_equal(.text_position_step(0.0123), 0.001)
+    expect_equal(.text_position_step(2e-5), 0.001)
+    expect_null(.text_position_step(0))
+    expect_null(.text_position_step(NA))
+    expect_null(.text_position_step(NULL))
+})
+
+test_that(".bar_range fits the tallest bar plotthis draws", {
+    # One row per Group and Type, three Types: dodged when grouped by Type, and
+    # Score, unlike Values, has negative values, which stack downward.
+    drawn <- function(p) {
+        ld <- ggplot2::layer_data(p, 1)
+        c(min(0, ld$ymin, ld$ymax, na.rm = TRUE), max(0, ld$ymin, ld$ymax, na.rm = TRUE))
+    }
+    cases <- list(
+        dodged = list(group_by = "Type"),
+        stacked = list(),
+        stacked_groups = list(group_by = "Group"),
+        fill = list(fill_by = "Type"),
+        faceted = list(facet_by = "Type"),
+        dodged_faceted = list(group_by = "Type", facet_by = "Type")
+    )
+    for (y in c("Values", "Score")) {
+        for (nm in names(cases)) {
+            cs <- cases[[nm]]
+            p <- suppressWarnings(do.call(plotthis::BarPlot, c(list(example_bar, x = "Group", y = y), cs)))
+            r <- .bar_range(example_bar, "Group", y,
+                group.by = cs$group_by, fill.by = cs$fill_by, facet.by = cs$facet_by
+            )
+            expect_equal(c(r$min, r$max), drawn(p), info = paste(y, nm))
+        }
+    }
+
+    # More than five groups stack; several rows in one dodged group stay apart.
+    many <- data.frame(x = rep(c("a", "b"), each = 7), g = rep(letters[1:7], 2), v = 1:14)
+    expect_equal(.bar_range(many, "x", "v", group.by = "g")$max, sum(8:14))
+    dup <- data.frame(x = rep(c("a", "b"), each = 4), g = rep(c("p", "q"), 4), v = 1:8)
+    expect_equal(.bar_range(dup, "x", "v", group.by = "g")$max, 8)
+})
+
+test_that(".bar_range pads the top, reaches below zero, and rejects bad columns", {
+    df <- data.frame(x = c("a", "b"), g = c("p", "q"), v = c(10, -4))
+    r <- .bar_range(df, "x", "v", group.by = "g", axis_scale_factor = 1.18)
+    expect_equal(r, list(min = -4, max = 11.8))
+    expect_equal(.bar_range(data.frame(x = "a", v = 0), "x", "v"), list(min = 0, max = 1))
+    expect_null(.bar_range(df, "x", "g"))
+    expect_null(.bar_range(df, "", "v"))
+    expect_null(.bar_range(df, "x", "missing"))
+})
+
 test_that("apply_axis_title_to_annotations tolerates an annotation with no xanchor", {
     fig <- plotly::plotly_build(plotly::plot_ly(mtcars, x = ~wt, y = ~mpg, type = "scatter", mode = "markers"))
     fig$x$layout$annotations <- list(list(x = 0.5, y = 1, xref = "paper", yref = "paper", text = "note"))
@@ -1724,13 +1784,6 @@ test_that("apply_axis_title_to_annotations tolerates an annotation with no xanch
     )
     out <- apply_axis_title_to_annotations(fig, input, identity)
     expect_null(out$x$layout$annotations[[1]]$font)
-})
-
-test_that("parallelCoordinatesPlot tolerates a blank line width", {
-    expect_s3_class(
-        parallelCoordinatesPlot(mtcars, dimensions = c("mpg", "hp"), color.by = "cyl", line.width = NA),
-        "plotly"
-    )
 })
 
 test_that("AreaPlot offers every categorical column except X for Group By", {

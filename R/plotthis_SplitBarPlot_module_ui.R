@@ -107,6 +107,10 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick mark color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick mark length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick mark width", default: 1)
+#' - `axis.scientific` - Write numeric tick labels in scientific notation (UI: "Scientific Notation Ticks",
+#'   default: FALSE; when off they never switch to it). See [apply_tick_notation()]
+#' - `axis.padding.y` - Space between the data and the plot area's edges along Y, as a fraction of the
+#'   data's extent at each end (UI: "Y Axis Padding", default: NA = the plot's own). See [apply_axis_padding()]
 #' - `legend.show` - Show the legend and any colorbar (UI: "Show Legend", default: TRUE)
 #' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
 #' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
@@ -343,7 +347,7 @@ plotthis_SplitBarPlotInputsUI <- function(id, data, defaults = NULL, title = NUL
         ),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.rotate = TRUE, include.padding = "y"),
         "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 

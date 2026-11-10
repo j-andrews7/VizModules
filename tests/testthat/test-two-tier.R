@@ -118,6 +118,7 @@
     axis.tickfont.size = 7, axis.tickfont.color = "#123456", axis.tickfont.family = "Courier New",
     axis.tickangle.x = 45, axis.tickangle.y = 30, axis.ticks = "inside", axis.tickcolor = "#654321",
     axis.ticklen = 9, axis.tickwidth = 3, show.grid.x = FALSE, show.grid.y = FALSE, grid.color = "#ABCDEF",
+    axis.scientific = TRUE, axis.padding.x = 0, axis.padding.y = 0,
     hline.intercepts = "1", hline.colors = "#FF00FF", hline.widths = "3", hline.linetypes = "dash",
     hline.opacities = "0.5",
     vline.intercepts = "1", vline.colors = "#FF00FF", vline.widths = "3", vline.linetypes = "dash",

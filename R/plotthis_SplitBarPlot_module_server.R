@@ -46,7 +46,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         })
         # Symmetric value-axis limits wide enough for the longest bar on either side.
         axis_range <- reactive({
-            .split_bar_range(data(), input$x.data, input$y.data, axis_scale())
+            .split_bar_range(data(), input$x.data, input$y.data, axis_scale(), facet_col = input$facet.by)
         })
 
         # The limits the x.min/x.max controls are set to: axis_range(), unless
@@ -235,7 +235,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
                 }
             }
             if (!is.null(x_range)) {
-                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
+                .update_text_position_slider(session, x_range$max)
             }
         }, priority = 999)
 
@@ -341,8 +341,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             reset_lines_inputs(session, defaults = defaults)
         })
 
-        # Update x-axis range when data columns or fill.by change (when auto-update is off)
-        observeEvent(list(input$x.data, input$y.data, input$fill.by), {
+        # Update x-axis range when data columns, fill.by, or facet.by change (when auto-update is off)
+        observeEvent(list(input$x.data, input$y.data, input$fill.by, input$facet.by), {
             req(input$x.data, input$y.data)
             req(input$x.data %in% names(data()))
             req(input$y.data %in% names(data()))
@@ -351,7 +351,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
             limits <- x_limits(x_range)
             if (!is.null(limits)) {
                 set_x_limits(limits)
-                updateSliderInput(session, "text.position", min = -x_range$max, max = x_range$max)
+                .update_text_position_slider(session, x_range$max)
             }
         }, priority = 999)
 
@@ -564,7 +564,9 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         generate_SplitBarPlot <- reactive({
             isolate_fn <- setup_auto_update_logic(input, params)
             base <- base_SplitBarPlot()
-            apply_uniform_styling(base$fig, input, isolate_fn, facet.by = base$facet.by, title_y = 0.98)
+            apply_uniform_styling(base$fig, input, isolate_fn,
+                facet.by = base$facet.by, title_y = 0.98, padding.axes = "y"
+            )
         })
 
         # Render the plot output
@@ -602,12 +604,47 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 }
 
 
+#' Fit the Category Label Position slider to the value axis
+#'
+#' Sets the `text.position` slider to run from `-extent` to `extent` with a round step
+#' (a power of ten near a hundredth of the extent, no finer than 0.001), and rounds the
+#' ends to that step, so the slider shows tidy numbers instead of floating-point noise
+#' such as -0.8000000000000007.
+#'
+#' @param session The module's Shiny session.
+#' @param extent The largest absolute value on the value axis.
+#' @return Called for its side effect, the slider update.
+#' @author Jared Andrews
+#' @keywords internal
+#' @rdname INTERNAL_update_text_position_slider
+.update_text_position_slider <- function(session, extent) {
+    step <- .text_position_step(extent)
+    if (is.null(step)) {
+        return(invisible())
+    }
+    limit <- round(ceiling(round(extent / step, 6)) * step, 3)
+    updateSliderInput(session, "text.position", min = -limit, max = limit, step = step)
+}
+
+
+# The text.position slider's step for an axis reaching `extent`: a power of ten about
+# a hundredth of it, between 0.001 and 1e6. NULL when `extent` is not a positive number.
+.text_position_step <- function(extent) {
+    extent <- suppressWarnings(as.numeric(extent)[1])
+    if (length(extent) == 0 || !is.finite(extent) || extent <= 0) {
+        return(NULL)
+    }
+    10^min(max(floor(log10(extent / 100)), -3), 6)
+}
+
+
 #' Value-axis limits for a split bar plot
 #'
 #' A split bar plot draws each category's bars outward from zero, positives on
 #' one side and negatives on the other, stacking a category's bars on each side.
 #' The axis is symmetric, so its half-width has to clear the longest stack on
-#' either side: the largest absolute per-category sum of that side's values.
+#' either side: the largest absolute per-category sum of that side's values,
+#' within each facet panel when the plot is faceted.
 #' Summing signed values instead lets a long negative bar be cancelled by a short
 #' positive one, clipping it, and inverts the range when every value is negative.
 #'
@@ -615,6 +652,8 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 #' @param value_col Name of the numeric value column (the module's `x.data`).
 #' @param category_col Name of the category column (the module's `y.data`).
 #' @param scale_factor Multiplier applied to the half-width for headroom.
+#' @param facet_col Name of the facet column, or `NULL`/`""` for none. Each
+#'   panel stacks only its own rows.
 #'
 #' @return `list(min = , max = )` with `min == -max`, or `NULL` when the columns
 #'   are missing or the value column is not numeric.
@@ -622,7 +661,7 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
 #' @author Jared Andrews
 #' @rdname INTERNAL_split_bar_range
 #' @keywords internal
-.split_bar_range <- function(df, value_col, category_col, scale_factor = 1) {
+.split_bar_range <- function(df, value_col, category_col, scale_factor = 1, facet_col = NULL) {
     if (is.null(df) || !nz_value(value_col) || !nz_value(category_col) ||
         !all(c(value_col, category_col) %in% names(df)) || !is.numeric(df[[value_col]])) {
         return(NULL)
@@ -637,7 +676,11 @@ plotthis_SplitBarPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs 
         return(NULL)
     }
     side <- ifelse(v[keep] >= 0, "positive", "negative")
-    sums <- tapply(v[keep], list(as.character(df[[category_col]][keep]), side), sum)
+    keys <- list(as.character(df[[category_col]][keep]), side)
+    if (nz_value(facet_col) && facet_col %in% names(df)) {
+        keys <- c(keys, list(as.character(df[[facet_col]][keep])))
+    }
+    sums <- tapply(v[keep], keys, sum)
     extent <- suppressWarnings(max(abs(sums), na.rm = TRUE))
     if (!is.finite(extent) || extent == 0) {
         extent <- 1

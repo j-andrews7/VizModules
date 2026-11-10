@@ -51,6 +51,9 @@ reset_axes_inputs <- function(session, defaults = NULL) {
     updateColourInput(session, "axis.tickcolor", value = get_default(defaults, "axis.tickcolor", "black"))
     updateNumericInput(session, "axis.ticklen", value = get_default(defaults, "axis.ticklen", 5, is.numeric))
     updateNumericInput(session, "axis.tickwidth", value = get_default(defaults, "axis.tickwidth", 1, is.numeric))
+    updateCheckboxInput(session, "axis.scientific", value = get_default(defaults, "axis.scientific", FALSE, is.logical))
+    updateNumericInput(session, "axis.padding.x", value = get_default(defaults, "axis.padding.x", NA, is.numeric))
+    updateNumericInput(session, "axis.padding.y", value = get_default(defaults, "axis.padding.y", NA, is.numeric))
     invisible(NULL)
 }
 

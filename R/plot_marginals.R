@@ -55,6 +55,9 @@
 #' @param rug.length Length of each rug tick as a fraction of its group's lane, 0 to 1.
 #' @param rug.width Line width of the rug ticks, in pixels.
 #' @param gap Paper-space gap between the main panel and the marginals.
+#' @param show.axes Logical. Whether each density or histogram strip shows its density or
+#'   count axis, with a line, a few ticks, and their labels. The strips' value axes, which
+#'   repeat the plot's own, and the rug strips stay bare. Default `FALSE`.
 #'
 #' @return The built plotly figure with the marginals added, or `fig` unchanged when `top`
 #'   and `right` are both empty.
@@ -78,7 +81,8 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
                                top = character(0), right = character(0),
                                top.size = 0.15, right.size = 0.15, opacity = 0.5,
                                bins = 30, binwidth = NULL, density.adjust = 1,
-                               rug.size = 0.3, rug.length = 0.8, rug.width = 1, gap = 0.02) {
+                               rug.size = 0.3, rug.length = 0.8, rug.width = 1, gap = 0.02,
+                               show.axes = FALSE) {
     top <- intersect(.marginal_types, top)
     right <- intersect(.marginal_types, right)
     if (!length(top) && !length(right)) {
@@ -182,7 +186,7 @@ add_marginal_plots <- function(fig, x, y, groups = NULL, colors = "#000000",
 
             layout[[.axis_layout_name(count.axis)]] <- c(
                 list(domain = strips[[strip]], anchor = value.axis, range = count.range, fixedrange = TRUE),
-                .marginal_axis_style()
+                .marginal_axis_style(show = isTRUE(show.axes) && strip != "rug")
             )
             overlay.axes <- c(overlay.axes, .axis_layout_name(count.axis))
         }
@@ -269,12 +273,21 @@ mark_overlay_axes <- function(fig, axes) {
     max(c(1L, used)) + 1L
 }
 
-# A marginal strip's axes show nothing of their own.
-.marginal_axis_style <- function() {
-    list(
+# A marginal strip's axes show nothing of their own, unless `show`, when a density or count
+# axis gets a line and a few small ticks with their labels.
+.marginal_axis_style <- function(show = FALSE) {
+    style <- list(
         showticklabels = FALSE, showgrid = FALSE, zeroline = FALSE, showline = FALSE,
         ticks = "", title = list(text = "")
     )
+    if (show) {
+        style <- utils::modifyList(style, list(
+            showticklabels = TRUE, showline = TRUE, linecolor = "#000000", linewidth = 0.5,
+            ticks = "outside", ticklen = 3, tickcolor = "#000000", nticks = 3,
+            tickfont = list(size = 9, color = "#000000")
+        ))
+    }
+    style
 }
 
 # One colour per group level, in level order: by name when `colors` is named, otherwise by

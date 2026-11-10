@@ -13,7 +13,8 @@ apply_uniform_styling(
   include.modebar.buttons = TRUE,
   fig.fn = NULL,
   ggplot.axis.styling = TRUE,
-  legend.position = NULL
+  legend.position = NULL,
+  padding.axes = c("x", "y")
 )
 }
 \arguments{
@@ -47,6 +48,11 @@ whose axis lines come from its ggplot theme (see
 
 \item{legend.position}{Passed to \code{\link[=apply_legend_inputs]{apply_legend_inputs()}}; \code{NULL} keeps the
 legend where it is.}
+
+\item{padding.axes}{Which of the module's axes, \code{"x"} and \code{"y"}, take the
+\code{axis.padding.x}/\code{axis.padding.y} inputs (see \code{\link[=apply_axis_padding]{apply_axis_padding()}}). Leave
+out an axis with its own limit inputs, so its limits stand. When \code{input$rotate}
+is \code{TRUE} the padding follows the variables onto the swapped axes.}
 }
 \value{
 The styled plotly figure.
@@ -56,8 +62,9 @@ The plot modules build their figures in two steps. The first draws the plot
 itself from the data and every input that changes what is drawn; that is the
 expensive part (a ggplot built and converted with \code{\link[plotly:ggplotly]{plotly::ggplotly()}}, say),
 and it is cached. This function is the second step: it applies the inputs
-that only style the figure -- titles, fonts, ticks, gridlines, reference
-lines, the modebar, the shape-drawing tool, and the legend -- to the figure
+that only style the figure -- titles, fonts, ticks and their notation,
+gridlines, the padding around the data, reference lines, the modebar, the
+shape-drawing tool, and the legend -- to the figure
 the first step returned. Changing one of those inputs re-runs only this step,
 which takes a few milliseconds rather than a full rebuild.
 }
@@ -88,7 +95,7 @@ apply_uniform_styling(fig, input, isolate_fn = identity)
 }
 \seealso{
 \code{\link[=apply_title_layout]{apply_title_layout()}}, \code{\link[=apply_subplot_axis_styling]{apply_subplot_axis_styling()}},
-\code{\link[=add_reference_lines]{add_reference_lines()}}, \code{\link[=add_plot_config]{add_plot_config()}}, \code{\link[=apply_plotly_newshape]{apply_plotly_newshape()}},
+\code{\link[=apply_tick_notation]{apply_tick_notation()}}, \code{\link[=apply_axis_padding]{apply_axis_padding()}}, \code{\link[=add_reference_lines]{add_reference_lines()}}, \code{\link[=add_plot_config]{add_plot_config()}}, \code{\link[=apply_plotly_newshape]{apply_plotly_newshape()}},
 \code{\link[=apply_legend_inputs]{apply_legend_inputs()}}, \code{\link[=axis_titles_as_annotations]{axis_titles_as_annotations()}}
 }
 \author{

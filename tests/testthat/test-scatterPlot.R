@@ -668,3 +668,19 @@ test_that("the Marginals tab seeds its inputs from defaults", {
     ))
     expect_length(selected(bad, "scatter-marginal.x"), 0)
 })
+
+test_that("with Size By, legend glyphs are all one size, and the marginal axes toggle", {
+    sized <- .scatter_figure(example_sales, .scatter_inputs(color.by = "product_line", size.by = "units"))
+    expect_identical(plotly::plotly_build(sized)$x$layout$legend$itemsizing, "constant")
+    plain <- .scatter_figure(example_sales, .scatter_inputs(color.by = "product_line"))
+    expect_null(plotly::plotly_build(plain)$x$layout$legend$itemsizing)
+
+    axes <- function(show) {
+        fig <- plotly::plotly_build(.scatter_figure(example_sales, .scatter_inputs(
+            color.by = "product_line", marginal.x = "density", marginal.axes = show
+        )))
+        vapply(fig$x$.vizmodules_overlay_axes, function(a) isTRUE(fig$x$layout[[a]]$showticklabels), logical(1))
+    }
+    expect_false(any(axes(FALSE)))
+    expect_true(any(axes(TRUE)))
+})

@@ -212,8 +212,12 @@ test_that("under a free y facet scale each panel's brackets sit on its own data"
                 group.by = "", fill.by = "", facet.by = "", y.min = 0, y.max = NA
             ), list(...))
         },
+        # Bars sharing a Group stack, positives up and negatives down from zero.
         range = function(col) {
-            list(min = 0, max = max(tapply(example_bar[[col]], example_bar$Group, sum)) * .bar_axis_scale)
+            v <- example_bar[[col]]
+            up <- tapply(pmax(v, 0), example_bar$Group, sum)
+            down <- tapply(pmin(v, 0), example_bar$Group, sum)
+            list(min = min(0, down), max = max(up) * .bar_axis_scale)
         }
     )
 )

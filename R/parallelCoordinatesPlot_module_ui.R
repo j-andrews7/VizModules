@@ -19,6 +19,9 @@
 #'
 #' - `title.text` - Plot title text (plotly allows interactive editing; use `defaults` to set)
 #'
+#' plotly draws parallel coordinates lines one pixel wide and fully opaque, with no way to
+#' set their width or opacity, so there are no inputs for either.
+#'
 #' @section Plot parameters and defaults:
 #' The following [VizModules::parallelCoordinatesPlot()] parameters can be accessed via UI inputs
 #' and/or the `defaults` argument:
@@ -30,8 +33,6 @@
 #' - `color.by` - Column to color lines by (UI: "Color by", default: "")
 #' - `color.scale` - Colorscale for lines when `color.by` is numeric (UI: "Color Scale", default: "Viridis")
 #' - `palette.selection` - Discrete color palette used when `color.by` is categorical (UI: palette picker)
-#' - `line.opacity` - Line opacity (UI: "Line opacity", default: 0.5)
-#' - `line.width` - Line width (UI: "Line width", default: 1)
 #' - `show.colorbar` - Show colorbar (UI: "Show colorbar", default: TRUE)
 #' - `label.font.size` - Dimension label font size (UI: "Label font size", default: 12)
 #' - `label.font.color` - Dimension label font color (UI: "Label font color", default: "black")
@@ -93,7 +94,7 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
 
     selected <- list(
         "dimensions", "color.by", "color.scale", "palette.selection",
-        "line.opacity", "line.width", "show.colorbar",
+        "show.colorbar",
         "label.font.size", "label.font.color", "label.font.family",
         "tick.font.size", "tick.font.color", "tick.font.family",
         "title.font.size", "title.font.family", "title.font.color", "bgcolor"
@@ -125,16 +126,6 @@ parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = N
                 )
             ), documentParameters$color.scale, placement = "top", options = list(container = "body")),
             uiOutput(ns("palette.selection")),
-            tipify(sliderInput(ns("line.opacity"), "Line Opacity",
-                min = 0, max = 1,
-                value = get_default(defaults, "line.opacity", 0.5, is.numeric),
-                step = 0.05
-            ), documentParameters$line.opacity, placement = "top", options = list(container = "body")),
-            tipify(numericInput(ns("line.width"), "Line Width",
-                value = get_default(defaults, "line.width", 1, is.numeric),
-                min = 0.5,
-                step = 0.5
-            ), documentParameters$line.width, placement = "top", options = list(container = "body")),
             tipify(checkboxInput(ns("show.colorbar"), "Show Colorbar",
                 value = get_default(defaults, "show.colorbar", TRUE, is.logical)
             ), documentParameters$show.colorbar, placement = "top", options = list(container = "body")),

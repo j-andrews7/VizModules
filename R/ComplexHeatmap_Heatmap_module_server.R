@@ -481,7 +481,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
                     name = isolate_fn(input$name) %||% get_default(defaults, "name", "value"),
                     na_col = isolate_fn(input$na_col) %||% get_default(defaults, "na_col", "grey"),
                     show_heatmap_legend = isolate_fn(input$show_heatmap_legend) %||% get_default(defaults, "show_heatmap_legend", TRUE),
-                    border = isolate_fn(input$border) %||% get_default(defaults, "border", FALSE),
+                    border = isolate_fn(input$border) %||% get_default(defaults, "border", fallback = TRUE),
                     cluster_rows = isolate_fn(input$cluster_rows) %||% get_default(defaults, "cluster_rows", TRUE),
                     cluster_columns = isolate_fn(input$cluster_columns) %||% get_default(defaults, "cluster_columns", TRUE),
                     clustering_distance_rows = isolate_fn(input$clustering_distance_rows) %||% get_default(defaults, "clustering_distance_rows", "euclidean"),
@@ -629,7 +629,7 @@ ComplexHeatmap_HeatmapServer <- function(id, data, hide.inputs = NULL, hide.tabs
             updateNumericInput(session, "mid_value", value = get_default(defaults, "mid_value", NA, is.numeric))
             updateNumericInput(session, "max_value", value = get_default(defaults, "max_value", NA, is.numeric))
             updateCheckboxInput(session, "show_heatmap_legend", value = get_default(defaults, "show_heatmap_legend", TRUE, is.logical))
-            updateCheckboxInput(session, "border", value = get_default(defaults, "border", FALSE, is.logical))
+            updateCheckboxInput(session, "border", value = get_default(defaults, "border", fallback = TRUE, is.logical))
 
             updateCheckboxInput(session, "cluster_rows", value = get_default(defaults, "cluster_rows", TRUE, is.logical))
             updateCheckboxInput(session, "cluster_columns", value = get_default(defaults, "cluster_columns", TRUE, is.logical))

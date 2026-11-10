@@ -328,6 +328,10 @@
 #' - `axis.tickcolor` - Color of tick marks (UI: "Tick Mark Color", default: "black")
 #' - `axis.ticklen` - Length of tick marks (UI: "Tick Mark Length", default: 5)
 #' - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width", default: 1)
+#' - `axis.scientific` - Write numeric tick labels in scientific notation (UI: "Scientific Notation Ticks",
+#'   default: FALSE; when off they never switch to it). See [apply_tick_notation()]
+#' - `axis.padding.x` - Space between the data and the plot area's edges along X, as a fraction of the
+#'   data's extent at each end (UI: "X Axis Padding", default: NA = the plot's own). See [apply_axis_padding()]
 #' - `legend.font.family` - Font family of the legend title and labels (UI: "Legend Font", default: "Arial")
 #' - `legend.font.color` - Font color of the legend title and labels (UI: "Legend Font Color", default: "#000000")
 #' - `legend.title.size` - Legend title font size (UI: "Legend Title Size", default: 14)
@@ -783,7 +787,7 @@ dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, c
         ),
         "Legend" = uniform_legend_inputs_ui(ns, defaults),
         "Plotly" = uniform_plotly_inputs_ui(ns, defaults),
-        "Axes" = uniform_axes_inputs_ui(ns, defaults),
+        "Axes" = uniform_axes_inputs_ui(ns, defaults, include.padding = "x"),
         "Lines" = uniform_lines_inputs_ui(ns, defaults)
     )
 

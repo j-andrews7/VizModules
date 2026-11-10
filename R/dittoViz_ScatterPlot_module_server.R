@@ -446,6 +446,9 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             updateNumericInput(session, "marginal.rug.width",
                 value = get_default(defaults, "marginal.rug.width", 1, is.numeric)
             )
+            updateCheckboxInput(session, "marginal.axes",
+                value = get_default(defaults, "marginal.axes", FALSE, is.logical)
+            )
 
             # Plotly/Extras
             updateCheckboxInput(session, "webgl", value = get_default(defaults, "webgl", TRUE, is.logical))
@@ -509,6 +512,7 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
             toggle_cells("marginal.density.adjust", has("density"))
             toggle_cells("marginal.rug.height", shares.rug(top) || shares.rug(right))
             toggle_cells("marginal.rug.width", has("rug"))
+            toggle_cells("marginal.axes", has("density") || has("histogram"))
         }, ignoreNULL = FALSE)
 
         # Reactive expression to generate the plot (used by both output and download)
@@ -1077,7 +1081,8 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     binwidth = isolate_fn(input$marginal.binwidth),
                     density.adjust = isolate_fn(input$marginal.density.adjust),
                     rug.size = isolate_fn(input$marginal.rug.height),
-                    rug.width = isolate_fn(input$marginal.rug.width)
+                    rug.width = isolate_fn(input$marginal.rug.width),
+                    show.axes = isTRUE(isolate_fn(input$marginal.axes))
                 )
             }
 
@@ -1093,6 +1098,12 @@ dittoViz_scatterPlotServer <- function(id, data, hide.inputs = NULL, hide.tabs =
                     color.levels = levels(droplevels(as.factor(plot_data[[color.plot]]))),
                     shape.levels = levels(droplevels(as.factor(plot_data[[shape.plot]])))
                 )
+            }
+            # plotly sizes each legend glyph from its trace's markers, so with size.by
+            # the colour entries would come out at whatever size their first points
+            # are. Size is read from the size legend instead; keep these uniform.
+            if (!is.null(null.na.inputs$size.by)) {
+                fig$x$layout$legend$itemsizing <- "constant"
             }
 
             list(

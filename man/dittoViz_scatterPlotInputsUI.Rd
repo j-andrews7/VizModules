@@ -214,6 +214,12 @@ The following parameters implementing new functionality or controlling plotly-sp
 \item \code{axis.tickcolor} - Color of tick marks (UI: "Tick Mark Color", default: "black")
 \item \code{axis.ticklen} - Length of tick marks (UI: "Tick Mark Length", default: 5)
 \item \code{axis.tickwidth} - Width of tick marks (UI: "Tick Mark Width", default: 1)
+\item \code{axis.scientific} - Write numeric tick labels in scientific notation (UI: "Scientific Notation Ticks",
+default: FALSE; when off they never switch to it). See \code{\link[=apply_tick_notation]{apply_tick_notation()}}
+\item \code{axis.padding.x} - Space between the data and the plot area's edges along X, as a fraction of the
+data's extent at each end (UI: "X Axis Padding", default: NA = the plot's own). See \code{\link[=apply_axis_padding]{apply_axis_padding()}}
+\item \code{axis.padding.y} - Space between the data and the plot area's edges along Y, as a fraction of the
+data's extent at each end (UI: "Y Axis Padding", default: NA = the plot's own). See \code{\link[=apply_axis_padding]{apply_axis_padding()}}
 \item \code{facet.title.font.size} - Facet subplot title font size (UI: "Facet Subplot Title Size", default: 18)
 \item \code{facet.title.font.color} - Facet subplot title font color (UI: "Facet Title Color", default: "#000000")
 \item \code{facet.title.font.family} - Facet subplot title font family (UI: "Facet Title Font", default: "Arial")
@@ -258,6 +264,9 @@ default: 1). Shown while either marginal has a density
 histogram (UI: "Rug Height", default: 0.3). Shown while a marginal has both
 \item \code{marginal.rug.width} - Line width of the rug ticks, in pixels (UI: "Rug Line Width", default: 1).
 Shown while either marginal has a rug
+\item \code{marginal.axes} - Show the density or count axis, with its ticks and labels, of each density and
+histogram marginal (UI: "Show Marginal Axes", default: FALSE). Shown while either marginal has a
+density or histogram
 }
 
 Marginal plots show one distribution per Color By group, in the group's colour, or a single one in

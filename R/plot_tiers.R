@@ -4,8 +4,9 @@
 #' itself from the data and every input that changes what is drawn; that is the
 #' expensive part (a ggplot built and converted with [plotly::ggplotly()], say),
 #' and it is cached. This function is the second step: it applies the inputs
-#' that only style the figure -- titles, fonts, ticks, gridlines, reference
-#' lines, the modebar, the shape-drawing tool, and the legend -- to the figure
+#' that only style the figure -- titles, fonts, ticks and their notation,
+#' gridlines, the padding around the data, reference lines, the modebar, the
+#' shape-drawing tool, and the legend -- to the figure
 #' the first step returned. Changing one of those inputs re-runs only this step,
 #' which takes a few milliseconds rather than a full rebuild.
 #'
@@ -39,11 +40,15 @@
 #'   [create_ggplot_axis_style()]); `FALSE` sets them from the Axes inputs here.
 #' @param legend.position Passed to [apply_legend_inputs()]; `NULL` keeps the
 #'   legend where it is.
+#' @param padding.axes Which of the module's axes, `"x"` and `"y"`, take the
+#'   `axis.padding.x`/`axis.padding.y` inputs (see [apply_axis_padding()]). Leave
+#'   out an axis with its own limit inputs, so its limits stand. When `input$rotate`
+#'   is `TRUE` the padding follows the variables onto the swapped axes.
 #'
 #' @return The styled plotly figure.
 #'
 #' @seealso [apply_title_layout()], [apply_subplot_axis_styling()],
-#'   [add_reference_lines()], [add_plot_config()], [apply_plotly_newshape()],
+#'   [apply_tick_notation()], [apply_axis_padding()], [add_reference_lines()], [add_plot_config()], [apply_plotly_newshape()],
 #'   [apply_legend_inputs()], [axis_titles_as_annotations()]
 #'
 #' @author Jared Andrews
@@ -65,7 +70,8 @@
 #' apply_uniform_styling(fig, input, isolate_fn = identity)
 apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = NULL,
                                   title_y = 0.95, include.modebar.buttons = TRUE, fig.fn = NULL,
-                                  ggplot.axis.styling = TRUE, legend.position = NULL) {
+                                  ggplot.axis.styling = TRUE, legend.position = NULL,
+                                  padding.axes = c("x", "y")) {
     if (is.null(fig)) {
         return(fig)
     }
@@ -84,6 +90,13 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     if (faceted) {
         fig <- apply_axis_title_to_annotations(fig, input, isolate_fn)
     }
+
+    fig <- apply_tick_notation(fig, scientific = isolate_fn(input$axis.scientific))
+    fig <- apply_axis_padding(fig,
+        x = if ("x" %in% padding.axes) isolate_fn(input$axis.padding.x),
+        y = if ("y" %in% padding.axes) isolate_fn(input$axis.padding.y),
+        swap = isTRUE(isolate_fn(input$rotate))
+    )
 
     fig <- add_reference_lines(fig,
         hline.intercepts = isolate_fn(input$hline.intercepts),
@@ -142,7 +155,9 @@ apply_uniform_styling <- function(fig, input, isolate_fn = isolate, facet.by = N
     # Ticks and gridlines
     "axis.tickfont.size", "axis.tickfont.color", "axis.tickfont.family",
     "axis.tickangle.x", "axis.tickangle.y", "axis.ticks", "axis.tickcolor", "axis.ticklen",
-    "axis.tickwidth", "show.grid.x", "show.grid.y", "grid.color",
+    "axis.tickwidth", "show.grid.x", "show.grid.y", "grid.color", "axis.scientific",
+    # Padding around the data
+    "axis.padding.x", "axis.padding.y",
     # Reference lines
     paste0("hline.", c("intercepts", "colors", "widths", "linetypes", "opacities")),
     paste0("vline.", c("intercepts", "colors", "widths", "linetypes", "opacities")),

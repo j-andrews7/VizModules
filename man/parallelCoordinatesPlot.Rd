@@ -10,8 +10,6 @@ parallelCoordinatesPlot(
   color.by = NULL,
   color.scale = "Viridis",
   palette.selection = NULL,
-  line.opacity = 0.5,
-  line.width = 1,
   show.colorbar = TRUE,
   label.font.size = 12,
   label.font.color = "black",
@@ -47,10 +45,6 @@ when \code{color.by} is categorical. May be unnamed (colors applied in
 order to the sorted unique levels) or named by level. If \code{NULL}, the
 plotly \code{color.scale} is used as a fallback. Default: NULL.}
 
-\item{line.opacity}{Numeric, opacity of lines between 0 and 1. Default: 0.5.}
-
-\item{line.width}{Numeric, width of lines in pixels. Default: 1.}
-
 \item{show.colorbar}{Logical, whether to show the colorbar. Default: TRUE.}
 
 \item{label.font.size}{Numeric, font size for dimension labels. Default: 12.}
@@ -82,13 +76,17 @@ A plotly object representing the interactive parallel coordinates plot.
 Generates a customizable interactive parallel coordinates plot using plotly,
 supporting dimension selection, color mapping, and font styling.
 }
+\details{
+plotly draws a parallel coordinates trace's lines with WebGL at a fixed width
+of one pixel and fully opaque: its \code{line} takes only a colour and colour
+scale, so line width and opacity cannot be set.
+}
 \examples{
 fig <- parallelCoordinatesPlot(
     data = mtcars,
     dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
     color.by = "mpg",
-    color.scale = "Viridis",
-    line.opacity = 0.6
+    color.scale = "Viridis"
 )
 }
 \author{
