@@ -125,7 +125,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::DotPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_DotPlotOutputUI()], [VizModules::plotthis_DotPlotServer()], [VizModules::plotthis_DotPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' plotthis_DotPlotInputsUI("DotPlot", mtcars)

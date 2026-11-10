@@ -288,8 +288,10 @@ fit lines are drawn while an adjustment (\code{as.factor}) makes an axis categor
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[dittoViz:scatterPlot]{dittoViz::scatterPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

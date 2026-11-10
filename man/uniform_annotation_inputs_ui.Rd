@@ -31,8 +31,10 @@ identified by the values of the column chosen in "Annotate By", which are
 also used as the label text.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot1")
 uniform_annotation_inputs_ui(ns, choices = c("", "Species", "Sepal.Length"))
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews

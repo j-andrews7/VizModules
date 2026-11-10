@@ -1055,7 +1055,7 @@ finalize_manual_edits <- function(fig, plot_source, store, session, regen_keys =
     }
     fig$dependencies <- c(fig$dependencies, list(htmlDependency(
         name = "vizmodules-plotly-update",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "plotlyUpdate.js"

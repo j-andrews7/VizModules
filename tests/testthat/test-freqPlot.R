@@ -366,13 +366,14 @@ test_that("the module builds every plot type and both scales", {
     df <- .freq_fixture()
 
     # One session each: the mock session never echoes the controls the server
-    # updates, so a second variant in the same session would wait on them.
-    for (variant in list(
+    # updates, so a second variant in the same session would wait on them. On
+    # CRAN, the ridge plot and the count scale only.
+    for (variant in .cran_cases(list(
         list(plots = "vlnplot"),
         list(plots = "ridgeplot"),
         list(plots = c("boxplot", "jitter"), scale = "count"),
         list(plots = c("vlnplot", "jitter"), max.normalize = TRUE)
-    )) {
+    ), keep = c(2, 3))) {
         shiny::testServer(
             dittoViz_freqPlotServer,
             args = list(id = "freq", data = shiny::reactive(df)),

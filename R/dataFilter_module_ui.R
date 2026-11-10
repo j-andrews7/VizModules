@@ -13,7 +13,7 @@
 #' @export
 #' @author Jacob Martin
 #' @seealso [dataFilterServer()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' dataFilterUI("myFilter")
 dataFilterUI <- function(id) {

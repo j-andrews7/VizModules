@@ -403,7 +403,7 @@
 #' @seealso [dittoViz::freqPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dittoViz_freqPlotOutputUI()], [VizModules::dittoViz_freqPlotServer()],
 #' [VizModules::dittoViz_freqPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 dittoViz_freqPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {

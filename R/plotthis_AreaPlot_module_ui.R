@@ -132,7 +132,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::AreaPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_AreaPlotOutputUI()], [VizModules::plotthis_AreaPlotServer()], [VizModules::plotthis_AreaPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' # Needs at least 2 categorical variables for grouping and x-axis
 #' mtcars$cyl <- as.factor(mtcars$cyl)

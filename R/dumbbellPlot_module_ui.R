@@ -118,7 +118,7 @@
 #' @author Jacob Martin
 #' @seealso [VizModules::dumbbellPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dumbbellPlotOutputUI()], [VizModules::dumbbellPlotServer()], [VizModules::dumbbellPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data <- data.frame(
 #'     School = c("MIT", "Stanford", "Harvard"),

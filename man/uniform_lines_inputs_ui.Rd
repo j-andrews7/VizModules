@@ -24,9 +24,11 @@ Creates a standardized tagList of line-related inputs (horizontal, vertical,
 and diagonal lines) for use across plot modules.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot")
 uniform_lines_inputs_ui(ns)
 uniform_lines_inputs_ui(ns, include.fit.lines = TRUE)
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews

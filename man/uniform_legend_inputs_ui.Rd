@@ -31,12 +31,14 @@ default: "#000000")
 Apply them to a figure with \code{\link[=apply_legend_inputs]{apply_legend_inputs()}} and restore them with \code{\link[=reset_legend_inputs]{reset_legend_inputs()}}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot1")
 uniform_legend_inputs_ui(ns)
 uniform_legend_inputs_ui(ns, defaults = list(
     legend.show = FALSE, legend.font.family = "Courier New",
     legend.title.size = 16, legend.text.size = 12
 ))
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews

@@ -45,10 +45,12 @@ pieces used for one heatmap must share the same module \code{id} as the
 switch between the combined and separated forms.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[InteractiveComplexHeatmap:originalHeatmapOutput]{InteractiveComplexHeatmap::originalHeatmapOutput()}},

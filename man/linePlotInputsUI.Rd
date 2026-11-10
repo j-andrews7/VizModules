@@ -137,9 +137,11 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 linePlotInputsUI("linePlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=linePlot]{linePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

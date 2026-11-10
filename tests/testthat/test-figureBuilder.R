@@ -246,6 +246,8 @@ test_that("the figure export collects vector art only from panels that offer it"
 })
 
 test_that("a ComplexHeatmap panel works end to end on the canvas", {
+    # The slowest test in the suite; test-heatmap.R covers the module itself on CRAN.
+    skip_on_cran()
     skip_if_not_installed("ComplexHeatmap")
     skip_if_not_installed("InteractiveComplexHeatmap")
     skip_if_not_installed("circlize")

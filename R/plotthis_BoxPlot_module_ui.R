@@ -223,7 +223,7 @@
 #' @seealso [plotthis::BoxPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_BoxPlotOutputUI()], [VizModules::plotthis_BoxPlotServer()],
 #' [VizModules::plotthis_BoxPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' plotthis_BoxPlotInputsUI("BoxPlot", mtcars)

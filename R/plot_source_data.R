@@ -287,7 +287,7 @@ collect_source_data <- function(plot_reactive,
 .source_export_dependency <- function() {
     htmlDependency(
         name = "viz-source-export",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "sourceExport.js"

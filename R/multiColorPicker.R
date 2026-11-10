@@ -335,7 +335,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
     list(
         htmlDependency(
             name = "multi-color-picker",
-            version = as.character(utils::packageVersion("VizModules")),
+            version = .pkg_version("VizModules"),
             src = "src",
             package = "VizModules",
             script = "multiColorPicker.js",
@@ -343,7 +343,7 @@ updateMultiColorPicker <- function(session, inputId, colors = NULL,
         ),
         htmlDependency(
             name = "selectize",
-            version = as.character(utils::packageVersion("shiny")),
+            version = .pkg_version("shiny"),
             src = "www/shared/selectize",
             package = "shiny",
             script = c(

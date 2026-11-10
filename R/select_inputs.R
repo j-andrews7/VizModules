@@ -36,7 +36,7 @@
 #'
 #' @author Jared Andrews
 #' @seealso [update_viz_select()], [shinyWidgets::virtualSelectInput()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' viz_select_input("gene", "Gene", choices = c("", paste0("GENE", 1:1000)))
 viz_select_input <- function(inputId, label, choices, selected = NULL, multiple = FALSE,
@@ -98,7 +98,7 @@ viz_select_input <- function(inputId, label, choices, selected = NULL, multiple 
 .viz_select_dependency <- function() {
     htmlDependency(
         name = "viz-select",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "vizSelect.js"

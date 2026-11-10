@@ -27,8 +27,10 @@ controls live in each module's "Facet" tab via
 \code{uniform_subplot_spacing_inputs_ui()}.)
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot")
 uniform_plotly_inputs_ui(ns)
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews

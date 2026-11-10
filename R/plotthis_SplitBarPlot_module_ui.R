@@ -155,7 +155,7 @@
 #' @author Jacob Martin
 #' @seealso [plotthis::SplitBarPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_SplitBarPlotOutputUI()], [VizModules::plotthis_SplitBarPlotServer()], [VizModules::plotthis_SplitBarPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #' plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)

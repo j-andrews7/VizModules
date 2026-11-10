@@ -41,12 +41,14 @@ The colorbar's fonts and visibility follow the Legend tab, through
 \code{\link[=apply_legend_styling]{apply_legend_styling()}}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot1")
 uniform_colorscale_inputs_ui(ns)
 uniform_colorscale_inputs_ui(ns, defaults = list(
     colorscale.palette = "Viridis", colorscale.min = 0, colorscale.max = 1,
     colorbar.title = "Beta value"
 ))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=resolve_colorscale]{resolve_colorscale()}}, \code{\link[=reset_colorscale_inputs]{reset_colorscale_inputs()}}

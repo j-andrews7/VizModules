@@ -28,7 +28,7 @@
 #' @export
 #' @author Jared Andrews
 #' @seealso [figureBuilderServer()], [figureBuilderApp()], [moduleGalleryApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' figureBuilderUI("figure_builder")
 figureBuilderUI <- function(id, title = "VizModules Figure Builder") {

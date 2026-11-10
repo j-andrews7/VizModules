@@ -65,7 +65,7 @@ get_default <- function(defaults, key, fallback, validator = NULL) {
 #'
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot")
 #' uniform_lines_inputs_ui(ns)
 #' uniform_lines_inputs_ui(ns, include.fit.lines = TRUE)
@@ -309,7 +309,7 @@ uniform_lines_inputs_ui <- function(ns, defaults = NULL, include.fit.lines = FAL
 #'
 #' @author Jared Andrews Jacob Martin
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot")
 #' uniform_axes_inputs_ui(ns)
 #' uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
@@ -522,7 +522,7 @@ uniform_axes_inputs_ui <- function(ns, defaults = NULL, include.rotate = FALSE, 
 #'
 #' @export
 #' @author Jared Andrews
-#' @examples
+#' @examplesIf interactive()
 #' uniform_stats_inputs_ui(shiny::NS("stats"))
 uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
@@ -692,7 +692,7 @@ uniform_stats_inputs_ui <- function(ns, defaults = NULL) {
 #'
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot")
 #' uniform_plotly_inputs_ui(ns)
 uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE) {
@@ -814,7 +814,7 @@ uniform_plotly_inputs_ui <- function(ns, defaults = NULL, include.shapes = TRUE)
 #'
 #' @export
 #' @author Jared Andrews
-#' @examples
+#' @examplesIf interactive()
 #' uniform_subplot_spacing_inputs_ui(shiny::NS("spacing"), defaults = list(subplot.margin = 0.05))
 uniform_subplot_spacing_inputs_ui <- function(ns, defaults = NULL) {
     tip_opts <- list(container = "body")
@@ -898,7 +898,7 @@ subplot_spacing_defaults <- function(defaults) {
 #'
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot1")
 #' uniform_legend_inputs_ui(ns)
 #' uniform_legend_inputs_ui(ns, defaults = list(
@@ -991,7 +991,7 @@ uniform_legend_inputs_ui <- function(ns, defaults = NULL) {
 #'
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot1")
 #' uniform_colorscale_inputs_ui(ns)
 #' uniform_colorscale_inputs_ui(ns, defaults = list(
@@ -1066,7 +1066,7 @@ uniform_colorscale_inputs_ui <- function(ns, defaults = NULL) {
 #'
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' ns <- shiny::NS("plot1")
 #' uniform_annotation_inputs_ui(ns, choices = c("", "Species", "Sepal.Length"))
 uniform_annotation_inputs_ui <- function(ns, defaults = NULL, choices = "", annotate.note = NULL) {

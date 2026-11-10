@@ -281,7 +281,7 @@ updateMultiDynamicInput <- function(session, inputId, elements = NULL, clear = F
     list(
         htmltools::htmlDependency(
             name = "multi-dynamic-input",
-            version = as.character(utils::packageVersion("VizModules")),
+            version = .pkg_version("VizModules"),
             src = "src",
             package = "VizModules",
             script = "multiDynamicInput.js",
@@ -291,7 +291,7 @@ updateMultiDynamicInput <- function(session, inputId, elements = NULL, clear = F
         # dynamically cloned colour inputs can be initialized.
         htmltools::htmlDependency(
             name = "colourpicker-binding",
-            version = as.character(utils::packageVersion("colourpicker")),
+            version = .pkg_version("colourpicker"),
             src = "srcjs",
             package = "colourpicker",
             script = "input_binding_colour.js"

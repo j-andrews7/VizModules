@@ -18,8 +18,10 @@ frame. Place this in the UI where you want the filterable table to appear,
 using an \code{id} that matches the one passed to \code{\link[=dataFilterServer]{dataFilterServer()}}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 dataFilterUI("myFilter")
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=dataFilterServer]{dataFilterServer()}}

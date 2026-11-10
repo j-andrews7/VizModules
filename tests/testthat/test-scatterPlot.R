@@ -233,13 +233,14 @@ test_that("fit and model lines are only listed in the legend when asked", {
 
 test_that("fit and model lines are fit to the plotted values under every axis adjustment (#365)", {
     df <- example_sales
-    for (adj in list(
+    # On CRAN, only the one adjusting both axes, one of them twice.
+    for (adj in .cran_cases(list(
         list(),
         list(x.adjustment = "z-score", y.adj.fxn = "log10"),
         list(x.adjustment = "relative.to.max", y.adj.fxn = "sqrt"),
         list(x.adj.fxn = "log2", y.adjustment = "z-score", y.adj.fxn = "abs"),
         list(y.adj.fxn = "neg_log10")
-    )) {
+    ), keep = 4)) {
         info <- paste(names(adj), unlist(adj), collapse = ", ")
 
         # The formula names the raw columns; it models the values as plotted.
@@ -319,7 +320,8 @@ test_that("trajectories run through the plotted group medians and end in an arro
     # The path doubles back: virginica's median lies right of versicolor's, so a path
     # sorted by x would visit the groups in another order.
     visit <- c("setosa", "virginica", "versicolor")
-    for (adj in list(list(), list(x.adj.fxn = "log2", y.adjustment = "z-score"))) {
+    # On CRAN, only the adjusted one.
+    for (adj in .cran_cases(list(list(), list(x.adj.fxn = "log2", y.adjustment = "z-score")), keep = 2)) {
         info <- paste(names(adj), unlist(adj), collapse = ", ")
         fig <- .scatter_figure(df, do.call(.iris_trajectory, c(list(list(visit)), adj)))
         expect_s3_class(fig, "plotly")
@@ -670,17 +672,19 @@ test_that("the Marginals tab seeds its inputs from defaults", {
 })
 
 test_that("with Size By, legend glyphs are all one size, and the marginal axes toggle", {
-    sized <- .scatter_figure(example_sales, .scatter_inputs(color.by = "product_line", size.by = "units"))
-    expect_identical(plotly::plotly_build(sized)$x$layout$legend$itemsizing, "constant")
-    plain <- .scatter_figure(example_sales, .scatter_inputs(color.by = "product_line"))
-    expect_null(plotly::plotly_build(plain)$x$layout$legend$itemsizing)
+    # Two figures check both: one sized with marginal axes, one plain without.
+    sized <- plotly::plotly_build(.scatter_figure(example_sales, .scatter_inputs(
+        color.by = "product_line", size.by = "units", marginal.x = "density", marginal.axes = TRUE
+    )))
+    plain <- plotly::plotly_build(.scatter_figure(example_sales, .scatter_inputs(
+        color.by = "product_line", marginal.x = "density", marginal.axes = FALSE
+    )))
+    expect_identical(sized$x$layout$legend$itemsizing, "constant")
+    expect_null(plain$x$layout$legend$itemsizing)
 
-    axes <- function(show) {
-        fig <- plotly::plotly_build(.scatter_figure(example_sales, .scatter_inputs(
-            color.by = "product_line", marginal.x = "density", marginal.axes = show
-        )))
+    axes <- function(fig) {
         vapply(fig$x$.vizmodules_overlay_axes, function(a) isTRUE(fig$x$layout[[a]]$showticklabels), logical(1))
     }
-    expect_false(any(axes(FALSE)))
-    expect_true(any(axes(TRUE)))
+    expect_true(any(axes(sized)))
+    expect_false(any(axes(plain)))
 })

@@ -165,67 +165,76 @@
     })
 }
 
-test_that("a styling change re-styles the figure without redrawing the plot", {
+# The three run in one session per module, since starting each module's session
+# (and drawing its first plot) costs more than the checks themselves.
+test_that("styling re-styles without a redraw, structure redraws once and is cached, and Update gates both", {
+    # Every module, several redraws each: too slow for CRAN's time limit, and it
+    # tests VizModules' own caching rather than anything a dependency could break.
+    skip_on_cran()
     for (nm in names(.two_tier_cases())) {
         case <- .two_tier_cases()[[nm]]
         .with_two_tier(case, {
+            # A styling change re-styles the figure without redrawing the plot.
             first <- styled()
             n <- draws()
             set(list(title.font.size = 31, hline.intercepts = "1"))
             second <- styled()
             expect_equal(draws(), n, info = nm)
             expect_false(identical(first$x$layout, second$x$layout), info = nm)
-        })
-    }
-})
 
-test_that("a structural change redraws the plot once, and going back is cached", {
-    for (nm in names(.two_tier_cases())) {
-        case <- .two_tier_cases()[[nm]]
-        .with_two_tier(case, {
-            styled()
-            n <- draws()
+            # A structural change redraws the plot once, and going back is cached.
             original <- case$inputs[names(case$structural)]
             set(case$structural)
             styled()
             expect_equal(draws(), n + 1, info = nm)
-
             set(original)
             styled()
             expect_equal(draws(), n + 1, info = nm)
-        })
-    }
-})
 
-test_that("with Auto Update off, nothing redraws until Update is pressed", {
-    for (nm in names(.two_tier_cases())) {
-        case <- .two_tier_cases()[[nm]]
-        .with_two_tier(case, {
-            styled()
-            set(list(auto.update = FALSE))
-            paused <- styled()
-            n <- draws()
+            # With Auto Update off, nothing redraws until Update is pressed. The
+            # structural change was drawn above, so the cache is off here for
+            # pressing Update to draw it anew.
+            withr::with_options(list(VizModules.cache = FALSE), {
+                set(list(auto.update = FALSE))
+                paused <- styled()
+                n <- draws()
 
-            set(case$structural, list(title.font.size = 31))
-            expect_identical(styled()$x$layout, paused$x$layout, info = nm)
-            expect_equal(draws(), n, info = nm)
+                set(case$structural, list(title.font.size = 25))
+                expect_identical(styled()$x$layout, paused$x$layout, info = nm)
+                expect_equal(draws(), n, info = nm)
 
-            set(list(update = 1))
-            expect_false(identical(styled()$x$layout, paused$x$layout), info = nm)
-            expect_equal(draws(), n + 1, info = nm)
+                set(list(update = 1))
+                expect_false(identical(styled()$x$layout, paused$x$layout), info = nm)
+                expect_equal(draws(), n + 1, info = nm)
+            })
         })
     }
 })
 
 test_that("no styling input changes what the structure step draws", {
+    skip_on_cran()
     withr::local_options(VizModules.cache = FALSE)
     for (nm in names(.two_tier_cases())) {
         case <- .two_tier_cases()[[nm]]
         # Inputs a module's structure step reads on purpose stay in its cache key.
         kept <- case$keep %||% character(0)
+        ids <- setdiff(VizModules:::.style_input_ids, kept)
+        # Change every styling input at once: one redraw rather than one per
+        # input. Only when that redraw differs are they tried one by one, in a
+        # fresh session, to name the input that leaked into the structure step.
+        unchanged <- FALSE
         .with_two_tier(case, {
             reference <- base()$fig$x
-            for (id in setdiff(VizModules:::.style_input_ids, kept)) {
+            set(.style_changes[ids])
+            unchanged <<- identical(base()$fig$x, reference)
+        })
+        if (isTRUE(unchanged)) {
+            succeed()
+            next
+        }
+        .with_two_tier(case, {
+            reference <- base()$fig$x
+            for (id in ids) {
                 original <- case$inputs[[id]]
                 set(.style_changes[id])
                 expect_identical(base()$fig$x, reference, info = paste(nm, id))

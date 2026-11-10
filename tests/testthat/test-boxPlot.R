@@ -362,7 +362,8 @@ test_that("significance brackets follow the sorted x order, faceted or not (#372
         value = rep(c(a <- rnorm(20, 10), a, rnorm(20, 50)), 2),
         stringsAsFactors = FALSE
     )
-    for (facet in c("", "panel")) {
+    # On CRAN, only the faceted one.
+    for (facet in .cran_cases(c("", "panel"), keep = 2)) {
         # Sorted C, B, A: C is compared with both others, so it is at one end of
         # every significant bracket. In the unsorted order it would be at 3.
         out <- .box_stats_figure(df, .box_inputs(

@@ -27,10 +27,12 @@ works out which plot on the page belongs to this button. See
 \code{\link[=create_source_download_handler]{create_source_download_handler()}}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 library(shiny)
 ns <- NS("myModule")
 module_tack_ui(ns)
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews

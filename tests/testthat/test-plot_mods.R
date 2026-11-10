@@ -1819,7 +1819,8 @@ test_that("plotthis Group By and Fill By leave out categoricals with too many le
         list(ui = plotthis_HistogramInputsUI, id = "hist", input = "group.by", numeric = FALSE),
         list(ui = plotthis_SplitBarPlotInputsUI, id = "split", input = "fill.by", numeric = TRUE)
     )
-    for (case in cases) {
+    # On CRAN, one grouping and one fill selector, from different modules.
+    for (case in .cran_cases(cases, keep = c(1, 5))) {
         info <- paste(case$id, case$input)
         input_id <- paste0(case$id, "-", case$input)
         ch <- .select_choices(as.character(case$ui(case$id, df)), input_id)

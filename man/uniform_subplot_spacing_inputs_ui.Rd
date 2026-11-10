@@ -20,7 +20,9 @@ inputs. These controls only have an effect when faceting is active, so they
 are rendered within each module's "Facet" tab.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 uniform_subplot_spacing_inputs_ui(shiny::NS("spacing"), defaults = list(subplot.margin = 0.05))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=subplot_spacing_defaults]{subplot_spacing_defaults()}}, \code{\link[=apply_facet_subplot_spacing]{apply_facet_subplot_spacing()}}, \code{\link[=reset_plotly_inputs]{reset_plotly_inputs()}}

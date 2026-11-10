@@ -124,7 +124,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [VizModules::linePlot()], [VizModules::organize_inputs()],
 #' [VizModules::linePlotOutputUI()], [VizModules::linePlotServer()], [VizModules::linePlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' linePlotInputsUI("linePlot", mtcars)

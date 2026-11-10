@@ -266,7 +266,7 @@
 #' @author Jared Andrews
 #' @seealso [dittoViz::scatterPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dittoViz_scatterPlotOutputUI()], [VizModules::dittoViz_scatterPlotServer()], [VizModules::dittoViz_scatterPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' dittoViz_scatterPlotInputsUI("scatterPlot", example_mtcars)
 dittoViz_scatterPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {

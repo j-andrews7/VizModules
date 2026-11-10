@@ -138,6 +138,7 @@ The one where we fix all the wonkiness with extending modules (i.e. building `sc
 
 * "Building Custom Modules" shows the newly exported helpers in use and adds the scatter module's `fig.fn` hook, "Adding a New Module" lists the helpers, and "Custom Shiny Inputs" covers `multiple = TRUE` select fields and the category order control.
 * "Custom Model Lines" no longer suggests editing package internals to allow GAM smooth terms, which the formula allowlist does not include.
+* Examples for the functions that return UI (`*InputsUI()`, `*OutputUI()`, the `uniform_*_inputs_ui()` tabs, `organize_inputs()`, and the custom inputs) are shown but no longer run, since the website rendered their output as unstyled HTML.
 * The bundled agent skills cover the new inputs (marginals, size scales, trajectories, `linePlot` intervals, category order and `x.order`) and exported helpers. The new-module template builds its Group By choices with `discrete_choices()`, and its test template now gives `testServer()` the full set of inputs a figure needs, without which its figure test failed.
 
 # VizModules 0.5.0

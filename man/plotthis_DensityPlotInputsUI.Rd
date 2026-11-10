@@ -161,9 +161,11 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 plotthis_DensityPlotInputsUI("densityPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:DensityPlot]{plotthis::DensityPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

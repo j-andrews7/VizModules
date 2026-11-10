@@ -40,10 +40,12 @@ See \code{\link[=ComplexHeatmap_HeatmapMainOutputUI]{ComplexHeatmap_HeatmapMainO
 pieces fit together.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapSubOutputUI("heatmap", title = "Selected region")
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[InteractiveComplexHeatmap:subHeatmapOutput]{InteractiveComplexHeatmap::subHeatmapOutput()}},

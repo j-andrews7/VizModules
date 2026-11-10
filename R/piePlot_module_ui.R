@@ -71,7 +71,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [VizModules::piePlot()], [VizModules::organize_inputs()],
 #' [VizModules::piePlotOutputUI()], [VizModules::piePlotServer()], [VizModules::piePlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' pie_df <- as.data.frame(table(iris$Species))
 #' names(pie_df) <- c("Species", "Count")

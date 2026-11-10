@@ -19,7 +19,9 @@ Creates a standardized tagList of statistical testing inputs for use across
 plot modules that support pairwise comparisons (BoxPlot, yPlot, freqPlot).
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 uniform_stats_inputs_ui(shiny::NS("stats"))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=reset_stats_inputs]{reset_stats_inputs()}}, \code{\link[=default_stat_pairs]{default_stat_pairs()}}, \code{\link[=stat_bracket_headroom]{stat_bracket_headroom()}},

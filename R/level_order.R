@@ -27,7 +27,7 @@
 #' @export
 #' @author Jared Andrews
 #' @seealso [level_order_choices()], [apply_level_order()], [setup_level_order()]
-#' @examples
+#' @examplesIf interactive()
 #' level_order_input("x.order", "X Order", items = c("Healthy", "Disease"))
 #'
 #' # The items for a column of a data frame, in the order they are drawn by default

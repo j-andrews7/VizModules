@@ -176,7 +176,7 @@ moduleGalleryApp <- function(title = "VizModules Gallery", return_components = F
         title = field("Title"),
         description = field("Description"),
         authors = gsub("[[:space:]]+", " ", trimws(authors)),
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         docs_url = if (is.na(docs_url)) "https://j-andrews7.github.io/VizModules/" else docs_url,
         repo_url = if (is.na(repo_url)) "https://github.com/j-andrews7/VizModules" else repo_url,
         cran_url = "https://cran.r-project.org/package=VizModules"

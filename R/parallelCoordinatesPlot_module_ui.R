@@ -64,7 +64,7 @@
 #' @seealso [VizModules::parallelCoordinatesPlot()], [VizModules::organize_inputs()],
 #' [VizModules::parallelCoordinatesPlotOutputUI()], [VizModules::parallelCoordinatesPlotServer()],
 #' [VizModules::parallelCoordinatesPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' parallelCoordinatesPlotInputsUI("parcoords", mtcars)
 parallelCoordinatesPlotInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {

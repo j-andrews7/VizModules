@@ -443,7 +443,7 @@ split_color_shape_legend <- function(fig, color.levels, shape.levels,
 
     fig$dependencies <- c(fig$dependencies, list(htmlDependency(
         name = "vizmodules-legend-sections",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "legendSections.js"

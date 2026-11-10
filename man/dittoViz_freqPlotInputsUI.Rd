@@ -232,8 +232,10 @@ left unset, every pair is tested
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 dittoViz_freqPlotInputsUI("freqPlot", example_composition)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[dittoViz:freqPlot]{dittoViz::freqPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

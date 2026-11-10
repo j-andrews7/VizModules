@@ -93,12 +93,14 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 skills <- data.frame(
     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),
     value = c(8, 6, 7, 9, 8)
 )
 radarPlotInputsUI("radarPlot", skills)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=radarPlot]{radarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

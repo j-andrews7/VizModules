@@ -42,11 +42,13 @@ between the data and the edges of the plot area as a fraction of the data's
 extent at each end (blank keeps the plot's own padding).
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 ns <- shiny::NS("plot")
 uniform_axes_inputs_ui(ns)
 uniform_axes_inputs_ui(ns, include.rotate = TRUE, include.flip = TRUE)
 # A plot with its own y-axis limit inputs: x padding only.
 uniform_axes_inputs_ui(ns, include.padding = "x")
+\dontshow{\}) # examplesIf}
 }
 \author{
 Jared Andrews Jacob Martin

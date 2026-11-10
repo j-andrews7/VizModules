@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @author Jared Andrews
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' # Example 1: Basic usage with a simple grid
 #' ui.inputs <- tagList(
@@ -155,7 +155,7 @@ organize_inputs <- function(
 .viz_modules_dependency <- function() {
     htmlDependency(
         name = "viz-modules",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         stylesheet = "vizModules.css"
@@ -394,7 +394,7 @@ default_palettes <- function() {
 #'
 #' @export
 #' @author Jared Andrews
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' library(shiny)
 #' ns <- NS("myModule")
@@ -472,7 +472,7 @@ module_tack_ui <- function(ns, defaults = NULL) {
 #' @seealso [auto_webgl()]
 #' @author Jared Andrews
 #' @export
-#' @examples
+#' @examplesIf interactive()
 #' webgl_input(shiny::NS("plot"))
 #' webgl_input(shiny::NS("plot"), defaults = list(webgl = FALSE))
 webgl_input <- function(ns, defaults = NULL) {

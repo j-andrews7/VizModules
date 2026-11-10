@@ -177,9 +177,11 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 mtcars$cyl <- as.factor(mtcars$cyl)
 plotthis_SplitBarPlotInputsUI("splitBarPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:SplitBarPlot]{plotthis::SplitBarPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

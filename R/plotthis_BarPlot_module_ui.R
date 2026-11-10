@@ -172,7 +172,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::BarPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_BarPlotOutputUI()], [VizModules::plotthis_BarPlotServer()], [VizModules::plotthis_BarPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' plotthis_BarPlotInputsUI("BarPlot", mtcars)

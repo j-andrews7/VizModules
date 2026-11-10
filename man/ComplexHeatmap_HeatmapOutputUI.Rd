@@ -65,6 +65,7 @@ separated pieces (\code{originalHeatmapOutput()}, \code{subHeatmapOutput()},
 \code{compact} argument at all.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     # Default combined widget:
@@ -76,6 +77,7 @@ if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     # Fixed pixel widths, ignoring the container:
     ComplexHeatmap_HeatmapOutputUI("heatmap", fit.width = FALSE)
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[InteractiveComplexHeatmap:InteractiveComplexHeatmapOutput]{InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()}},

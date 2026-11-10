@@ -214,7 +214,7 @@
 #' @seealso [dittoViz::yPlot()], [VizModules::organize_inputs()],
 #' [VizModules::dittoViz_yPlotOutputUI()], [VizModules::dittoViz_yPlotServer()],
 #' [VizModules::dittoViz_yPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' dittoViz_yPlotInputsUI("yPlot", mtcars)

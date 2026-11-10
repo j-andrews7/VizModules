@@ -34,8 +34,10 @@ The returned UI bundles the JavaScript and CSS the canvas needs, and calls
 \code{\link[shinyjs:useShinyjs]{shinyjs::useShinyjs()}}, so no extra setup is required in the host app.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 figureBuilderUI("figure_builder")
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=figureBuilderServer]{figureBuilderServer()}}, \code{\link[=figureBuilderApp]{figureBuilderApp()}}, \code{\link[=moduleGalleryApp]{moduleGalleryApp()}}

@@ -184,8 +184,10 @@ custom \code{col} mapping functions for the annotation tracks (beyond the Low/Mi
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[ComplexHeatmap:Heatmap]{ComplexHeatmap::Heatmap()}}, \code{\link[=organize_inputs]{organize_inputs()}},

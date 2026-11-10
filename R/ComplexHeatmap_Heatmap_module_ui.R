@@ -163,7 +163,7 @@
 #' @seealso [ComplexHeatmap::Heatmap()], [VizModules::organize_inputs()],
 #' [VizModules::ComplexHeatmap_HeatmapOutputUI()],
 #' [VizModules::ComplexHeatmap_HeatmapServer()], [VizModules::ComplexHeatmap_HeatmapApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' ComplexHeatmap_HeatmapInputsUI("heatmap", example_heatmap_matrix)
 ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NULL, columns = 2) {
@@ -612,7 +612,7 @@ ComplexHeatmap_HeatmapInputsUI <- function(id, data, defaults = NULL, title = NU
 #' @seealso [InteractiveComplexHeatmap::InteractiveComplexHeatmapOutput()],
 #' [ComplexHeatmap_HeatmapMainOutputUI()], [ComplexHeatmap_HeatmapSubOutputUI()],
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #'     # Default combined widget:
@@ -682,7 +682,7 @@ ComplexHeatmap_HeatmapOutputUI <- function(id, resizable = TRUE, fit.width = TRU
 #' @seealso [InteractiveComplexHeatmap::originalHeatmapOutput()],
 #' [ComplexHeatmap_HeatmapOutputUI()], [ComplexHeatmap_HeatmapSubOutputUI()],
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #'     ComplexHeatmap_HeatmapMainOutputUI("heatmap", title = "Heatmap")
@@ -738,7 +738,7 @@ ComplexHeatmap_HeatmapMainOutputUI <- function(id, title = NULL, width = 450, he
 #' @seealso [InteractiveComplexHeatmap::subHeatmapOutput()],
 #' [ComplexHeatmap_HeatmapOutputUI()], [ComplexHeatmap_HeatmapMainOutputUI()],
 #' [ComplexHeatmap_HeatmapInfoOutputUI()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #'     ComplexHeatmap_HeatmapSubOutputUI("heatmap", title = "Selected region")
@@ -791,7 +791,7 @@ ComplexHeatmap_HeatmapSubOutputUI <- function(id, title = NULL, width = 400, hei
 #' @seealso [InteractiveComplexHeatmap::HeatmapInfoOutput()],
 #' [ComplexHeatmap_HeatmapOutputUI()], [ComplexHeatmap_HeatmapMainOutputUI()],
 #' [ComplexHeatmap_HeatmapSubOutputUI()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
 #'     ComplexHeatmap_HeatmapInfoOutputUI("heatmap", title = "Details")
@@ -856,7 +856,7 @@ ComplexHeatmap_HeatmapInfoOutputUI <- function(id, title = NULL, width = 400, ..
 #' @author Jared Andrews
 #' @seealso [ComplexHeatmap_HeatmapOutputUI()] for the interactive widget,
 #' [ComplexHeatmap_HeatmapServer()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
 #'     ComplexHeatmap_HeatmapStaticOutputUI("heatmap")
@@ -924,7 +924,7 @@ ComplexHeatmap_HeatmapStaticOutputUI <- function(id, resizable = TRUE,
 .heatmap_fit_width_dependency <- function() {
     htmlDependency(
         name = "vizmodules-heatmap-fit-width",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "heatmapFitWidth.js"
@@ -1051,7 +1051,7 @@ heatmap_fit_width <- function(ui, heatmap_id,
 .heatmap_float_output_dependency <- function() {
     htmlDependency(
         name = "vizmodules-heatmap-float-output",
-        version = as.character(utils::packageVersion("VizModules")),
+        version = .pkg_version("VizModules"),
         src = "src",
         package = "VizModules",
         script = "heatmapFloatOutput.js"

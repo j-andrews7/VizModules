@@ -526,7 +526,8 @@ test_that("linePlot's error bars sit on their own colour group's points, however
         ordered = function(g) factor(g, levels = c("C", "A", "B"), ordered = TRUE)
     )
 
-    for (repr in names(stored_as)) {
+    # On CRAN, the two orders furthest from the order of first appearance.
+    for (repr in .cran_cases(names(stored_as), keep = c(2, 4))) {
         d <- base
         d$grp <- stored_as[[repr]](d$grp)
         for (type in c("sd", "sem", "ci95")) {
@@ -760,7 +761,8 @@ test_that("linePlot's ribbons sit under their own colour group's line, in its co
         ordered = function(g) factor(g, levels = c("C", "A", "B"), ordered = TRUE)
     )
 
-    for (repr in names(stored_as)) {
+    # On CRAN, the two not in the order of first appearance.
+    for (repr in .cran_cases(names(stored_as), keep = c(2, 3))) {
         d <- base
         d$grp <- stored_as[[repr]](d$grp)
         fig <- linePlot(

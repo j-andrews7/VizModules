@@ -169,9 +169,11 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 plotthis_HistogramInputsUI("histogram", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:Histogram]{plotthis::Histogram()}}, \code{\link[=organize_inputs]{organize_inputs()}},

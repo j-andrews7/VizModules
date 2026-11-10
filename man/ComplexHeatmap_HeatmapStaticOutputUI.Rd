@@ -48,6 +48,7 @@ Unlike the interactive output, this needs only \pkg{ComplexHeatmap} itself,
 not \pkg{InteractiveComplexHeatmap}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapStaticOutputUI("heatmap")
@@ -56,6 +57,7 @@ if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
         resizable = FALSE, width = "600px", height = "400px"
     )
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=ComplexHeatmap_HeatmapOutputUI]{ComplexHeatmap_HeatmapOutputUI()}} for the interactive widget,

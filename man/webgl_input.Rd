@@ -22,8 +22,10 @@ fully vector. Read it in the module's plot step with
 counts as on.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 webgl_input(shiny::NS("plot"))
 webgl_input(shiny::NS("plot"), defaults = list(webgl = FALSE))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=auto_webgl]{auto_webgl()}}

@@ -464,11 +464,12 @@ test_that("the y.min and y.max defaults seed the Y axis limits and survive start
 test_that("significance brackets are tested on and drawn over the plotted values (#319)", {
     df <- example_demographics
     # One session each: the mock session never echoes the controls the server
-    # updates, so a second variant in the same session would wait on them.
-    for (adj in list(
+    # updates, so a second variant in the same session would wait on them. On
+    # CRAN, only the last: it both moves the axis and changes the p-values.
+    for (adj in .cran_cases(list(
         c("", ""), c("z-score", ""), c("relative.to.max", ""),
         c("", "log10"), c("", "neg_log10"), c("relative.to.max", "sqrt")
-    )) {
+    ), keep = 6)) {
         info <- paste("adjustment:", toString(adj))
         shiny::testServer(
             dittoViz_yPlotServer,

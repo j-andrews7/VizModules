@@ -139,7 +139,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::DensityPlot()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_DensityPlotOutputUI()], [VizModules::plotthis_DensityPlotServer()], [VizModules::plotthis_DensityPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' plotthis_DensityPlotInputsUI("densityPlot", mtcars)

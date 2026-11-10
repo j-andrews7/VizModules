@@ -147,7 +147,7 @@
 #' @author Jacob Martin, Jared Andrews
 #' @seealso [plotthis::Histogram()], [VizModules::organize_inputs()],
 #' [VizModules::plotthis_HistogramOutputUI()], [VizModules::plotthis_HistogramServer()], [VizModules::plotthis_HistogramApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' data(mtcars)
 #' plotthis_HistogramInputsUI("histogram", mtcars)

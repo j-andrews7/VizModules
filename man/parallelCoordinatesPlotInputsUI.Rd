@@ -82,8 +82,10 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 parallelCoordinatesPlotInputsUI("parcoords", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=parallelCoordinatesPlot]{parallelCoordinatesPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

@@ -55,8 +55,10 @@ throughout this package) is relabelled \code{"(none)"} so it is visible in the
 dropdown, while its value remains \code{""}.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 viz_select_input("gene", "Gene", choices = c("", paste0("GENE", 1:1000)))
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=update_viz_select]{update_viz_select()}}, \code{\link[shinyWidgets:virtualSelectInput]{shinyWidgets::virtualSelectInput()}}

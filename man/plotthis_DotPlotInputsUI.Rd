@@ -140,9 +140,11 @@ The following parameters implementing new functionality or controlling plotly-sp
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 plotthis_DotPlotInputsUI("DotPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:DotPlot]{plotthis::DotPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

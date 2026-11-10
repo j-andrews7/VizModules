@@ -229,9 +229,11 @@ default: ""). Values containing spaces
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 dittoViz_yPlotInputsUI("yPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[dittoViz:yPlot]{dittoViz::yPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

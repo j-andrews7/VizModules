@@ -29,10 +29,12 @@ brushed cell(s) (e.g. row/column names and value), via
 fit together.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapInfoOutputUI("heatmap", title = "Details")
 }
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[InteractiveComplexHeatmap:HeatmapInfoOutput]{InteractiveComplexHeatmap::HeatmapInfoOutput()}},

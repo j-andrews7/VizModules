@@ -41,12 +41,14 @@ numeric one, or one with more levels than are practical to drag). A cell hidden
 with \code{\link[=hide_input]{hide_input()}} stays hidden either way.
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 level_order_input("x.order", "X Order", items = c("Healthy", "Disease"))
 
 # The items for a column of a data frame, in the order they are drawn by default
 level_order_input("x.order", "X Order",
     items = level_order_choices(example_iris, "Species")
 )
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=level_order_choices]{level_order_choices()}}, \code{\link[=apply_level_order]{apply_level_order()}}, \code{\link[=setup_level_order]{setup_level_order()}}

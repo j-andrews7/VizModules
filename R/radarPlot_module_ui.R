@@ -80,7 +80,7 @@
 #' @author Jacob Martin
 #' @seealso [VizModules::radarPlot()], [VizModules::organize_inputs()],
 #' [VizModules::radarPlotOutputUI()], [VizModules::radarPlotServer()], [VizModules::radarPlotApp()]
-#' @examples
+#' @examplesIf interactive()
 #' library(VizModules)
 #' skills <- data.frame(
 #'     category = c("Speed", "Strength", "Defense", "Stamina", "Speed"),

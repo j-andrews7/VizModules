@@ -241,9 +241,11 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data(mtcars)
 plotthis_BoxPlotInputsUI("BoxPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:BoxPlot]{plotthis::BoxPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

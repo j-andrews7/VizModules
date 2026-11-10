@@ -84,10 +84,12 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 pie_df <- as.data.frame(table(iris$Species))
 names(pie_df) <- c("Species", "Count")
 piePlotInputsUI("piePlot", pie_df)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=piePlot]{piePlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

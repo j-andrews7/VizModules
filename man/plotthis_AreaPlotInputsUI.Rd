@@ -148,11 +148,13 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 # Needs at least 2 categorical variables for grouping and x-axis
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 plotthis_AreaPlotInputsUI("areaPlot", mtcars)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[plotthis:AreaPlot]{plotthis::AreaPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},

@@ -135,6 +135,7 @@ back to the default palette and user edits take precedence.
 }
 
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 library(VizModules)
 data <- data.frame(
     School = c("MIT", "Stanford", "Harvard"),
@@ -142,6 +143,7 @@ data <- data.frame(
     Men = c(152, 151, 165)
 )
 dumbbellPlotInputsUI("dumbbellPlot", data)
+\dontshow{\}) # examplesIf}
 }
 \seealso{
 \code{\link[=dumbbellPlot]{dumbbellPlot()}}, \code{\link[=organize_inputs]{organize_inputs()}},
