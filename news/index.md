@@ -1,5 +1,9 @@
 # Changelog
 
+## VizModules 0.6.1
+
+Minor release to fix issues with slow tests.
+
 ## VizModules 0.6.0
 
 The one where we fix all the wonkiness with extending modules
