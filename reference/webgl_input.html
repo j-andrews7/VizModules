@@ -98,26 +98,10 @@ counts as on.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">webgl_input</span><span class="op">(</span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify6006700"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;input id="plot-webgl" type="checkbox" class="shiny-input-checkbox" checked="checked"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span&gt;Plot with WebGL&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6006700', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});&lt;/script&gt;</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
+<span class="r-in"><span><span class="fu">webgl_input</span><span class="op">(</span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">webgl_input</span><span class="op">(</span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html" class="external-link">NS</a></span><span class="op">(</span><span class="st">"plot"</span><span class="op">)</span>, defaults <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>webgl <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;div class="form-group shiny-input-container" id="tipify1516763"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;div class="checkbox"&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;input id="plot-webgl" type="checkbox" class="shiny-input-checkbox"/&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       &lt;span&gt;Plot with WebGL&lt;/span&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     &lt;/label&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;/div&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;script&gt;$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1516763', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Draw the points with WebGL once the plot has 5,000 or more, which is much faster with large data. In SVG downloads, WebGL points are an embedded image rather than vector shapes; turn this off for a fully vector file.'})}, 500)});&lt;/script&gt;</span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

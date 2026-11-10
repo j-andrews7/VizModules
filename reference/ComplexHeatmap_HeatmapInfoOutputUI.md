@@ -52,12 +52,10 @@ Jacob Martin
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 library(VizModules)
 if (requireNamespace("InteractiveComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapInfoOutputUI("heatmap", title = "Details")
 }
-#> <div id="heatmap_Heatmap_output_wrapper" style="width: 400px">
-#>   <h5>Details</h5>
-#>   <div id="heatmap_Heatmap_info" class="shiny-html-output"></div>
-#> </div>
+}
 ```

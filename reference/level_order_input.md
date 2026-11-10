@@ -71,27 +71,12 @@ Jared Andrews
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 level_order_input("x.order", "X Order", items = c("Healthy", "Disease"))
-#> <div class="vizmodules-level-order">
-#>   <label class="control-label" id="x.order-label" for="x.order">X Order</label>
-#>   <div id="x.order" style="width: 100%; font-size: 0px; min-height: 25px;" class="jqui-orderInput">
-#>     <div data-value="Healthy" class="btn btn-default" style="margin: 1px">Healthy</div>
-#>     <div data-value="Disease" class="btn btn-default" style="margin: 1px">Disease</div>
-#>   </div>
-#>   <iframe srcdoc="&lt;p&gt;cant catch me&lt;/p&gt;" class="jqui_self_cleaning_script" style="width:0;height:0;border:none;display:none !important" onload="$(function(){setTimeout(function(){shinyjqui.msgCallback({&quot;ui&quot;:&quot;[id=&#39;x.order&#39;]&quot;,&quot;type&quot;:&quot;interaction&quot;,&quot;func&quot;:&quot;sortable&quot;,&quot;operation&quot;:&quot;enable&quot;,&quot;options&quot;:{&quot;connectWith&quot;:&quot;false&quot;,&quot;remove&quot;:&quot;function(e, ui){if(!$(e.target).children().length)$(e.target).empty();}&quot;},&quot;debug&quot;:false,&quot;_js_idx&quot;:{&quot;ui&quot;:false,&quot;type&quot;:false,&quot;func&quot;:false,&quot;operation&quot;:false,&quot;options&quot;:{&quot;connectWith&quot;:false,&quot;remove&quot;:true},&quot;debug&quot;:false}});&#10;      $(&quot;.jqui_self_cleaning_script&quot;).remove();}, 10);});"></iframe>
-#> </div>
 
 # The items for a column of a data frame, in the order they are drawn by default
 level_order_input("x.order", "X Order",
     items = level_order_choices(example_iris, "Species")
 )
-#> <div class="vizmodules-level-order">
-#>   <label class="control-label" id="x.order-label" for="x.order">X Order</label>
-#>   <div id="x.order" style="width: 100%; font-size: 0px; min-height: 25px;" class="jqui-orderInput">
-#>     <div data-value="setosa" class="btn btn-default" style="margin: 1px">setosa</div>
-#>     <div data-value="versicolor" class="btn btn-default" style="margin: 1px">versicolor</div>
-#>     <div data-value="virginica" class="btn btn-default" style="margin: 1px">virginica</div>
-#>   </div>
-#>   <iframe srcdoc="&lt;p&gt;cant catch me&lt;/p&gt;" class="jqui_self_cleaning_script" style="width:0;height:0;border:none;display:none !important" onload="$(function(){setTimeout(function(){shinyjqui.msgCallback({&quot;ui&quot;:&quot;[id=&#39;x.order&#39;]&quot;,&quot;type&quot;:&quot;interaction&quot;,&quot;func&quot;:&quot;sortable&quot;,&quot;operation&quot;:&quot;enable&quot;,&quot;options&quot;:{&quot;connectWith&quot;:&quot;false&quot;,&quot;remove&quot;:&quot;function(e, ui){if(!$(e.target).children().length)$(e.target).empty();}&quot;},&quot;debug&quot;:false,&quot;_js_idx&quot;:{&quot;ui&quot;:false,&quot;type&quot;:false,&quot;func&quot;:false,&quot;operation&quot;:false,&quot;options&quot;:{&quot;connectWith&quot;:false,&quot;remove&quot;:true},&quot;debug&quot;:false}});&#10;      $(&quot;.jqui_self_cleaning_script&quot;).remove();}, 10);});"></iframe>
-#> </div>
+}
 ```

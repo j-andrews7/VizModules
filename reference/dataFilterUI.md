@@ -32,7 +32,8 @@ Jacob Martin
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 library(VizModules)
 dataFilterUI("myFilter")
-#> <div class="datatables html-widget html-widget-output shiny-report-size html-fill-item" id="myFilter-table" style="width:100%;height:auto;"></div>
+}
 ```

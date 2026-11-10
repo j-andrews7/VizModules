@@ -55,6 +55,7 @@ Jared Andrews
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 library(VizModules)
 # Example 1: Basic usage with a simple grid
 ui.inputs <- tagList(
@@ -63,31 +64,6 @@ ui.inputs <- tagList(
     selectInput("gender", "Gender", choices = c("Male", "Female", "Other"))
 )
 organize_inputs(ui.inputs, columns = 2, rows = 2)
-#> <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="name-label" for="name">Name</label>
-#>       <input id="name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     </div>
-#>   </div>
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="age-label" for="age">Age</label>
-#>       <input id="age" type="number" class="shiny-input-number form-control" value="30" data-update-on="change"/>
-#>     </div>
-#>   </div>
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="gender-label" for="gender">Gender</label>
-#>       <div>
-#>         <select id="gender" class="shiny-input-select"><option value="Male" selected>Male</option>
-#> <option value="Female">Female</option>
-#> <option value="Other">Other</option></select>
-#>         <script type="application/json" data-for="gender" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>       </div>
-#>     </div>
-#>   </div>
-#> </div>
 
 # Example 2: Using a named list to create tabs
 ui.inputs.tabs <- list(
@@ -101,130 +77,13 @@ ui.inputs.tabs <- list(
     )
 )
 organize_inputs(ui.inputs.tabs, columns = 1)
-#> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs" data-tabsetid="3364">
-#>     <li class="active">
-#>       <a href="#tab-3364-1" data-toggle="tab" data-bs-toggle="tab" data-value="Personal">Personal</a>
-#>     </li>
-#>     <li>
-#>       <a href="#tab-3364-2" data-toggle="tab" data-bs-toggle="tab" data-value="Settings">Settings</a>
-#>     </li>
-#>   </ul>
-#>   <div class="tab-content" data-tabsetid="3364">
-#>     <div class="tab-pane active" data-value="Personal" id="tab-3364-1">
-#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="firstname-label" for="firstname">First Name</label>
-#>             <input id="firstname" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>           </div>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="lastname-label" for="lastname">Last Name</label>
-#>             <input id="lastname" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>     </div>
-#>     <div class="tab-pane" data-value="Settings" id="tab-3364-2">
-#>       <div class="vizmodules-input-grid" style="--viz-input-columns: 1;">
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container">
-#>             <div class="checkbox">
-#>               <label>
-#>                 <input id="newsletter" type="checkbox" class="shiny-input-checkbox" checked="checked"/>
-#>                 <span>Subscribe to newsletter</span>
-#>               </label>
-#>             </div>
-#>           </div>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container">
-#>             <label class="control-label" id="volume-label" for="volume">Volume</label>
-#>             <input class="js-range-slider" id="volume" data-skin="shiny" data-min="0" data-max="100" data-from="50" data-step="1" data-grid="true" data-grid-num="10" data-grid-snap="false" data-prettify-separator="," data-prettify-enabled="true" data-keyboard="true" data-data-type="number"/>
-#>           </div>
-#>         </div>
-#>       </div>
-#>     </div>
-#>   </div>
-#> </div>
 
 # Example 3: Adding an additional UI element with 'tack'
 additional.ui <- actionButton("submit", "Submit")
 organize_inputs(ui.inputs, tack = additional.ui, columns = 3)
-#> <div class="vizmodules-input-grid" style="--viz-input-columns: 3;">
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="name-label" for="name">Name</label>
-#>       <input id="name" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     </div>
-#>   </div>
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="age-label" for="age">Age</label>
-#>       <input id="age" type="number" class="shiny-input-number form-control" value="30" data-update-on="change"/>
-#>     </div>
-#>   </div>
-#>   <div class="vizmodules-input-cell">
-#>     <div class="form-group shiny-input-container">
-#>       <label class="control-label" id="gender-label" for="gender">Gender</label>
-#>       <div>
-#>         <select id="gender" class="shiny-input-select"><option value="Male" selected>Male</option>
-#> <option value="Female">Female</option>
-#> <option value="Other">Other</option></select>
-#>         <script type="application/json" data-for="gender" data-nonempty="">{"plugins":["selectize-plugin-a11y"]}</script>
-#>       </div>
-#>     </div>
-#>   </div>
-#> </div>
-#> <button id="submit" type="button" class="btn btn-default action-button"><span class="action-label">Submit</span></button>
 
 # Example 4: Handling a case with more inputs than grid cells
 many.inputs <- tagList(replicate(10, textInput("input", "Input")))
 organize_inputs(many.inputs, columns = 3) # Creates more than one row
-#> <div class="vizmodules-input-grid" style="--viz-input-columns: 3;">
-#>   <div class="vizmodules-input-cell">
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>     div
-#>     form-group shiny-input-container
-#>     <label class="control-label" id="input-label" for="input">Input</label>
-#>     <input id="input" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
-#>   </div>
-#> </div>
+}
 ```

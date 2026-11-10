@@ -73,6 +73,7 @@ Jared Andrews
 ## Examples
 
 ``` r
+if (FALSE) { # interactive()
 library(VizModules)
 if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
     ComplexHeatmap_HeatmapStaticOutputUI("heatmap")
@@ -81,5 +82,5 @@ if (requireNamespace("ComplexHeatmap", quietly = TRUE)) {
         resizable = FALSE, width = "600px", height = "400px"
     )
 }
-#> <div class="shiny-plot-output html-fill-item" id="heatmap-HeatmapStatic" style="width:600px;height:400px;"></div>
+}
 ```

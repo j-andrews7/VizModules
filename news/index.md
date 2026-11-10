@@ -476,6 +476,11 @@ The one where we fix all the wonkiness with extending modules
   fields and the category order control.
 - “Custom Model Lines” no longer suggests editing package internals to
   allow GAM smooth terms, which the formula allowlist does not include.
+- Examples for the functions that return UI (`*InputsUI()`,
+  `*OutputUI()`, the `uniform_*_inputs_ui()` tabs,
+  [`organize_inputs()`](https://j-andrews7.github.io/VizModules/reference/organize_inputs.md),
+  and the custom inputs) are shown but no longer run, since the website
+  rendered their output as unstyled HTML.
 - The bundled agent skills cover the new inputs (marginals, size scales,
   trajectories, `linePlot` intervals, category order and `x.order`) and
   exported helpers. The new-module template builds its Group By choices
