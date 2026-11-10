@@ -18,6 +18,7 @@ The one where we fix all the wonkiness with extending modules
   startup, where some modules drew it up to 12 times, and once when a
   column changes rather than twice. Settings panels build in about a
   third of the time.
+
   - Plots now update in place wherever possible instead of being
     redrawn. Changing what is plotted still resets the view. This
     results in much snappier performance for styling changes.
@@ -25,6 +26,23 @@ The one where we fix all the wonkiness with extending modules
     the data and the inputs it reads, and applies the styling inputs to
     it in a second step; the adding-a-new-module vignette describes this
     pattern.
+
+- The Axes tab has new **X Axis Padding** and **Y Axis Padding** inputs
+  that set the space between the data and the edges of the plot area, as
+  a fraction of the data’s extent at each end, so `0` makes an area or
+  line plot fill it
+  ([\#377](https://github.com/j-andrews7/VizModules/issues/377)). Blank
+  keeps each plot’s own padding, and an axis with its own limit inputs
+  (the value axis of `BarPlot`, `BoxPlot`, `freqPlot`, `yPlot`, and
+  `SplitBarPlot`) gets none. Changing it restyles the plot without
+  redrawing it.
+
+- Tick labels no longer switch to scientific notation (`1e+05`)
+  depending on which breaks an axis gets, and a new **Scientific
+  Notation Ticks** switch in the Axes tab writes them as powers of ten
+  when wanted
+  ([\#379](https://github.com/j-andrews7/VizModules/issues/379)).
+
 - Colour, shape, group, and fill selectors no longer offer categorical
   columns with 50 or more levels (the
   [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
@@ -106,6 +124,9 @@ The one where we fix all the wonkiness with extending modules
   per **Color By** group.
   - Marginals are drawn from the plotted values, after any adjustment.
   - Marginals are not drawn on a split plot because that’d be a mess.
+  - **Show Marginal Axes** (off by default) shows the density or count
+    axis of the density and histogram marginals
+    ([\#378](https://github.com/j-andrews7/VizModules/issues/378)).
 - New **Min Point Size** and **Max Point Size** inputs set the size
   range a **Size By** column maps onto
   ([\#364](https://github.com/j-andrews7/VizModules/issues/364)). They
@@ -296,9 +317,25 @@ The one where we fix all the wonkiness with extending modules
 - New
   [`add_marginal_plots()`](https://j-andrews7.github.io/VizModules/reference/add_marginal_plots.md)
   adds density, histogram and rug marginals to a single-panel plotly
-  figure, given the plotted X and Y values and their groups. The scatter
+  figure, given the plotted X and Y values and their groups, and with
+  `show.axes = TRUE` shows their density or count axes. The scatter
   module’s **Marginals** tab uses it
   ([\#113](https://github.com/j-andrews7/VizModules/issues/113)).
+
+- New
+  [`apply_axis_padding()`](https://j-andrews7.github.io/VizModules/reference/apply_axis_padding.md)
+  sets each axis’ range to the extent of the data its traces draw,
+  widened by a fraction at each end, and
+  [`apply_tick_notation()`](https://j-andrews7.github.io/VizModules/reference/apply_tick_notation.md)
+  sets whether numeric tick labels, including those ggplotly writes as
+  fixed text, use scientific notation
+  ([\#377](https://github.com/j-andrews7/VizModules/issues/377),
+  [\#379](https://github.com/j-andrews7/VizModules/issues/379)).
+  [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)
+  applies both from the Axes tab, with `padding.axes` (and
+  `include.padding` in
+  [`uniform_axes_inputs_ui()`](https://j-andrews7.github.io/VizModules/reference/uniform_axes_inputs_ui.md))
+  leaving out an axis that has its own limits.
 
 - [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
   takes `max.levels` (default 50), so the cap on how many distinct
@@ -334,6 +371,13 @@ The one where we fix all the wonkiness with extending modules
 - **Facet By** keeps its
   [`facet_check()`](https://j-andrews7.github.io/VizModules/reference/facet_check.md)
   limit when X changes.
+
+#### `BarPlot` and `SplitBarPlot`
+
+- The value axis now fits the bars as drawn on load and when the columns
+  change, rather than leaving a lot of empty space due to improve
+  pre-grouping addition & range-finding
+  ([\#375](https://github.com/j-andrews7/VizModules/issues/375)).
 
 #### `BoxPlot`
 
@@ -383,6 +427,9 @@ The one where we fix all the wonkiness with extending modules
   values, after any adjustment. On a split plot, each panel’s path runs
   through that panel’s own medians rather than repeating the whole
   data’s.
+- With a **Size By** column, the colour and shape legend entries are now
+  all one size, rather than each drawn at the size of its group’s first
+  point ([\#378](https://github.com/j-andrews7/VizModules/issues/378)).
 - Groups are coloured by name, so a factor level with no points (left by
   filtering the data table, or one a wrapper keeps for its colour
   picker) no longer shifts the colours of the levels after it.
@@ -394,6 +441,12 @@ The one where we fix all the wonkiness with extending modules
   per combination (“(Gadgets,North)”, …). Clicking an entry hides every
   point of that level, and double-clicking one shows only its level. The
   legend’s title inputs style the section titles too.
+
+#### `SplitBarPlot`
+
+- The **Category Label Position** slider now runs in round steps of at
+  most three decimals, rather than showing values with many decimals
+  that make it look like nonsense.
 
 #### Helpers and exported functions
 

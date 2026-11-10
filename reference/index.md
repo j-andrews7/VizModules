@@ -422,6 +422,9 @@ configuration.
   : Exempt a figure's overlay axes from the shared styling
 - [`adjusted_axis_label()`](https://j-andrews7.github.io/VizModules/reference/adjusted_axis_label.md)
   : Build an adjustment-aware axis label
+- [`apply_axis_padding()`](https://j-andrews7.github.io/VizModules/reference/apply_axis_padding.md)
+  : Set the padding between a figure's data and the edges of its plot
+  area
 - [`apply_axis_title_to_annotations()`](https://j-andrews7.github.io/VizModules/reference/apply_axis_title_to_annotations.md)
   : Apply axis title font styling to shared facet axis annotations
 - [`reset_axis_title_text()`](https://j-andrews7.github.io/VizModules/reference/reset_axis_title_text.md)
@@ -438,6 +441,8 @@ configuration.
   : Apply standard render-time margin layout to a plotly figure
 - [`apply_subplot_axis_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_subplot_axis_styling.md)
   : Apply axis styling to all subplot axes in a plotly figure
+- [`apply_tick_notation()`](https://j-andrews7.github.io/VizModules/reference/apply_tick_notation.md)
+  : Set the notation of a figure's numeric tick labels
 - [`apply_title_layout()`](https://j-andrews7.github.io/VizModules/reference/apply_title_layout.md)
   : Apply plot title styling to a plotly figure
 - [`apply_uniform_styling()`](https://j-andrews7.github.io/VizModules/reference/apply_uniform_styling.md)

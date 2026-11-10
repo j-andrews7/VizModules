@@ -55,68 +55,68 @@ Jared Andrews
 ``` r
 ns <- shiny::NS("plot1")
 uniform_legend_inputs_ui(ns)
-#> <div class="form-group shiny-input-container" id="tipify690620">
+#> <div class="form-group shiny-input-container" id="tipify2981795">
 #>   <div class="material-switch">
 #>     <label for="plot1-legend.show" style="padding-right: 10px;">Show Legend</label>
 #>     <input id="plot1-legend.show" type="checkbox" checked="checked"/>
 #>     <label class="switch label-success bg-success" for="plot1-legend.show"></label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify690620', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" style="width:100%;" id="tipify7287162">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2981795', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" style="width:100%;" id="tipify3813288">
 #>   <label class="control-label" id="plot1-legend.font.family-label" for="plot1-legend.font.family">Legend Font</label>
 #>   <div id="plot1-legend.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>     <script type="application/json" data-for="plot1-legend.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Arial","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7287162', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6721112">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3813288', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify2478494">
 #>   <label class="control-label" for="plot1-legend.font.color">Legend Font Color</label>
 #>   <input id="plot1-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6721112', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify8198010">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2478494', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify3449817">
 #>   <label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size">Legend Title Size</label>
 #>   <input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="14" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8198010', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify9146215">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3449817', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify4197834">
 #>   <label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size">Legend Text Size</label>
 #>   <input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9146215', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4197834', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 uniform_legend_inputs_ui(ns, defaults = list(
     legend.show = FALSE, legend.font.family = "Courier New",
     legend.title.size = 16, legend.text.size = 12
 ))
-#> <div class="form-group shiny-input-container" id="tipify6899707">
+#> <div class="form-group shiny-input-container" id="tipify6591100">
 #>   <div class="material-switch">
 #>     <label for="plot1-legend.show" style="padding-right: 10px;">Show Legend</label>
 #>     <input id="plot1-legend.show" type="checkbox"/>
 #>     <label class="switch label-success bg-success" for="plot1-legend.show"></label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6899707', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" style="width:100%;" id="tipify4919778">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6591100', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Show the legend. Turning it off also hides colorbars and any point size legend.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" style="width:100%;" id="tipify9539570">
 #>   <label class="control-label" id="plot1-legend.font.family-label" for="plot1-legend.font.family">Legend Font</label>
 #>   <div id="plot1-legend.font.family" class="virtual-select" style="width:100%;max-width:none;display:block;" data-update="change">
 #>     <script type="application/json" data-for="plot1-legend.font.family">{"stateInput":false,"options":{"type":["transpose"],"choices":{"label":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"],"value":["Arial","Balto","Courier New","Droid Sans","Droid Serif","Droid Sans Mono","Gravitas One","Old Standard TT","Open Sans","Overpass","PT Sans Narrow","Raleway","Times New Roman","Verdana","sans-serif","serif","monospace"]}},"config":{"multiple":false,"search":true,"selectedValue":"Courier New","hideClearButton":true,"autoSelectFirstOption":false,"showSelectedOptionsFirst":false,"showValueAsTags":false,"optionsCount":10,"noOfDisplayValues":50,"allowNewOption":false,"disableSelectAll":true,"disableOptionGroupCheckbox":true,"disabled":false,"dropboxWrapper":"body","zIndex":1060}}</script>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4919778', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify6469286">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9539570', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font family of the legend title and entry labels.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" data-shiny-input-type="colour" id="tipify4698937">
 #>   <label class="control-label" for="plot1-legend.font.color">Legend Font Color</label>
 #>   <input id="plot1-legend.font.color" type="text" class="form-control shiny-colour-input" data-init-value="#000000" data-show-colour="both" data-palette="square"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6469286', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify4565150">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4698937', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font color of the legend title and entry labels.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify1506211">
 #>   <label class="control-label" id="plot1-legend.title.size-label" for="plot1-legend.title.size">Legend Title Size</label>
 #>   <input id="plot1-legend.title.size" type="number" class="shiny-input-number form-control" value="16" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4565150', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify1254467">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1506211', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend title.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify9025228">
 #>   <label class="control-label" id="plot1-legend.text.size-label" for="plot1-legend.text.size">Legend Text Size</label>
 #>   <input id="plot1-legend.text.size" type="number" class="shiny-input-number form-control" value="12" data-update-on="change" min="0" step="1"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1254467', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9025228', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Font size of the legend entry labels.'})}, 500)});</script>
 ```

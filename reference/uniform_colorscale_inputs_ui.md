@@ -122,34 +122,34 @@ uniform_colorscale_inputs_ui(ns)
 #>     </div>
 #>   </div>
 #> </div>
-#> <div class="form-group shiny-input-container" id="tipify616548">
+#> <div class="form-group shiny-input-container" id="tipify7232087">
 #>   <div class="material-switch">
 #>     <label for="plot1-colorscale.reverse" style="padding-right: 10px;">Reverse Colors</label>
 #>     <input id="plot1-colorscale.reverse" type="checkbox"/>
 #>     <label class="switch label-success bg-success" for="plot1-colorscale.reverse"></label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify616548', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Run the colors from the highest value to the lowest.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify6794862">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7232087', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Run the colors from the highest value to the lowest.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify4913631">
 #>   <label class="control-label" id="plot1-colorscale.min-label" for="plot1-colorscale.min">Scale Min</label>
 #>   <input id="plot1-colorscale.min" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6794862', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the lowest color. Empty for the minimum of the data.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify3781626">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4913631', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the lowest color. Empty for the minimum of the data.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify8453550">
 #>   <label class="control-label" id="plot1-colorscale.mid-label" for="plot1-colorscale.mid">Scale Mid</label>
 #>   <input id="plot1-colorscale.mid" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify3781626', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the middle color. Empty for the center of the limits.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify5883703">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8453550', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the middle color. Empty for the center of the limits.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify251097">
 #>   <label class="control-label" id="plot1-colorscale.max-label" for="plot1-colorscale.max">Scale Max</label>
 #>   <input id="plot1-colorscale.max" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5883703', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the highest color. Empty for the maximum of the data.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify4919785">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify251097', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the highest color. Empty for the maximum of the data.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify5484002">
 #>   <label class="control-label" id="plot1-colorbar.title-label" for="plot1-colorbar.title">Colorbar Title</label>
 #>   <input id="plot1-colorbar.title" type="text" class="shiny-input-text form-control" value="Value" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify4919785', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title of the colorbar.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5484002', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title of the colorbar.'})}, 500)});</script>
 uniform_colorscale_inputs_ui(ns, defaults = list(
     colorscale.palette = "Viridis", colorscale.min = 0, colorscale.max = 1,
     colorbar.title = "Beta value"
@@ -201,32 +201,32 @@ uniform_colorscale_inputs_ui(ns, defaults = list(
 #>     </div>
 #>   </div>
 #> </div>
-#> <div class="form-group shiny-input-container" id="tipify2857770">
+#> <div class="form-group shiny-input-container" id="tipify9554548">
 #>   <div class="material-switch">
 #>     <label for="plot1-colorscale.reverse" style="padding-right: 10px;">Reverse Colors</label>
 #>     <input id="plot1-colorscale.reverse" type="checkbox"/>
 #>     <label class="switch label-success bg-success" for="plot1-colorscale.reverse"></label>
 #>   </div>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2857770', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Run the colors from the highest value to the lowest.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify84196">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9554548', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Run the colors from the highest value to the lowest.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify1405019">
 #>   <label class="control-label" id="plot1-colorscale.min-label" for="plot1-colorscale.min">Scale Min</label>
 #>   <input id="plot1-colorscale.min" type="number" class="shiny-input-number form-control" value="0" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify84196', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the lowest color. Empty for the minimum of the data.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify5507743">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1405019', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the lowest color. Empty for the minimum of the data.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify7102736">
 #>   <label class="control-label" id="plot1-colorscale.mid-label" for="plot1-colorscale.mid">Scale Mid</label>
 #>   <input id="plot1-colorscale.mid" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5507743', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the middle color. Empty for the center of the limits.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify8132309">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7102736', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the middle color. Empty for the center of the limits.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify1264019">
 #>   <label class="control-label" id="plot1-colorscale.max-label" for="plot1-colorscale.max">Scale Max</label>
 #>   <input id="plot1-colorscale.max" type="number" class="shiny-input-number form-control" value="1" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8132309', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the highest color. Empty for the maximum of the data.'})}, 500)});</script>
-#> <div class="form-group shiny-input-container" id="tipify6435746">
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1264019', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Value at the highest color. Empty for the maximum of the data.'})}, 500)});</script>
+#> <div class="form-group shiny-input-container" id="tipify8356562">
 #>   <label class="control-label" id="plot1-colorbar.title-label" for="plot1-colorbar.title">Colorbar Title</label>
 #>   <input id="plot1-colorbar.title" type="text" class="shiny-input-text form-control" value="Beta value" data-update-on="change"/>
 #> </div>
-#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6435746', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title of the colorbar.'})}, 500)});</script>
+#> <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8356562', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Title of the colorbar.'})}, 500)});</script>
 ```

@@ -342,6 +342,16 @@ plotly-specific features are also available:
 - `axis.tickwidth` - Width of tick marks (UI: "Tick Mark Width",
   default: 1)
 
+- `axis.scientific` - Write numeric tick labels in scientific notation
+  (UI: "Scientific Notation Ticks", default: FALSE; when off they never
+  switch to it). See
+  [`apply_tick_notation()`](https://j-andrews7.github.io/VizModules/reference/apply_tick_notation.md)
+
+- `axis.padding.x` - Space between the data and the plot area's edges
+  along X, as a fraction of the data's extent at each end (UI: "X Axis
+  Padding", default: NA = the plot's own). See
+  [`apply_axis_padding()`](https://j-andrews7.github.io/VizModules/reference/apply_axis_padding.md)
+
 - `legend.font.family` - Font family of the legend title and labels (UI:
   "Legend Font", default: "Arial")
 
@@ -482,49 +492,49 @@ Jared Andrews
 library(VizModules)
 dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #> <div class="tabbable vizmodules-input-tabs">
-#>   <ul class="nav nav-tabs shiny-tab-input" id="freqPlot-freqPlotTabsetPanel" data-tabsetid="1169">
+#>   <ul class="nav nav-tabs shiny-tab-input" id="freqPlot-freqPlotTabsetPanel" data-tabsetid="4837">
 #>     <li class="active">
-#>       <a href="#tab-1169-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
+#>       <a href="#tab-4837-1" data-toggle="tab" data-bs-toggle="tab" data-value="Data">Data</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-2" data-toggle="tab" data-bs-toggle="tab" data-value="Scale">Scale</a>
+#>       <a href="#tab-4837-2" data-toggle="tab" data-bs-toggle="tab" data-value="Scale">Scale</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
+#>       <a href="#tab-4837-3" data-toggle="tab" data-bs-toggle="tab" data-value="Jitter">Jitter</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
+#>       <a href="#tab-4837-4" data-toggle="tab" data-bs-toggle="tab" data-value="Box">Box</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
+#>       <a href="#tab-4837-5" data-toggle="tab" data-bs-toggle="tab" data-value="Violin">Violin</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
+#>       <a href="#tab-4837-6" data-toggle="tab" data-bs-toggle="tab" data-value="Ridge">Ridge</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
+#>       <a href="#tab-4837-7" data-toggle="tab" data-bs-toggle="tab" data-value="Stats">Stats</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
+#>       <a href="#tab-4837-8" data-toggle="tab" data-bs-toggle="tab" data-value="Facet">Facet</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
+#>       <a href="#tab-4837-9" data-toggle="tab" data-bs-toggle="tab" data-value="Annotations">Annotations</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
+#>       <a href="#tab-4837-10" data-toggle="tab" data-bs-toggle="tab" data-value="Legend">Legend</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
+#>       <a href="#tab-4837-11" data-toggle="tab" data-bs-toggle="tab" data-value="Plotly">Plotly</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
+#>       <a href="#tab-4837-12" data-toggle="tab" data-bs-toggle="tab" data-value="Axes">Axes</a>
 #>     </li>
 #>     <li>
-#>       <a href="#tab-1169-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
+#>       <a href="#tab-4837-13" data-toggle="tab" data-bs-toggle="tab" data-value="Lines">Lines</a>
 #>     </li>
 #>   </ul>
-#>   <div class="tab-content" data-tabsetid="1169">
-#>     <div class="tab-pane active" data-value="Data" id="tab-1169-1">
+#>   <div class="tab-content" data-tabsetid="4837">
+#>     <div class="tab-pane active" data-value="Data" id="tab-4837-1">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify9662091">
@@ -599,7 +609,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Scale" id="tab-1169-2">
+#>     <div class="tab-pane" data-value="Scale" id="tab-4837-2">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify8707271">
@@ -636,7 +646,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Jitter" id="tab-1169-3">
+#>     <div class="tab-pane" data-value="Jitter" id="tab-4837-3">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5862222">
@@ -696,7 +706,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Box" id="tab-1169-4">
+#>     <div class="tab-pane" data-value="Box" id="tab-4837-4">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7249351">
@@ -748,7 +758,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Violin" id="tab-1169-5">
+#>     <div class="tab-pane" data-value="Violin" id="tab-4837-5">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5144025">
@@ -768,7 +778,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Ridge" id="tab-1169-6">
+#>     <div class="tab-pane" data-value="Ridge" id="tab-4837-6">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8430969">
@@ -816,7 +826,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Stats" id="tab-1169-7">
+#>     <div class="tab-pane" data-value="Stats" id="tab-4837-7">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5593832">
@@ -947,7 +957,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Facet" id="tab-1169-8">
+#>     <div class="tab-pane" data-value="Facet" id="tab-4837-8">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <span class="help-block">Faceted on the frequency variable; use "Levels To Show" to pick facets.</span>
@@ -991,7 +1001,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Annotations" id="tab-1169-9">
+#>     <div class="tab-pane" data-value="Annotations" id="tab-4837-9">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;" id="tipify1130475">
@@ -1114,7 +1124,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Legend" id="tab-1169-10">
+#>     <div class="tab-pane" data-value="Legend" id="tab-4837-10">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify5168041">
@@ -1158,7 +1168,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Plotly" id="tab-1169-11">
+#>     <div class="tab-pane" data-value="Plotly" id="tab-4837-11">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1235,7 +1245,7 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Axes" id="tab-1169-12">
+#>     <div class="tab-pane" data-value="Axes" id="tab-4837-12">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" style="width:100%;">
@@ -1400,6 +1410,24 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>           </div>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify9302335">
+#>             <div class="checkbox">
+#>               <label>
+#>                 <input id="freqPlot-axis.scientific" type="checkbox" class="shiny-input-checkbox"/>
+#>                 <span>Scientific Notation Ticks</span>
+#>               </label>
+#>             </div>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9302335', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Write numeric tick labels as powers of ten. Off, they are never in scientific notation.'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify6511186">
+#>             <label class="control-label" id="freqPlot-axis.padding.x-label" for="freqPlot-axis.padding.x">X Axis Padding</label>
+#>             <input id="freqPlot-axis.padding.x" type="number" class="shiny-input-number form-control" value="NA" data-update-on="change" min="0" step="0.01"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6511186', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Space between the data and the edges of the plot area along X, as a fraction of the data&#39;s extent at each end. 0 fills the plot area. Leave blank for the default.'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container">
 #>             <label class="control-label" id="freqPlot-facet.title.font.size-label" for="freqPlot-facet.title.font.size">Facet Subplot Title Size</label>
 #>             <input id="freqPlot-facet.title.font.size" type="number" class="shiny-input-number form-control" value="18" data-update-on="change" min="1" step="1"/>
@@ -1421,119 +1449,119 @@ dittoViz_freqPlotInputsUI("freqPlot", example_composition)
 #>         </div>
 #>       </div>
 #>     </div>
-#>     <div class="tab-pane" data-value="Lines" id="tab-1169-13">
+#>     <div class="tab-pane" data-value="Lines" id="tab-4837-13">
 #>       <div class="vizmodules-input-grid" style="--viz-input-columns: 2;">
 #>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify9302335">
+#>           <div class="form-group shiny-input-container" id="tipify5287093">
 #>             <label class="control-label" id="freqPlot-hline.intercepts-label" for="freqPlot-hline.intercepts">Y-intercepts</label>
 #>             <input id="freqPlot-hline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9302335', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify6511186">
-#>             <label class="control-label" id="freqPlot-hline.colors-label" for="freqPlot-hline.colors">Y Colors</label>
-#>             <input id="freqPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6511186', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
-#>         </div>
-#>         <div class="vizmodules-input-cell">
-#>           <div class="form-group shiny-input-container" id="tipify5287093">
-#>             <label class="control-label" id="freqPlot-hline.widths-label" for="freqPlot-hline.widths">Y Widths</label>
-#>             <input id="freqPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
-#>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5287093', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify5287093', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2251154">
-#>             <label class="control-label" id="freqPlot-hline.linetypes-label" for="freqPlot-hline.linetypes">Y Line Types</label>
-#>             <input id="freqPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-hline.colors-label" for="freqPlot-hline.colors">Y Colors</label>
+#>             <input id="freqPlot-hline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2251154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2251154', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for horizontal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9832668">
-#>             <label class="control-label" id="freqPlot-hline.opacities-label" for="freqPlot-hline.opacities">Y Opacities (0-1)</label>
-#>             <input id="freqPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-hline.widths-label" for="freqPlot-hline.widths">Y Widths</label>
+#>             <input id="freqPlot-hline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9832668', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9832668', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for horizontal reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1090488">
-#>             <label class="control-label" id="freqPlot-vline.intercepts-label" for="freqPlot-vline.intercepts">X-intercepts</label>
-#>             <input id="freqPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-hline.linetypes-label" for="freqPlot-hline.linetypes">Y Line Types</label>
+#>             <input id="freqPlot-hline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1090488', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1090488', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for horizontal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify699456">
-#>             <label class="control-label" id="freqPlot-vline.colors-label" for="freqPlot-vline.colors">X Colors</label>
-#>             <input id="freqPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-hline.opacities-label" for="freqPlot-hline.opacities">Y Opacities (0-1)</label>
+#>             <input id="freqPlot-hline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify699456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify699456', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of horizontal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7776455">
-#>             <label class="control-label" id="freqPlot-vline.widths-label" for="freqPlot-vline.widths">X Widths</label>
-#>             <input id="freqPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-vline.intercepts-label" for="freqPlot-vline.intercepts">X-intercepts</label>
+#>             <input id="freqPlot-vline.intercepts" type="text" class="shiny-input-text form-control" value="" placeholder="e.g. 2, -2" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7776455', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7776455', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6583222">
-#>             <label class="control-label" id="freqPlot-vline.linetypes-label" for="freqPlot-vline.linetypes">X Line Types</label>
-#>             <input id="freqPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-vline.colors-label" for="freqPlot-vline.colors">X Colors</label>
+#>             <input id="freqPlot-vline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6583222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6583222', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for vertical reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2592028">
-#>             <label class="control-label" id="freqPlot-vline.opacities-label" for="freqPlot-vline.opacities">X Opacities (0-1)</label>
-#>             <input id="freqPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-vline.widths-label" for="freqPlot-vline.widths">X Widths</label>
+#>             <input id="freqPlot-vline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2592028', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2592028', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for vertical reference lines in pixels, as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify9183378">
-#>             <label class="control-label" id="freqPlot-abline.slopes-label" for="freqPlot-abline.slopes">Ab Slopes</label>
-#>             <input id="freqPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-vline.linetypes-label" for="freqPlot-vline.linetypes">X Line Types</label>
+#>             <input id="freqPlot-vline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9183378', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify9183378', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for vertical reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify1487104">
-#>             <label class="control-label" id="freqPlot-abline.intercepts-label" for="freqPlot-abline.intercepts">Ab Y-intercepts</label>
-#>             <input id="freqPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-vline.opacities-label" for="freqPlot-vline.opacities">X Opacities (0-1)</label>
+#>             <input id="freqPlot-vline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1487104', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify1487104', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of vertical reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify6406805">
-#>             <label class="control-label" id="freqPlot-abline.colors-label" for="freqPlot-abline.colors">Ab Colors</label>
-#>             <input id="freqPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-abline.slopes-label" for="freqPlot-abline.slopes">Ab Slopes</label>
+#>             <input id="freqPlot-abline.slopes" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6406805', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify6406805', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Slope(s) of diagonal reference lines (rise/run), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify2012385">
-#>             <label class="control-label" id="freqPlot-abline.widths-label" for="freqPlot-abline.widths">Ab Widths</label>
-#>             <input id="freqPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-abline.intercepts-label" for="freqPlot-abline.intercepts">Ab Y-intercepts</label>
+#>             <input id="freqPlot-abline.intercepts" type="text" class="shiny-input-text form-control" value="" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2012385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify2012385', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'For categorical or factor axes, enter the index (position) of the category rather than its name. For example, if the axis categories are &#39;Audi&#39;, &#39;Mercedes&#39;, &#39;Bugatti&#39;, enter 2 to place a line at &#39;Mercedes&#39;.'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify7436213">
-#>             <label class="control-label" id="freqPlot-abline.linetypes-label" for="freqPlot-abline.linetypes">Ab Line Types</label>
-#>             <input id="freqPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>             <label class="control-label" id="freqPlot-abline.colors-label" for="freqPlot-abline.colors">Ab Colors</label>
+#>             <input id="freqPlot-abline.colors" type="text" class="shiny-input-text form-control" value="#000000" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7436213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify7436213', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Color(s) for diagonal reference lines, as comma-separated hex codes or color names'})}, 500)});</script>
 #>         </div>
 #>         <div class="vizmodules-input-cell">
 #>           <div class="form-group shiny-input-container" id="tipify8476374">
+#>             <label class="control-label" id="freqPlot-abline.widths-label" for="freqPlot-abline.widths">Ab Widths</label>
+#>             <input id="freqPlot-abline.widths" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8476374', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Width(s) for diagonal reference lines in pixels, as comma-separated values'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify8536358">
+#>             <label class="control-label" id="freqPlot-abline.linetypes-label" for="freqPlot-abline.linetypes">Ab Line Types</label>
+#>             <input id="freqPlot-abline.linetypes" type="text" class="shiny-input-text form-control" value="dashed" placeholder="solid, dashed, dotted, ..." data-update-on="change"/>
+#>           </div>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8536358', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Line style(s) for diagonal reference lines (solid, dashed, dotted, dotdash, longdash, twodash)'})}, 500)});</script>
+#>         </div>
+#>         <div class="vizmodules-input-cell">
+#>           <div class="form-group shiny-input-container" id="tipify8034125">
 #>             <label class="control-label" id="freqPlot-abline.opacities-label" for="freqPlot-abline.opacities">Ab Opacities (0-1)</label>
 #>             <input id="freqPlot-abline.opacities" type="text" class="shiny-input-text form-control" value="1" data-update-on="change"/>
 #>           </div>
-#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8476374', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
+#>           <script>$(document).ready(function() {setTimeout(function() {shinyBS.addTooltip('tipify8034125', 'tooltip', {'container': 'body', 'placement': 'top', 'trigger': 'hover', 'title': 'Opacity of diagonal reference lines between 0 (transparent) and 1 (opaque), as comma-separated values'})}, 500)});</script>
 #>         </div>
 #>       </div>
 #>     </div>

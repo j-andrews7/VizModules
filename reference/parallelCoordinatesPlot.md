@@ -12,8 +12,6 @@ parallelCoordinatesPlot(
   color.by = NULL,
   color.scale = "Viridis",
   palette.selection = NULL,
-  line.opacity = 0.5,
-  line.width = 1,
   show.colorbar = TRUE,
   label.font.size = 12,
   label.font.color = "black",
@@ -61,14 +59,6 @@ parallelCoordinatesPlot(
   categorical. May be unnamed (colors applied in order to the sorted
   unique levels) or named by level. If `NULL`, the plotly `color.scale`
   is used as a fallback. Default: NULL.
-
-- line.opacity:
-
-  Numeric, opacity of lines between 0 and 1. Default: 0.5.
-
-- line.width:
-
-  Numeric, width of lines in pixels. Default: 1.
 
 - show.colorbar:
 
@@ -122,6 +112,12 @@ parallelCoordinatesPlot(
 
 A plotly object representing the interactive parallel coordinates plot.
 
+## Details
+
+plotly draws a parallel coordinates trace's lines with WebGL at a fixed
+width of one pixel and fully opaque: its `line` takes only a colour and
+colour scale, so line width and opacity cannot be set.
+
 ## Author
 
 Jacob Martin, Jared Andrews
@@ -133,7 +129,6 @@ fig <- parallelCoordinatesPlot(
     data = mtcars,
     dimensions = c("mpg", "cyl", "disp", "hp", "wt"),
     color.by = "mpg",
-    color.scale = "Viridis",
-    line.opacity = 0.6
+    color.scale = "Viridis"
 )
 ```

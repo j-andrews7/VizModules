@@ -3,15 +3,17 @@
 itself from the data and every input that changes what is drawn; that is the
 expensive part (a ggplot built and converted with plotly::ggplotly(), say),
 and it is cached. This function is the second step: it applies the inputs
-that only style the figure – titles, fonts, ticks, gridlines, reference
-lines, the modebar, the shape-drawing tool, and the legend – to the figure
+that only style the figure – titles, fonts, ticks and their notation,
+gridlines, the padding around the data, reference lines, the modebar, the
+shape-drawing tool, and the legend – to the figure
 the first step returned. Changing one of those inputs re-runs only this step,
 which takes a few milliseconds rather than a full rebuild."><meta property="og:description" content="The plot modules build their figures in two steps. The first draws the plot
 itself from the data and every input that changes what is drawn; that is the
 expensive part (a ggplot built and converted with plotly::ggplotly(), say),
 and it is cached. This function is the second step: it applies the inputs
-that only style the figure – titles, fonts, ticks, gridlines, reference
-lines, the modebar, the shape-drawing tool, and the legend – to the figure
+that only style the figure – titles, fonts, ticks and their notation,
+gridlines, the padding around the data, reference lines, the modebar, the
+shape-drawing tool, and the legend – to the figure
 the first step returned. Changing one of those inputs re-runs only this step,
 which takes a few milliseconds rather than a full rebuild."><!-- dependencies from examples --><script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="libs/plotly-binding-4.12.1/plotly.js"></script><script src="libs/typedarray-0.1/typedarray.min.js"></script><link href="libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet"><script src="libs/crosstalk-1.2.2/js/crosstalk.min.js"></script><link href="libs/plotly-htmlwidgets-css-2.25.2/plotly-htmlwidgets.css" rel="stylesheet"><script src="libs/plotly-main-2.25.2/plotly-latest.min.js"></script></head><body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -69,8 +71,9 @@ which takes a few milliseconds rather than a full rebuild."><!-- dependencies fr
 itself from the data and every input that changes what is drawn; that is the
 expensive part (a ggplot built and converted with <code><a href="https://rdrr.io/pkg/plotly/man/ggplotly.html" class="external-link">plotly::ggplotly()</a></code>, say),
 and it is cached. This function is the second step: it applies the inputs
-that only style the figure – titles, fonts, ticks, gridlines, reference
-lines, the modebar, the shape-drawing tool, and the legend – to the figure
+that only style the figure – titles, fonts, ticks and their notation,
+gridlines, the padding around the data, reference lines, the modebar, the
+shape-drawing tool, and the legend – to the figure
 the first step returned. Changing one of those inputs re-runs only this step,
 which takes a few milliseconds rather than a full rebuild.</p>
     </div>
@@ -86,7 +89,8 @@ which takes a few milliseconds rather than a full rebuild.</p>
 <span>  include.modebar.buttons <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  fig.fn <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  ggplot.axis.styling <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  legend.position <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  legend.position <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  padding.axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"x"</span>, <span class="st">"y"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -142,6 +146,13 @@ whose axis lines come from its ggplot theme (see
 <dd><p>Passed to <code><a href="apply_legend_inputs.html">apply_legend_inputs()</a></code>; <code>NULL</code> keeps the
 legend where it is.</p></dd>
 
+
+<dt id="arg-padding-axes">padding.axes<a class="anchor" aria-label="anchor" href="#arg-padding-axes"></a></dt>
+<dd><p>Which of the module's axes, <code>"x"</code> and <code>"y"</code>, take the
+<code>axis.padding.x</code>/<code>axis.padding.y</code> inputs (see <code><a href="apply_axis_padding.html">apply_axis_padding()</a></code>). Leave
+out an axis with its own limit inputs, so its limits stand. When <code>input$rotate</code>
+is <code>TRUE</code> the padding follows the variables onto the swapped axes.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -159,7 +170,7 @@ styling and get no reference lines.</p>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
     <div class="dont-index"><p><code><a href="apply_title_layout.html">apply_title_layout()</a></code>, <code><a href="apply_subplot_axis_styling.html">apply_subplot_axis_styling()</a></code>,
-<code><a href="add_reference_lines.html">add_reference_lines()</a></code>, <code><a href="add_plot_config.html">add_plot_config()</a></code>, <code><a href="apply_plotly_newshape.html">apply_plotly_newshape()</a></code>,
+<code><a href="apply_tick_notation.html">apply_tick_notation()</a></code>, <code><a href="apply_axis_padding.html">apply_axis_padding()</a></code>, <code><a href="add_reference_lines.html">add_reference_lines()</a></code>, <code><a href="add_plot_config.html">add_plot_config()</a></code>, <code><a href="apply_plotly_newshape.html">apply_plotly_newshape()</a></code>,
 <code><a href="apply_legend_inputs.html">apply_legend_inputs()</a></code>, <code><a href="axis_titles_as_annotations.html">axis_titles_as_annotations()</a></code></p></div>
     </div>
     <div class="section level2">
@@ -183,8 +194,8 @@ styling and get no reference lines.</p>
 <span class="r-in"><span>    download.format <span class="op">=</span> <span class="st">"svg"</span>, legend.text.size <span class="op">=</span> <span class="fl">12</span>, legend.title.size <span class="op">=</span> <span class="fl">14</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">apply_uniform_styling</span><span class="op">(</span><span class="va">fig</span>, <span class="va">input</span>, isolate_fn <span class="op">=</span> <span class="va">identity</span><span class="op">)</span></span></span>
-<div id="htmlwidget-d11fc4360aa0230696d7" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d11fc4360aa0230696d7">{"x":{"visdat":{"19325f9670d9":["function () ","plotlyVisDat"]},"cur_data":"19325f9670d9","attrs":{"19325f9670d9":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"shapes":[{"type":"line","x0":0,"x1":1,"xref":"x domain","y0":20,"y1":20,"yref":"y","line":{"color":"#D55E00","width":1,"dash":"solid"},"opacity":1}],"title":{"font":{"size":20,"family":"Arial","color":"#000000"},"x":0.5,"xanchor":"center","y":0.94999999999999996,"yanchor":"top"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"font":{"size":16,"family":"Arial","color":"#000000"}},"tickfont":{"size":12,"color":"#000000","family":"Arial"},"tickangle":0,"ticks":"outside","tickcolor":"#000000","ticklen":5,"tickwidth":1,"showgrid":true,"gridcolor":"#CCCCCC"},"yaxis":{"domain":[0,1],"automargin":true,"title":{"font":{"size":16,"family":"Arial","color":"#000000"}},"tickfont":{"size":12,"color":"#000000","family":"Arial"},"tickangle":0,"ticks":"outside","tickcolor":"#000000","ticklen":5,"tickwidth":1,"showgrid":false,"gridcolor":"#CCCCCC"},"newshape":{"fillcolor":[],"line":{"color":[],"width":[],"dash":[]},"opacity":[]},"legend":{"font":{"size":12},"title":{"font":{"size":14}},"grouptitlefont":{"size":14}},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["drawline","drawopenpath","drawclosedpath","drawcircle","drawrect","eraseshape","hoverclosest","hovercompare"],"showSendToCloud":false,"edits":{"axisTitleText":false,"titleText":true,"annotationText":true,"legendText":true,"legendPosition":true,"colorbarPosition":true,"colorbarTitleText":true,"annotationTail":true,"annotationPosition":true},"toImageButtonOptions":{"format":"svg","filename":"2026-11-07"},"displaylogo":false},"data":[{"x":[2.6200000000000001,2.875,2.3199999999999998,3.2149999999999999,3.4399999999999999,3.46,3.5699999999999998,3.1899999999999999,3.1499999999999999,3.4399999999999999,3.4399999999999999,4.0700000000000003,3.73,3.7799999999999998,5.25,5.4240000000000004,5.3449999999999998,2.2000000000000002,1.615,1.835,2.4649999999999999,3.52,3.4350000000000001,3.8399999999999999,3.8450000000000002,1.9350000000000001,2.1400000000000001,1.5129999999999999,3.1699999999999999,2.77,3.5699999999999998,2.7799999999999998],"y":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly",".vizmodules_built":true},"evals":[],"jsHooks":[]}</script></code></pre></div>
+<div id="htmlwidget-21c7483268bafca56cec" style="width:700px;height:432.632880098888px;" class="plotly html-widget"></div>
+<script type="application/json" data-for="htmlwidget-21c7483268bafca56cec">{"x":{"visdat":{"186f4c178175":["function () ","plotlyVisDat"]},"cur_data":"186f4c178175","attrs":{"186f4c178175":{"x":{},"y":{},"mode":"markers","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":{"font":{"size":20,"family":"Arial","color":"#000000"},"x":0.5,"xanchor":"center","y":0.94999999999999996,"yanchor":"top"},"xaxis":{"domain":[0,1],"automargin":true,"title":{"font":{"size":16,"family":"Arial","color":"#000000"}},"tickfont":{"size":12,"color":"#000000","family":"Arial"},"tickangle":0,"ticks":"outside","tickcolor":"#000000","ticklen":5,"tickwidth":1,"showgrid":true,"gridcolor":"#CCCCCC"},"yaxis":{"domain":[0,1],"automargin":true,"title":{"font":{"size":16,"family":"Arial","color":"#000000"}},"tickfont":{"size":12,"color":"#000000","family":"Arial"},"tickangle":0,"ticks":"outside","tickcolor":"#000000","ticklen":5,"tickwidth":1,"showgrid":false,"gridcolor":"#CCCCCC"},"hovermode":"closest","showlegend":false,"shapes":[{"type":"line","x0":0,"x1":1,"xref":"x domain","y0":20,"y1":20,"yref":"y","line":{"color":"#D55E00","width":1,"dash":"solid"},"opacity":1}],"newshape":{"fillcolor":[],"line":{"color":[],"width":[],"dash":[]},"opacity":[]},"legend":{"font":{"size":12},"title":{"font":{"size":14}},"grouptitlefont":{"size":14}}},"source":"A","config":{"modeBarButtonsToAdd":["drawline","drawopenpath","drawclosedpath","drawcircle","drawrect","eraseshape","hoverclosest","hovercompare"],"showSendToCloud":false,"edits":{"axisTitleText":false,"titleText":true,"annotationText":true,"legendText":true,"legendPosition":true,"colorbarPosition":true,"colorbarTitleText":true,"annotationTail":true,"annotationPosition":true},"toImageButtonOptions":{"format":"svg","filename":"2026-11-10"},"displaylogo":false},"data":[{"x":[2.6200000000000001,2.875,2.3199999999999998,3.2149999999999999,3.4399999999999999,3.46,3.5699999999999998,3.1899999999999999,3.1499999999999999,3.4399999999999999,3.4399999999999999,4.0700000000000003,3.73,3.7799999999999998,5.25,5.4240000000000004,5.3449999999999998,2.2000000000000002,1.615,1.835,2.4649999999999999,3.52,3.4350000000000001,3.8399999999999999,3.8450000000000002,1.9350000000000001,2.1400000000000001,1.5129999999999999,3.1699999999999999,2.77,3.5699999999999998,2.7799999999999998],"y":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"mode":"markers","type":"scatter","marker":{"color":"rgba(31,119,180,1)","line":{"color":"rgba(31,119,180,1)"}},"error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly",".vizmodules_built":true},"evals":[],"jsHooks":[]}</script></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
