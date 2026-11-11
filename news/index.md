@@ -6,6 +6,8 @@ Minor release to fix issues with slow tests.
 
 ## VizModules 0.6.0
 
+CRAN release: 2026-11-10
+
 The one where we fix all the wonkiness with extending modules
 (i.e. building `sciVizModules`).
 
